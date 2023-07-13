@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 
 import {
   Card,
@@ -10,12 +9,13 @@ import {
 } from "@/components/ui/card";
 import { LoginForm } from "./components/login-form";
 import { NewAccountAlert } from "./components/new-account-alert";
+import { EmailVerifiedAlert } from "./components/email-verified-alert";
 
 export default async function Page() {
   return (
     <>
       <NewAccountAlert />
-
+      <EmailVerifiedAlert />
       <Card>
         <CardHeader>
           <CardTitle className="text-center font-nunito">Sign In</CardTitle>

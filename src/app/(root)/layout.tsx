@@ -6,9 +6,9 @@ export default async function SetupLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const token = cookies().get("auth_token");
+  // const token = cookies().get("auth_token");
 
-  if (!token) redirect("/sign-in");
+  // if (!token) redirect("/sign-in");
 
   return <>{children}</>;
 }

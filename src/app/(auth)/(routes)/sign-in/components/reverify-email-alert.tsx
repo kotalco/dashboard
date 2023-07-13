@@ -22,7 +22,7 @@ export const ReverifyEmailALert = ({
       setIsLoading(true);
       setSuccess(false);
 
-      await api.post<{ message: string }>("/users/resend_email_verification", {
+      await api.post("/users/resend_email_verification", {
         email,
       });
 
@@ -81,7 +81,6 @@ export const ReverifyEmailALert = ({
         <span>Email not verified. Resend Activation Email? Click </span>
         <Button
           variant="link"
-          disabled={isLoading}
           type="button"
           onClick={reactivateEmail}
           className="px-0"

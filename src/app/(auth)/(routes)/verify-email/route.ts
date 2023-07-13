@@ -1,0 +1,37 @@
+import { NextRequest, NextResponse } from "next/server";
+import { isAxiosError } from "axios";
+
+import { api } from "@/lib/axios";
+import { StorageItems } from "@/enums";
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+
+  const email = searchParams.get("email");
+  const token = searchParams.get("token");
+  try {
+    await api.post("users/verify_email", { email, token });
+    const response = NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
+    response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},200`, {
+      maxAge: 5,
+    });
+    return response;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        const response = NextResponse.redirect(
+          `${process.env.BASE_URL}/sign-in`
+        );
+        response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},401`, {
+          maxAge: 5,
+        });
+        return response;
+      }
+    }
+    const response = NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
+    response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},500`, {
+      maxAge: 5,
+    });
+    return response;
+  }
+}

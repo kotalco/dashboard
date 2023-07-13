@@ -2,15 +2,15 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { LocalStorageItems } from "@/enums";
+import { StorageItems } from "@/enums";
 
 export const NewAccountAlert = () => {
   const mounted = useIsMounted();
 
   if (!mounted) return null;
 
-  const email = localStorage.getItem(LocalStorageItems.NEW_ACCOUNT);
-  localStorage.removeItem(LocalStorageItems.NEW_ACCOUNT);
+  const email = localStorage.getItem(StorageItems.NEW_ACCOUNT);
+  localStorage.removeItem(StorageItems.NEW_ACCOUNT);
 
   if (email) {
     return (

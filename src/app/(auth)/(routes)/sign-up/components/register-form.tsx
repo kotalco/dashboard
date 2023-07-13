@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { LocalStorageItems } from "@/enums";
+import { StorageItems } from "@/enums";
 
 const schema = z
   .object({
@@ -60,7 +60,7 @@ export const RegisterForm = () => {
     try {
       const { data } = await api.post<User>(`/users`, values);
       !data.platform_admin &&
-        localStorage.setItem(LocalStorageItems.NEW_ACCOUNT, data.email);
+        localStorage.setItem(StorageItems.NEW_ACCOUNT, data.email);
       router.push("/sign-in");
     } catch (error) {
       if (isAxiosError(error)) {

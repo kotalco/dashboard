@@ -1,5 +1,6 @@
-export enum LocalStorageItems {
+export enum StorageItems {
   NEW_ACCOUNT = "NEW_ACCOUNT",
+  EMAIL_VERIFIED = "EMAIL_VERIFIED",
 }
 
 export enum Roles {
