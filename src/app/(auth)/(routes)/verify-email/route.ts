@@ -9,9 +9,10 @@ export async function GET(req: NextRequest) {
 
   const email = searchParams.get("email");
   const token = searchParams.get("token");
+  const response = NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
+
   try {
     await api.post("users/verify_email", { email, token });
-    const response = NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
     response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},200`, {
       maxAge: 5,
     });
@@ -19,16 +20,12 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     if (isAxiosError(error)) {
       if (error.response?.status === 401) {
-        const response = NextResponse.redirect(
-          `${process.env.BASE_URL}/sign-in`
-        );
         response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},401`, {
           maxAge: 5,
         });
         return response;
       }
     }
-    const response = NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
     response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},500`, {
       maxAge: 5,
     });

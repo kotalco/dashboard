@@ -23,16 +23,14 @@ export default async function Page() {
         <CardContent>
           <LoginForm />
         </CardContent>
-        <CardFooter>
-          <p className="flex space-x-1">
-            <span>Don&apos;t have an account?</span>
-            <Link
-              href="/sign-up"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              Sign Up
-            </Link>
-          </p>
+        <CardFooter className="gap-x-1">
+          Don&apos;t have an account?
+          <Link
+            href="/sign-up"
+            className="text-primary hover:underline underline-offset-4"
+          >
+            Sign Up
+          </Link>
         </CardFooter>
       </Card>
     </>

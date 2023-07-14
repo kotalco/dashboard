@@ -18,16 +18,14 @@ export default function Page() {
       <CardContent>
         <RegisterForm />
       </CardContent>
-      <CardFooter>
-        <p>
-          <span>Already have an account? </span>
-          <Link
-            href="/sign-in"
-            className="font-medium text-primary/80 hover:text-primary"
-          >
-            Login
-          </Link>
-        </p>
+      <CardFooter className="gap-x-1">
+        Already have an account?
+        <Link
+          href="/sign-in"
+          className="text-primary hover:underline underline-offset-4"
+        >
+          Login
+        </Link>
       </CardFooter>
     </Card>
   );

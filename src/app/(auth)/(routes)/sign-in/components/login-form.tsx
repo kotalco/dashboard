@@ -1,8 +1,10 @@
 "use client";
 
 import * as z from "zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -52,8 +54,7 @@ export const LoginForm = () => {
 
   async function onSubmit(values: SchemaType) {
     try {
-      const { data } = await api.post<APIResponse>("/sessions", values);
-      // cookies().set("token", data.token);
+      await api.post<APIResponse>("/sessions", values);
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -115,18 +116,29 @@ export const LoginForm = () => {
           control={form.control}
           name="remember_me"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Remember me</FormLabel>
+            <div className="flex items-center justify-between">
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Remember me</FormLabel>
+                </div>
+                <FormMessage />
+              </FormItem>
+
+              <div className="text-sm whitespace-nowrap">
+                <Link
+                  href="/forget-password"
+                  className="text-primary hover:underline underline-offset-4"
+                >
+                  Forgot your password?
+                </Link>
               </div>
-              <FormMessage />
-            </FormItem>
+            </div>
           )}
         />
 
