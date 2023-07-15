@@ -1,8 +1,10 @@
 "use client";
 
 import * as z from "zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { isAxiosError } from "axios";
 
 import {
@@ -18,19 +20,26 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { api } from "@/lib/axios";
 
-const schema = z.object({
-  email: z
-    .string({ required_error: "Email is required" })
-    .email("Invalid Email")
-    .trim()
-    .toLowerCase(),
-});
+const schema = z
+  .object({
+    password: z
+      .string({ required_error: "Password is required" })
+      .min(6, "Password must be not less than 6 characters"),
+    password_confirmation: z.string({
+      required_error: "Password confirmation is required",
+    }),
+  })
+  .refine(
+    ({ password, password_confirmation }) => password === password_confirmation,
+    { message: "Passwords didn't match", path: ["password_confirmation"] }
+  );
 
 type SchemaType = z.infer<typeof schema>;
 
-const defaultValues = { email: "" };
+const defaultValues = { password: "", password_confirmation: "" };
 
-export const ForgetPasswordForm = () => {
+export const ResetPasswordForm = () => {
+  const searchParams = useSearchParams();
   const form = useForm<SchemaType>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -49,8 +58,10 @@ export const ForgetPasswordForm = () => {
   } = form;
 
   async function onSubmit(values: SchemaType) {
+    const email = searchParams.get("email");
+    const token = searchParams.get("token");
     try {
-      await api.post("/users/forget_password", values);
+      await api.post("/users/reset_password", { ...values, email, token });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -58,7 +69,7 @@ export const ForgetPasswordForm = () => {
         if (response?.status === 404) {
           return setError("root", {
             type: response?.status.toString(),
-            message: `Cann't find user with email ${values.email}`,
+            message: `Cann't find user with email ${email}`,
           });
         }
 
@@ -75,12 +86,26 @@ export const ForgetPasswordForm = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="email"
+          name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} {...field} />
+                <Input disabled={isSubmitting} type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="password_confirmation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password Confirmation</FormLabel>
+              <FormControl>
+                <Input disabled={isSubmitting} type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,14 +117,20 @@ export const ForgetPasswordForm = () => {
           className="w-full"
           type="submit"
         >
-          Send Reset Email
+          Reset Password
         </Button>
 
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
             <AlertDescription>
-              Reset password email has been sent to your email. Please check
-              your mail to continue.
+              Congratulations, your email has been reset. You can now{" "}
+              <Link
+                href="/sign-ih"
+                className="text-primary hover:underline underline-offset-4"
+              >
+                Login
+              </Link>{" "}
+              using your new password and enjoy our services.
             </AlertDescription>
           </Alert>
         )}
