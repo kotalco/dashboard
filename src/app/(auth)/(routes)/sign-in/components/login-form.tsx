@@ -2,6 +2,8 @@
 
 import * as z from "zod";
 import Link from "next/link";
+import axios, { isAxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -17,10 +19,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { api } from "@/lib/axios";
-import { isAxiosError } from "axios";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ReverifyEmailALert } from "./reverify-email-alert";
 import { useState } from "react";
+import { StorageItems } from "@/enums";
 
 const schema = z.object({
   email: z
@@ -35,12 +37,13 @@ const schema = z.object({
 });
 
 type SchemaType = z.infer<typeof schema>;
-type APIResponse = { token: string; authorized: boolean };
+type APIResponse = { token: string; Authorized: boolean };
 
 const defaultValues = { email: "", password: "", remember_me: false };
 
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>();
+  const router = useRouter();
 
   const form = useForm<SchemaType>({
     resolver: zodResolver(schema),
@@ -54,8 +57,20 @@ export const LoginForm = () => {
 
   async function onSubmit(values: SchemaType) {
     try {
-      await api.post<APIResponse>("/sessions", values);
+      const {
+        data: { Authorized, token },
+      } = await api.post<APIResponse>("/sessions", values);
+
+      if (Authorized) {
+        localStorage.setItem(StorageItems.AUTH_TOKEN, token);
+        await axios.post("/set-cookie", {
+          name: StorageItems.AUTH_TOKEN,
+          value: token,
+        });
+        router.replace("/");
+      }
     } catch (error) {
+      console.log(error);
       if (isAxiosError(error)) {
         const { response } = error;
 

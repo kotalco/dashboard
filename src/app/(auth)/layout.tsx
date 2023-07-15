@@ -8,7 +8,13 @@ export default function AuthLayout({
   return (
     <div className="flex flex-col items-center justify-center h-full space-y-10">
       <div className="flex justify-center space-x-2 font-nunito">
-        <Image src="/images/logo.svg" alt="logo" width={80} height={80} />
+        <Image
+          src="/images/logo.svg"
+          alt="logo"
+          width={80}
+          height={80}
+          priority
+        />
         <p className="mt-6 text-4xl font-bold leading-4">
           Kotal <br />
           <span className="block mt-2 tracking-wider uppercase logo-slogan">

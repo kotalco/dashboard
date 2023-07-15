@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const response = NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
 
   try {
-    await api.post("users/verify_email", { email, token });
+    await api.post("/users/verify_email", { email, token });
     response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},200`, {
       maxAge: 5,
     });
