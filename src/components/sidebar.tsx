@@ -2,28 +2,6 @@
 
 import { Logo } from "@/components/logo";
 
-export type NavItem = {
-  title: string;
-  href: string;
-  disabled?: boolean;
-};
-
-export type SidebarNavItem = {
-  title: string;
-  disabled?: boolean;
-  external?: boolean;
-  // icon?: keyof typeof Icons;
-} & (
-  | {
-      href: string;
-      items?: never;
-    }
-  | {
-      href?: string;
-      items: NavItem[];
-    }
-);
-
 export const Sidebar = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex shrink-0">
