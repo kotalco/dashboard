@@ -1,28 +1,45 @@
-import Image from "next/image";
+import { cookies } from "next/headers";
 
-export default function AuthLayout({
+import { Logo } from "@/components/logo";
+import { api } from "@/lib/axios";
+import { StorageItems } from "@/enums";
+import { Workspace } from "@/types";
+import { redirect } from "next/navigation";
+
+export default async function PublicPageLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex flex-col items-center justify-center h-full space-y-10">
-      <div className="flex justify-center space-x-2 font-nunito">
-        <Image
-          src="/images/logo.svg"
-          alt="logo"
-          width={80}
-          height={80}
-          priority
-        />
-        <p className="mt-6 text-4xl font-bold leading-4">
-          Kotal <br />
-          <span className="block mt-2 tracking-wider uppercase logo-slogan">
-            Professional
-          </span>
-        </p>
-      </div>
-      <div className="w-full px-3 sm:max-w-2xl">{children}</div>
-    </div>
-  );
+  const token = cookies().get(StorageItems.AUTH_TOKEN);
+
+  if (!token?.value) return <>{children}</>;
+
+  const config = {
+    headers: { Authorization: `Bearer ${token.value}` },
+  };
+
+  try {
+    await api.get("/users/whoami", config);
+  } catch (error) {
+    return <>{children}</>;
+  }
+
+  const workspaceId = cookies().get(StorageItems.LAST_WORKSPACE_ID);
+
+  try {
+    if (!workspaceId?.value) throw new Error("No workspace ID found");
+    const { data: workspace } = await api.get<Workspace>(
+      `/workspaces/${workspaceId?.value}`,
+      config
+    );
+    redirect(`/${workspace.id}`);
+  } catch (error) {
+    const { data: workspaces } = await api.get<Workspace[]>(
+      "/workspaces",
+      config
+    );
+
+    redirect(`/${workspaces[0].id}`);
+  }
 }

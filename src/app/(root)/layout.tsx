@@ -5,13 +5,8 @@ import { StorageItems } from "@/enums";
 import { api } from "@/lib/axios";
 import { Workspace } from "@/types";
 
-export default async function SetupLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function SetupLayout() {
   const token = cookies().get(StorageItems.AUTH_TOKEN);
-
   if (!token?.value) redirect("/sign-in");
 
   const config = {
@@ -41,6 +36,4 @@ export default async function SetupLayout({
 
     redirect(`/${workspaces[0].id}`);
   }
-
-  return <>{children}</>;
 }
