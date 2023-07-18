@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { StorageItems } from "@/enums";
 import { api } from "@/lib/axios";
-import { Workspace } from "@/types";
+import { WorksapcesList, Workspace } from "@/types";
 
 export default async function SetupLayout() {
   const token = cookies().get(StorageItems.AUTH_TOKEN);
@@ -29,7 +29,7 @@ export default async function SetupLayout() {
     );
     redirect(`/${workspace.id}`);
   } catch (error) {
-    const { data: workspaces } = await api.get<Workspace[]>(
+    const { data: workspaces } = await api.get<WorksapcesList>(
       "/workspaces",
       config
     );

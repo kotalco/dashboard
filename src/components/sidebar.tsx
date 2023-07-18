@@ -1,8 +1,27 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { Logo } from "@/components/logo";
+import { WorkspaceSwitcher } from "@/components/workspace-switcher";
+import { api } from "@/lib/axios";
+import { User, WorksapcesList } from "@/types";
+import { StorageItems } from "@/enums";
 
-export const Sidebar = ({ children }: { children: React.ReactNode }) => {
+export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
+  const token = cookies().get(StorageItems.AUTH_TOKEN);
+  if (!token?.value) redirect("/sign-in");
+
+  const config = {
+    headers: { Authorization: `Bearer ${token.value}` },
+  };
+
+  const { data: user } = await api.get<User>("/users/whoami", config);
+
+  const { data: workspaces } = await api.get<WorksapcesList>(
+    "/workspaces",
+    config
+  );
+
   return (
     <div className="flex shrink-0">
       <div className="flex flex-col w-64 bg-white">
@@ -11,6 +30,13 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
             <Logo />
           </div>
           {children}
+        </div>
+        <div className="px-3 py-2">
+          <WorkspaceSwitcher
+            workspaces={workspaces}
+            userId={user.id}
+            className="w-full"
+          />
         </div>
         {/* <WorkspacesList /> */}
         {/* <div>

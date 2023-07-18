@@ -1,9 +1,8 @@
 import { cookies } from "next/headers";
 
-import { Logo } from "@/components/logo";
 import { api } from "@/lib/axios";
 import { StorageItems } from "@/enums";
-import { Workspace } from "@/types";
+import { WorksapcesList, Workspace } from "@/types";
 import { redirect } from "next/navigation";
 
 export default async function PublicPageLayout({
@@ -35,7 +34,7 @@ export default async function PublicPageLayout({
     );
     redirect(`/${workspace.id}`);
   } catch (error) {
-    const { data: workspaces } = await api.get<Workspace[]>(
+    const { data: workspaces } = await api.get<WorksapcesList>(
       "/workspaces",
       config
     );
