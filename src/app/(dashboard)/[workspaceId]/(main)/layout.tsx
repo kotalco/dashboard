@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { MainSidebarContent } from "@/components/main-sidebar-content";
+import { MainNavigationItems } from "@/components/main-navigation-items";
 import { Sidebar } from "@/components/sidebar";
 import { getWorkspace } from "@/services/get-workspace";
 
@@ -20,7 +20,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex overflow-hidden">
       <Sidebar>
-        <MainSidebarContent />
+        <MainNavigationItems />
       </Sidebar>
       <div className="flex flex-col flex-1 w-0 min-h-screen overflow-y-auto">
         <main className="flex-1 pt-10 focus:outline-none" tabIndex={0}>

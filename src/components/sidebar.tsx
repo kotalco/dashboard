@@ -15,7 +15,13 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
           <div className="flex items-center px-4 shrink-0">
             <Logo />
           </div>
-          {children}
+          <div className="flex-1 px-2">
+            <nav>
+              <ul className="flex flex-col mt-5 overflow-y-auto gap-y-1">
+                {children}
+              </ul>
+            </nav>
+          </div>
         </div>
         <WorkspaceSwitcher
           workspaces={workspaces}

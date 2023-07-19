@@ -8,7 +8,7 @@ export type NavItem = {
 
 export type SidebarNavItem = {
   title?: string;
-  label: string;
+  label?: string;
   active?: boolean;
   Icon: LucideIcon;
 } & (

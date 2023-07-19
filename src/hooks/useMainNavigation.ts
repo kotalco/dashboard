@@ -1,5 +1,18 @@
 import { useParams, usePathname } from "next/navigation";
-import { Box, Cog, Home, KeyRound, Link, LogOut } from "lucide-react";
+import {
+  ArrowLeft,
+  Box,
+  Cog,
+  Globe,
+  Home,
+  KeyRound,
+  Link,
+  Lock,
+  LogOut,
+  User2,
+  UserPlus2,
+  Users2,
+} from "lucide-react";
 
 import { SidebarNavItem } from "@/types";
 
@@ -7,7 +20,7 @@ export function useMainNavigation() {
   const pathname = usePathname();
   const { workspaceId } = useParams();
 
-  const navigations: SidebarNavItem[] = [
+  const main: SidebarNavItem[] = [
     {
       label: "Dashboard",
       href: `/${workspaceId}`,
@@ -91,5 +104,50 @@ export function useMainNavigation() {
     },
   ];
 
-  return navigations;
+  const settings: SidebarNavItem[] = [
+    {
+      href: `/${workspaceId}`,
+      Icon: ArrowLeft,
+    },
+    {
+      label: "Account",
+      href: `/${workspaceId}/account`,
+      active: pathname === `/${workspaceId}/account`,
+      Icon: User2,
+    },
+    {
+      label: "Security",
+      href: `/${workspaceId}/security`,
+      active: pathname === `/${workspaceId}/security`,
+      Icon: Lock,
+    },
+    {
+      title: "Platform",
+      label: "Domain",
+      href: `/${workspaceId}/domain`,
+      active: pathname === `/${workspaceId}/domain`,
+      Icon: Globe,
+    },
+    {
+      label: "Registration",
+      href: `/${workspaceId}/registrations`,
+      active: pathname === `/${workspaceId}/Registrations`,
+      Icon: UserPlus2,
+    },
+    {
+      title: "Workspaces",
+      label: "Settings",
+      href: `/${workspaceId}/settings`,
+      active: pathname === `/${workspaceId}/settings`,
+      Icon: Cog,
+    },
+    {
+      label: "Members",
+      href: `/${workspaceId}/members`,
+      active: pathname === `/${workspaceId}/members`,
+      Icon: Users2,
+    },
+  ];
+
+  return { main, settings };
 }
