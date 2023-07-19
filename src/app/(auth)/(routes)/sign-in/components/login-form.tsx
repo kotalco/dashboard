@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { api } from "@/lib/axios";
+import { client } from "@/lib/client-instance";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ReverifyEmailALert } from "./reverify-email-alert";
 import { useState } from "react";
@@ -59,7 +59,7 @@ export const LoginForm = () => {
     try {
       const {
         data: { Authorized, token },
-      } = await api.post<APIResponse>("/sessions", values);
+      } = await client.post<APIResponse>("/sessions", values);
 
       if (Authorized) {
         localStorage.setItem(StorageItems.AUTH_TOKEN, token);

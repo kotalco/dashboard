@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Cog, LogOut, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useMainNavigation } from "@/hooks/useMainNavigation";
@@ -15,12 +15,17 @@ export const MainSidebarContent = () => {
   const [open, setOpen] = useState(() => pathname.includes("deployments"));
 
   return (
-    <div className="px-2">
+    <div className="flex-1 px-2">
       <nav>
         <ul className="flex flex-col mt-5 overflow-y-auto gap-y-1">
-          {navigations.map(({ title, href, active, Icon, items }) =>
+          {navigations.map(({ title, label, href, active, Icon, items }) =>
             href ? (
-              <li key={title}>
+              <li key={label}>
+                {title && (
+                  <div className="mt-3 mb-1 text-xs font-normal text-gray-500">
+                    Account
+                  </div>
+                )}
                 <Button
                   asChild
                   variant="ghost"
@@ -31,12 +36,12 @@ export const MainSidebarContent = () => {
                 >
                   <Link href={href}>
                     <Icon className="w-6 h-6 mr-3" />
-                    {title}
+                    {label}
                   </Link>
                 </Button>
               </li>
             ) : (
-              <li key={title}>
+              <li key={label}>
                 <Button
                   onClick={() => setOpen((state) => !state)}
                   variant="ghost"
@@ -46,7 +51,7 @@ export const MainSidebarContent = () => {
                   )}
                 >
                   <Icon className="w-6 h-6 mr-3" />
-                  {title}
+                  {label}
                   <ChevronRight
                     className={cn(
                       `w-4 h-4 ml-auto transition-transform`,
@@ -54,55 +59,32 @@ export const MainSidebarContent = () => {
                     )}
                   />
                 </Button>
-                {open && (
-                  <ul className="">
-                    {items?.map(({ title, href, active }) => (
-                      <li key={title}>
-                        <Button
-                          asChild
-                          variant="ghost"
-                          className={cn(
-                            `justify-start pl-14 w-full text-muted-foreground`,
-                            active ? "text-primary" : ""
-                          )}
-                        >
-                          <Link href={href}>{title}</Link>
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <ul
+                  className={cn(
+                    "overflow-hidden transition-all",
+                    open ? "max-h-full" : "max-h-0"
+                  )}
+                >
+                  {items?.map(({ label, href, active }) => (
+                    <li key={label}>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        className={cn(
+                          `justify-start pl-14 w-full text-muted-foreground`,
+                          active ? "text-primary" : ""
+                        )}
+                      >
+                        <Link href={href}>{label}</Link>
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
               </li>
             )
           )}
         </ul>
       </nav>
-
-      <div>
-        <div className="mt-3 mb-1 text-xs font-normal text-gray-500">
-          Account
-        </div>
-        <Button
-          asChild
-          variant="ghost"
-          className="justify-start w-full text-muted-foreground"
-        >
-          <Link href="/settings">
-            <Cog className="w-6 h-6 mr-3" />
-            Settings
-          </Link>
-        </Button>
-        <Button
-          asChild
-          variant="ghost"
-          className="justify-start w-full text-muted-foreground"
-        >
-          <Link href="/logout">
-            <LogOut className="w-6 h-6 mr-3" />
-            Logout
-          </Link>
-        </Button>
-      </div>
     </div>
   );
 };

@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { api } from "@/lib/axios";
+import { client } from "@/lib/client-instance";
 import { Workspace } from "@/types";
 
 const schema = z.object({
@@ -42,7 +42,7 @@ export const WorksapceModal = () => {
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      const { data } = await api.post<Omit<Workspace, "role">>(
+      const { data } = await client.post<Omit<Workspace, "role">>(
         "/workspaces",
         values
       );

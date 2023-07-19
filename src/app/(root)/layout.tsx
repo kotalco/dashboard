@@ -2,8 +2,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { StorageItems } from "@/enums";
-import { api } from "@/lib/axios";
-import { WorksapcesList, Workspace } from "@/types";
+import { findUser } from "@/services/find-user";
+import { getWorkspaces } from "@/services/get-workspaces";
 
 export default async function SetupLayout() {
   const token = cookies().get(StorageItems.AUTH_TOKEN);
@@ -14,7 +14,7 @@ export default async function SetupLayout() {
   };
 
   try {
-    await api.get("/users/whoami", config);
+    await findUser();
   } catch (error) {
     redirect("/sign-in");
   }
@@ -22,9 +22,6 @@ export default async function SetupLayout() {
   const workspaceId = cookies().get(StorageItems.LAST_WORKSPACE_ID);
   if (workspaceId?.value) redirect(`/${workspaceId.value}`);
 
-  const { data: workspaces } = await api.get<WorksapcesList>(
-    "/workspaces",
-    config
-  );
+  const workspaces = await getWorkspaces();
   redirect(`/${workspaces[0].id}`);
 }

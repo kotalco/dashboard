@@ -1,29 +1,12 @@
-import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
 import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
+import { WorkspaceCreator } from "@/components/workspace-creator";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
-import { api } from "@/lib/axios";
-import { User, WorksapcesList } from "@/types";
-import { StorageItems } from "@/enums";
-import { WorkspaceCreator } from "./workspace-creator";
+import { findUser } from "@/services/find-user";
+import { getWorkspaces } from "@/services/get-workspaces";
 
 export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
-  const token = cookies().get(StorageItems.AUTH_TOKEN);
-  if (!token?.value) redirect("/sign-in");
-
-  const config = {
-    headers: { Authorization: `Bearer ${token.value}` },
-  };
-
-  const { data: user } = await api.get<User>("/users/whoami", config);
-
-  const { data: workspaces } = await api.get<WorksapcesList>(
-    "/workspaces",
-    config
-  );
+  const user = await findUser();
+  const workspaces = await getWorkspaces();
 
   return (
     <div className="flex justify-center pb-4 shrink-0">
@@ -34,16 +17,12 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
           </div>
           {children}
         </div>
-        <div className="px-3">
-          <WorkspaceSwitcher
-            workspaces={workspaces}
-            userId={user.id}
-            className="w-full"
-          />
-        </div>
-        <div className="px-3">
-          <WorkspaceCreator />
-        </div>
+        <WorkspaceSwitcher
+          workspaces={workspaces}
+          userId={user.id}
+          className="w-full"
+        />
+        <WorkspaceCreator />
       </div>
     </div>
   );

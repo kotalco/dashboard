@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { StorageItems } from "@/enums";
-import { api } from "@/lib/axios";
+import { findUser } from "@/services/find-user";
 
 export default async function PrivatePageLayout({
   children,
@@ -12,12 +12,8 @@ export default async function PrivatePageLayout({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   if (!token?.value) redirect("/sign-in");
 
-  const config = {
-    headers: { Authorization: `Bearer ${token.value}` },
-  };
-
   try {
-    await api.get("/users/whoami", config);
+    await findUser();
   } catch (error) {
     redirect("/sign-in");
   }

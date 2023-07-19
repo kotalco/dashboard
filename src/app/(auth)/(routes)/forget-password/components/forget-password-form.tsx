@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { api } from "@/lib/axios";
+import { client } from "@/lib/client-instance";
 
 const schema = z.object({
   email: z
@@ -50,7 +50,7 @@ export const ForgetPasswordForm = () => {
 
   async function onSubmit(values: SchemaType) {
     try {
-      await api.post("/users/forget_password", values);
+      await client.post("/users/forget_password", values);
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;

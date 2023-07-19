@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { api } from "@/lib/axios";
+import { client } from "@/lib/client-instance";
 
 const schema = z
   .object({
@@ -61,7 +61,7 @@ export const ResetPasswordForm = () => {
     const email = searchParams.get("email");
     const token = searchParams.get("token");
     try {
-      await api.post("/users/reset_password", { ...values, email, token });
+      await client.post("/users/reset_password", { ...values, email, token });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;

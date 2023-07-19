@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 
-import { api } from "@/lib/axios";
+import { client } from "@/lib/client-instance";
 import { User } from "@/types";
 import {
   Form,
@@ -58,7 +58,7 @@ export const RegisterForm = () => {
 
   async function onSubmit(values: SchemaType) {
     try {
-      const { data } = await api.post<User>(`/users`, values);
+      const { data } = await client.post<User>(`/users`, values);
       !data.platform_admin &&
         localStorage.setItem(StorageItems.NEW_ACCOUNT, data.email);
       router.push("/sign-in");

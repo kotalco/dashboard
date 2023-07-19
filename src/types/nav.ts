@@ -1,14 +1,15 @@
 import { LucideIcon } from "lucide-react";
 
 export type NavItem = {
-  title: string;
+  label: string;
   href: string;
   active: boolean;
 };
 
 export type SidebarNavItem = {
-  title: string;
-  active: boolean;
+  title?: string;
+  label: string;
+  active?: boolean;
   Icon: LucideIcon;
 } & (
   | {

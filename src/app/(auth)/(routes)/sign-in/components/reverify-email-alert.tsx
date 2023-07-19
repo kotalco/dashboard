@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/axios";
+import { client } from "@/lib/client-instance";
 
 export const ReverifyEmailALert = ({
   email,
@@ -22,7 +22,7 @@ export const ReverifyEmailALert = ({
       setIsLoading(true);
       setSuccess(false);
 
-      await api.post("/users/resend_email_verification", {
+      await client.post("/users/resend_email_verification", {
         email,
       });
 

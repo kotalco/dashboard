@@ -6,7 +6,7 @@ import { isAxiosError } from "axios";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/axios";
+import { client } from "@/lib/client-instance";
 
 interface FailedVerificationAlertProps {
   email: string;
@@ -24,7 +24,7 @@ export const FailedVerificationAlert: React.FC<
       setIsLoading(true);
       setIsSuccess(false);
 
-      await api.post("/users/resend_email_verification", {
+      await client.post("/users/resend_email_verification", {
         email,
       });
 
