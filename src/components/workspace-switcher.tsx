@@ -81,7 +81,7 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandList>
             <CommandInput placeholder="Search a Workspace" />

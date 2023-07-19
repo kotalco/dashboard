@@ -70,7 +70,6 @@ export const LoginForm = () => {
         router.replace("/");
       }
     } catch (error) {
-      console.log(error);
       if (isAxiosError(error)) {
         const { response } = error;
 
@@ -135,6 +134,7 @@ export const LoginForm = () => {
               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
+                    disabled={isSubmitting}
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />

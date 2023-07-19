@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 
 import { StorageItems } from "@/enums";
 import { api } from "@/lib/axios";
-import { Workspace } from "@/types";
 
 export default async function PrivatePageLayout({
   children,

@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 import { api } from "@/lib/axios";
 import { StorageItems } from "@/enums";
-import { WorksapcesList, Workspace } from "@/types";
+import { WorksapcesList } from "@/types";
 import { redirect } from "next/navigation";
 
 export default async function PublicPageLayout({
@@ -25,20 +25,12 @@ export default async function PublicPageLayout({
   }
 
   const workspaceId = cookies().get(StorageItems.LAST_WORKSPACE_ID);
+  if (workspaceId?.value) redirect(`/${workspaceId.value}`);
 
-  try {
-    if (!workspaceId?.value) throw new Error("No workspace ID found");
-    const { data: workspace } = await api.get<Workspace>(
-      `/workspaces/${workspaceId?.value}`,
-      config
-    );
-    redirect(`/${workspace.id}`);
-  } catch (error) {
-    const { data: workspaces } = await api.get<WorksapcesList>(
-      "/workspaces",
-      config
-    );
+  const { data: workspaces } = await api.get<WorksapcesList>(
+    "/workspaces",
+    config
+  );
 
-    redirect(`/${workspaces[0].id}`);
-  }
+  redirect(`/${workspaces[0].id}`);
 }

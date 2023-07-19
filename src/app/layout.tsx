@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 
+import { ModalProvider } from "@/providers/modal-provider";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -23,7 +24,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${nunito.variable}`}>{children}</body>
+      <body className={`${nunito.variable}`}>
+        <ModalProvider />
+        {children}
+      </body>
     </html>
   );
 }

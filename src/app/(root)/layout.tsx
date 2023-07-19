@@ -20,20 +20,11 @@ export default async function SetupLayout() {
   }
 
   const workspaceId = cookies().get(StorageItems.LAST_WORKSPACE_ID);
+  if (workspaceId?.value) redirect(`/${workspaceId.value}`);
 
-  try {
-    if (!workspaceId?.value) throw new Error("No workspace ID found");
-    const { data: workspace } = await api.get<Workspace>(
-      `/workspaces/${workspaceId?.value}`,
-      config
-    );
-    redirect(`/${workspace.id}`);
-  } catch (error) {
-    const { data: workspaces } = await api.get<WorksapcesList>(
-      "/workspaces",
-      config
-    );
-
-    redirect(`/${workspaces[0].id}`);
-  }
+  const { data: workspaces } = await api.get<WorksapcesList>(
+    "/workspaces",
+    config
+  );
+  redirect(`/${workspaces[0].id}`);
 }
