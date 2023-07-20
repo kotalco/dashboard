@@ -15,9 +15,7 @@ export default async function Page() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center font-nunito">
-            Forget Password
-          </CardTitle>
+          <CardTitle className="text-center">Forget Password</CardTitle>
         </CardHeader>
         <CardContent>
           <ForgetPasswordForm />

@@ -6,9 +6,7 @@ export default async function Page() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center font-nunito">
-            Reset Password
-          </CardTitle>
+          <CardTitle className="text-center">Reset Password</CardTitle>
         </CardHeader>
         <CardContent>
           <ResetPasswordForm />

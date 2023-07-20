@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-center font-nunito">Sign In</CardTitle>
+        <CardTitle className="text-center">Sign In</CardTitle>
       </CardHeader>
       <CardContent>
         <RegisterForm />
