@@ -1,22 +1,11 @@
-import { notFound } from "next/navigation";
-
 import { MainNavigationItems } from "@/components/main-navigation-items";
 import { Sidebar } from "@/components/sidebar";
-import { getWorkspace } from "@/services/get-workspace";
 
 export default async function DashboardLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { workspaceId: string };
 }) {
-  try {
-    await getWorkspace(params.workspaceId);
-  } catch (error) {
-    notFound();
-  }
-
   return (
     <div className="flex overflow-hidden">
       <Sidebar>
