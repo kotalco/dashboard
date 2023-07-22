@@ -27,9 +27,9 @@ const schema = z
     password: z
       .string({ required_error: "New password is required" })
       .min(6, "Your new password must be not less than 6 characters"),
-    password_confirmation: z.string({
-      required_error: "Please confirm your new password",
-    }),
+    password_confirmation: z
+      .string()
+      .min(1, "Password confirmation is required"),
   })
   .refine(
     ({ password, password_confirmation }) => password === password_confirmation,

@@ -22,12 +22,10 @@ import { client } from "@/lib/client-instance";
 
 const schema = z
   .object({
-    password: z
-      .string({ required_error: "Password is required" })
-      .min(6, "Password must be not less than 6 characters"),
-    password_confirmation: z.string({
-      required_error: "Password confirmation is required",
-    }),
+    password: z.string().min(6, "Password must be not less than 6 characters"),
+    password_confirmation: z
+      .string()
+      .min(1, "Password confirmation is required"),
   })
   .refine(
     ({ password, password_confirmation }) => password === password_confirmation,
