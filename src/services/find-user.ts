@@ -10,3 +10,14 @@ export const findUser = cache(async () => {
 
   return data;
 });
+
+// export const findUser = async () => {
+//   const token = cookies().get(StorageItems.AUTH_TOKEN);
+//   const URL = `${process.env.API_URL}/users/whoami`;
+//   const res = await fetch(URL, {
+//     next: { tags: ["user"] },
+//     headers: { Authorization: `Bearer ${token?.value}` },
+//   });
+
+//   return res.json();
+// };

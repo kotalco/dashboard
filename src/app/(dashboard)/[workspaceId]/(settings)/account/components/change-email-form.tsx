@@ -35,7 +35,9 @@ export const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ email }) => {
         .email("Invalid Email")
         .trim()
         .toLowerCase(),
-      password: z.string({ required_error: "Password is required" }),
+      password: z
+        .string({ required_error: "Password is required" })
+        .min(6, "Password must be not less than 6 characters"),
     })
     .refine(
       (values) => values.email !== email,

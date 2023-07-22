@@ -7,6 +7,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function responseInterceptor(response: AxiosResponse<{ data: any }>) {
+  if (response.config.responseType === "blob") {
+    return response;
+  }
   response.data = response.data.data;
 
   return response;

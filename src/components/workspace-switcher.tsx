@@ -67,60 +67,55 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
   };
 
   return (
-    <div className="px-3">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            size="lg"
-            aria-expanded={open}
-            aria-label="Select a wrokspace"
-            className={cn(
-              "justify-between px-3 text-lg font-normal",
-              className
-            )}
-          >
-            <Boxes className="w-8 h-8 mr-3" />
-            {currentWorkspace?.name}
-            <span className="ml-1 text-sm font-light">
-              ({currentWorkspace?.user_id === userId ? "Owner" : "Member"})
-            </span>
-            <ChevronsUpDown className="w-4 h-4 ml-auto opacity-50 shrink-0" />
-          </Button>
-        </PopoverTrigger>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          size="lg"
+          aria-expanded={open}
+          aria-label="Select a wrokspace"
+          className={cn("justify-between px-3 text-lg font-normal", className)}
+        >
+          <Boxes className="w-8 h-8 mr-3" />
+          {currentWorkspace?.name}
+          <span className="ml-1 text-sm font-light">
+            ({currentWorkspace?.user_id === userId ? "Owner" : "Member"})
+          </span>
+          <ChevronsUpDown className="w-4 h-4 ml-auto opacity-50 shrink-0" />
+        </Button>
+      </PopoverTrigger>
 
-        <PopoverContent className="w-full p-0">
-          <Command>
-            <CommandList>
-              <CommandInput placeholder="Search a Workspace" />
-              <CommandEmpty>No Workspaces Found.</CommandEmpty>
-              <CommandGroup>
-                {workspaces.map((workspace) => (
-                  <CommandItem
-                    key={workspace.id}
-                    onSelect={() => onWorkspaceSelect(workspace)}
-                    className="text-sm"
-                  >
-                    {workspace.name} (
-                    <span className="text-sm font-light">
-                      {workspace.user_id === userId ? "Owner" : "Member"})
-                    </span>
-                    <Check
-                      className={cn(
-                        "ml-auto h-4 w-4 text-primary",
-                        currentWorkspace?.id === workspace.id
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+      <PopoverContent className="w-full p-0">
+        <Command>
+          <CommandList>
+            <CommandInput placeholder="Search a Workspace" />
+            <CommandEmpty>No Workspaces Found.</CommandEmpty>
+            <CommandGroup>
+              {workspaces.map((workspace) => (
+                <CommandItem
+                  key={workspace.id}
+                  onSelect={() => onWorkspaceSelect(workspace)}
+                  className="text-sm"
+                >
+                  {workspace.name} (
+                  <span className="text-sm font-light">
+                    {workspace.user_id === userId ? "Owner" : "Member"})
+                  </span>
+                  <Check
+                    className={cn(
+                      "ml-auto h-4 w-4 text-primary",
+                      currentWorkspace?.id === workspace.id
+                        ? "opacity-100"
+                        : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 };
