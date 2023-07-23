@@ -3,6 +3,6 @@ export interface IPAddress {
 }
 
 export interface Settings {
-  key: "registration" | "domain";
+  key: "registration_is_enabled" | "domain" | "activation_key";
   value: string;
 }

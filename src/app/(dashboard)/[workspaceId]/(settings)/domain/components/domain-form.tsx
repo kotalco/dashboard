@@ -22,7 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
-interface ChangeEmailFormProps {
+interface DomainFormProps {
   ip: string;
   domainName?: string;
 }
@@ -49,10 +49,7 @@ const schema = z
 
 type SchemaType = z.input<typeof schema>;
 
-export const DomainForm: React.FC<ChangeEmailFormProps> = ({
-  ip,
-  domainName,
-}) => {
+export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
   const [count, setCount] = useState(10);
   const defaultValues = {
     domain: domainName || "",

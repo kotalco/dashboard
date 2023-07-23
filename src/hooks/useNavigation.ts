@@ -131,8 +131,8 @@ export function useMainNavigation() {
     },
     {
       label: "Registration",
-      href: `/${workspaceId}/registrations`,
-      active: pathname === `/${workspaceId}/Registrations`,
+      href: `/${workspaceId}/registration`,
+      active: pathname === `/${workspaceId}/registration`,
       Icon: UserPlus2,
     },
     {

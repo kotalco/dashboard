@@ -11,18 +11,22 @@ const getIPAddress = cache(async () => {
   return data.ip_address;
 });
 
-const getDomainName = cache(async () => {
+export const getSettings = cache(async () => {
   const { data } = await server.get<Settings[]>("/settings");
   const domainName = data.find(({ key }) => key === "domain")?.value;
+  const registration = data.find(
+    ({ key }) => key === "registration_is_enabled"
+  )?.value;
+  const activationKey = data.find(({ key }) => key === "activation_key")?.value;
 
-  return domainName;
+  return { domainName, registration, activationKey };
 });
 
 export const getDomainInfo = async () => {
   const ipData = getIPAddress();
-  const domianNameData = getDomainName();
+  const settingsData = getSettings();
 
-  const [ip, domainName] = await Promise.all([ipData, domianNameData]);
+  const [ip, settings] = await Promise.all([ipData, settingsData]);
 
-  return { ip, name: domainName };
+  return { ip, name: settings.domainName };
 };
