@@ -101,6 +101,7 @@ export function useMainNavigation() {
       label: "Logout",
       href: `/logout`,
       Icon: LogOut,
+      prefetch: false,
     },
   ];
 

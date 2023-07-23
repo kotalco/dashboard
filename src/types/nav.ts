@@ -10,6 +10,7 @@ export type SidebarNavItem = {
   title?: string;
   label?: string;
   active?: boolean;
+  prefetch?: boolean;
   Icon: LucideIcon;
 } & (
   | {
