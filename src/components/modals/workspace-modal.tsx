@@ -26,7 +26,7 @@ const schema = z.object({
 });
 
 export const WorksapceModal = () => {
-  const storeModal = useWorkspaceModal();
+  const workspaceModal = useWorkspaceModal();
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -69,14 +69,14 @@ export const WorksapceModal = () => {
   const onClose = () => {
     reset();
     clearErrors();
-    storeModal.onClose();
+    workspaceModal.onClose();
   };
 
   return (
     <Modal
       title="Create New Workspace"
       description="Create a new workspace for your team and enjoy managing your nodes together."
-      isOpen={storeModal.isOpen}
+      isOpen={workspaceModal.isOpen}
       onClose={onClose}
     >
       <div>

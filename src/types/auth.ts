@@ -7,3 +7,8 @@ export type User = {
   two_factor_enabled: boolean;
   platform_admin: boolean;
 };
+
+export interface LoginResponse {
+  token: string;
+  Authorized: boolean;
+}

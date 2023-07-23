@@ -3,6 +3,7 @@
 import * as z from "zod";
 import Link from "next/link";
 import axios, { isAxiosError } from "axios";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,8 +22,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { client } from "@/lib/client-instance";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ReverifyEmailALert } from "./reverify-email-alert";
-import { useState } from "react";
 import { StorageItems } from "@/enums";
+import { LoginResponse } from "@/types";
+import { Verification2FAModal } from "@/components/modals/verification-2fa-modal";
 
 const schema = z.object({
   email: z
@@ -37,12 +39,12 @@ const schema = z.object({
 });
 
 type SchemaType = z.infer<typeof schema>;
-type APIResponse = { token: string; Authorized: boolean };
 
 const defaultValues = { email: "", password: "", remember_me: false };
 
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>();
+  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const form = useForm<SchemaType>({
@@ -59,7 +61,7 @@ export const LoginForm = () => {
     try {
       const {
         data: { Authorized, token },
-      } = await client.post<APIResponse>("/sessions", values);
+      } = await client.post<LoginResponse>("/sessions", values);
 
       if (Authorized) {
         localStorage.setItem(StorageItems.AUTH_TOKEN, token);
@@ -68,6 +70,8 @@ export const LoginForm = () => {
           value: token,
         });
         router.replace("/");
+      } else {
+        setOpen(true);
       }
     } catch (error) {
       if (isAxiosError(error)) {
@@ -96,85 +100,88 @@ export const LoginForm = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Address</FormLabel>
-              <FormControl>
-                <Input disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input disabled={isSubmitting} type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="remember_me"
-          render={({ field }) => (
-            <div className="flex items-center justify-between">
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+    <>
+      <Verification2FAModal isOpen={open} onClose={() => setOpen(false)} />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email Address</FormLabel>
                 <FormControl>
-                  <Checkbox
-                    disabled={isSubmitting}
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Input disabled={isSubmitting} {...field} />
                 </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Remember me</FormLabel>
-                </div>
                 <FormMessage />
               </FormItem>
+            )}
+          />
 
-              <div className="text-sm whitespace-nowrap">
-                <Link
-                  href="/forget-password"
-                  className="text-primary hover:underline underline-offset-4"
-                >
-                  Forgot your password?
-                </Link>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input disabled={isSubmitting} type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="remember_me"
+            render={({ field }) => (
+              <div className="flex items-center justify-between">
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      disabled={isSubmitting}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Remember me</FormLabel>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+
+                <div className="text-sm whitespace-nowrap">
+                  <Link
+                    href="/forget-password"
+                    className="text-primary hover:underline underline-offset-4"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
+          />
+
+          <Button
+            disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
+            className="w-full"
+            type="submit"
+          >
+            Login
+          </Button>
+
+          {errors.root && errors.root.type !== "403" && (
+            <Alert variant="destructive" className="text-center">
+              <AlertDescription>{errors.root.message}</AlertDescription>
+            </Alert>
           )}
-        />
 
-        <Button
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          className="w-full"
-          type="submit"
-        >
-          Login
-        </Button>
-
-        {errors.root && errors.root.type !== "403" && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-
-        {errors.root?.type === "403" && (
-          <ReverifyEmailALert email={email} setError={setError} />
-        )}
-      </form>
-    </Form>
+          {errors.root?.type === "403" && (
+            <ReverifyEmailALert email={email} setError={setError} />
+          )}
+        </form>
+      </Form>
+    </>
   );
 };
