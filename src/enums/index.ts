@@ -6,7 +6,7 @@ export enum StorageItems {
 }
 
 export enum Roles {
-  ADMIN = "admin",
-  WRITER = "writer",
-  READER = "reader",
+  Admin = "admin",
+  Writer = "writer",
+  Reader = "reader",
 }

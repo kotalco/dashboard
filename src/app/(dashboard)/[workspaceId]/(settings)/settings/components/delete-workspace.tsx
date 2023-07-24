@@ -49,7 +49,7 @@ export const DeleteWorkspace: React.FC<DeleteWorkspaceProps> = ({
     setOpen(false);
   }
 
-  if (role !== Roles.ADMIN) return null;
+  if (role !== Roles.Admin) return null;
 
   return (
     <>

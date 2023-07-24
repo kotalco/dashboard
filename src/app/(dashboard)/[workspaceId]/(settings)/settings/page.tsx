@@ -16,11 +16,11 @@ export default async function SettingsPage({
 }: {
   params: { workspaceId: string };
 }) {
-  const { data: workspace } = await getWorkspace(params.workspaceId);
+  const workspace = await getWorkspace(params.workspaceId);
 
   return (
     <div className="max-w-3xl mx-auto space-y-10">
-      {workspace.role === Roles.ADMIN && (
+      {workspace.role === Roles.Admin && (
         <Card>
           <CardHeader>
             <CardTitle>Workspace Settings</CardTitle>

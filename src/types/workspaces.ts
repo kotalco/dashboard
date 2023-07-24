@@ -9,3 +9,9 @@ export interface Workspace {
 }
 
 export type WorksapcesList = Omit<Workspace, "role">[];
+
+export interface TeamMember {
+  id: string;
+  email: string;
+  role: Roles;
+}
