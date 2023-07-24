@@ -3,6 +3,7 @@
 import { Roles } from "@/enums";
 import { ColumnDef } from "@tanstack/react-table";
 import { CellRole } from "./cell-role";
+import { CellActions } from "./cell-actions";
 
 export type TeamMemberColumn = {
   id: string;
@@ -18,4 +19,5 @@ export const columns: ColumnDef<TeamMemberColumn>[] = [
     header: "Role",
     cell: ({ row }) => <CellRole data={row.original} />,
   },
+  { id: "actions", cell: ({ row }) => <CellActions data={row.original} /> },
 ];

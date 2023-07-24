@@ -28,7 +28,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
   const { workspace, isLoading: isInitialLoading } = useWorkspace(
     params.workspaceId
   );
-  const { isCurrentUser, role, id } = data;
+  const { isCurrentUser, role, id, email } = data;
 
   useEffect(() => {
     return () => clearMessage();
@@ -37,7 +37,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
   if (isInitialLoading) return <Skeleton className="w-full h-4 " />;
 
   if (isCurrentUser || workspace?.role !== Roles.Admin)
-    return <>{getEnumKey(Roles, role)}</>;
+    return <div className="pl-4">{getEnumKey(Roles, role)}</div>;
 
   async function onChangeRole(role: Roles) {
     try {
@@ -47,7 +47,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
         role,
       });
       setMessage({
-        message: "Member role has been changed",
+        message: `Member (${email}) role has been changed for ${workspace?.name} workspace`,
         type: { variant: "success" },
       });
       router.refresh();
@@ -63,7 +63,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
 
   return (
     <Select disabled={loading} defaultValue={role} onValueChange={onChangeRole}>
-      <SelectTrigger>
+      <SelectTrigger className="max-w-[100px]">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
