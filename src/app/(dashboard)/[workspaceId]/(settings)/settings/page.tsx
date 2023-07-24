@@ -8,6 +8,8 @@ import {
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
 import { EditWorkspaceForm } from "./components/edit-workspace-form";
+import { LeaveWorkspace } from "./components/leave-workspace";
+import { DeleteWorkspace } from "./components/delete-workspace";
 
 export default async function SettingsPage({
   params,
@@ -31,17 +33,13 @@ export default async function SettingsPage({
       )}
 
       <Card>
-        <CardHeader className="relative">
-          <CardTitle>Two Factor Authentication</CardTitle>
-
-          <CardDescription>
-            Two Factor authentication adds an additional layer of security to
-            your account by requiring more than just password to sign in.
-          </CardDescription>
+        <CardHeader>
+          <CardTitle>Danger Zone</CardTitle>
         </CardHeader>
-        {/* <CardContent>
-          <TwoFactorAuthForm enabled={two_factor_enabled} />
-        </CardContent> */}
+        <CardContent className="space-y-5">
+          <LeaveWorkspace workspaceId={workspace.id} />
+          <DeleteWorkspace workspace={workspace} />
+        </CardContent>
       </Card>
     </div>
   );
