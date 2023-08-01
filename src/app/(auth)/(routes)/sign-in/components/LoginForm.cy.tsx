@@ -159,7 +159,7 @@ describe("<LoginForm />", () => {
           .its("request.body")
           .should("deep.equal", { ...credetials, remember_me: false });
 
-        cy.get("@replace").should("not.be.calledOn");
+        cy.get("@replace").should("not.be.called");
       });
 
       it("Success Authorization", () => {
@@ -185,7 +185,7 @@ describe("<LoginForm />", () => {
         cy.findAllByTestId("otp-input").first().type("123456");
         cy.findByTestId("verification-form").as("verificationForm").submit();
         cy.wait("@userVerify");
-        cy.get("@replace").should("not.be.calledOn");
+        cy.get("@replace").should("not.be.called");
         cy.get("@verificationForm").should("exist");
         cy.findByTestId("submit-verification").should("be.disabled");
         cy.findByRole("alert").should("exist");
@@ -195,7 +195,7 @@ describe("<LoginForm />", () => {
         cy.findAllByTestId("otp-input").first().type("123");
         cy.findByTestId("verification-form").as("verificationForm").submit();
 
-        cy.get("@replace").should("not.be.calledOn");
+        cy.get("@replace").should("not.be.called");
         cy.get("@verificationForm").should("exist");
         cy.findByTestId("submit-verification").should("be.disabled");
         cy.findByRole("alert").should("exist");

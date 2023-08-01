@@ -73,6 +73,17 @@ export const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ email }) => {
       if (isAxiosError(error)) {
         const { response } = error;
 
+        if (
+          response?.status === 400 &&
+          response.data.message === "invalid password"
+        ) {
+          setError("root", {
+            type: response?.status.toString(),
+            message: "Wrong Password.",
+          });
+          return;
+        }
+
         setError("root", {
           type: response?.status.toString(),
           message: "Something went wrong.",
@@ -83,7 +94,11 @@ export const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ email }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        data-testid="change-email-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="email"
@@ -91,7 +106,7 @@ export const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ email }) => {
             <FormItem>
               <FormLabel>New Email Address</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} {...field} />
+                <Input data-testid="email" disabled={isSubmitting} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,7 +120,12 @@ export const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ email }) => {
             <FormItem>
               <FormLabel>Current Password</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} type="password" {...field} />
+                <Input
+                  data-testid="password"
+                  disabled={isSubmitting}
+                  type="password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -113,6 +133,7 @@ export const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ email }) => {
         />
 
         <Button
+          data-testid="submit"
           disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
           type="submit"
         >
