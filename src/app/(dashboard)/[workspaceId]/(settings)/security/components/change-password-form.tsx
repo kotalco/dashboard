@@ -86,7 +86,11 @@ export const ChangePasswordForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        data-testid="change-password-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="old_password"
@@ -94,7 +98,12 @@ export const ChangePasswordForm = () => {
             <FormItem>
               <FormLabel>Current Password</FormLabel>
               <FormControl>
-                <Input type="password" disabled={isSubmitting} {...field} />
+                <Input
+                  data-testid="current-password"
+                  type="password"
+                  disabled={isSubmitting}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,7 +117,12 @@ export const ChangePasswordForm = () => {
             <FormItem>
               <FormLabel>New Password</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} type="password" {...field} />
+                <Input
+                  data-testid="new-password"
+                  disabled={isSubmitting}
+                  type="password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -122,7 +136,12 @@ export const ChangePasswordForm = () => {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} type="password" {...field} />
+                <Input
+                  data-testid="confirm-new-password"
+                  disabled={isSubmitting}
+                  type="password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -130,6 +149,7 @@ export const ChangePasswordForm = () => {
         />
 
         <Button
+          data-testid="submit"
           disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
           type="submit"
         >

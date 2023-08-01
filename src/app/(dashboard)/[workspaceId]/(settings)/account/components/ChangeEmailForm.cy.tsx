@@ -58,7 +58,7 @@ describe("<ChangeEmailForm />", () => {
       cy.findByRole("alert").should("exist");
     });
 
-    it("Fail invalid body request", () => {
+    it("Fail with invalid body request", () => {
       cy.findByTestId("email").clear();
       cy.findByTestId("password").clear();
       cy.findByTestId("change-email-form").submit();
