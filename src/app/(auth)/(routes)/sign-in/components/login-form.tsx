@@ -103,7 +103,11 @@ export const LoginForm = () => {
     <>
       <Verification2FAModal isOpen={open} onClose={() => setOpen(false)} />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          data-testid="login-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           <FormField
             control={form.control}
             name="email"
@@ -111,7 +115,11 @@ export const LoginForm = () => {
               <FormItem>
                 <FormLabel>Email Address</FormLabel>
                 <FormControl>
-                  <Input disabled={isSubmitting} {...field} />
+                  <Input
+                    data-testid="email"
+                    disabled={isSubmitting}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -125,7 +133,12 @@ export const LoginForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input disabled={isSubmitting} type="password" {...field} />
+                  <Input
+                    data-testid="password"
+                    disabled={isSubmitting}
+                    type="password"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,6 +153,7 @@ export const LoginForm = () => {
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
                     <Checkbox
+                      data-testid="remember-me"
                       disabled={isSubmitting}
                       checked={field.value}
                       onCheckedChange={field.onChange}
@@ -164,6 +178,7 @@ export const LoginForm = () => {
           />
 
           <Button
+            data-testid="submit-login"
             disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
             className="w-full"
             type="submit"

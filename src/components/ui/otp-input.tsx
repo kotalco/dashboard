@@ -73,6 +73,7 @@ const OTPInput: React.FC<InputProps> = ({
     <div className="flex flex-row items-center justify-center flex-nowrap gap-x-4">
       {Array.from({ length: digitsLength }, (_, index) => (
         <Input
+          data-testid="otp-input"
           key={index}
           type="text"
           inputMode="numeric"

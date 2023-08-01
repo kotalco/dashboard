@@ -100,7 +100,11 @@ export const Verification2FAModal: React.FC<Verification2FAModalProps> = ({
       onClose={handleClose}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          data-testid="verification-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           <FormField
             control={form.control}
             name="totp"
@@ -120,6 +124,7 @@ export const Verification2FAModal: React.FC<Verification2FAModalProps> = ({
 
           <div className="flex justify-center w-full">
             <Button
+              data-testid="submit-verification"
               size="lg"
               disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
               type="submit"

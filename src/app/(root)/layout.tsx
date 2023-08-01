@@ -6,12 +6,8 @@ import { findUser } from "@/services/find-user";
 import { getWorkspaces } from "@/services/get-workspaces";
 
 export default async function SetupLayout() {
-  const token = cookies().get(StorageItems.AUTH_TOKEN);
-  if (!token?.value) redirect("/sign-in");
-
-  const config = {
-    headers: { Authorization: `Bearer ${token.value}` },
-  };
+  // const token = cookies().get(StorageItems.AUTH_TOKEN);
+  // if (!token?.value) redirect("/sign-in");
 
   try {
     await findUser();

@@ -26,7 +26,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const { setMessage, clearMessage } = useAPIMessage();
   const { workspace, isLoading: isInitialLoading } = useWorkspace(
-    params.workspaceId
+    params.workspaceId as string
   );
   const { isCurrentUser, role, id, email } = data;
 

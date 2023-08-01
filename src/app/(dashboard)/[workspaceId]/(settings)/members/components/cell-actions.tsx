@@ -23,7 +23,7 @@ export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { workspace, isLoading: isInitialLoading } = useWorkspace(
-    params.workspaceId
+    params.workspaceId as string
   );
   const { isCurrentUser, id, email } = data;
 

@@ -1,3 +1,4 @@
 {
-  "extends": "next/core-web-vitals"
+  "plugins": ["cypress"],
+  "extends": ["plugin:cypress/recommended", "next/core-web-vitals"]
 }
