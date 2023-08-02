@@ -68,6 +68,7 @@ export const LeaveWorkspace: React.FC<LeaveWorkspaceProps> = ({
           be undone untill you have been invited again.
         </p>
         <Button
+          data-testid="leave-button"
           variant="outline"
           onClick={() => setOpen(true)}
           className="shrink-0"

@@ -75,6 +75,7 @@ export const DeleteWorkspace: React.FC<DeleteWorkspaceProps> = ({
           all deployments running in the current workspace
         </p>
         <Button
+          data-testid="delete-button"
           variant="destructive"
           onClick={() => setOpen(true)}
           className="shrink-0"
