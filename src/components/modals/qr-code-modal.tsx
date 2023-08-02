@@ -95,7 +95,11 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
       onClose={handleClose}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          data-testid="qr-code-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           {qrImageUrl && (
             <Image
               src={qrImageUrl}
@@ -103,6 +107,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
               width={170}
               height={170}
               className="mx-auto"
+              unoptimized
             />
           )}
           <p className="text-center">
@@ -128,6 +133,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
 
           <div className="flex justify-center w-full">
             <Button
+              data-testid="submit"
               size="lg"
               disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
               type="submit"

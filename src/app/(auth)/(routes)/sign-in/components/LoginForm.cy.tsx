@@ -162,6 +162,14 @@ describe("<LoginForm />", () => {
         cy.get("@replace").should("not.be.called");
       });
 
+      it("Cancel before authorization", () => {
+        cy.findAllByTestId("otp-input").first().type("123456");
+        cy.get("svg").click();
+        cy.findByTestId("verification-form").should("not.exist");
+        cy.findByTestId("login-form").submit();
+        cy.findAllByTestId("otp-input").first().should("be.empty");
+      });
+
       it("Success Authorization", () => {
         cy.intercept("POST", "**/users/totp/verify", {
           fixture: "authorized-user.json",

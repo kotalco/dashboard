@@ -107,7 +107,11 @@ export const TwoFAModal: React.FC<AlertModalProps> = ({
       onClose={onCloseModal}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          data-testid="password-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           <FormField
             control={form.control}
             name="password"
@@ -115,7 +119,12 @@ export const TwoFAModal: React.FC<AlertModalProps> = ({
               <FormItem>
                 <FormLabel>Your Password</FormLabel>
                 <FormControl>
-                  <Input type="password" disabled={isSubmitting} {...field} />
+                  <Input
+                    data-testid="password"
+                    type="password"
+                    disabled={isSubmitting}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -124,6 +133,7 @@ export const TwoFAModal: React.FC<AlertModalProps> = ({
 
           <div className="flex items-center w-full space-x-2">
             <Button
+              data-testid="cancel"
               type="button"
               disabled={isSubmitting}
               variant="outline"
@@ -133,6 +143,7 @@ export const TwoFAModal: React.FC<AlertModalProps> = ({
             </Button>
 
             <Button
+              data-testid="submit"
               disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
               type="submit"
             >
