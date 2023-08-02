@@ -99,7 +99,11 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        data-testid="domain-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="domain"
@@ -107,7 +111,11 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
             <FormItem>
               <FormLabel>Domain Name</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} {...field} />
+                <Input
+                  data-testid="domain-name"
+                  disabled={isSubmitting}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -137,6 +145,7 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
               <div className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
+                    data-testid="is-updated"
                     disabled={isSubmitting}
                     checked={field.value}
                     onCheckedChange={field.onChange}
@@ -161,6 +170,7 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
               <div className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
                   <Checkbox
+                    data-testid="is-aware"
                     disabled={isSubmitting}
                     checked={field.value}
                     onCheckedChange={field.onChange}
@@ -185,6 +195,7 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
             !isDirty ||
             isSubmitSuccessful
           }
+          data-testid="submit"
           type="submit"
         >
           {isSubmitSuccessful ? (
