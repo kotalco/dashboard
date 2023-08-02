@@ -1,0 +1,7 @@
+{
+  "id": "1",
+  "name": "Workspace Name",
+  "k8s_namespace": "1",
+  "user_id": "user1",
+  "role": "admin"
+}

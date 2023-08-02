@@ -70,7 +70,11 @@ export const EditWorkspaceForm: React.FC<EditWorkspaceFormProps> = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        data-testid="workspace-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -78,7 +82,7 @@ export const EditWorkspaceForm: React.FC<EditWorkspaceFormProps> = ({
             <FormItem>
               <FormLabel>Workspace Name</FormLabel>
               <FormControl>
-                <Input disabled={isSubmitting} {...field} />
+                <Input data-testid="name" disabled={isSubmitting} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -86,6 +90,7 @@ export const EditWorkspaceForm: React.FC<EditWorkspaceFormProps> = ({
         />
 
         <Button
+          data-testid="submit"
           disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
           type="submit"
         >
