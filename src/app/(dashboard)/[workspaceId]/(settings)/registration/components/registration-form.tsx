@@ -69,7 +69,11 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        data-testid="registration-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="enable_registration"
@@ -84,6 +88,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
               </div>
               <FormControl>
                 <Switch
+                  data-testid="enable-switch"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
@@ -93,6 +98,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
         />
 
         <Button
+          data-testid="submit"
           disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
           type="submit"
         >
