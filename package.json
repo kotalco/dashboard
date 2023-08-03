@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@testing-library/cypress": "^9.0.0",
-    "cypress": "^12.17.2",
+    "cypress": "12.17.3",
     "eslint-plugin-cypress": "^2.13.3"
   }
 }

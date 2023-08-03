@@ -64,7 +64,6 @@ export const AddMemberForm: React.FC<AddMemberFormProps> = ({
       isSubmitSuccessful,
     },
     setError,
-    setValue,
     reset,
   } = form;
 
@@ -99,7 +98,11 @@ export const AddMemberForm: React.FC<AddMemberFormProps> = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+      <form
+        data-testid="add-member-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-6"
+      >
         <div className="grid items-start grid-cols-12 gap-4">
           <FormField
             control={form.control}
@@ -108,6 +111,7 @@ export const AddMemberForm: React.FC<AddMemberFormProps> = ({
               <FormItem className="col-span-12 lg:col-span-6 xl:col-span-4">
                 <FormControl>
                   <Input
+                    data-testid="email"
                     disabled={isSubmitting}
                     placeholder="Email Address"
                     className="bg-white"
@@ -131,7 +135,7 @@ export const AddMemberForm: React.FC<AddMemberFormProps> = ({
                   value={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="bg-white">
+                    <SelectTrigger data-testid="role" className="bg-white">
                       <SelectValue placeholder="Select a Role" />
                     </SelectTrigger>
                   </FormControl>
@@ -150,6 +154,7 @@ export const AddMemberForm: React.FC<AddMemberFormProps> = ({
           />
 
           <Button
+            data-testid="submit"
             disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
             className="col-span-12 md:col-span-6 lg:col-span-3 xl:col-span-2"
             type="submit"
