@@ -9,13 +9,13 @@ import { client } from "@/lib/client-instance";
 import { Button } from "@/components/ui/button";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { TeamMemberColumn } from "./columns";
+import { SecretColumn } from "./colums";
 
 interface CellRoleProps {
-  data: TeamMemberColumn;
+  data: SecretColumn;
 }
 
-export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
+export const CellAction: React.FC<CellRoleProps> = ({ data }) => {
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -24,17 +24,18 @@ export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
   const { workspace, isLoading: isInitialLoading } = useWorkspace(
     params.workspaceId as string
   );
-  const { isCurrentUser, id, email } = data;
+  const { name } = data;
 
   if (isInitialLoading) return <Skeleton className="w-4 h-4 " />;
 
-  if (isCurrentUser || workspace?.role !== Roles.Admin) return null;
+  if (workspace?.role !== Roles.Admin) return null;
 
-  async function onDeleteMember() {
+  async function onDeleteSecret() {
     try {
       setLoading(true);
-      await client.delete(`/workspaces/${params.workspaceId}/members/${id}`);
+      await client.delete(`/core/secrets/${name}`);
       router.refresh();
+      setOpen(false);
     } catch (error) {
       setError("Something went wrong.");
     } finally {
@@ -52,9 +53,9 @@ export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
       <AlertModal
         isOpen={open}
         onClose={onClose}
-        onConfirm={onDeleteMember}
-        title="Remove Team Member"
-        description={`Are you sure you want to delete member (${email})? This user will not be able to access any deployment untill invited again`}
+        onConfirm={onDeleteSecret}
+        title="Remove Secret"
+        description={`Are you sure you want to remove secret (${name})?`}
         loading={loading}
       >
         {error && (
@@ -63,14 +64,15 @@ export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
           </Alert>
         )}
       </AlertModal>
-      <div className="flex justify-end">
+      <div className="flex justify-end transition opacity-0 group-hover:opacity-100">
         <Button
           onClick={() => setOpen(true)}
           disabled={loading}
-          variant="destructive"
+          variant="outline"
           size="icon"
+          className="border-destructive"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-4 h-4 text-destructive" />
         </Button>
       </div>
     </>

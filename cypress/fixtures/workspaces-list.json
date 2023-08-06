@@ -1,0 +1,21 @@
+[
+  {
+    "id": "1",
+    "name": "Workspace 1",
+    "k8s_namespace": "1",
+    "user_id": "user_1"
+  },
+  {
+    "id": "2",
+    "name": "Workspace 2",
+    "k8s_namespace": "2",
+    "user_id": "user_2"
+  },
+
+  {
+    "id": "3",
+    "name": "Workspace 3",
+    "k8s_namespace": "3",
+    "user_id": "user_3"
+  }
+]
