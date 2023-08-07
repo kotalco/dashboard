@@ -3,7 +3,7 @@ import { ChangeEvent, useRef, ClipboardEvent } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 
-export interface InputProps
+export interface OTPInputProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "type" | "maxLength" | "onChange"
@@ -13,7 +13,7 @@ export interface InputProps
   onChange: (value: string) => void;
 }
 
-const OTPInput: React.FC<InputProps> = ({
+const OTPInput: React.FC<OTPInputProps> = ({
   className,
   onChange,
   value,
