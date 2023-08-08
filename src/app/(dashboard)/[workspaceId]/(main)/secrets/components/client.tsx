@@ -5,7 +5,6 @@ import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/ui/data-table";
 import { Roles } from "@/enums";
 import { SecretColumn, columns } from "./colums";
@@ -42,7 +41,7 @@ export const SecretsClient: React.FC<SecretsClientProps> = ({ data, role }) => {
           imageUrl="/images/key.svg"
           title="No Secrets"
           description="Secret stores sensetive data into secure location that can be referenced by multiple nodes."
-          createUrl="/core/secrets/create"
+          createUrl={`/${params.workspaceId}/secrets/new`}
           buttonText="Create New Secret"
           role={role}
         />

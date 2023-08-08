@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 
 import { ModalProvider } from "@/providers/modal-provider";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${nunito.variable}`}>
         <ModalProvider />
+        <Toaster />
         {children}
       </body>
     </html>

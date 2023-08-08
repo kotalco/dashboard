@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
+import qs from "query-string";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspace } from "@/hooks/useWorkspace";
@@ -32,8 +33,12 @@ export const CellAction: React.FC<CellRoleProps> = ({ data }) => {
 
   async function onDeleteSecret() {
     try {
+      const url = qs.stringifyUrl({
+        url: `/core/secrets/${name}`,
+        query: { workspace_id: params.workspaceId },
+      });
       setLoading(true);
-      await client.delete(`/core/secrets/${name}`);
+      await client.delete(url);
       router.refresh();
       setOpen(false);
     } catch (error) {

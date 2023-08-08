@@ -1,6 +1,6 @@
 import { format, parseISO } from "date-fns";
 
-import { getSecret } from "@/services/get-secrets";
+import { getSecrets } from "@/services/get-secrets";
 import { getEnumKey } from "@/lib/utils";
 import { SecretsClient } from "./components/client";
 import { SecretType } from "@/enums";
@@ -11,7 +11,7 @@ export default async function SecretsPage({
 }: {
   params: { workspaceId: string };
 }) {
-  const secrets = await getSecret(params.workspaceId);
+  const secrets = await getSecrets(params.workspaceId);
   const { role } = await getWorkspace(params.workspaceId);
   const formattedSecrets = secrets.map(({ type, name, createdAt }) => ({
     type: getEnumKey(SecretType, type),

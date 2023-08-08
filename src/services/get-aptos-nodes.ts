@@ -4,15 +4,15 @@ import { cache } from "react";
 import qs from "query-string";
 
 import { server } from "@/lib/server-instance";
-import { Secret } from "@/types";
+import { AptosNode } from "@/types";
 
-export const getSecrets = cache(async (workspace_id: string) => {
+export const getAptosNodes = cache(async (workspace_id: string) => {
   const url = qs.stringifyUrl({
-    url: "/core/secrets",
+    url: "/aptos/nodes",
     query: { workspace_id },
   });
 
-  const { data } = await server.get<Secret[]>(url);
+  const { data } = await server.get<AptosNode[]>(url);
 
   return data;
 });
