@@ -24,3 +24,15 @@ export enum SecretType {
   "Stacks Private Key" = "stacks_private_key",
   "TLS Certificate" = "tls_certificate",
 }
+
+export enum Networks {
+  Mainnet = "mainnet",
+  Testnet = "testnet",
+  Devnet = "devnet",
+}
+
+export enum AptosNetworks {
+  Mainnet = "mainnet",
+  Testnet = "testnet",
+  Devnet = "devnet",
+}

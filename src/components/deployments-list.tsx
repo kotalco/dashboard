@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ChevronRight, Cpu, Globe } from "lucide-react";
 
 import { MainNodeInfo } from "@/types";
+import { getEnumKey } from "@/lib/utils";
+import { Networks } from "@/enums";
 
 interface DeployemntsListProps {
   data: MainNodeInfo[];
@@ -20,7 +22,7 @@ export const DeploymentsList: React.FC<DeployemntsListProps> = ({ data }) => {
                   <div className="flex text-sm gap-x-4">
                     <div className="flex items-center gap-x-1">
                       <Globe className="w-5 h-6 text-muted-foreground" />
-                      {network}
+                      {getEnumKey(Networks, network)}
                     </div>
                     <div className="flex items-center gap-x-1">
                       <Cpu className="w-5 h-6 text-muted-foreground" />

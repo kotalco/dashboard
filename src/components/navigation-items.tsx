@@ -73,7 +73,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
                       variant="ghost"
                       className={cn(
                         `justify-start pl-14 w-full text-muted-foreground`,
-                        active ? "text-primary" : ""
+                        active ? "text-primary hover:text-primary" : ""
                       )}
                     >
                       <Link href={href}>{label}</Link>

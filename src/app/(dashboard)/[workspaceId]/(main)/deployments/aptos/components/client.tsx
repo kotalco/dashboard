@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Roles } from "@/enums";
-import { NoResult } from "@/components/ui/no-result";
+import { NoResult } from "@/components/no-result";
 import { AptosNode } from "@/types";
 import { DeploymentsList } from "@/components/deployments-list";
 

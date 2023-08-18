@@ -1,14 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateSecretForm } from "../components/create-secret-form";
+import { CreateAptosNodeForm } from "../components/create-aptos-node-form";
 
 export default async function CreateNewSecretPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create New Secret</CardTitle>
+        <CardTitle>Create New Aptos Node</CardTitle>
       </CardHeader>
       <CardContent>
-        <CreateSecretForm />
+        <CreateAptosNodeForm />
       </CardContent>
     </Card>
   );

@@ -8,7 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import { DataTable } from "@/components/ui/data-table";
 import { Roles } from "@/enums";
 import { SecretColumn, columns } from "./colums";
-import { NoResult } from "@/components/ui/no-result";
+import { NoResult } from "@/components/no-result";
 
 interface SecretsClientProps {
   data: SecretColumn[];
@@ -33,7 +33,6 @@ export const SecretsClient: React.FC<SecretsClientProps> = ({ data, role }) => {
           </Button>
         )}
       </div>
-      {/* <Separator /> */}
 
       {!!data.length && <DataTable columns={columns} data={data} />}
       {!data.length && (
