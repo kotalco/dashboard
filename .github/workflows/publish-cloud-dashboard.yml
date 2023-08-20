@@ -35,8 +35,8 @@ jobs:
         wait-on: "http://localhost:3000"
         # wait for 2 minutes for the server to respond
         wait-on-timeout: 120
-        # Cancel the run after 2 failed tests
-        auto-cancel-after-failures: 2
+        # Cancel the run after 2 failed tests # run with cloud only
+        # auto-cancel-after-failures: 2
 
     - name: Cypress Artifacts
       # after the test run completes store videos and any screenshots
