@@ -1,10 +1,6 @@
 name: Build-Push dashboard
 
 on:
-  push:
-    branches: [ main ]
-    tags:
-      - 'v*'
   pull_request:
     branches: [ main ]
 
@@ -38,23 +34,6 @@ jobs:
         # Cancel the run after 2 failed tests # run with cloud only
         # auto-cancel-after-failures: 2
 
-    - name: Cypress Artifacts
-      # after the test run completes store videos and any screenshots
-      # store generated videos and screenshots as CI artifacts.
-      uses: actions/upload-artifact@v3
-      # add the line below to store screenshots only on failures
-      # if: failure()
-      with:
-        name: cypress-screenshots
-        path: cypress/screenshots
-        if-no-files-found: ignore # 'warn' or 'error' are also available, defaults to `warn`
-
-    - uses: actions/upload-artifact@v3
-      with:
-        name: cypress-videos
-        path: cypress/videos
-        if-no-files-found: ignore # 'warn' or 'error' are also available, defaults to `warn`
-
     - name: Generate Docker metadata
       id: meta
       uses: docker/metadata-action@v3
@@ -64,8 +43,6 @@ jobs:
         tags: |
           type=ref,event=tag
           type=sha,prefix=,suffix=,format=short
-        flavor: |
-          latest=true
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
