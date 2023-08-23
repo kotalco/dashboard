@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { Protocol, StorageItems } from "@/enums";
+import { NodeMetrics } from "@/components/node-metrics";
 
 export default async function SecretsPage({
   params,
@@ -26,7 +27,7 @@ export default async function SecretsPage({
             <NodeStatus
               nodeName={node.name}
               protocol={Protocol.aptos}
-              token={token?.value}
+              token={token.value}
               workspaceId={workspaceId}
             />
           )}
@@ -37,6 +38,19 @@ export default async function SecretsPage({
               "MMMM do, yyyy"
             )}`}
           />
+        </div>
+        <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
+          <div>Node Stats</div>
+          {token && (
+            <>
+              <NodeMetrics
+                nodeName={node.name}
+                protocol={Protocol.aptos}
+                token={token.value}
+                workspaceId={workspaceId}
+              />
+            </>
+          )}
         </div>
         <Tabs defaultValue="protocol" className="w-[400px]">
           <TabsList>
