@@ -25,14 +25,25 @@ export enum SecretType {
   "TLS Certificate" = "tls_certificate",
 }
 
-export enum Networks {
+export enum AptosNetworks {
   Mainnet = "mainnet",
   Testnet = "testnet",
   Devnet = "devnet",
 }
 
-export enum AptosNetworks {
-  Mainnet = "mainnet",
-  Testnet = "testnet",
-  Devnet = "devnet",
+export enum Protocol {
+  aptos = "aptos",
+}
+
+export enum NodeStatuses {
+  "Connection Error" = "ConnectionError",
+  "Loading Info" = "LoadingInfo",
+  "Pod Initializing" = "PodInitializing",
+  "Container Creating" = "ContainerCreating",
+  "Terminating" = "Terminating",
+  "Not Found" = "NotFound",
+  "Error" = "Error",
+  "Pending" = "Pending",
+  "Running" = "Running",
+  "Disconnected" = "Disconnected",
 }
