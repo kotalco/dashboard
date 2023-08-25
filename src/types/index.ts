@@ -23,6 +23,33 @@ export interface ClientImage {
   image: string;
 }
 
+export interface ClientVersions {
+  version: string;
+  protocols: {
+    [protocol: string]: {
+      components: {
+        [node: string]: {
+          clients: {
+            [client: string]: {
+              repository: string;
+              versions: {
+                name: string;
+                image: string;
+                network?: string;
+                releaseNotes: string;
+                next: string;
+                previous: string;
+                canBeUpgraded: boolean;
+                canBeDowngraded: boolean;
+              }[];
+            };
+          };
+        };
+      };
+    };
+  };
+}
+
 export interface AptosNode extends ClientImage, ResourcesInfo {
   name: string;
   network: string;
@@ -33,4 +60,13 @@ export interface AptosNode extends ClientImage, ResourcesInfo {
   nodePrivateKeySecretName: string;
   p2pPort: number;
   validator: boolean;
+}
+
+export interface StatsError {
+  error: string;
+}
+
+export interface AptosStats {
+  currentBlock: string;
+  peerCount: number;
 }
