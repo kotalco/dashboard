@@ -56,12 +56,10 @@ export const AptosNodeStats: React.FC<AptosNodeStatsProps> = ({
     return (
       <>
         <div className="space-y-2 lg:col-span-1">
-          <Skeleton className="w-[50px] h-4" />
-          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-[128px]" />
         </div>
         <div className="space-y-2 lg:col-span-1">
-          <Skeleton className="w-[50px] h-4" />
-          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-[128px]" />
         </div>
       </>
     );

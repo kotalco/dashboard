@@ -12,6 +12,7 @@ import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { AptosNodeStats } from "./components/aptos-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
+import { APITab } from "./components/api-tab";
 
 export default async function SecretsPage({
   params,
@@ -78,7 +79,9 @@ export default async function SecretsPage({
             <TabsContent value="protocol">
               <ProtocolTab node={node} role={role} />
             </TabsContent>
-            <TabsContent value="api">API</TabsContent>
+            <TabsContent value="api">
+              <APITab node={node} role={role} />
+            </TabsContent>
             <TabsContent value="logs">Logs</TabsContent>
             <TabsContent value="resources">Resources</TabsContent>
             <TabsContent value="danger">Danger Zone</TabsContent>
