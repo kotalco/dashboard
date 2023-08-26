@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
+import { Logs } from "@/components/logs";
 import { AptosNodeStats } from "./components/aptos-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
@@ -82,7 +83,13 @@ export default async function SecretsPage({
             <TabsContent value="api">
               <APITab node={node} role={role} />
             </TabsContent>
-            <TabsContent value="logs">Logs</TabsContent>
+            <TabsContent value="logs">
+              {token && (
+                <Logs
+                  url={`aptos/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
+                />
+              )}
+            </TabsContent>
             <TabsContent value="resources">Resources</TabsContent>
             <TabsContent value="danger">Danger Zone</TabsContent>
           </Tabs>
