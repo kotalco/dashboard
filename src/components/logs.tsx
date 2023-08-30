@@ -7,7 +7,7 @@ import { AlertTriangle, Expand } from "lucide-react";
 
 import { getWsBaseURL } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface LogsProps {
   url: string;

@@ -87,6 +87,14 @@ export const CreateAptosNodeForm = () => {
           return;
         }
 
+        if (response?.status === 403) {
+          setError("root", {
+            type: response?.status.toString(),
+            message: "Reached Nodes Limit.",
+          });
+          return;
+        }
+
         setError("root", {
           type: response?.status.toString(),
           message: "Something went wrong.",

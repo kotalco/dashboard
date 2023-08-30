@@ -94,7 +94,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         />
 
         {isSubmitSuccessful && (
-          <Alert variant="success" className="absolute text-center -bottom-24">
+          <Alert variant="success" className="text-center">
             <AlertDescription>
               API settings have been updated successfully.
             </AlertDescription>
@@ -102,10 +102,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         )}
 
         {errors.root && (
-          <Alert
-            variant="destructive"
-            className="absolute text-center -bottom-24"
-          >
+          <Alert variant="destructive" className="text-center">
             <AlertDescription>{errors.root.message}</AlertDescription>
           </Alert>
         )}

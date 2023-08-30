@@ -47,3 +47,9 @@ export enum NodeStatuses {
   "Running" = "Running",
   "Disconnected" = "Disconnected",
 }
+
+export enum StorageUnits {
+  Megabyte = "Mi",
+  Gigabyte = "Gi",
+  Terabyte = "Ti",
+}

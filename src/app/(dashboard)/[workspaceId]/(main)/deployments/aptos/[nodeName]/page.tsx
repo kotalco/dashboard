@@ -14,6 +14,7 @@ import { Logs } from "@/components/logs";
 import { AptosNodeStats } from "./components/aptos-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
+import { ResourcesForm } from "@/components/resources-form";
 
 export default async function SecretsPage({
   params,
@@ -90,7 +91,13 @@ export default async function SecretsPage({
                 />
               )}
             </TabsContent>
-            <TabsContent value="resources">Resources</TabsContent>
+            <TabsContent value="resources">
+              <ResourcesForm
+                node={node}
+                role={role}
+                updateUrl={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
+              />
+            </TabsContent>
             <TabsContent value="danger">Danger Zone</TabsContent>
           </Tabs>
         </div>
