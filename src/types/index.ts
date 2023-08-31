@@ -23,28 +23,32 @@ export interface ClientImage {
   image: string;
 }
 
+export interface Version {
+  name: string;
+  image: string;
+  network?: string;
+  releaseNotes: string;
+  next: string;
+  previous: string;
+  canBeUpgraded: boolean;
+  canBeDowngraded: boolean;
+}
+
+export interface Clients {
+  clients: {
+    [client: string]: {
+      repository: string;
+      versions: Version[];
+    };
+  };
+}
+
 export interface ClientVersions {
   version: string;
   protocols: {
     [protocol: string]: {
       components: {
-        [node: string]: {
-          clients: {
-            [client: string]: {
-              repository: string;
-              versions: {
-                name: string;
-                image: string;
-                network?: string;
-                releaseNotes: string;
-                next: string;
-                previous: string;
-                canBeUpgraded: boolean;
-                canBeDowngraded: boolean;
-              }[];
-            };
-          };
-        };
+        [node: string]: Clients;
       };
     };
   };

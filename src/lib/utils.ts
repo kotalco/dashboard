@@ -1,4 +1,5 @@
 import { NodeStatuses } from "@/enums";
+import { Clients } from "@/types";
 import { AxiosResponse } from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -60,4 +61,22 @@ export const getStatusColor = (value: NodeStatuses) => {
     default:
       return "#EF4444";
   }
+};
+
+export const getLatestVersion = (
+  data: Clients,
+  client: string,
+  network?: string
+) => {
+  let versions = data.clients[client].versions;
+
+  if (network) {
+    versions = versions.filter((version) => version.network === network);
+  }
+
+  if (versions.length > 1) {
+    versions.reverse();
+  }
+
+  return versions[0].image;
 };

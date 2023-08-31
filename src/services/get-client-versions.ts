@@ -4,13 +4,13 @@ import { ClientVersions } from "@/types";
 
 interface Config {
   protocol: string;
-  node: string;
+  component: string;
   client?: string;
   network?: string;
 }
 
 export const getClientVersions = async (
-  { protocol, node, client, network }: Config,
+  { protocol, component, client, network }: Config,
   image?: string
 ) => {
   let versions;
@@ -24,7 +24,7 @@ export const getClientVersions = async (
 
   if (client) {
     versions =
-      data.protocols[protocol].components[node].clients[client].versions;
+      data.protocols[protocol].components[component].clients[client].versions;
 
     if (network) {
       versions = versions?.filter((version) => version.network === network);
@@ -35,6 +35,8 @@ export const getClientVersions = async (
       value: image,
     }));
   }
+
+  const componentData = data.protocols[protocol].components[component];
 
   if (image && versions && versionOptions) {
     versionOptions = versionOptions.map((version) => ({
@@ -61,8 +63,7 @@ export const getClientVersions = async (
     }
   }
 
-  versionOptions?.reverse();
-  const defaultValue = versionOptions?.[0].value;
+  if (versionOptions && versionOptions.length > 1) versionOptions.reverse();
 
-  return { versions, versionOptions, defaultValue };
+  return { versions, versionOptions, component: componentData };
 };

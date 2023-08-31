@@ -1,6 +1,7 @@
 "use client";
 
 import * as z from "zod";
+import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
@@ -26,8 +27,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { getSelectItems } from "@/lib/utils";
+import { getLatestVersion, getSelectItems } from "@/lib/utils";
 import { client } from "@/lib/client-instance";
+import { Clients } from "@/types";
 
 const schema = z.object({
   name: z
@@ -42,6 +44,7 @@ const schema = z.object({
     required_error: "Please select a Network",
   }),
   workspace_id: z.string().min(1),
+  image: z.string().min(1),
 });
 
 type SchemaType = z.infer<typeof schema>;
@@ -51,7 +54,9 @@ const defaultValues = {
   network: undefined,
 };
 
-export const CreateAptosNodeForm = () => {
+export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
+  images,
+}) => {
   const { toast } = useToast();
   const router = useRouter();
   const { workspaceId } = useParams();
@@ -63,8 +68,19 @@ export const CreateAptosNodeForm = () => {
 
   const {
     formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
+    watch,
     setError,
+    setValue,
   } = form;
+
+  const [network] = watch(["network"]);
+
+  useEffect(() => {
+    if (network)
+      setValue("image", getLatestVersion(images, "aptos-core", network), {
+        shouldValidate: true,
+      });
+  }, [images, network, setValue]);
 
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
