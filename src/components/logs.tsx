@@ -15,8 +15,7 @@ interface LogsProps {
 
 const WS_URL = getWsBaseURL();
 const MAX_LENGTH = 200;
-// const TIME_INTERVAL = 10000;
-const TIME_INTERVAL = 3000;
+const TIME_INTERVAL = 10000;
 const OPEN_CONNECTION_MSG = "Connection Established.";
 const CLOSE_CONNECTION_MSG = "Disconnected. Connection Closed.";
 

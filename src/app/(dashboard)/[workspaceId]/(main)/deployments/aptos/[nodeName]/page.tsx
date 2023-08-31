@@ -5,16 +5,17 @@ import { format, parseISO } from "date-fns";
 import { getWorkspace } from "@/services/get-workspace";
 import { getAptosNode } from "@/services/get-aptos.node";
 import { getClientVersions } from "@/services/get-client-versions";
-import { Protocol, StorageItems } from "@/enums";
+import { Protocol, Roles, StorageItems } from "@/enums";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
+import { ResourcesForm } from "@/components/resources-form";
 import { AptosNodeStats } from "./components/aptos-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
-import { ResourcesForm } from "@/components/resources-form";
+import { DangerZoneTab } from "./components/danger-zone-tab";
 
 export default async function SecretsPage({
   params,
@@ -71,12 +72,14 @@ export default async function SecretsPage({
               <TabsTrigger value="api">API</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
+              {role === Roles.Admin && (
+                <TabsTrigger
+                  value="danger"
+                  className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
+                >
+                  Danger Zone
+                </TabsTrigger>
+              )}
             </TabsList>
             <TabsContent value="protocol">
               <ProtocolTab node={node} role={role} />
@@ -98,7 +101,11 @@ export default async function SecretsPage({
                 updateUrl={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
-            <TabsContent value="danger">Danger Zone</TabsContent>
+            {role === Roles.Admin && (
+              <TabsContent value="danger">
+                <DangerZoneTab node={node} />
+              </TabsContent>
+            )}
           </Tabs>
         </div>
       </div>

@@ -18,6 +18,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { TabsFooter } from "@/components/ui/tabs";
 
 interface APITabProps {
   node: AptosNode;
@@ -108,7 +109,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         )}
 
         {role !== Roles.Reader && (
-          <div className="flex flex-row-reverse items-center px-4 py-3 -mx-4 space-x-2 space-x-reverse translate-y-4 rounded-b bg-muted/80 sm:-mx-6 sm:px-6">
+          <TabsFooter>
             <Button
               disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
               data-testid="submit"
@@ -116,7 +117,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
             >
               Save
             </Button>
-          </div>
+          </TabsFooter>
         )}
       </form>
     </Form>

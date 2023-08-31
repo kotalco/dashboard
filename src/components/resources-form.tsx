@@ -19,6 +19,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { InputWithUnit } from "@/components/ui/input-with-unit";
+import { TabsFooter } from "@/components/ui/tabs";
 import { getSelectItems } from "@/lib/utils";
 
 interface ResourcesFormProps<T> {
@@ -221,7 +222,7 @@ export function ResourcesForm<T extends ResourcesInfo>({
         )}
 
         {role !== Roles.Reader && (
-          <div className="flex flex-row-reverse items-center px-4 py-3 -mx-4 space-x-2 space-x-reverse translate-y-4 rounded-b bg-muted/80 sm:-mx-6 sm:px-6">
+          <TabsFooter>
             <Button
               disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
               data-testid="submit"
@@ -229,7 +230,7 @@ export function ResourcesForm<T extends ResourcesInfo>({
             >
               Save
             </Button>
-          </div>
+          </TabsFooter>
         )}
       </form>
     </Form>

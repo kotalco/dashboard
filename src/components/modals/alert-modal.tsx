@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 interface AlertModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
-  loading: boolean;
+  onConfirm?: () => void;
+  loading?: boolean;
   title: string;
   description: string;
   children?: React.ReactNode;
@@ -48,14 +48,16 @@ export const AlertModal: React.FC<AlertModalProps> = ({
           Cancel
         </Button>
 
-        <Button
-          data-testid="confirm-button"
-          disabled={loading}
-          variant="destructive"
-          onClick={onConfirm}
-        >
-          Continue
-        </Button>
+        {onConfirm && (
+          <Button
+            data-testid="confirm-button"
+            disabled={loading}
+            variant="destructive"
+            onClick={onConfirm}
+          >
+            Continue
+          </Button>
+        )}
       </div>
     </Modal>
   );
