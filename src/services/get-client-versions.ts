@@ -1,6 +1,6 @@
 import "server-only";
 
-import { ClientVersions } from "@/types";
+import { ClientVersions, Version } from "@/types";
 
 interface Config {
   protocol: string;
@@ -13,14 +13,14 @@ export const getClientVersions = async (
   { protocol, component, client, network }: Config,
   image?: string
 ) => {
-  let versions;
-  let versionOptions;
+  let versions: (Version & { disabled?: boolean })[] = [];
 
   const response = await fetch(
     "https://raw.githubusercontent.com/kotalco/images/master/releases.json",
     { method: "GET", next: { revalidate: 24 * 60 * 60 } }
   );
   const data = (await response.json()) as ClientVersions;
+  const componentData = data.protocols[protocol].components[component];
 
   if (client) {
     versions =
@@ -29,17 +29,10 @@ export const getClientVersions = async (
     if (network) {
       versions = versions?.filter((version) => version.network === network);
     }
-
-    versionOptions = versions?.map(({ name, image }) => ({
-      label: name,
-      value: image,
-    }));
   }
 
-  const componentData = data.protocols[protocol].components[component];
-
-  if (image && versions && versionOptions) {
-    versionOptions = versionOptions.map((version) => ({
+  if (image) {
+    versions = versions.map((version) => ({
       ...version,
       disabled: true,
     }));
@@ -50,20 +43,19 @@ export const getClientVersions = async (
         (version) => version.name === selectedVersion.previous
       );
 
-      if (typeof previousIndex === "number")
-        versionOptions[previousIndex].disabled = false;
+      versions[previousIndex].disabled = false;
     }
 
     if (selectedVersion?.canBeUpgraded) {
       const nextIndex = versions.findIndex(
         (version) => version.name === selectedVersion.next
       );
-      if (typeof nextIndex === "number")
-        versionOptions[nextIndex].disabled = false;
+
+      versions[nextIndex].disabled = false;
     }
   }
 
-  if (versionOptions && versionOptions.length > 1) versionOptions.reverse();
+  if (versions.length > 1) versions.reverse();
 
-  return { versions, versionOptions, component: componentData };
+  return { versions, component: componentData };
 };

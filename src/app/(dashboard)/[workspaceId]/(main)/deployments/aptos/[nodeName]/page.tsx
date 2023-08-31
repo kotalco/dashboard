@@ -28,6 +28,15 @@ export default async function SecretsPage({
 
   try {
     const node = await getAptosNode(workspaceId, nodeName);
+    const { versions } = await getClientVersions(
+      {
+        protocol: "aptos",
+        component: "node",
+        client: "aptos-core",
+        network: node.network,
+      },
+      node.image
+    );
 
     return (
       <div className="flex-col">
@@ -82,7 +91,7 @@ export default async function SecretsPage({
               )}
             </TabsList>
             <TabsContent value="protocol">
-              <ProtocolTab node={node} role={role} />
+              <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
             <TabsContent value="api">
               <APITab node={node} role={role} />
