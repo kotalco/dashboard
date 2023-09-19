@@ -31,6 +31,11 @@ export enum AptosNetworks {
   Devnet = "devnet",
 }
 
+export enum BitcoinNetworks {
+  Mainnet = "mainnet",
+  Testnet = "testnet",
+}
+
 export enum Protocol {
   aptos = "aptos",
 }

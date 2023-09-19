@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateAptosNodeForm } from "../components/create-aptos-node-form";
+import { CreateBitcoinNodeForm } from "../components/create-bitcoin-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
 
-export default async function CreateNewAptosNodePage({
+export default async function CreateNewBitcoinNodePage({
   params,
 }: {
   params: { workspaceId: string };
@@ -16,18 +16,19 @@ export default async function CreateNewAptosNodePage({
 
   if (role === Roles.Reader) notFound();
 
-  const { component } = await getClientVersions({
-    protocol: "aptos",
+  const { versions } = await getClientVersions({
+    protocol: "bitcoin",
     component: "node",
+    client: "bitcoin-core",
   });
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create New Aptos Node</CardTitle>
+        <CardTitle>Create New Bitcoin Node</CardTitle>
       </CardHeader>
       <CardContent>
-        <CreateAptosNodeForm images={component} />
+        <CreateBitcoinNodeForm images={versions} />
       </CardContent>
     </Card>
   );

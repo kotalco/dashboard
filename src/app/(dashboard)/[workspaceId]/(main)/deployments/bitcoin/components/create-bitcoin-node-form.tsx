@@ -1,7 +1,6 @@
 "use client";
 
 import * as z from "zod";
-import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
@@ -18,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AptosNetworks } from "@/enums";
+import { BitcoinNetworks } from "@/enums";
 import {
   Select,
   SelectContent,
@@ -27,9 +26,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { getLatestVersion, getSelectItems } from "@/lib/utils";
+import { getSelectItems } from "@/lib/utils";
 import { client } from "@/lib/client-instance";
-import { Clients } from "@/types";
+import { Version } from "@/types";
 
 const schema = z.object({
   name: z
@@ -40,7 +39,7 @@ const schema = z.object({
     .refine((value) => /^\S*$/.test(value), {
       message: "Invalid character used",
     }),
-  network: z.nativeEnum(AptosNetworks, {
+  network: z.nativeEnum(BitcoinNetworks, {
     required_error: "Please select a Network",
   }),
   workspace_id: z.string().min(1),
@@ -49,18 +48,18 @@ const schema = z.object({
 
 type SchemaType = z.infer<typeof schema>;
 
-const defaultValues = {
-  name: "",
-  network: undefined,
-};
-
-export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
+export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
   images,
 }) => {
   const { toast } = useToast();
   const router = useRouter();
   const { workspaceId } = useParams();
 
+  const defaultValues = {
+    name: "",
+    network: undefined,
+    image: images[0].image,
+  };
   const form = useForm<SchemaType>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -68,27 +67,16 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
 
   const {
     formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
-    watch,
     setError,
-    setValue,
   } = form;
-
-  const [network] = watch(["network"]);
-
-  useEffect(() => {
-    if (network)
-      setValue("image", getLatestVersion(images, "aptos-core", network), {
-        shouldValidate: true,
-      });
-  }, [images, network, setValue]);
 
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
-      await client.post("/aptos/nodes", values);
-      router.push(`/${workspaceId}/deployments/aptos`);
+      await client.post("/bitcoin/nodes", values);
+      router.push(`/${workspaceId}/deployments/bitcoin`);
       router.refresh();
       toast({
-        title: "Aptos node has been created",
+        title: "Bitcoin node has been created",
         description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
       });
     } catch (error) {
@@ -165,7 +153,7 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {getSelectItems(AptosNetworks).map(({ value, label }) => (
+                  {getSelectItems(BitcoinNetworks).map(({ value, label }) => (
                     <SelectItem key={value} value={value}>
                       {label}
                     </SelectItem>
@@ -181,12 +169,12 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
         <p className="text-sm">
           Client:{" "}
           <a
-            href="https://github.com/aptos-labs/aptos-core"
+            href="https://github.com/bitcoin/bitcoin"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline underline-offset-4"
           >
-            aptos-core
+            Bitcoin Core
           </a>
         </p>
 
