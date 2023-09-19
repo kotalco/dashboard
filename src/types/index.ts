@@ -66,6 +66,18 @@ export interface AptosNode extends ClientImage, ResourcesInfo {
   validator: boolean;
 }
 
+export interface BitcoinNode extends ClientImage, ResourcesInfo {
+  name: string;
+  network: string;
+  rpc: boolean;
+  txIndex: boolean;
+  rpcUsers: { username: string; passwordSecretName: string }[];
+  wallet: boolean;
+  createdAt: string;
+  p2pPort: number;
+  rpcPort: number;
+}
+
 export interface StatsError {
   error: string;
 }

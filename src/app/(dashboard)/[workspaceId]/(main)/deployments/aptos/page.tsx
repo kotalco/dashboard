@@ -2,7 +2,7 @@ import { getWorkspace } from "@/services/get-workspace";
 import { getAptosNodes } from "@/services/get-aptos-nodes";
 import { AptosClient } from "./components/client";
 
-export default async function SecretsPage({
+export default async function AptosPage({
   params,
 }: {
   params: { workspaceId: string };
