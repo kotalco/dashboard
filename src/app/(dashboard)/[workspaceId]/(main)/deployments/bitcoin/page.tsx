@@ -1,7 +1,7 @@
 import { getWorkspace } from "@/services/get-workspace";
-import { BitcoinClient } from "./components/client";
 import { getNodes } from "@/services/get-nodes";
 import { BitcoinNode } from "@/types";
+import { BitcoinClient } from "./components/client";
 
 export default async function BitcoinPage({
   params,

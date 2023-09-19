@@ -1,5 +1,6 @@
 import { getWorkspace } from "@/services/get-workspace";
-import { getAptosNodes } from "@/services/get-aptos-nodes";
+import { getNodes } from "@/services/get-nodes";
+import { AptosNode } from "@/types";
 import { AptosClient } from "./components/client";
 
 export default async function AptosPage({
@@ -7,7 +8,7 @@ export default async function AptosPage({
 }: {
   params: { workspaceId: string };
 }) {
-  const nodes = await getAptosNodes(params.workspaceId);
+  const nodes = await getNodes<AptosNode>(params.workspaceId, "/aptos/nodes");
   const { role } = await getWorkspace(params.workspaceId);
 
   return (
