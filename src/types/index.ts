@@ -86,3 +86,8 @@ export interface AptosStats {
   currentBlock: string;
   peerCount: number;
 }
+
+export interface BitcoinStats {
+  blockCount: number;
+  peerCount: number;
+}

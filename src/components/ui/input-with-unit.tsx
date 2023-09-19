@@ -66,7 +66,11 @@ const InputWithUnit = forwardRef<HTMLInputElement, InputProps>(
         )}
 
         {typeof unit === "object" && (
-          <Select value={selectedUnit} onValueChange={handleUnitChange}>
+          <Select
+            value={selectedUnit}
+            onValueChange={handleUnitChange}
+            disabled={props.disabled}
+          >
             <SelectTrigger className="absolute inset-y-0 right-0 w-4/12 border-l-0 rounded-l-none">
               <SelectValue />
             </SelectTrigger>

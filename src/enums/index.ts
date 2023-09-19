@@ -38,6 +38,7 @@ export enum BitcoinNetworks {
 
 export enum Protocol {
   aptos = "aptos",
+  bitcoin = "bitcoin",
 }
 
 export enum NodeStatuses {

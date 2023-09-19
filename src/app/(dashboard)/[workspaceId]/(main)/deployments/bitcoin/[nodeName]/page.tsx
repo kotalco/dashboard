@@ -3,22 +3,24 @@ import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
 import { getWorkspace } from "@/services/get-workspace";
+import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
-import { Protocol, Roles, StorageItems } from "@/enums";
-import { AptosNode } from "@/types";
+import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
+import { BitcoinNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
-import { AptosNodeStats } from "./components/aptos-node-stats";
+import { BitcoinNodeStats } from "./components/bitcoin-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
+import { WalletTab } from "./components/wallet-tab";
 
-export default async function AptosPage({
+export default async function BitcoinPage({
   params,
 }: {
   params: { workspaceId: string; nodeName: string };
@@ -26,18 +28,19 @@ export default async function AptosPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
+  const secrets = await getSecrets(workspaceId, SecretType.Password);
 
   try {
-    const node = await getNode<AptosNode>(
+    const node = await getNode<BitcoinNode>(
       workspaceId,
-      `/aptos/nodes/${nodeName}`
+      `/bitcoin/nodes/${nodeName}`
     );
+
     const { versions } = await getClientVersions(
       {
-        protocol: "aptos",
+        protocol: "bitcoin",
         component: "node",
-        client: "aptos-core",
-        network: node.network,
+        client: "bitcoin-core",
       },
       node.image
     );
@@ -49,7 +52,7 @@ export default async function AptosPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.aptos}
+                protocol={Protocol.bitcoin}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -65,14 +68,14 @@ export default async function AptosPage({
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
               <>
-                <AptosNodeStats
+                <BitcoinNodeStats
                   nodeName={node.name}
                   token={token.value}
                   workspaceId={workspaceId}
                 />
                 <NodeMetrics
                   nodeName={node.name}
-                  protocol={Protocol.aptos}
+                  protocol={Protocol.bitcoin}
                   token={token.value}
                   workspaceId={workspaceId}
                 />
@@ -83,6 +86,7 @@ export default async function AptosPage({
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
+              <TabsTrigger value="wallet">Wallet</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -98,12 +102,15 @@ export default async function AptosPage({
               <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
             <TabsContent value="api">
-              <APITab node={node} role={role} />
+              <APITab node={node} role={role} secrets={secrets} />
+            </TabsContent>
+            <TabsContent value="wallet">
+              <WalletTab node={node} role={role} />
             </TabsContent>
             <TabsContent value="logs">
               {token && (
                 <Logs
-                  url={`aptos/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
+                  url={`bitcoin/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
                 />
               )}
             </TabsContent>
@@ -111,7 +118,7 @@ export default async function AptosPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/bitcoin/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

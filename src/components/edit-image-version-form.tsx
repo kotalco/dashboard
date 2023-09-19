@@ -8,6 +8,7 @@ import { isAxiosError } from "axios";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -62,7 +63,10 @@ export const EditImageVersionForm: React.FC<EditImageVersionFormProps> = ({
     },
     reset,
     setError,
+    watch,
   } = form;
+
+  const watchedImage = watch("image");
 
   const onSubmit = async (values: Schema) => {
     try {
@@ -111,6 +115,22 @@ export const EditImageVersionForm: React.FC<EditImageVersionFormProps> = ({
                   ))}
                 </SelectContent>
               </Select>
+              <FormDescription className="flex flex-col">
+                <span>Latest version is recommended</span>
+                {watchedImage && (
+                  <a
+                    className="text-primary hover:underline underline-offset-4"
+                    rel="noreferrer"
+                    href={
+                      versions?.find((version) => version.image === image)
+                        ?.releaseNotes
+                    }
+                    target="_blank"
+                  >
+                    Release Notes
+                  </a>
+                )}
+              </FormDescription>
 
               <FormMessage />
             </FormItem>
