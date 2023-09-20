@@ -23,6 +23,37 @@ export interface ClientImage {
   image: string;
 }
 
+export interface Version {
+  name: string;
+  image: string;
+  network?: string;
+  releaseNotes: string;
+  next: string;
+  previous: string;
+  canBeUpgraded: boolean;
+  canBeDowngraded: boolean;
+}
+
+export interface Clients {
+  clients: {
+    [client: string]: {
+      repository: string;
+      versions: Version[];
+    };
+  };
+}
+
+export interface ClientVersions {
+  version: string;
+  protocols: {
+    [protocol: string]: {
+      components: {
+        [node: string]: Clients;
+      };
+    };
+  };
+}
+
 export interface AptosNode extends ClientImage, ResourcesInfo {
   name: string;
   network: string;
@@ -33,4 +64,30 @@ export interface AptosNode extends ClientImage, ResourcesInfo {
   nodePrivateKeySecretName: string;
   p2pPort: number;
   validator: boolean;
+}
+
+export interface BitcoinNode extends ClientImage, ResourcesInfo {
+  name: string;
+  network: string;
+  rpc: boolean;
+  txIndex: boolean;
+  rpcUsers: { username: string; passwordSecretName: string }[];
+  wallet: boolean;
+  createdAt: string;
+  p2pPort: number;
+  rpcPort: number;
+}
+
+export interface StatsError {
+  error: string;
+}
+
+export interface AptosStats {
+  currentBlock: string;
+  peerCount: number;
+}
+
+export interface BitcoinStats {
+  blockCount: number;
+  peerCount: number;
 }
