@@ -21,9 +21,9 @@ import "./commands";
 
 import { mount } from "cypress/react18";
 import {
-  AppRouterInstance,
   AppRouterContext,
-} from "next/dist/shared/lib/app-router-context";
+  AppRouterInstance,
+} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import "../../src/app/globals.css";
 
 // Augment the Cypress namespace to include type definitions for

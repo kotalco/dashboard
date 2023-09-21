@@ -42,7 +42,7 @@ export const NoResult: React.FC<NoResultProps> = ({
           height={64}
           alt="decoration"
           src={imageUrl}
-          className="mb-3"
+          className="w-16 h-16 mb-3"
         />
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

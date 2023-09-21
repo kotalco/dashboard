@@ -9,20 +9,26 @@ import { ValidatorClient } from "./components/validator-client";
 import { Roles } from "@/enums";
 import { ButtonGroup } from "@/components/ui/button-group";
 
-const menu = [
-  {
-    title: "Execution Client",
-    href: "/deployments/ethereum/execution-clients/new",
-  },
-  { title: "Beacon Node", href: "/deployments/ethereum/beacon-nodes/new" },
-  { title: "Validator", href: "/deployments/ethereum/validators/new" },
-];
-
 export default async function EthereumPage({
   params,
 }: {
   params: { workspaceId: string };
 }) {
+  const menu = [
+    {
+      title: "Execution Client",
+      href: `/${params.workspaceId}/deployments/ethereum/execution-clients/new`,
+    },
+    {
+      title: "Beacon Node",
+      href: `/${params.workspaceId}/deployments/ethereum/beacon-nodes/new`,
+    },
+    {
+      title: "Validator",
+      href: `/${params.workspaceId}/deployments/ethereum/validators/new`,
+    },
+  ];
+
   const { data: executionClients, count: executionClientsCount } =
     await getNodes<ExecutionClientNode>(params.workspaceId, "/ethereum/nodes");
 
