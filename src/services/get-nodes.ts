@@ -11,7 +11,7 @@ export const getNodes = cache(async <T>(workspace_id: string, url: string) => {
     query: { workspace_id },
   });
 
-  const { data } = await server.get<T[]>(qUrl);
+  const { data, headers } = await server.get<T[]>(qUrl);
 
-  return data;
+  return { data, count: +headers["x-total-count"] };
 });

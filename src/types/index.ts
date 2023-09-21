@@ -1,3 +1,12 @@
+import {
+  BeaconNodeClients,
+  ExecutionClientAPI,
+  ExecutionClientClients,
+  ExecutionClientLogging,
+  ExecutionClientSyncMode,
+  ValidatorClients,
+} from "@/enums";
+
 export * from "@/types/auth";
 export * from "@/types/workspaces";
 export * from "@/types/nav";
@@ -76,6 +85,63 @@ export interface BitcoinNode extends ClientImage, ResourcesInfo {
   createdAt: string;
   p2pPort: number;
   rpcPort: number;
+}
+
+export interface ExecutionClientNode extends ClientImage, ResourcesInfo {
+  name: string;
+  client: ExecutionClientClients;
+  network: string;
+  nodePrivateKeySecretName: string;
+  syncMode: ExecutionClientSyncMode;
+  staticNodes: string[];
+  bootnodes: string[];
+  rpc: boolean;
+  rpcAPI: ExecutionClientAPI;
+  ws: boolean;
+  wsAPI: ExecutionClientAPI;
+  graphql: boolean;
+  engine: boolean;
+  jwtSecretName: string;
+  hosts: string[];
+  corsDomains: string[];
+  miner: boolean;
+  coinbase: string;
+  import: {
+    privateKeySecretName: string;
+    passwordSecretName: string;
+  };
+  logging: ExecutionClientLogging;
+  createdAt: string;
+  p2pPort: number;
+  rpcPort: number;
+  wsPort: number;
+  graphqlPort: number;
+  enginePort: number;
+}
+
+export interface BeaconNode extends ClientImage, ResourcesInfo {
+  name: string;
+  client: BeaconNodeClients;
+  network: string;
+  rest: boolean;
+  rpc: boolean;
+  grpc: boolean;
+  checkpointSyncUrl: string;
+  createdAt: string;
+  restPort: number;
+  rpcPort: number;
+  grpcPort: number;
+}
+
+export interface Validator extends ClientImage, ResourcesInfo {
+  name: string;
+  network: string;
+  client: ValidatorClients;
+  walletPasswordSecretName: string;
+  beaconEndpoints: string[];
+  graffiti: string;
+  createdAt: string;
+  keystores: { secretName: string }[];
 }
 
 export interface StatsError {

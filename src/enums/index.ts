@@ -59,3 +59,47 @@ export enum StorageUnits {
   Gigabyte = "Gi",
   Terabyte = "Ti",
 }
+
+export enum ExecutionClientClients {
+  "Go Ethereum" = "geth",
+  "Hyperledger Besu" = "besu",
+  Nethermind = "nethermind",
+}
+
+export enum ExecutionClientSyncMode {
+  Fast = "fast",
+  Full = "full",
+  Light = "light",
+  Snap = "snap",
+}
+
+export enum ExecutionClientAPI {
+  Eth = "eth",
+  Net = "net",
+  Web3 = "web3",
+}
+
+export enum ExecutionClientLogging {
+  All = "all",
+  Debug = "debug",
+  Error = "error",
+  Fatal = "fatal",
+  Info = "info",
+  Warn = "warn",
+  Trace = "trace",
+  Off = "off",
+}
+
+export enum BeaconNodeClients {
+  "ConsenSys Teku" = "teku",
+  "Prysatic Labs Prysm" = "prysm",
+  "Sigma Prime Lighthouse" = "lighthouse",
+  "Status.im Nimbus" = "nimbus",
+}
+
+export enum ValidatorClients {
+  "ConsenSys Teku" = "teku",
+  "Prysatic Labs Prysm" = "prysm",
+  "Sigma Prime Lighthouse" = "lighthouse",
+  "Status.im Nimbus" = "nimbus",
+}

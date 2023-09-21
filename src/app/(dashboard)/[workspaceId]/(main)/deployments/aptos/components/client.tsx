@@ -5,7 +5,8 @@ import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import { Roles } from "@/enums";
+import { getEnumKey } from "@/lib/utils";
+import { AptosNetworks, Roles } from "@/enums";
 import { NoResult } from "@/components/no-result";
 import { AptosNode } from "@/types";
 import { DeploymentsList } from "@/components/deployments-list";
@@ -21,7 +22,7 @@ export const AptosClient: React.FC<AptosClientProps> = ({ data, role }) => {
 
   const mainNodesInfo = data.map(({ name, network }) => ({
     name,
-    network,
+    network: getEnumKey(AptosNetworks, network),
     client: "aptos-core",
     url: `/${params.workspaceId}/deployments/aptos/${name}`,
   }));

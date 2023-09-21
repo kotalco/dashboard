@@ -8,7 +8,7 @@ export default async function BitcoinPage({
 }: {
   params: { workspaceId: string };
 }) {
-  const nodes = await getNodes<BitcoinNode>(
+  const { data } = await getNodes<BitcoinNode>(
     params.workspaceId,
     "/bitcoin/nodes"
   );
@@ -17,7 +17,7 @@ export default async function BitcoinPage({
   return (
     <div className="flex-col">
       <div className="flex-1 p-8 pt-6 space-y-4">
-        <BitcoinClient data={nodes} role={role} />
+        <BitcoinClient data={data} role={role} />
       </div>
     </div>
   );
