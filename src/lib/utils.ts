@@ -1,4 +1,4 @@
-import { NodeStatuses } from "@/enums";
+import { ExecutionClientClients, NodeStatuses } from "@/enums";
 import { Clients } from "@/types";
 import { AxiosResponse } from "axios";
 import { type ClassValue, clsx } from "clsx";
@@ -82,4 +82,17 @@ export const getLatestVersion = (
   }
 
   return versions[0].image;
+};
+
+export const getClientUrl = (client: string) => {
+  switch (client) {
+    case ExecutionClientClients["Go Ethereum"]:
+      return "https://github.com/ethereum/go-ethereum";
+    case ExecutionClientClients["Hyperledger Besu"]:
+      return "https://github.com/hyperledger/besu";
+    case ExecutionClientClients.Nethermind:
+      return "https://github.com/NethermindEth/nethermind";
+    default:
+      return "#";
+  }
 };

@@ -1,15 +1,22 @@
 "use client";
 
 import useSWRSubscription from "swr/subscription";
-import type { SWRSubscription } from "swr/subscription";
 import { cx } from "class-variance-authority";
+import { AlertCircle, RefreshCw } from "lucide-react";
+import type { SWRSubscription } from "swr/subscription";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
-import { BitcoinStats, StatsError } from "@/types";
+import { ExecutionClientStats, StatsError } from "@/types";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface BitcoinNodeStatsProps {
   nodeName: string;
@@ -19,14 +26,14 @@ interface BitcoinNodeStatsProps {
 
 const WS_URL = getWsBaseURL();
 
-export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
+export const ExecutionClientNodeStats: React.FC<BitcoinNodeStatsProps> = ({
   nodeName,
   token,
   workspaceId,
 }) => {
   const subscription: SWRSubscription<
     string,
-    BitcoinStats | StatsError,
+    ExecutionClientStats | StatsError,
     string
   > = (key, { next }) => {
     const socket = new WebSocket(key);
@@ -39,7 +46,7 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
     return () => socket.close();
   };
   const { data, error } = useSWRSubscription(
-    `${WS_URL}/bitcoin/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
+    `${WS_URL}/ethereum/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription
   );
 
@@ -64,6 +71,12 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
       </>
     );
 
+  const syncPercentage =
+    !("error" in data) &&
+    (!+data.highestBlock
+      ? "00%"
+      : `${((+data.currentBlock / +data.highestBlock) * 100).toFixed(2)}%`);
+
   return (
     <div className="relative lg:col-span-2">
       <div
@@ -74,11 +87,33 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
       >
         <Card>
           <CardHeader>
-            <CardTitle>Blocks</CardTitle>
+            <CardTitle className="items-start">
+              Blocks
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AlertCircle className="w-4 h-4 ml-2" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{syncPercentage}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </CardTitle>
           </CardHeader>
-          <CardContent className="text-3xl font-light text-gray-500 truncate">
-            {!("error" in data) &&
-              new Intl.NumberFormat("en-US").format(+data.blockCount)}
+          <CardContent className="flex items-center text-3xl font-light text-gray-500 truncate gap-x-2">
+            {!("error" in data) && (
+              <>
+                {!data.peersCount ? (
+                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                ) : (
+                  <RefreshCw className="w-5 h-5 animate-spin" />
+                )}
+                <span>
+                  {new Intl.NumberFormat("en-US").format(+data.currentBlock)}
+                </span>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>
@@ -86,7 +121,7 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
             <CardTitle>Peers</CardTitle>
           </CardHeader>
           <CardContent className="text-3xl font-light text-gray-500 truncate">
-            {!("error" in data) && data.peerCount}
+            {!("error" in data) && data.peersCount}
           </CardContent>
         </Card>
       </div>

@@ -157,3 +157,9 @@ export interface BitcoinStats {
   blockCount: number;
   peerCount: number;
 }
+
+export interface ExecutionClientStats {
+  currentBlock: string;
+  highestBlock: string;
+  peersCount: number;
+}

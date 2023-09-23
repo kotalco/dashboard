@@ -1,10 +1,15 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import { BitcoinNetworks, Roles } from "@/enums";
-import { getEnumKey } from "@/lib/utils";
-import { BitcoinNode, Version } from "@/types";
+import {
+  BitcoinNetworks,
+  ExecutionClientClients,
+  ExecutionClientNetworks,
+  Roles,
+} from "@/enums";
+import { getClientUrl, getEnumKey } from "@/lib/utils";
+import { ExecutionClientNode, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: BitcoinNode;
+  node: ExecutionClientNode;
   role: Roles;
   versions: Version[];
 }
@@ -14,31 +19,31 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
   role,
   versions,
 }) => {
-  const { network, image, name } = node;
+  const { network, image, name, client } = node;
   return (
     <>
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Protocol</span>
-          <span className="text-sm text-foreground/50">Bitcoin</span>
+          <span className="text-sm text-foreground/50">Ethereum</span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Network</span>
           <span className="text-sm text-foreground/50">
-            {getEnumKey(BitcoinNetworks, network)}
+            {getEnumKey(ExecutionClientNetworks, network)}
           </span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Client</span>
           <a
-            href="https://github.com/bitcoin/bitcoin"
+            href={getClientUrl(client)}
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            Bitcoin Core
+            {getEnumKey(ExecutionClientClients, client)}
           </a>
         </li>
       </ul>
@@ -46,7 +51,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/bitcoin/nodes/${name}`}
+        updateUrl={`/ethereum/nodes/${name}`}
       />
     </>
   );
