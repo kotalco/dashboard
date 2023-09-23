@@ -85,7 +85,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
               <FormLabel className="mt-2 text-base">REST</FormLabel>
               <FormControl>
                 <Switch
-                  disabled={role === Roles.Reader}
+                  disabled={isSubmitting || role === Roles.Reader}
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />

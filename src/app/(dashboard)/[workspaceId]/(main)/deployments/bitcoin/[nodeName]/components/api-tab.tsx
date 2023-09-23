@@ -155,7 +155,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
                     <FormControl>
                       <Input
                         data-testid="name"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || role === Roles.Reader}
                         {...field}
                       />
                     </FormControl>
@@ -171,7 +171,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
                   <FormItem className="col-span-12 lg:col-span-5 xl:col-span-4">
                     <FormLabel>Password</FormLabel>
                     <Select
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || role === Roles.Reader}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       value={field.value}
@@ -203,7 +203,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
                 )}
               />
 
-              {idx === fields.length - 1 && (
+              {idx === fields.length - 1 && role !== Roles.Reader && (
                 <div className="col-span-2 mt-8">
                   {fields.length > 1 && (
                     <Button

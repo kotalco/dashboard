@@ -82,15 +82,17 @@ export const WalletTab: React.FC<WalletTabProps> = ({ node, role }) => {
           control={form.control}
           name="wallet"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">Wallet</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
+            <FormItem>
+              <div className="flex flex-row items-center gap-x-3">
+                <FormLabel className="text-base">Wallet</FormLabel>
+                <FormControl>
+                  <Switch
+                    disabled={isSubmitting || role === Roles.Reader}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </div>
               <FormDescription>
                 Load wallet and enable wallet RPC calls
               </FormDescription>

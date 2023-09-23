@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
 import { getWorkspace } from "@/services/get-workspace";
-// import { getSecrets } from "@/services/get-secrets";
+import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
@@ -19,6 +19,7 @@ import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { WalletTab } from "./components/wallet-tab";
+import { NetworkingTab } from "./components/networking-tab";
 
 export default async function ExecutionClientPage({
   params,
@@ -28,7 +29,10 @@ export default async function ExecutionClientPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  // const secrets = await getSecrets(workspaceId, SecretType.Password);
+  const secrets = await getSecrets(
+    workspaceId,
+    SecretType["Execution Client Private Key"]
+  );
 
   try {
     const node = await getNode<ExecutionClientNode>(
@@ -101,6 +105,12 @@ export default async function ExecutionClientPage({
             </TabsList>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
+            </TabsContent>
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="networking"
+            >
+              <NetworkingTab node={node} role={role} secrets={secrets} />
             </TabsContent>
             {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={secrets} />
