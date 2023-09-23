@@ -5,7 +5,11 @@ import { useParams } from "next/navigation";
 import { NoResult } from "@/components/no-result";
 import { DeploymentsList } from "@/components/deployments-list";
 import { ExecutionClientNode } from "@/types";
-import { ExecutionClientClients, Roles } from "@/enums";
+import {
+  ExecutionClientClients,
+  ExecutionClientNetworks,
+  Roles,
+} from "@/enums";
 import { getEnumKey } from "@/lib/utils";
 
 interface ExecutionClientClientProps {
@@ -21,7 +25,7 @@ export const ExecutionClientClient: React.FC<ExecutionClientClientProps> = ({
 
   const mainNodesInfo = data.map(({ name, network, client }) => ({
     name,
-    network,
+    network: getEnumKey(ExecutionClientNetworks, network),
     client: getEnumKey(ExecutionClientClients, client),
     url: `/${params.workspaceId}/deployments/ethereum/execution-clients/${name}`,
   }));

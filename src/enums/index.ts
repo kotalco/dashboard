@@ -103,3 +103,9 @@ export enum ValidatorClients {
   "Sigma Prime Lighthouse" = "lighthouse",
   "Status.im Nimbus" = "nimbus",
 }
+
+export enum ExecutionClientNetworks {
+  Mainnet = "mainnet",
+  Sepolia = "sepolia",
+  Goerli = "goerli",
+}

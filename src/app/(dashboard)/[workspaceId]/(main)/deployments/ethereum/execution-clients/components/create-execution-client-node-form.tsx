@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import * as z from "zod";
 import { useParams, useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
@@ -17,7 +18,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { BitcoinNetworks } from "@/enums";
+import {
+  BitcoinNetworks,
+  ExecutionClientClients,
+  ExecutionClientNetworks,
+} from "@/enums";
 import {
   Select,
   SelectContent,
@@ -26,9 +31,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { getSelectItems } from "@/lib/utils";
+import { getEnumKey, getLatestVersion, getSelectItems } from "@/lib/utils";
 import { client } from "@/lib/client-instance";
-import { Version } from "@/types";
+import { Clients } from "@/types";
+import { SelectWithInput } from "@/components/ui/select-with-input";
 
 const schema = z.object({
   name: z
@@ -39,27 +45,29 @@ const schema = z.object({
     .refine((value) => /^\S*$/.test(value), {
       message: "Invalid character used",
     }),
-  network: z.nativeEnum(BitcoinNetworks, {
-    required_error: "Please select a Network",
+  client: z.nativeEnum(ExecutionClientClients, {
+    required_error: "Please select a Client",
   }),
+  network: z.string().min(1, "Please select a Netwrok").trim(),
   workspace_id: z.string().min(1),
   image: z.string().min(1),
 });
 
 type SchemaType = z.infer<typeof schema>;
 
-export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
+const defaultValues = {
+  name: "",
+  network: undefined,
+  client: undefined,
+};
+
+export const CreateExecutionClientNodeForm: React.FC<{ images: Clients }> = ({
   images,
 }) => {
   const { toast } = useToast();
   const router = useRouter();
   const { workspaceId } = useParams();
 
-  const defaultValues = {
-    name: "",
-    network: undefined,
-    image: images[0].image,
-  };
   const form = useForm<SchemaType>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -67,16 +75,27 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
 
   const {
     formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
+    watch,
     setError,
+    setValue,
   } = form;
+
+  const [watchedClient, network] = watch(["client", "network"]);
+
+  useEffect(() => {
+    if (watchedClient)
+      setValue("image", getLatestVersion(images, watchedClient), {
+        shouldValidate: true,
+      });
+  }, [watchedClient, images, setValue]);
 
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
-      await client.post("/bitcoin/nodes", values);
-      router.push(`/${workspaceId}/deployments/bitcoin`);
+      await client.post("/ethereum/nodes", values);
+      router.push(`/${workspaceId}/deployments/ethereum`);
       router.refresh();
       toast({
-        title: "Bitcoin node has been created",
+        title: "Execution client node has been created",
         description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
       });
     } catch (error) {
@@ -137,10 +156,10 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
 
         <FormField
           control={form.control}
-          name="network"
+          name="client"
           render={({ field }) => (
             <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-              <FormLabel>Network</FormLabel>
+              <FormLabel>Client</FormLabel>
               <Select
                 disabled={isSubmitting}
                 onValueChange={field.onChange}
@@ -148,35 +167,43 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
                 value={field.value}
               >
                 <FormControl>
-                  <SelectTrigger data-testid="network" className="bg-white">
-                    <SelectValue placeholder="Select a Network" />
+                  <SelectTrigger data-testid="client" className="bg-white">
+                    <SelectValue placeholder="Select a Client" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {getSelectItems(BitcoinNetworks).map(({ value, label }) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
+                  {getSelectItems(ExecutionClientClients).map(
+                    ({ value, label }) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    )
+                  )}
                 </SelectContent>
               </Select>
-
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <p className="text-sm">
-          Client:{" "}
-          <a
-            href="https://github.com/bitcoin/bitcoin"
-            target="_blank"
-            rel="noreferrer"
-            className="text-primary hover:underline underline-offset-4"
-          >
-            Bitcoin Core
-          </a>
-        </p>
+        <FormField
+          control={form.control}
+          name="network"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
+              <FormLabel>Network</FormLabel>
+              <SelectWithInput
+                placeholder="Select a Network"
+                disabled={isSubmitting}
+                onChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+                options={getSelectItems(ExecutionClientNetworks)}
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <Button
           data-testid="submit"
