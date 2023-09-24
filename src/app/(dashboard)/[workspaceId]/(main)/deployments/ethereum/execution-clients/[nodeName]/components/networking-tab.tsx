@@ -82,7 +82,6 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
       isSubmitSuccessful,
       errors,
     },
-    control,
     reset,
     setError,
   } = form;

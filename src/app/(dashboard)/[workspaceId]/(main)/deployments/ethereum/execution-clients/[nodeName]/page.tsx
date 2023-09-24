@@ -6,7 +6,13 @@ import { getWorkspace } from "@/services/get-workspace";
 import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
-import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
+import {
+  ExecutionClientClients,
+  Protocol,
+  Roles,
+  SecretType,
+  StorageItems,
+} from "@/enums";
 import { BitcoinNode, ExecutionClientNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -18,7 +24,7 @@ import { ExecutionClientNodeStats } from "./components/execution-client-node-sta
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
-import { WalletTab } from "./components/wallet-tab";
+import { AccessControlTab } from "./components/access-control-tab";
 import { NetworkingTab } from "./components/networking-tab";
 
 export default async function ExecutionClientPage({
@@ -94,7 +100,9 @@ export default async function ExecutionClientPage({
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="networking">Networking</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
-              <TabsTrigger value="accessControl">Access Control</TabsTrigger>
+              {node.client !== ExecutionClientClients.Nethermind && (
+                <TabsTrigger value="accessControl">Access Control</TabsTrigger>
+              )}
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -122,9 +130,14 @@ export default async function ExecutionClientPage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={jwtSecrets} />
             </TabsContent>
-            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
-              <WalletTab node={node} role={role} />
-            </TabsContent> */}
+            {node.client !== ExecutionClientClients.Nethermind && (
+              <TabsContent
+                className="px-4 py-3 sm:px-6 sm:py-4"
+                value="accessControl"
+              >
+                <AccessControlTab node={node} role={role} />
+              </TabsContent>
+            )}
             {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
                 <Logs
