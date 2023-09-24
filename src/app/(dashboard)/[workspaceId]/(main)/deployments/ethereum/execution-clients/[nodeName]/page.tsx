@@ -26,6 +26,7 @@ import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { AccessControlTab } from "./components/access-control-tab";
 import { NetworkingTab } from "./components/networking-tab";
+import { LogsTab } from "./components/logs-tab";
 
 export default async function ExecutionClientPage({
   params,
@@ -138,13 +139,9 @@ export default async function ExecutionClientPage({
                 <AccessControlTab node={node} role={role} />
               </TabsContent>
             )}
-            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && (
-                <Logs
-                  url={`bitcoin/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-                />
-              )}
-            </TabsContent> */}
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
+              {token && <LogsTab node={node} role={role} token={token.value} />}
+            </TabsContent>
             {/* <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="resources"

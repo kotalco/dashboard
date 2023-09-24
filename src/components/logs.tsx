@@ -152,7 +152,7 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
                 <span>{log}</span>
               </li>
             ))}
-            {counter && (
+            {!!counter && (
               <li>
                 <span>
                   {`Will retry to connect in ${counter / 1000} seconds. `}

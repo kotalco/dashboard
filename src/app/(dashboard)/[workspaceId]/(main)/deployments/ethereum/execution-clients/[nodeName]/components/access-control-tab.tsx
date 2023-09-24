@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { BitcoinNode, ExecutionClientNode } from "@/types";
+import { ExecutionClientNode } from "@/types";
 import { Roles } from "@/enums";
 import {
   Form,
@@ -40,12 +40,18 @@ const schema = z.object({
     .string()
     .transform((value) =>
       value ? value.split("\n").filter((value) => !!value) : []
-    ),
+    )
+    .refine((value) => !!value.length, {
+      message: `Please specify your whitelisted hosts or "*" to whitelist all hosts`,
+    }),
   corsDomains: z
     .string()
     .transform((value) =>
       value ? value.split("\n").filter((value) => !!value) : []
-    ),
+    )
+    .refine((value) => !!value.length, {
+      message: `Please specify your CORS domains or "*" to whitelist all domains`,
+    }),
 });
 
 type Schema = z.input<typeof schema>;
@@ -78,24 +84,23 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
   } = form;
 
   const onSubmit = async (values: Schema) => {
-    console.log(values);
-    // try {
-    //   const { data } = await client.put<ExecutionClientNode>(
-    //     `/ethereum/nodes/${node.name}`,
-    //     values
-    //   );
-    //   const { hosts, corsDomains } = data;
-    //   reset({ hosts, corsDomains });
-    // } catch (error) {
-    //   if (isAxiosError(error)) {
-    //     const { response } = error;
+    try {
+      const { data } = await client.put<ExecutionClientNode>(
+        `/ethereum/nodes/${node.name}`,
+        values
+      );
+      const { hosts, corsDomains } = data;
+      reset({ hosts: hosts.join("\n"), corsDomains: corsDomains.join("\n") });
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const { response } = error;
 
-    //     setError("root", {
-    //       type: response?.status.toString(),
-    //       message: "Something went wrong.",
-    //     });
-    //   }
-    // }
+        setError("root", {
+          type: response?.status.toString(),
+          message: "Something went wrong.",
+        });
+      }
+    }
   };
 
   return (
@@ -108,7 +113,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
           control={form.control}
           name="hosts"
           render={({ field }) => (
-            <FormItem className="max-w-xs">
+            <FormItem>
               <FormLabel>
                 Whitelisted Hosts
                 <TooltipProvider>
@@ -123,7 +128,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
               <FormControl>
                 <Textarea
                   disabled={isSubmitting || role === Roles.Reader}
-                  className="resize-none"
+                  className="max-w-xs resize-none"
                   {...field}
                 />
               </FormControl>
@@ -139,7 +144,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
           control={form.control}
           name="corsDomains"
           render={({ field }) => (
-            <FormItem className="max-w-xs">
+            <FormItem>
               <FormLabel>
                 CORS Domains
                 <TooltipProvider>
@@ -154,7 +159,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
               <FormControl>
                 <Textarea
                   disabled={isSubmitting || role === Roles.Reader}
-                  className="resize-none"
+                  className="max-w-xs resize-none"
                   {...field}
                 />
               </FormControl>
