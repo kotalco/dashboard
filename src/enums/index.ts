@@ -75,7 +75,7 @@ export enum ExecutionClientSyncMode {
 }
 
 export enum ExecutionClientAPI {
-  Eth = "eth",
+  ETH = "eth",
   Net = "net",
   Web3 = "web3",
 }

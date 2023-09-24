@@ -29,9 +29,12 @@ export default async function ExecutionClientPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(
-    workspaceId,
-    SecretType["Execution Client Private Key"]
+  const secrets = await getSecrets(workspaceId);
+  const executionClientPrivateKeys = secrets.filter(
+    ({ type }) => type === SecretType["Execution Client Private Key"]
+  );
+  const jwtSecrets = secrets.filter(
+    ({ type }) => type === SecretType["JWT Secret"]
   );
 
   try {
@@ -110,11 +113,15 @@ export default async function ExecutionClientPage({
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="networking"
             >
-              <NetworkingTab node={node} role={role} secrets={secrets} />
+              <NetworkingTab
+                node={node}
+                role={role}
+                secrets={executionClientPrivateKeys}
+              />
             </TabsContent>
-            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} secrets={secrets} />
-            </TabsContent> */}
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
+              <APITab node={node} role={role} secrets={jwtSecrets} />
+            </TabsContent>
             {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
               <WalletTab node={node} role={role} />
             </TabsContent> */}

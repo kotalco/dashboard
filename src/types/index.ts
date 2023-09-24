@@ -96,9 +96,9 @@ export interface ExecutionClientNode extends ClientImage, ResourcesInfo {
   staticNodes: string[];
   bootnodes: string[];
   rpc: boolean;
-  rpcAPI: ExecutionClientAPI;
+  rpcAPI: ExecutionClientAPI[];
   ws: boolean;
-  wsAPI: ExecutionClientAPI;
+  wsAPI: ExecutionClientAPI[];
   graphql: boolean;
   engine: boolean;
   jwtSecretName: string;

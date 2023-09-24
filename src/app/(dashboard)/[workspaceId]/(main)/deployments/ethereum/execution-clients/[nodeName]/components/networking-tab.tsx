@@ -4,12 +4,12 @@ import * as z from "zod";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MinusCircle, PlusCircle } from "lucide-react";
 
 import { client } from "@/lib/client-instance";
-import { BitcoinNode, ExecutionClientNode, Secret } from "@/types";
+import { getSelectItems } from "@/lib/utils";
+import { ExecutionClientNode, Secret } from "@/types";
 import { ExecutionClientSyncMode, Roles, SecretType } from "@/enums";
 import {
   Form,
@@ -20,11 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -32,7 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getSelectItems } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 
 interface NetWorkingTabProps {
