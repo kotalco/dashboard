@@ -9,11 +9,11 @@ import { DeleteNodeForm } from "@/components/delete-node-form";
 import { useToast } from "@/components/ui/use-toast";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { BitcoinNode } from "@/types";
+import { ExecutionClientNode } from "@/types";
 import { client } from "@/lib/client-instance";
 
 interface DangerZoneTabProps {
-  node: BitcoinNode;
+  node: ExecutionClientNode;
 }
 
 export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
@@ -23,16 +23,18 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
 
   const [open, setOpen] = useState(false);
 
-  async function onDeleteBitcoinNode() {
+  async function onDeleteExecutionClientNode() {
     const url = qs.stringifyUrl({
-      url: `/bitcoin/nodes/${node.name}`,
+      url: `/ethereum/nodes/${node.name}`,
       query: { workspace_id: params.workspaceId },
     });
     await client.delete(url);
-    router.push(`/${params.workspaceId}/deployments/bitcoin`);
+    router.push(
+      `/${params.workspaceId}/deployments/ethereum?deployment=execution-clients`
+    );
     router.refresh();
     toast({
-      title: "Bitcoin node has been deleted",
+      title: "Execution client node has been deleted",
       description: `${node.name} node has been deleted successfully.`,
     });
     setOpen(false);
@@ -66,10 +68,13 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        title="Delete Bitcoin Node"
-        description={`This action cann't be undone. This will permnantly delete (${node.name}) Bitcoin Node.`}
+        title="Delete Execution Client Node"
+        description={`This action cann't be undone. This will permnantly delete (${node.name}) Execution Client Node.`}
       >
-        <DeleteNodeForm nodeName={node.name} onDelete={onDeleteBitcoinNode} />
+        <DeleteNodeForm
+          nodeName={node.name}
+          onDelete={onDeleteExecutionClientNode}
+        />
       </AlertModal>
     </>
   );

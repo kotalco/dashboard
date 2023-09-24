@@ -11,8 +11,12 @@ import { ButtonGroup } from "@/components/ui/button-group";
 
 export default async function EthereumPage({
   params,
+  searchParams,
 }: {
   params: { workspaceId: string };
+  searchParams: {
+    deployment: "execution-clients" | "beacon-nodes" | "validators";
+  };
 }) {
   const menu = [
     {
@@ -49,9 +53,9 @@ export default async function EthereumPage({
             <ButtonGroup title="Create New" menu={menu} />
           )}
         </div>
-        <Tabs defaultValue="executionClient">
+        <Tabs defaultValue={searchParams.deployment}>
           <TabsList>
-            <TabsTrigger value="executionClient">
+            <TabsTrigger value="execution-clients">
               Execution Client Nodes
               {!!executionClientsCount && (
                 <span className="flex items-center justify-center w-6 h-6 ml-2 rounded-full bg-foreground/10 text-primary">
@@ -59,7 +63,7 @@ export default async function EthereumPage({
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="beaconNodes">
+            <TabsTrigger value="beacon-nodes">
               Beacon Nodes
               {!!beaconnodesCount && (
                 <span className="flex items-center justify-center w-6 h-6 ml-2 rounded-full bg-foreground/10 text-primary">
@@ -76,10 +80,10 @@ export default async function EthereumPage({
               )}
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="executionClient">
+          <TabsContent value="execution-clients">
             <ExecutionClientClient data={executionClients} role={role} />
           </TabsContent>
-          <TabsContent value="beaconNodes">
+          <TabsContent value="beacon-nodes">
             <BeaconNodesClient data={beaconnodes} role={role} />
           </TabsContent>
           <TabsContent value="validators">

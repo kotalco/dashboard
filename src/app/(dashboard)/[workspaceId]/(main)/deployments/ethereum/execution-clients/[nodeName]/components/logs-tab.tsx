@@ -1,7 +1,6 @@
 "use client";
 
 import * as z from "zod";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
@@ -9,17 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
 import { getSelectItems } from "@/lib/utils";
-import { ExecutionClientNode, Secret } from "@/types";
-import {
-  ExecutionClientLogging,
-  ExecutionClientSyncMode,
-  Roles,
-  SecretType,
-} from "@/enums";
+import { ExecutionClientNode } from "@/types";
+import { ExecutionClientLogging, Roles } from "@/enums";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,7 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Logs } from "@/components/logs";
 
 interface LogsTabProps {
