@@ -29,7 +29,9 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
   placeholder,
   otherLabel = "Other",
 }) => {
-  const [selected, setSelected] = useState(defaultValue);
+  const [selected, setSelected] = useState(() =>
+    options.some(({ value }) => value === defaultValue) ? defaultValue : "other"
+  );
 
   const handleChange = (value: string) => {
     setSelected(value);

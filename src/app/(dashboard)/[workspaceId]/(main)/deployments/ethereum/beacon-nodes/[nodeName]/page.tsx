@@ -14,6 +14,7 @@ import {
   StorageItems,
 } from "@/enums";
 import { BeaconNode, ExecutionClientNode } from "@/types";
+import { getNodes } from "@/services/get-nodes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
@@ -24,7 +25,7 @@ import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { AccessControlTab } from "./components/access-control-tab";
-import { NetworkingTab } from "./components/networking-tab";
+import { ExecutionClientTab } from "./components/execution-client-tab";
 import { LogsTab } from "./components/logs-tab";
 
 export default async function BeaconNodePage({
@@ -36,6 +37,10 @@ export default async function BeaconNodePage({
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
   const secrets = await getSecrets(workspaceId, SecretType["JWT Secret"]);
+  const { data } = await getNodes<ExecutionClientNode>(
+    params.workspaceId,
+    "/ethereum/nodes"
+  );
 
   try {
     const node = await getNode<BeaconNode>(
@@ -112,16 +117,17 @@ export default async function BeaconNodePage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
-            {/* <TabsContent
+            <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
-              value="networking"
+              value="executionClient"
             >
-              <NetworkingTab
+              <ExecutionClientTab
                 node={node}
                 role={role}
-                secrets={executionClientPrivateKeys}
+                secrets={secrets}
+                executionClients={data}
               />
-            </TabsContent> */}
+            </TabsContent>
             {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={jwtSecrets} />
             </TabsContent> */}

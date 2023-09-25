@@ -122,6 +122,8 @@ export interface ExecutionClientNode extends ClientImage, ResourcesInfo {
 export interface BeaconNode extends ClientImage, ResourcesInfo {
   name: string;
   client: BeaconNodeClients;
+  executionEngineEndpoint: string;
+  jwtSecretName: string;
   network: string;
   rest: boolean;
   rpc: boolean;
