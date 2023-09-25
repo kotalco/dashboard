@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { NoResult } from "@/components/no-result";
 import { DeploymentsList } from "@/components/deployments-list";
 import { BeaconNode } from "@/types";
-import { BeaconNodeClients, Roles } from "@/enums";
+import { BeaconNodeClients, BeaconNodeNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
 
 interface BeaconNodesClientProps {
@@ -21,7 +21,7 @@ export const BeaconNodesClient: React.FC<BeaconNodesClientProps> = ({
 
   const mainNodesInfo = data.map(({ name, network, client }) => ({
     name,
-    network,
+    network: getEnumKey(BeaconNodeNetworks, network),
     client: getEnumKey(BeaconNodeClients, client),
     url: `/${params.workspaceId}/deployments/ethereum/beacon-nodes/${name}`,
   }));

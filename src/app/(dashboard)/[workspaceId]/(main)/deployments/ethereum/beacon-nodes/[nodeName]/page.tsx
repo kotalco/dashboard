@@ -24,9 +24,9 @@ import { BeaconNodeStats } from "./components/beacon-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
-import { AccessControlTab } from "./components/access-control-tab";
 import { ExecutionClientTab } from "./components/execution-client-tab";
 import { LogsTab } from "./components/logs-tab";
+import { CheckpointSyncTab } from "./components/checkpoint-sync-tab";
 
 export default async function BeaconNodePage({
   params,
@@ -127,6 +127,12 @@ export default async function BeaconNodePage({
                 secrets={secrets}
                 executionClients={data}
               />
+            </TabsContent>
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="checkpointSync"
+            >
+              <CheckpointSyncTab node={node} role={role} />
             </TabsContent>
             {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={jwtSecrets} />

@@ -1,11 +1,5 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import {
-  BeaconNodeClients,
-  BeaconNodeNetworks,
-  ExecutionClientClients,
-  ExecutionClientNetworks,
-  Roles,
-} from "@/enums";
+import { BeaconNodeClients, BeaconNodeNetworks, Roles } from "@/enums";
 import { getClientUrl, getEnumKey } from "@/lib/utils";
 import { BeaconNode, Version } from "@/types";
 

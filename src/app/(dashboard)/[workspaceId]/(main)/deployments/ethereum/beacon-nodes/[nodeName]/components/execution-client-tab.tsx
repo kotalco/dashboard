@@ -8,9 +8,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { getSelectItems } from "@/lib/utils";
 import { BeaconNode, ExecutionClientNode, Secret } from "@/types";
-import { ExecutionClientSyncMode, Roles, SecretType } from "@/enums";
+import { Roles, SecretType } from "@/enums";
 import {
   Form,
   FormControl,
@@ -30,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { SelectWithInput } from "@/components/ui/select-with-input";
 
 interface ExecutionClientTabProps {
@@ -50,7 +48,7 @@ const schema = z.object({
   jwtSecretName: z.string().min(1, "JWT secret is required"),
 });
 
-type Schema = z.input<typeof schema>;
+type Schema = z.infer<typeof schema>;
 
 export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
   node,
@@ -125,7 +123,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
               <FormLabel>Execution Engine Endpoint</FormLabel>
               <SelectWithInput
                 placeholder="Select a Node"
-                disabled={isSubmitting}
+                disabled={isSubmitting || role === Roles.Reader}
                 onChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
@@ -148,7 +146,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
               <FormLabel>JWT Secret</FormLabel>
               <div className="flex items-center gap-x-2">
                 <Select
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || role === Roles.Reader}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   value={field.value}
