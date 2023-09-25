@@ -134,9 +134,9 @@ export default async function BeaconNodePage({
             >
               <CheckpointSyncTab node={node} role={role} />
             </TabsContent>
-            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} secrets={jwtSecrets} />
-            </TabsContent> */}
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
+              <APITab node={node} role={role} />
+            </TabsContent>
 
             {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && <LogsTab node={node} role={role} token={token.value} />}
