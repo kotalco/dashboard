@@ -25,8 +25,8 @@ import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { ExecutionClientTab } from "./components/execution-client-tab";
-import { LogsTab } from "./components/logs-tab";
 import { CheckpointSyncTab } from "./components/checkpoint-sync-tab";
+import { Logs } from "@/components/logs";
 
 export default async function BeaconNodePage({
   params,
@@ -138,24 +138,29 @@ export default async function BeaconNodePage({
               <APITab node={node} role={role} />
             </TabsContent>
 
-            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && <LogsTab node={node} role={role} token={token.value} />}
-            </TabsContent> */}
-            {/* <TabsContent
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
+              {token && (
+                <Logs
+                  url={`ethereum2/beaconnodes/${node.name}/logs?authorization=Bearer ${token}&workspace_id=${params.workspaceId}`}
+                />
+              )}
+            </TabsContent>
+
+            <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="resources"
             >
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/ethereum/nodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
               />
-            </TabsContent> */}
-            {/* {role === Roles.Admin && (
+            </TabsContent>
+            {role === Roles.Admin && (
               <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
                 <DangerZoneTab node={node} />
               </TabsContent>
-            )} */}
+            )}
           </Tabs>
         </div>
       </div>

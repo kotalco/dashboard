@@ -1,43 +1,25 @@
 "use client";
 
 import * as z from "zod";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { BeaconNode, ExecutionClientNode, Secret } from "@/types";
-import {
-  BeaconNodeClients,
-  ExecutionClientAPI,
-  ExecutionClientClients,
-  Roles,
-  SecretType,
-} from "@/enums";
-import { getSelectItems } from "@/lib/utils";
+import { BeaconNode } from "@/types";
+import { BeaconNodeClients, Roles } from "@/enums";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface APITabProps {
   node: BeaconNode;
