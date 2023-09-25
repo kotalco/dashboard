@@ -163,3 +163,10 @@ export interface ExecutionClientStats {
   highestBlock: string;
   peersCount: number;
 }
+
+export interface BeaconStats {
+  currentSlot: number;
+  targetSlot: number;
+  peersCount: number;
+  syncing: boolean;
+}

@@ -18,6 +18,7 @@ interface NodeStatusProps {
   protocol: Protocol;
   token: string;
   workspaceId: string;
+  component?: "nodes" | "beaconnodes";
 }
 
 const WS_URL = getWsBaseURL();
@@ -27,6 +28,7 @@ export const NodeStatus: React.FC<NodeStatusProps> = ({
   protocol,
   token,
   workspaceId,
+  component = "nodes",
 }) => {
   const subscription: SWRSubscription<string, NodeStatuses, string> = (
     key,
@@ -40,7 +42,7 @@ export const NodeStatus: React.FC<NodeStatusProps> = ({
     return () => socket.close();
   };
   const { data } = useSWRSubscription(
-    `${WS_URL}/${protocol}/nodes/${nodeName}/status?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
+    `${WS_URL}/${protocol}/${component}/${nodeName}/status?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription
   );
 

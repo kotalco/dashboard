@@ -40,6 +40,7 @@ export enum Protocol {
   aptos = "aptos",
   bitcoin = "bitcoin",
   ethereum = "ethereum",
+  ethereum2 = "ethereum2",
 }
 
 export enum NodeStatuses {

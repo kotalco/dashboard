@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
-import { ExecutionClientStats, StatsError } from "@/types";
+import { BeaconStats, ExecutionClientStats, StatsError } from "@/types";
 import {
   Tooltip,
   TooltipContent,
@@ -18,7 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface ExecutionClientNodeStatsProps {
+interface BeaconNodeStatsProps {
   nodeName: string;
   token: string;
   workspaceId: string;
@@ -26,12 +26,14 @@ interface ExecutionClientNodeStatsProps {
 
 const WS_URL = getWsBaseURL();
 
-export const ExecutionClientNodeStats: React.FC<
-  ExecutionClientNodeStatsProps
-> = ({ nodeName, token, workspaceId }) => {
+export const BeaconNodeStats: React.FC<BeaconNodeStatsProps> = ({
+  nodeName,
+  token,
+  workspaceId,
+}) => {
   const subscription: SWRSubscription<
     string,
-    ExecutionClientStats | StatsError,
+    BeaconStats | StatsError,
     string
   > = (key, { next }) => {
     const socket = new WebSocket(key);
@@ -44,7 +46,7 @@ export const ExecutionClientNodeStats: React.FC<
     return () => socket.close();
   };
   const { data, error } = useSWRSubscription(
-    `${WS_URL}/ethereum/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
+    `${WS_URL}/ethereum2/beaconnodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription
   );
 
@@ -71,9 +73,9 @@ export const ExecutionClientNodeStats: React.FC<
 
   const syncPercentage =
     !("error" in data) &&
-    (!+data.highestBlock
+    (!+data.targetSlot
       ? "00%"
-      : `${((+data.currentBlock / +data.highestBlock) * 100).toFixed(2)}%`);
+      : `${((+data.currentSlot / +data.targetSlot) * 100).toFixed(2)}%`);
 
   return (
     <div className="relative lg:col-span-2">
@@ -102,13 +104,13 @@ export const ExecutionClientNodeStats: React.FC<
           <CardContent className="flex items-center text-3xl font-light text-gray-500 truncate gap-x-2">
             {!("error" in data) && (
               <>
-                {!data.peersCount ? (
+                {!data.syncing ? (
                   <AlertTriangle className="w-5 h-5 text-yellow-600" />
                 ) : (
                   <RefreshCw className="w-5 h-5 animate-spin" />
                 )}
                 <span>
-                  {new Intl.NumberFormat("en-US").format(+data.currentBlock)}
+                  {new Intl.NumberFormat("en-US").format(+data.currentSlot)}
                 </span>
               </>
             )}
