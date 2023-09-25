@@ -17,6 +17,7 @@ interface SelectWithInputProps {
   defaultValue?: string;
   options: { label: string; value: string }[];
   placeholder?: string;
+  otherLabel?: string;
 }
 
 export const SelectWithInput: React.FC<SelectWithInputProps> = ({
@@ -26,6 +27,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
   defaultValue,
   options,
   placeholder,
+  otherLabel = "Other",
 }) => {
   const [selected, setSelected] = useState(defaultValue);
 
@@ -61,7 +63,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
             </SelectItem>
           ))}
           <SelectItem value="other" className="text-primary focus:text-primary">
-            Other Network
+            {otherLabel}
           </SelectItem>
         </SelectContent>
       </Select>

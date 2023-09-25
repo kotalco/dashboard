@@ -13,12 +13,11 @@ import {
   SecretType,
   StorageItems,
 } from "@/enums";
-import { BitcoinNode, ExecutionClientNode } from "@/types";
+import { ExecutionClientNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
-import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
 import { ExecutionClientNodeStats } from "./components/execution-client-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";

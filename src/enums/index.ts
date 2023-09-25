@@ -110,3 +110,9 @@ export enum ExecutionClientNetworks {
   Sepolia = "sepolia",
   Goerli = "goerli",
 }
+
+export enum BeaconNodeNetworks {
+  Mainnet = "mainnet",
+  Sepolia = "sepolia",
+  Goerli = "goerli",
+}

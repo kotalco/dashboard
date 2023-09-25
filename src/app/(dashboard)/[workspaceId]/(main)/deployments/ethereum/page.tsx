@@ -53,7 +53,7 @@ export default async function EthereumPage({
             <ButtonGroup title="Create New" menu={menu} />
           )}
         </div>
-        <Tabs defaultValue={searchParams.deployment}>
+        <Tabs defaultValue={searchParams.deployment || "execution-clients"}>
           <TabsList>
             <TabsTrigger value="execution-clients">
               Execution Client Nodes

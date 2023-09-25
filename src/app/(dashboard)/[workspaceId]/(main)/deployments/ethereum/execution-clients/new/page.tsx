@@ -6,7 +6,7 @@ import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
 
-export default async function CreateNewBitcoinNodePage({
+export default async function CreateNewExecutionClientNodePage({
   params,
 }: {
   params: { workspaceId: string };
