@@ -1,6 +1,5 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
 import {
-  BitcoinNetworks,
   ExecutionClientClients,
   ExecutionClientNetworks,
   Roles,

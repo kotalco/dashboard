@@ -90,14 +90,14 @@ export default async function BeaconNodePage({
               </>
             )}
           </div>
-          {/* <Tabs defaultValue="protocol">
+          <Tabs defaultValue="protocol">
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
-              <TabsTrigger value="networking">Networking</TabsTrigger>
+              <TabsTrigger value="executionClient">
+                Execution Client
+              </TabsTrigger>
+              <TabsTrigger value="checkpointSync">Checkpoint Sync</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
-              {node.client !== ExecutionClientClients.Nethermind && (
-                <TabsTrigger value="accessControl">Access Control</TabsTrigger>
-              )}
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -112,7 +112,7 @@ export default async function BeaconNodePage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
-            <TabsContent
+            {/* <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="networking"
             >
@@ -121,22 +121,15 @@ export default async function BeaconNodePage({
                 role={role}
                 secrets={executionClientPrivateKeys}
               />
-            </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
+            </TabsContent> */}
+            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={jwtSecrets} />
-            </TabsContent>
-            {node.client !== ExecutionClientClients.Nethermind && (
-              <TabsContent
-                className="px-4 py-3 sm:px-6 sm:py-4"
-                value="accessControl"
-              >
-                <AccessControlTab node={node} role={role} />
-              </TabsContent>
-            )}
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
+            </TabsContent> */}
+
+            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && <LogsTab node={node} role={role} token={token.value} />}
-            </TabsContent>
-            <TabsContent
+            </TabsContent> */}
+            {/* <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="resources"
             >
@@ -145,13 +138,13 @@ export default async function BeaconNodePage({
                 role={role}
                 updateUrl={`/ethereum/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
-            </TabsContent>
-            {role === Roles.Admin && (
+            </TabsContent> */}
+            {/* {role === Roles.Admin && (
               <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
                 <DangerZoneTab node={node} />
               </TabsContent>
-            )}
-          </Tabs> */}
+            )} */}
+          </Tabs>
         </div>
       </div>
     );

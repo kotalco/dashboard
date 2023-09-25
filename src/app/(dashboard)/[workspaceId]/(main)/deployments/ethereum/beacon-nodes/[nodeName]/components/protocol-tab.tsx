@@ -1,15 +1,16 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
 import {
-  BitcoinNetworks,
+  BeaconNodeClients,
+  BeaconNodeNetworks,
   ExecutionClientClients,
   ExecutionClientNetworks,
   Roles,
 } from "@/enums";
 import { getClientUrl, getEnumKey } from "@/lib/utils";
-import { ExecutionClientNode, Version } from "@/types";
+import { BeaconNode, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: ExecutionClientNode;
+  node: BeaconNode;
   role: Roles;
   versions: Version[];
 }
@@ -31,7 +32,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Network</span>
           <span className="text-sm text-foreground/50">
-            {getEnumKey(ExecutionClientNetworks, network)}
+            {getEnumKey(BeaconNodeNetworks, network)}
           </span>
         </li>
 
@@ -43,7 +44,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            {getEnumKey(ExecutionClientClients, client)}
+            {getEnumKey(BeaconNodeClients, client)}
           </a>
         </li>
       </ul>
@@ -51,7 +52,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/ethereum/nodes/${name}`}
+        updateUrl={`/ethereum2/beaconnodes/${name}`}
       />
     </>
   );

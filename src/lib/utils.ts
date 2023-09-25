@@ -1,4 +1,8 @@
-import { ExecutionClientClients, NodeStatuses } from "@/enums";
+import {
+  BeaconNodeClients,
+  ExecutionClientClients,
+  NodeStatuses,
+} from "@/enums";
 import { Clients } from "@/types";
 import { AxiosResponse } from "axios";
 import { type ClassValue, clsx } from "clsx";
@@ -92,6 +96,14 @@ export const getClientUrl = (client: string) => {
       return "https://github.com/hyperledger/besu";
     case ExecutionClientClients.Nethermind:
       return "https://github.com/NethermindEth/nethermind";
+    case BeaconNodeClients["ConsenSys Teku"]:
+      return "https://github.com/ConsenSys/teku";
+    case BeaconNodeClients["Prysatic Labs Prysm"]:
+      return "https://github.com/prysmaticlabs/prysm";
+    case BeaconNodeClients["Sigma Prime Lighthouse"]:
+      return "https://github.com/sigp/lighthouse";
+    case BeaconNodeClients["Status.im Nimbus"]:
+      return "https://github.com/status-im/nimbus-eth2";
     default:
       return "#";
   }

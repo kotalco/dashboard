@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
-import { BeaconStats, ExecutionClientStats, StatsError } from "@/types";
+import { BeaconStats, StatsError } from "@/types";
 import {
   Tooltip,
   TooltipContent,
