@@ -117,3 +117,9 @@ export enum BeaconNodeNetworks {
   Sepolia = "sepolia",
   Goerli = "goerli",
 }
+
+export enum ValidatorNetworks {
+  Mainnet = "mainnet",
+  Sepolia = "sepolia",
+  Goerli = "goerli",
+}

@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { NoResult } from "@/components/no-result";
 import { DeploymentsList } from "@/components/deployments-list";
 import { Validator } from "@/types";
-import { Roles, ValidatorClients } from "@/enums";
+import { Roles, ValidatorClients, ValidatorNetworks } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
 
 interface ValidatorClientProps {
@@ -21,7 +21,7 @@ export const ValidatorClient: React.FC<ValidatorClientProps> = ({
 
   const mainNodesInfo = data.map(({ name, network, client }) => ({
     name,
-    network,
+    network: getEnumKey(ValidatorNetworks, network),
     client: getEnumKey(ValidatorClients, client),
     url: `/${params.workspaceId}/deployments/ethereum/validators/${name}`,
   }));
