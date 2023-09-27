@@ -12,6 +12,7 @@ import { BeaconNodeClients, Roles } from "@/enums";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -116,12 +117,15 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
                   <FormLabel className="text-base">JSON-RPC Server</FormLabel>
                   <FormControl>
                     <Switch
-                      disabled={isSubmitting || role === Roles.Reader}
+                      disabled
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
                 </div>
+                <FormDescription>
+                  JSON-RPC Server cann&apos;t be disabled for Prysm.
+                </FormDescription>
               </FormItem>
             )}
           />
