@@ -1,6 +1,6 @@
 import { getWorkspace } from "@/services/get-workspace";
 import { getNodes } from "@/services/get-nodes";
-import { BeaconNode, ExecutionClientNode, Validator } from "@/types";
+import { BeaconNode, ExecutionClientNode, ValidatorNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { ExecutionClientClient } from "./components/execution-client-client";
@@ -40,7 +40,7 @@ export default async function EthereumPage({
     await getNodes<BeaconNode>(params.workspaceId, "/ethereum2/beaconnodes");
 
   const { data: validators, count: validatorsCount } =
-    await getNodes<Validator>(params.workspaceId, "/ethereum2/validators");
+    await getNodes<ValidatorNode>(params.workspaceId, "/ethereum2/validators");
 
   const { role } = await getWorkspace(params.workspaceId);
 
