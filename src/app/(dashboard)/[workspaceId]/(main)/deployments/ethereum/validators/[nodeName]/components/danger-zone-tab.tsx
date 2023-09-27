@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Validator, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import qs from "query-string";
 
@@ -9,11 +9,11 @@ import { DeleteNodeForm } from "@/components/delete-node-form";
 import { useToast } from "@/components/ui/use-toast";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { BeaconNode } from "@/types";
+import { ValidatorNode } from "@/types";
 import { client } from "@/lib/client-instance";
 
 interface DangerZoneTabProps {
-  node: BeaconNode;
+  node: ValidatorNode;
 }
 
 export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
@@ -23,18 +23,18 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
 
   const [open, setOpen] = useState(false);
 
-  async function onDeleteBeaconNode() {
+  async function onDeleteValidatorNode() {
     const url = qs.stringifyUrl({
-      url: `/ethereum2/beaconnodes/${node.name}`,
+      url: `/ethereum2/validators/${node.name}`,
       query: { workspace_id: params.workspaceId },
     });
     await client.delete(url);
     router.push(
-      `/${params.workspaceId}/deployments/ethereum?deployment=beacon-nodes`
+      `/${params.workspaceId}/deployments/ethereum?deployment=validators`
     );
     router.refresh();
     toast({
-      title: "Beacon node has been deleted",
+      title: "Validator node has been deleted",
       description: `${node.name} node has been deleted successfully.`,
     });
     setOpen(false);
@@ -68,10 +68,10 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        title="Delete Beacon Node"
-        description={`This action cann't be undone. This will permnantly delete (${node.name}) Beacon Node.`}
+        title="Delete Validator Node"
+        description={`This action cann't be undone. This will permnantly delete (${node.name}) Validator Node.`}
       >
-        <DeleteNodeForm nodeName={node.name} onDelete={onDeleteBeaconNode} />
+        <DeleteNodeForm nodeName={node.name} onDelete={onDeleteValidatorNode} />
       </AlertModal>
     </>
   );
