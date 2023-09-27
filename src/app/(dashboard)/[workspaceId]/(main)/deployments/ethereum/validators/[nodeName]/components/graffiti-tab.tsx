@@ -1,19 +1,16 @@
 "use client";
 
 import * as z from "zod";
-import Link from "next/link";
-import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { BeaconNode, ValidatorNode } from "@/types";
-import { Roles, SecretType } from "@/enums";
+import { ValidatorNode } from "@/types";
+import { Roles } from "@/enums";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,14 +19,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SelectWithInput } from "@/components/ui/select-with-input";
 import { Input } from "@/components/ui/input";
 
 interface GraffitiTabProps {
@@ -44,7 +33,6 @@ const schema = z.object({
 type Schema = z.infer<typeof schema>;
 
 export const GraffitiTab: React.FC<GraffitiTabProps> = ({ node, role }) => {
-  const params = useParams();
   const { graffiti } = node;
 
   const form = useForm<Schema>({

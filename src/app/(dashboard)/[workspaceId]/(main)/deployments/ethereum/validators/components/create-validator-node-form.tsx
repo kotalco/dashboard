@@ -69,11 +69,11 @@ const schema = z
       .array()
       .nonempty({ message: "Keystores are required" })
       .transform((val) => val.map((secret) => ({ secretName: secret }))),
-    walletPasswordSecretName: z.string().optional().default(""),
+    walletPasswordSecretName: z.string().optional(),
     beaconEndpoints: z
       .string({ required_error: "Beacon node endpoints are required" })
       .array()
-      .length(1, { message: "Beacon node endpoint requires only 1 endpoint" }),
+      .nonempty({ message: "Beacon node endpoints are required" }),
     workspace_id: z.string().min(1),
     image: z.string().min(1),
   })
@@ -89,11 +89,11 @@ const schema = z
   )
   .refine(
     ({ client, beaconEndpoints }) =>
-      (client === ValidatorClients["Sigma Prime Lighthouse"] &&
-        beaconEndpoints.length > 1) ||
-      client !== ValidatorClients["Sigma Prime Lighthouse"],
+      (client !== ValidatorClients["Sigma Prime Lighthouse"] &&
+        beaconEndpoints.length === 1) ||
+      client === ValidatorClients["Sigma Prime Lighthouse"],
     {
-      message: "Beacon node endpoint requires at least 1 endpoint",
+      message: "Beacon node endpoint requires only 1 endpoint",
       path: ["beaconEndpoints"],
     }
   );
@@ -344,27 +344,15 @@ export const CreateValidatorNodeForm: React.FC<
                 <MultiSelect
                   value={field.value}
                   placeholder="Select beacon nodes or enter your own endpoints"
-                  // options={[]}
                   options={activeBeaconNods}
                   onChange={field.onChange}
                   emptyText="Enter your own endpoints"
                   allowCustomValues
-                  // otherLabel={
-                  //   client === BeaconNodeClients["Sigma Prime Lighthouse"]
-                  //     ? "Add external beacon nodes"
-                  //     : "Use external beacon node"
-                  // }
-                  // single={
-                  //   client !== BeaconNodeClients["Sigma Prime Lighthouse"]
-                  // }
-                  // emptyLabel="No Internal Active Beaconnodes"
-                  // helperText={
-                  //   client === BeaconNodeClients["Sigma Prime Lighthouse"]
-                  //     ? "One endpoint per line"
-                  //     : ""
-                  // }
                 />
               </div>
+              <FormDescription>
+                Select beacon nodes or enter your own endpoints
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

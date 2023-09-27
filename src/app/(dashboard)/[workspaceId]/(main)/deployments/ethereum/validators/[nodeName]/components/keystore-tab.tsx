@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { BeaconNode, Secret, ValidatorNode } from "@/types";
+import { Secret, ValidatorNode } from "@/types";
 import { Roles, SecretType, ValidatorClients } from "@/enums";
 import {
   Form,
@@ -21,7 +21,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 import Link from "next/link";
 import {
@@ -129,6 +128,7 @@ export const KeystoreTab: React.FC<KeystoreTabProps> = ({
               <FormLabel>Ethereum Keystores</FormLabel>
               <div>
                 <MultiSelect
+                  disabled={isSubmitting || role === Roles.Reader}
                   defaultValue={field.value}
                   value={field.value}
                   placeholder="Select keystores"
@@ -139,14 +139,16 @@ export const KeystoreTab: React.FC<KeystoreTabProps> = ({
                   onChange={field.onChange}
                   emptyText="No Keystores Available"
                 />
-                <FormDescription>
-                  <Link
-                    href={`/${params.workspaceId}/secrets/new?type=${SecretType["Ethereum Keystore"]}`}
-                    className="text-sm text-primary hover:underline underline-offset-4"
-                  >
-                    Create New Keystore
-                  </Link>
-                </FormDescription>
+                {role !== Roles.Reader && (
+                  <FormDescription>
+                    <Link
+                      href={`/${params.workspaceId}/secrets/new?type=${SecretType["Ethereum Keystore"]}`}
+                      className="text-sm text-primary hover:underline underline-offset-4"
+                    >
+                      Create New Keystore
+                    </Link>
+                  </FormDescription>
+                )}
               </div>
               <FormMessage />
             </FormItem>
@@ -161,7 +163,7 @@ export const KeystoreTab: React.FC<KeystoreTabProps> = ({
               <FormItem className="max-w-xs">
                 <FormLabel>Prysm Client Wallet Password</FormLabel>
                 <Select
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || role === Roles.Reader}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   value={field.value}

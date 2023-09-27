@@ -7,7 +7,7 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { ExecutionClientNode, ValidatorNode } from "@/types";
+import { BeaconNode, ExecutionClientNode, ValidatorNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -15,7 +15,7 @@ import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
 import { ProtocolTab } from "./components/protocol-tab";
-import { APITab } from "./components/api-tab";
+import { BeaconNodeTab } from "./components/beacon-node-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { GraffitiTab } from "./components/graffiti-tab";
 import { KeystoreTab } from "./components/keystore-tab";
@@ -34,7 +34,7 @@ export default async function BeaconNodePage({
   const keystores = secrets.filter(
     ({ type }) => type === SecretType["Ethereum Keystore"]
   );
-  const { data } = await getNodes<ExecutionClientNode>(
+  const { data } = await getNodes<BeaconNode>(
     params.workspaceId,
     "/ethereum2/beaconnodes"
   );
@@ -120,7 +120,7 @@ export default async function BeaconNodePage({
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="beaconNode"
             >
-              <APITab node={node} role={role} />
+              <BeaconNodeTab node={node} role={role} beaconNodes={data} />
             </TabsContent>
 
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">

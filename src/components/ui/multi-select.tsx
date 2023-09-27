@@ -20,6 +20,7 @@ interface MultiSelectProps {
   value: string[];
   allowCustomValues?: boolean;
   emptyText?: string;
+  disabled?: boolean;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -30,12 +31,27 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   value = [],
   allowCustomValues,
   emptyText,
+  disabled,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Option[]>(() => {
     if (!defaultValue) return [];
-    return options.filter((option) => defaultValue.includes(option.value));
+    const initialValue = options.filter((option) =>
+      defaultValue.includes(option.value)
+    );
+
+    if (!allowCustomValues) {
+      return initialValue;
+    }
+    const remainingValues = defaultValue.filter(
+      (value) => !initialValue.some((option) => option.value === value)
+    );
+
+    return [
+      ...initialValue,
+      ...remainingValues.map((value) => ({ label: value, value })),
+    ];
   });
 
   const [inputValue, setInputValue] = useState("");
@@ -121,6 +137,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             </Badge>
           ))}
           <CommandPrimitive.Input
+            disabled={disabled}
             ref={inputRef}
             value={inputValue}
             onValueChange={setInputValue}
