@@ -135,7 +135,7 @@ export interface BeaconNode extends ClientImage, ResourcesInfo {
   grpcPort: number;
 }
 
-export interface Validator extends ClientImage, ResourcesInfo {
+export interface ValidatorNode extends ClientImage, ResourcesInfo {
   name: string;
   network: string;
   client: ValidatorClients;

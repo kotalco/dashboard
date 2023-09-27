@@ -6,14 +6,8 @@ import { getWorkspace } from "@/services/get-workspace";
 import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
-import {
-  ExecutionClientClients,
-  Protocol,
-  Roles,
-  SecretType,
-  StorageItems,
-} from "@/enums";
-import { BeaconNode, ExecutionClientNode } from "@/types";
+import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
+import { ExecutionClientNode, ValidatorNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -23,7 +17,7 @@ import { ResourcesForm } from "@/components/resources-form";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
-import { ExecutionClientTab } from "./components/execution-client-tab";
+import { GraffitiTab } from "./components/graffiti-tab";
 import { CheckpointSyncTab } from "./components/checkpoint-sync-tab";
 import { Logs } from "@/components/logs";
 
@@ -42,7 +36,7 @@ export default async function BeaconNodePage({
   );
 
   try {
-    const node = await getNode<BeaconNode>(
+    const node = await getNode<ValidatorNode>(
       workspaceId,
       `/ethereum2/validators/${nodeName}`
     );
@@ -108,12 +102,7 @@ export default async function BeaconNodePage({
               <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="Graffiti">
-              <ExecutionClientTab
-                node={node}
-                role={role}
-                secrets={secrets}
-                executionClients={data}
-              />
+              <GraffitiTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="Keystore">
               <CheckpointSyncTab node={node} role={role} />

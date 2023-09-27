@@ -4,12 +4,12 @@ import { useParams } from "next/navigation";
 
 import { NoResult } from "@/components/no-result";
 import { DeploymentsList } from "@/components/deployments-list";
-import { Validator } from "@/types";
+import { ValidatorNode } from "@/types";
 import { Roles, ValidatorClients, ValidatorNetworks } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
 
 interface ValidatorClientProps {
-  data: Validator[];
+  data: ValidatorNode[];
   role: Roles;
 }
 
