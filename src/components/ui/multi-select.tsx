@@ -33,7 +33,11 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<Option[]>([]);
+  const [selected, setSelected] = useState<Option[]>(() => {
+    if (!defaultValue) return [];
+    return options.filter((option) => defaultValue.includes(option.value));
+  });
+
   const [inputValue, setInputValue] = useState("");
 
   const handleUnselect = useCallback(

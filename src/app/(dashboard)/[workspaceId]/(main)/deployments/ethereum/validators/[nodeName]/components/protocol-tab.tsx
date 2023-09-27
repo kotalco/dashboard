@@ -1,10 +1,10 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
 import { Roles, ValidatorClients, ValidatorNetworks } from "@/enums";
 import { getClientUrl, getEnumKey } from "@/lib/utils";
-import { BeaconNode, Version } from "@/types";
+import { ValidatorNode, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: BeaconNode;
+  node: ValidatorNode;
   role: Roles;
   versions: Version[];
 }

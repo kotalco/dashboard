@@ -18,7 +18,7 @@ import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { GraffitiTab } from "./components/graffiti-tab";
-import { CheckpointSyncTab } from "./components/checkpoint-sync-tab";
+import { KeystoreTab } from "./components/keystore-tab";
 import { Logs } from "@/components/logs";
 
 export default async function BeaconNodePage({
@@ -29,7 +29,11 @@ export default async function BeaconNodePage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType["JWT Secret"]);
+  const secrets = await getSecrets(workspaceId);
+  const passwords = secrets.filter(({ type }) => type === SecretType.Password);
+  const keystores = secrets.filter(
+    ({ type }) => type === SecretType["Ethereum Keystore"]
+  );
   const { data } = await getNodes<ExecutionClientNode>(
     params.workspaceId,
     "/ethereum2/beaconnodes"
@@ -105,7 +109,12 @@ export default async function BeaconNodePage({
               <GraffitiTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="Keystore">
-              <CheckpointSyncTab node={node} role={role} />
+              <KeystoreTab
+                node={node}
+                role={role}
+                passwords={passwords}
+                keystores={keystores}
+              />
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
