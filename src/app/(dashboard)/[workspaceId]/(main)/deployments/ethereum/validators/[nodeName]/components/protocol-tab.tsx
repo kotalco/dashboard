@@ -1,5 +1,5 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import { BeaconNodeClients, BeaconNodeNetworks, Roles } from "@/enums";
+import { Roles, ValidatorClients, ValidatorNetworks } from "@/enums";
 import { getClientUrl, getEnumKey } from "@/lib/utils";
 import { BeaconNode, Version } from "@/types";
 
@@ -26,7 +26,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Network</span>
           <span className="text-sm text-foreground/50">
-            {getEnumKey(BeaconNodeNetworks, network)}
+            {getEnumKey(ValidatorNetworks, network)}
           </span>
         </li>
 
@@ -38,7 +38,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            {getEnumKey(BeaconNodeClients, client)}
+            {getEnumKey(ValidatorClients, client)}
           </a>
         </li>
       </ul>
@@ -46,7 +46,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/ethereum2/beaconnodes/${name}`}
+        updateUrl={`/ethereum2/validators/${name}`}
       />
     </>
   );

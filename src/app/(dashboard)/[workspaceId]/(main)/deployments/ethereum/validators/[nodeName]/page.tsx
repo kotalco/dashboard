@@ -20,7 +20,6 @@ import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
-import { BeaconNodeStats } from "./components/beacon-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
@@ -39,19 +38,19 @@ export default async function BeaconNodePage({
   const secrets = await getSecrets(workspaceId, SecretType["JWT Secret"]);
   const { data } = await getNodes<ExecutionClientNode>(
     params.workspaceId,
-    "/ethereum/nodes"
+    "/ethereum2/beaconnodes"
   );
 
   try {
     const node = await getNode<BeaconNode>(
       workspaceId,
-      `/ethereum2/beaconnodes/${nodeName}`
+      `/ethereum2/validators/${nodeName}`
     );
 
     const { versions } = await getClientVersions(
       {
         protocol: "ethereum",
-        component: "beaconNode",
+        component: "validatorClient",
         client: node.client,
       },
       node.image
@@ -67,7 +66,7 @@ export default async function BeaconNodePage({
                 protocol={Protocol.ethereum2}
                 token={token.value}
                 workspaceId={workspaceId}
-                component="beaconnodes"
+                component="validators"
               />
             )}
             <Heading
@@ -80,29 +79,20 @@ export default async function BeaconNodePage({
           </div>
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
-              <>
-                <BeaconNodeStats
-                  nodeName={node.name}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-                <NodeMetrics
-                  nodeName={node.name}
-                  protocol={Protocol.ethereum}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-              </>
+              <NodeMetrics
+                nodeName={node.name}
+                protocol={Protocol.ethereum}
+                token={token.value}
+                workspaceId={workspaceId}
+              />
             )}
           </div>
           <Tabs defaultValue="protocol">
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
-              <TabsTrigger value="executionClient">
-                Execution Client
-              </TabsTrigger>
-              <TabsTrigger value="checkpointSync">Checkpoint Sync</TabsTrigger>
-              <TabsTrigger value="api">API</TabsTrigger>
+              <TabsTrigger value="Graffiti">Graffiti</TabsTrigger>
+              <TabsTrigger value="Keystore">Keystore</TabsTrigger>
+              <TabsTrigger value="beaconNode">Beacon Node</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -117,10 +107,7 @@ export default async function BeaconNodePage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="executionClient"
-            >
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="Graffiti">
               <ExecutionClientTab
                 node={node}
                 role={role}
@@ -128,13 +115,13 @@ export default async function BeaconNodePage({
                 executionClients={data}
               />
             </TabsContent>
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="checkpointSync"
-            >
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="Keystore">
               <CheckpointSyncTab node={node} role={role} />
             </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="beaconNode"
+            >
               <APITab node={node} role={role} />
             </TabsContent>
 
