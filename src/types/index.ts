@@ -1,5 +1,6 @@
 import {
   BeaconNodeClients,
+  ChainlinkLogging,
   ExecutionClientAPI,
   ExecutionClientClients,
   ExecutionClientLogging,
@@ -144,6 +145,24 @@ export interface ValidatorNode extends ClientImage, ResourcesInfo {
   graffiti: string;
   createdAt: string;
   keystores: { secretName: string }[];
+}
+
+export interface ChainlinkNode extends ClientImage, ResourcesInfo {
+  name: string;
+  ethereumChainId: number;
+  linkContractAddress: string;
+  databaseURL: string;
+  ethereumWsEndpoint: string;
+  ethereumHttpEndpoints: string[];
+  keystorePasswordSecretName: string;
+  apiCredentials: { email: string; passwordSecretName: string };
+  api: boolean;
+  certSecretName: string;
+  tlsPort: number;
+  secureCookies: boolean;
+  corsDomains: string[];
+  logging: ChainlinkLogging;
+  createdAt: string;
 }
 
 export interface StatsError {
