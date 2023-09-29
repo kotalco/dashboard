@@ -21,6 +21,7 @@ import { WalletTab } from "./components/wallet-tab";
 import { DatabaseTab } from "./components/database-tab";
 import { ExecutionClientTab } from "./components/execution-client-tab";
 import { getNodes } from "@/services/get-nodes";
+import { TLSTab } from "./components/tls-tab";
 
 export default async function ChainlinkPage({
   params,
@@ -30,7 +31,11 @@ export default async function ChainlinkPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType.Password);
+  const secrets = await getSecrets(workspaceId);
+  const passwords = secrets.filter(({ type }) => type === SecretType.Password);
+  const tls = secrets.filter(
+    ({ type }) => type === SecretType["TLS Certificate"]
+  );
   const { data } = await getNodes<ExecutionClientNode>(
     workspaceId,
     "/ethereum/nodes"
@@ -89,6 +94,7 @@ export default async function ChainlinkPage({
                 Execution Client
               </TabsTrigger>
               <TabsTrigger value="wallet">Wallet</TabsTrigger>
+              <TabsTrigger value="tls">TLS</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
@@ -118,7 +124,10 @@ export default async function ChainlinkPage({
               />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
-              <WalletTab node={node} role={role} passwords={secrets} />
+              <WalletTab node={node} role={role} passwords={passwords} />
+            </TabsContent>
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="tls">
+              <TLSTab node={node} role={role} secrets={tls} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={secrets} />
