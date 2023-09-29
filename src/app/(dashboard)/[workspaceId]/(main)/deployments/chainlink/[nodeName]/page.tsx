@@ -23,6 +23,7 @@ import { ExecutionClientTab } from "./components/execution-client-tab";
 import { getNodes } from "@/services/get-nodes";
 import { TLSTab } from "./components/tls-tab";
 import { AccessControlTab } from "./components/access-control-tab";
+import { LogsTab } from "./components/logs-tab";
 
 export default async function ChainlinkPage({
   params,
@@ -141,11 +142,7 @@ export default async function ChainlinkPage({
               <AccessControlTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && (
-                <Logs
-                  url={`bitcoin/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-                />
-              )}
+              {token && <LogsTab node={node} role={role} token={token.value} />}
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
@@ -154,7 +151,7 @@ export default async function ChainlinkPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/bitcoin/nodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/chainlink/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (
