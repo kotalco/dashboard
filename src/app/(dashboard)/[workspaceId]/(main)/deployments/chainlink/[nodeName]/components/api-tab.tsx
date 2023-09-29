@@ -4,9 +4,8 @@ import * as z from "zod";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MinusCircle, PlusCircle } from "lucide-react";
 
 import { client } from "@/lib/client-instance";
 import { BitcoinNode, ChainlinkNode, Secret } from "@/types";

@@ -22,6 +22,7 @@ import { DatabaseTab } from "./components/database-tab";
 import { ExecutionClientTab } from "./components/execution-client-tab";
 import { getNodes } from "@/services/get-nodes";
 import { TLSTab } from "./components/tls-tab";
+import { AccessControlTab } from "./components/access-control-tab";
 
 export default async function ChainlinkPage({
   params,
@@ -96,6 +97,7 @@ export default async function ChainlinkPage({
               <TabsTrigger value="wallet">Wallet</TabsTrigger>
               <TabsTrigger value="tls">TLS</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
+              <TabsTrigger value="accessControl">Access Control</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -131,6 +133,12 @@ export default async function ChainlinkPage({
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={passwords} />
+            </TabsContent>
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="accessControl"
+            >
+              <AccessControlTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
