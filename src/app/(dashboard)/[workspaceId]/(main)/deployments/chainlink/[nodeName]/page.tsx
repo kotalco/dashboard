@@ -18,6 +18,7 @@ import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { WalletTab } from "./components/wallet-tab";
+import { DatabaseTab } from "./components/database-tab";
 
 export default async function ChainlinkPage({
   params,
@@ -77,6 +78,7 @@ export default async function ChainlinkPage({
           <Tabs defaultValue="protocol">
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
+              <TabsTrigger value="database">Database</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
               <TabsTrigger value="wallet">Wallet</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
@@ -92,6 +94,9 @@ export default async function ChainlinkPage({
             </TabsList>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
+            </TabsContent>
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="database">
+              <DatabaseTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={secrets} />

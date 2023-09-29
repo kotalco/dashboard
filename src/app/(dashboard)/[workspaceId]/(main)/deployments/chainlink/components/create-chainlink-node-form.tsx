@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { BitcoinNetworks, ChainlinkNetworks, SecretType } from "@/enums";
+import { ChainlinkNetworks, SecretType } from "@/enums";
 import {
   Select,
   SelectContent,

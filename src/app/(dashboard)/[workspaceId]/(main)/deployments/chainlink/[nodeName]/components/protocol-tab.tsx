@@ -1,5 +1,5 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import { BitcoinNetworks, ChainlinkNetworks, Roles } from "@/enums";
+import { ChainlinkNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
 import { ChainlinkNode, Version } from "@/types";
 
