@@ -137,6 +137,14 @@ export const EditImageVersionForm: React.FC<EditImageVersionFormProps> = ({
           )}
         />
 
+        {versions?.find((version) => version.image === image)
+          ?.canBeUpgraded && (
+          <Alert variant="info">
+            New image version is avaliable. It is recommended to update to
+            latest version.
+          </Alert>
+        )}
+
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
             <AlertDescription>

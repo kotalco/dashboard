@@ -1,10 +1,10 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import { BitcoinNetworks, Roles } from "@/enums";
+import { BitcoinNetworks, ChainlinkNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
-import { BitcoinNode, Version } from "@/types";
+import { ChainlinkNode, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: BitcoinNode;
+  node: ChainlinkNode;
   role: Roles;
   versions: Version[];
 }
@@ -14,31 +14,48 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
   role,
   versions,
 }) => {
-  const { network, image, name } = node;
+  const { ethereumChainId, linkContractAddress, image, name } = node;
   return (
     <>
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Protocol</span>
-          <span className="text-sm text-foreground/50">Bitcoin</span>
+          <span className="text-sm text-foreground/50">Chainlink</span>
         </li>
 
         <li className="flex flex-col">
-          <span className="text-sm font-medium text-foreground">Network</span>
+          <span className="text-sm font-medium text-foreground">EVM Chain</span>
           <span className="text-sm text-foreground/50">
-            {getEnumKey(BitcoinNetworks, network)}
+            {getEnumKey(
+              ChainlinkNetworks,
+              `${ethereumChainId}:${linkContractAddress}`
+            )}
+          </span>
+        </li>
+
+        <li className="flex flex-col">
+          <span className="text-sm font-medium text-foreground">Chain ID</span>
+          <span className="text-sm text-foreground/50">{ethereumChainId}</span>
+        </li>
+
+        <li className="flex flex-col">
+          <span className="text-sm font-medium text-foreground">
+            Link Contract Address
+          </span>
+          <span className="text-sm text-foreground/50">
+            {linkContractAddress}
           </span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Client</span>
           <a
-            href="https://github.com/bitcoin/bitcoin"
+            href="https://github.com/smartcontractkit/chainlink"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            Bitcoin Core
+            Chainlink
           </a>
         </li>
       </ul>
@@ -46,7 +63,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/bitcoin/nodes/${name}`}
+        updateUrl={`/chainlink/nodes/${name}`}
       />
     </>
   );

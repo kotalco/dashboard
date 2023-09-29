@@ -7,20 +7,19 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { BitcoinNode } from "@/types";
+import { BitcoinNode, ChainlinkNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
-import { BitcoinNodeStats } from "./components/bitcoin-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { WalletTab } from "./components/wallet-tab";
 
-export default async function BitcoinPage({
+export default async function ChainlinkPage({
   params,
 }: {
   params: { workspaceId: string; nodeName: string };
@@ -31,16 +30,16 @@ export default async function BitcoinPage({
   const secrets = await getSecrets(workspaceId, SecretType.Password);
 
   try {
-    const node = await getNode<BitcoinNode>(
+    const node = await getNode<ChainlinkNode>(
       workspaceId,
-      `/bitcoin/nodes/${nodeName}`
+      `/chainlink/nodes/${nodeName}`
     );
 
     const { versions } = await getClientVersions(
       {
-        protocol: "bitcoin",
+        protocol: "chainlink",
         component: "node",
-        client: "bitcoin-core",
+        client: "chainlink",
       },
       node.image
     );
@@ -52,7 +51,7 @@ export default async function BitcoinPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.bitcoin}
+                protocol={Protocol.chainlink}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -67,19 +66,12 @@ export default async function BitcoinPage({
           </div>
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
-              <>
-                <BitcoinNodeStats
-                  nodeName={node.name}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-                <NodeMetrics
-                  nodeName={node.name}
-                  protocol={Protocol.bitcoin}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-              </>
+              <NodeMetrics
+                nodeName={node.name}
+                protocol={Protocol.chainlink}
+                token={token.value}
+                workspaceId={workspaceId}
+              />
             )}
           </div>
           <Tabs defaultValue="protocol">

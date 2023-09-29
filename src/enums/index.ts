@@ -41,6 +41,7 @@ export enum Protocol {
   bitcoin = "bitcoin",
   ethereum = "ethereum",
   ethereum2 = "ethereum2",
+  chainlink = "chainlink",
 }
 
 export enum NodeStatuses {
@@ -54,6 +55,7 @@ export enum NodeStatuses {
   "Pending" = "Pending",
   "Running" = "Running",
   "Disconnected" = "Disconnected",
+  "Crash Loop Back Off" = "CrashLoopBackOff",
 }
 
 export enum StorageUnits {
