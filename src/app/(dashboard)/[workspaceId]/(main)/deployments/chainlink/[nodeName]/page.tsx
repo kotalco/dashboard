@@ -130,7 +130,7 @@ export default async function ChainlinkPage({
               <TLSTab node={node} role={role} secrets={tls} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} secrets={secrets} />
+              <APITab node={node} role={role} secrets={passwords} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
