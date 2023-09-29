@@ -7,7 +7,7 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { ChainlinkNode } from "@/types";
+import { ChainlinkNode, ExecutionClientNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
@@ -31,7 +31,10 @@ export default async function ChainlinkPage({
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
   const secrets = await getSecrets(workspaceId, SecretType.Password);
-  const { data } = await getNodes(workspaceId, "/ethereum/nodes");
+  const { data } = await getNodes<ExecutionClientNode>(
+    workspaceId,
+    "/ethereum/nodes"
+  );
 
   try {
     const node = await getNode<ChainlinkNode>(
@@ -85,8 +88,8 @@ export default async function ChainlinkPage({
               <TabsTrigger value="executionClient">
                 Execution Client
               </TabsTrigger>
-              <TabsTrigger value="api">API</TabsTrigger>
               <TabsTrigger value="wallet">Wallet</TabsTrigger>
+              <TabsTrigger value="api">API</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -114,11 +117,11 @@ export default async function ChainlinkPage({
                 executionClients={data}
               />
             </TabsContent>
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
+              <WalletTab node={node} role={role} passwords={secrets} />
+            </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={secrets} />
-            </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
-              <WalletTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
