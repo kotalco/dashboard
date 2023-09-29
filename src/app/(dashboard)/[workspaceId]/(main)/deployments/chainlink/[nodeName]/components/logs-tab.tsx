@@ -8,8 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
 import { getSelectItems } from "@/lib/utils";
-import { ChainlinkNode, ExecutionClientNode } from "@/types";
-import { ChainlinkLogging, ExecutionClientLogging, Roles } from "@/enums";
+import { ChainlinkNode } from "@/types";
+import { ChainlinkLogging, Roles } from "@/enums";
 import {
   Form,
   FormControl,
