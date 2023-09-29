@@ -7,7 +7,7 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { BitcoinNode, ChainlinkNode } from "@/types";
+import { ChainlinkNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
@@ -19,6 +19,8 @@ import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { WalletTab } from "./components/wallet-tab";
 import { DatabaseTab } from "./components/database-tab";
+import { ExecutionClientTab } from "./components/execution-client-tab";
+import { getNodes } from "@/services/get-nodes";
 
 export default async function ChainlinkPage({
   params,
@@ -29,6 +31,7 @@ export default async function ChainlinkPage({
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
   const secrets = await getSecrets(workspaceId, SecretType.Password);
+  const { data } = await getNodes(workspaceId, "/ethereum/nodes");
 
   try {
     const node = await getNode<ChainlinkNode>(
@@ -79,6 +82,9 @@ export default async function ChainlinkPage({
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="database">Database</TabsTrigger>
+              <TabsTrigger value="executionClient">
+                Execution Client
+              </TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
               <TabsTrigger value="wallet">Wallet</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
@@ -97,6 +103,16 @@ export default async function ChainlinkPage({
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="database">
               <DatabaseTab node={node} role={role} />
+            </TabsContent>
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="executionClient"
+            >
+              <ExecutionClientTab
+                node={node}
+                role={role}
+                executionClients={data}
+              />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={secrets} />

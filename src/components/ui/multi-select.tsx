@@ -17,7 +17,7 @@ interface MultiSelectProps {
   defaultValue?: string[];
   placeholder?: string;
   onChange?: (value: string[]) => void;
-  value: string[];
+  value?: string[];
   allowCustomValues?: boolean;
   emptyText?: string;
   disabled?: boolean;

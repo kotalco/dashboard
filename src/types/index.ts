@@ -153,7 +153,7 @@ export interface ChainlinkNode extends ClientImage, ResourcesInfo {
   linkContractAddress: string;
   databaseURL: string;
   ethereumWsEndpoint: string;
-  ethereumHttpEndpoints: string[];
+  ethereumHttpEndpoints: string[] | null;
   keystorePasswordSecretName: string;
   apiCredentials: { email: string; passwordSecretName: string };
   api: boolean;

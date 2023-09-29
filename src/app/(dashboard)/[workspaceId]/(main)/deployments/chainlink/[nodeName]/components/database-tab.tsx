@@ -1,16 +1,13 @@
 "use client";
 
 import * as z from "zod";
-import Link from "next/link";
-import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MinusCircle, PlusCircle } from "lucide-react";
 
 import { client } from "@/lib/client-instance";
-import { BitcoinNode, ChainlinkNode, Secret } from "@/types";
-import { Roles, SecretType } from "@/enums";
+import { ChainlinkNode } from "@/types";
+import { Roles } from "@/enums";
 import {
   Form,
   FormControl,
@@ -19,18 +16,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface DatabaseTabProps {
   node: ChainlinkNode;
@@ -50,7 +39,6 @@ const schema = z.object({
 type Schema = z.infer<typeof schema>;
 
 export const DatabaseTab: React.FC<DatabaseTabProps> = ({ node, role }) => {
-  const params = useParams();
   const { databaseURL } = node;
 
   const form = useForm<Schema>({
