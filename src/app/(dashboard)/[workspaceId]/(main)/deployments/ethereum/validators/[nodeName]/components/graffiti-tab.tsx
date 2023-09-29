@@ -77,13 +77,13 @@ export const GraffitiTab: React.FC<GraffitiTabProps> = ({ node, role }) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-8"
+        className="relative space-y-4"
       >
         <FormField
           control={form.control}
           name="graffiti"
           render={({ field }) => (
-            <FormItem className="max-w-xs">
+            <FormItem className="max-w-sm">
               <FormLabel>Graffiti</FormLabel>
               <FormControl>
                 <Input

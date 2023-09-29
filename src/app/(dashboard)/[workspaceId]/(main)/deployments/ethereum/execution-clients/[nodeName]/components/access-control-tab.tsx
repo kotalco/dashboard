@@ -107,7 +107,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-8"
+        className="relative space-y-4"
       >
         <FormField
           control={form.control}
@@ -128,7 +128,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
               <FormControl>
                 <Textarea
                   disabled={isSubmitting || role === Roles.Reader}
-                  className="max-w-xs resize-none"
+                  className="max-w-sm resize-none"
                   {...field}
                 />
               </FormControl>
@@ -159,7 +159,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
               <FormControl>
                 <Textarea
                   disabled={isSubmitting || role === Roles.Reader}
-                  className="max-w-xs resize-none"
+                  className="max-w-sm resize-none"
                   {...field}
                 />
               </FormControl>

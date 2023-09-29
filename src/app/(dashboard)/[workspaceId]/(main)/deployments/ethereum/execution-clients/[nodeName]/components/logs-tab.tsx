@@ -93,13 +93,13 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="relative space-y-8"
+          className="relative space-y-4"
         >
           <FormField
             control={form.control}
             name="logging"
             render={({ field }) => (
-              <FormItem className="max-w-xs">
+              <FormItem className="max-w-sm">
                 <FormLabel>Verbosity Levels</FormLabel>
                 <Select
                   disabled={isSubmitting || role === Roles.Reader}

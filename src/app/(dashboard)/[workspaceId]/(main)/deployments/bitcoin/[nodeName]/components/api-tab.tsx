@@ -104,7 +104,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-8"
+        className="relative space-y-4"
       >
         <FormField
           control={form.control}

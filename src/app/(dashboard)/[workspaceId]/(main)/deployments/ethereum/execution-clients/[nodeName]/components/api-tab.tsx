@@ -133,7 +133,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-8"
+        className="relative space-y-4"
       >
         <div className="p-4 border rounded-lg">
           <FormField
@@ -174,7 +174,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
                       <FormControl>
                         <SelectTrigger
                           data-testid="secret-private-key"
-                          className="max-w-xs bg-white"
+                          className="max-w-sm bg-white"
                         >
                           <SelectValue placeholder="Select a Secret" />
                         </SelectTrigger>

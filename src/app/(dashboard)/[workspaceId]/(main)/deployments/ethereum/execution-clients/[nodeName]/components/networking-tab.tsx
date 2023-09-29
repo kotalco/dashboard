@@ -116,7 +116,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-8"
+        className="relative space-y-4"
       >
         <FormField
           control={form.control}
@@ -134,7 +134,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
                   <FormControl>
                     <SelectTrigger
                       data-testid="secret-private-key"
-                      className="max-w-xs bg-white"
+                      className="max-w-sm bg-white"
                     >
                       <SelectValue placeholder="Select a Secret" />
                     </SelectTrigger>
@@ -173,7 +173,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
           control={form.control}
           name="syncMode"
           render={({ field }) => (
-            <FormItem className="max-w-xs">
+            <FormItem className="max-w-sm">
               <FormLabel>Sync Mode</FormLabel>
               <Select
                 disabled={isSubmitting || role === Roles.Reader}
@@ -206,7 +206,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
           control={form.control}
           name="staticNodes"
           render={({ field }) => (
-            <FormItem className="max-w-xs">
+            <FormItem className="max-w-sm">
               <FormLabel>Static Nodes</FormLabel>
               <FormControl>
                 <Textarea
@@ -225,7 +225,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
           control={form.control}
           name="bootnodes"
           render={({ field }) => (
-            <FormItem className="max-w-xs">
+            <FormItem className="max-w-sm">
               <FormLabel>Boot Nodes</FormLabel>
               <FormControl>
                 <Textarea

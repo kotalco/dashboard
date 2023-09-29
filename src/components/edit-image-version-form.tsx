@@ -86,7 +86,7 @@ export const EditImageVersionForm: React.FC<EditImageVersionFormProps> = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-4">
         <FormField
           control={form.control}
           name="image"

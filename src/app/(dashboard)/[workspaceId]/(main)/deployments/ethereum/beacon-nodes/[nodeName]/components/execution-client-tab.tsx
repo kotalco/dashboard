@@ -113,13 +113,13 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-8"
+        className="relative space-y-4"
       >
         <FormField
           control={form.control}
           name="executionEngineEndpoint"
           render={({ field }) => (
-            <FormItem className="max-w-xs">
+            <FormItem className="max-w-sm">
               <FormLabel>Execution Engine Endpoint</FormLabel>
               <SelectWithInput
                 placeholder="Select a Node"
@@ -154,7 +154,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
                   <FormControl>
                     <SelectTrigger
                       data-testid="jwt-secret"
-                      className="max-w-xs bg-white"
+                      className="max-w-sm bg-white"
                     >
                       <SelectValue placeholder="Select a Secret" />
                     </SelectTrigger>
