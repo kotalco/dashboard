@@ -18,6 +18,7 @@ import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { IPFSTab } from "./components/ipfs-tab";
 import { getNodes } from "@/services/get-nodes";
+import { LogsTab } from "./components/logs-tab";
 
 export default async function AptosPage({
   params,
@@ -100,11 +101,11 @@ export default async function AptosPage({
               <IPFSTab node={node} role={role} peers={data} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && (
-                <Logs
-                  url={`aptos/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-                />
-              )}
+              <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
+                {token && (
+                  <LogsTab node={node} role={role} token={token.value} />
+                )}
+              </TabsContent>
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
