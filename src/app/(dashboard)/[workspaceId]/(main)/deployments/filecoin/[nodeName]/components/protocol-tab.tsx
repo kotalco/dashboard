@@ -1,10 +1,10 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import { AptosNetworks, Roles } from "@/enums";
+import { FilecoinNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
-import { AptosNode, Version } from "@/types";
+import { FilecoinNode, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: AptosNode;
+  node: FilecoinNode;
   role: Roles;
   versions: Version[];
 }
@@ -20,25 +20,25 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Protocol</span>
-          <span className="text-sm text-foreground/50">Aptos</span>
+          <span className="text-sm text-foreground/50">Filecoin</span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Network</span>
           <span className="text-sm text-foreground/50">
-            {getEnumKey(AptosNetworks, network)}
+            {getEnumKey(FilecoinNetworks, network)}
           </span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Client</span>
           <a
-            href="https://github.com/aptos-labs/aptos-core"
+            href="https://github.com/filecoin-project/lotus"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            aptos-core
+            Lotus
           </a>
         </li>
       </ul>
@@ -46,7 +46,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/aptos/nodes/${name}`}
+        updateUrl={`/filecoin/nodes/${name}`}
       />
     </>
   );

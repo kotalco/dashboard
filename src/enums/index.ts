@@ -47,6 +47,7 @@ export enum Protocol {
   ethereum = "ethereum",
   ethereum2 = "ethereum2",
   chainlink = "chainlink",
+  filecoin = "filecoin",
 }
 
 export enum NodeStatuses {
