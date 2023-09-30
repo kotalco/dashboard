@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AptosNetworks, FilecoinNetworks } from "@/enums";
+import { FilecoinNetworks } from "@/enums";
 import {
   Select,
   SelectContent,

@@ -6,14 +6,13 @@ import { getWorkspace } from "@/services/get-workspace";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, StorageItems } from "@/enums";
-import { AptosNode } from "@/types";
+import { AptosNode, FilecoinNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
-import { AptosNodeStats } from "./components/aptos-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
@@ -28,15 +27,15 @@ export default async function AptosPage({
   const { role } = await getWorkspace(workspaceId);
 
   try {
-    const node = await getNode<AptosNode>(
+    const node = await getNode<FilecoinNode>(
       workspaceId,
-      `/aptos/nodes/${nodeName}`
+      `/filecoin/nodes/${nodeName}`
     );
     const { versions } = await getClientVersions(
       {
-        protocol: "aptos",
+        protocol: "filecoin",
         component: "node",
-        client: "aptos-core",
+        client: "lotus",
         network: node.network,
       },
       node.image
@@ -49,7 +48,7 @@ export default async function AptosPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.aptos}
+                protocol={Protocol.filecoin}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -64,25 +63,19 @@ export default async function AptosPage({
           </div>
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
-              <>
-                <AptosNodeStats
-                  nodeName={node.name}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-                <NodeMetrics
-                  nodeName={node.name}
-                  protocol={Protocol.aptos}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-              </>
+              <NodeMetrics
+                nodeName={node.name}
+                protocol={Protocol.filecoin}
+                token={token.value}
+                workspaceId={workspaceId}
+              />
             )}
           </div>
           <Tabs defaultValue="protocol">
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
+              <TabsTrigger value="ipfs">IPFS</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
