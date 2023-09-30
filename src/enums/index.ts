@@ -36,6 +36,11 @@ export enum BitcoinNetworks {
   Testnet = "testnet",
 }
 
+export enum FilecoinNetworks {
+  Mainnet = "mainnet",
+  Calibration = "calibration",
+}
+
 export enum Protocol {
   aptos = "aptos",
   bitcoin = "bitcoin",
