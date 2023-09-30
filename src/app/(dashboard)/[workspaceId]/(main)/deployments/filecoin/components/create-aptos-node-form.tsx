@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AptosNetworks } from "@/enums";
+import { AptosNetworks, FilecoinNetworks } from "@/enums";
 import {
   Select,
   SelectContent,
@@ -40,7 +40,7 @@ const schema = z.object({
     .refine((value) => /^\S*$/.test(value), {
       message: "Invalid character used",
     }),
-  network: z.nativeEnum(AptosNetworks, {
+  network: z.nativeEnum(FilecoinNetworks, {
     required_error: "Please select a Network",
   }),
   workspace_id: z.string().min(1),
@@ -51,10 +51,9 @@ type SchemaType = z.infer<typeof schema>;
 
 const defaultValues = {
   name: "",
-  network: undefined,
 };
 
-export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
+export const CreateNewFilecoinNode: React.FC<{ images: Clients }> = ({
   images,
 }) => {
   const { toast } = useToast();
@@ -77,18 +76,18 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
 
   useEffect(() => {
     if (network)
-      setValue("image", getLatestVersion(images, "aptos-core", network), {
+      setValue("image", getLatestVersion(images, "lotus", network), {
         shouldValidate: true,
       });
   }, [images, network, setValue]);
 
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
-      await client.post("/aptos/nodes", values);
-      router.push(`/${workspaceId}/deployments/aptos`);
+      await client.post("/filecoin/nodes", values);
+      router.push(`/${workspaceId}/deployments/filecoin`);
       router.refresh();
       toast({
-        title: "Aptos node has been created",
+        title: "Filecoin node has been created",
         description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
       });
     } catch (error) {
@@ -165,7 +164,7 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {getSelectItems(AptosNetworks).map(({ value, label }) => (
+                  {getSelectItems(FilecoinNetworks).map(({ value, label }) => (
                     <SelectItem key={value} value={value}>
                       {label}
                     </SelectItem>
@@ -181,12 +180,12 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
         <p className="text-sm">
           Client:{" "}
           <a
-            href="https://github.com/aptos-labs/aptos-core"
+            href="https://github.com/filecoin-project/lotus"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline underline-offset-4"
           >
-            aptos-core
+            Lotus
           </a>
         </p>
 
