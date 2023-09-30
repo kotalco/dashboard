@@ -165,6 +165,20 @@ export interface ChainlinkNode extends ClientImage, ResourcesInfo {
   createdAt: string;
 }
 
+export interface FilecoinNode extends ClientImage, ResourcesInfo {
+  name: string;
+  network: string;
+  api: boolean;
+  apiRequestTimeout: number;
+  ipfsForRetrieval: boolean;
+  ipfsPeerEndpoint: string;
+  ipfsOnlineMode: boolean;
+  disableMetadataLog: boolean;
+  createdAt: string;
+  apiPort: number;
+  p2pPort: number;
+}
+
 export interface StatsError {
   error: string;
 }
