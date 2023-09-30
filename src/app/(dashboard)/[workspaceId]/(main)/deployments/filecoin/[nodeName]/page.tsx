@@ -6,7 +6,7 @@ import { getWorkspace } from "@/services/get-workspace";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, StorageItems } from "@/enums";
-import { AptosNode, FilecoinNode } from "@/types";
+import { AptosNode, FilecoinNode, IPFSPeer } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
@@ -16,6 +16,8 @@ import { ResourcesForm } from "@/components/resources-form";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
+import { IPFSTab } from "./components/ipfs-tab";
+import { getNodes } from "@/services/get-nodes";
 
 export default async function AptosPage({
   params,
@@ -25,6 +27,7 @@ export default async function AptosPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
+  const { data } = await getNodes<IPFSPeer>(workspaceId, "/ipfs/peers");
 
   try {
     const node = await getNode<FilecoinNode>(
@@ -92,6 +95,9 @@ export default async function AptosPage({
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} />
+            </TabsContent>
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="ipfs">
+              <IPFSTab node={node} role={role} peers={data} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (

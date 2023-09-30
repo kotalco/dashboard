@@ -5,6 +5,8 @@ import {
   ExecutionClientClients,
   ExecutionClientLogging,
   ExecutionClientSyncMode,
+  IPFSConfigProfile,
+  IPFSRouting,
   ValidatorClients,
 } from "@/enums";
 
@@ -177,6 +179,16 @@ export interface FilecoinNode extends ClientImage, ResourcesInfo {
   createdAt: string;
   apiPort: number;
   p2pPort: number;
+}
+
+export interface IPFSPeer extends ClientImage, ResourcesInfo {
+  name: string;
+  initProfiles: IPFSConfigProfile[];
+  profiles: IPFSConfigProfile[];
+  api: boolean;
+  gateway: boolean;
+  routing: IPFSRouting;
+  createdAt: string;
 }
 
 export interface StatsError {

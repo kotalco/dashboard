@@ -50,6 +50,25 @@ export enum Protocol {
   filecoin = "filecoin",
 }
 
+export enum IPFSConfigProfile {
+  server = "server",
+  randomports = "randomports",
+  defaultDatastore = "default-datastore",
+  localDiscovery = "local-discovery",
+  test = "test",
+  defaultNetworking = "default-networking",
+  flatfs = "flatfs",
+  badgerds = "badgerds",
+  lowpower = "lowpower",
+}
+
+export enum IPFSRouting {
+  none = "none",
+  dht = "dht",
+  dhtclient = "dhtclient",
+  dhtserver = "dhtserver",
+}
+
 export enum NodeStatuses {
   "Connection Error" = "ConnectionError",
   "Loading Info" = "LoadingInfo",
