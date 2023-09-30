@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { AptosNode, FilecoinNode } from "@/types";
+import { AptosNode, FilecoinNode, IPFSPeer } from "@/types";
 import { Roles } from "@/enums";
 import {
   Form,
@@ -21,33 +21,32 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
 import { InputWithUnit } from "@/components/ui/input-with-unit";
+import { SelectWithInput } from "@/components/ui/select-with-input";
 
-interface APITabProps {
+interface IPFSTabProps {
   node: FilecoinNode;
   role: Roles;
+  peers: IPFSPeer[];
 }
 
-const schema = z
-  .object({
-    api: z.boolean(),
-    apiRequestTimeout: z.coerce
-      .number({
-        invalid_type_error: "Please enter a valid number with seconds",
-      })
-      .min(1, "Please enter a valid number with seconds"),
-  })
-  .transform(({ api, apiRequestTimeout }) =>
-    api ? { api, apiRequestTimeout } : { api }
-  );
+const schema = z.object({
+  ipfsForRetrieval: z.boolean(),
+  ipfsOnlineMode: z.boolean(),
+  ipfsPeerEndpoint: z.string().trim().optional(),
+});
 
 type Schema = z.input<typeof schema>;
 
-export const APITab: React.FC<APITabProps> = ({ node, role }) => {
-  const { api, apiRequestTimeout } = node;
+export const IPFSTab: React.FC<IPFSTabProps> = ({ node, role, peers }) => {
+  const { ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint } = node;
+  const peersOptions = peers.map(({ name }) => ({
+    label: name,
+    value: `/dns4/${name}/tcp/5001`,
+  }));
 
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: { api, apiRequestTimeout },
+    defaultValues: { ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint },
   });
 
   const {
@@ -61,10 +60,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
     },
     reset,
     setError,
-    watch,
   } = form;
-
-  const [apiState] = watch(["api"]);
 
   const onSubmit = async (values: Schema) => {
     try {
@@ -72,8 +68,8 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         `/filecoin/nodes/${node.name}`,
         values
       );
-      const { api, apiRequestTimeout } = data;
-      reset({ api, apiRequestTimeout });
+      const { ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint } = data;
+      reset({ ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -94,10 +90,12 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
       >
         <FormField
           control={form.control}
-          name="api"
+          name="ipfsForRetrieval"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">REST</FormLabel>
+              <FormLabel className="mt-2 text-base">
+                Use IPFS For Retrieval
+              </FormLabel>
               <FormControl>
                 <Switch
                   disabled={isSubmitting || role === Roles.Reader}
@@ -111,18 +109,38 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
 
         <FormField
           control={form.control}
-          name="apiRequestTimeout"
+          name="ipfsOnlineMode"
           render={({ field }) => (
-            <FormItem className="max-w-xs">
-              <FormLabel>API Request Timeout</FormLabel>
+            <FormItem className="flex flex-row items-center gap-x-3">
+              <FormLabel className="mt-2 text-base">IPFS Online Mode</FormLabel>
               <FormControl>
-                <InputWithUnit
-                  disabled={isSubmitting || role === Roles.Reader || !apiState}
-                  unit={`Second${+field.value !== 1 ? "s" : ""}`}
-                  value={field.value.toString()}
-                  onChange={field.onChange}
+                <Switch
+                  disabled={isSubmitting || role === Roles.Reader}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
                 />
               </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="ipfsPeerEndpoint"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>IPFS Peer Endpoint</FormLabel>
+              <SelectWithInput
+                placeholder="Select a peer"
+                disabled={isSubmitting || role === Roles.Reader}
+                onChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+                options={peersOptions}
+                otherLabel="Use External Peer"
+                allowClear
+              />
+
               <FormMessage />
             </FormItem>
           )}
@@ -131,7 +149,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
             <AlertDescription>
-              API settings have been updated successfully.
+              IPFS settings have been updated successfully.
             </AlertDescription>
           </Alert>
         )}
