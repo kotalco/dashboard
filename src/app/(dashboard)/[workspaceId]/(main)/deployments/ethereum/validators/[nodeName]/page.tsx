@@ -126,7 +126,7 @@ export default async function BeaconNodePage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
                 <Logs
-                  url={`ethereum2/validators/${node.name}/logs?authorization=Bearer ${token}&workspace_id=${params.workspaceId}`}
+                  url={`ethereum2/validators/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
                 />
               )}
             </TabsContent>
