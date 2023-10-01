@@ -64,7 +64,6 @@ export const CreateIPFSPeerForm: React.FC<{ images: Version[] }> = ({
   const {
     formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
     setError,
-    setValue,
   } = form;
 
   async function onSubmit(values: Schema) {
@@ -166,6 +165,7 @@ export const CreateIPFSPeerForm: React.FC<{ images: Version[] }> = ({
                         >
                           <FormControl>
                             <Checkbox
+                              disabled={isSubmitting}
                               checked={field.value?.includes(value)}
                               onCheckedChange={(checked) => {
                                 return checked
