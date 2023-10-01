@@ -24,7 +24,7 @@ import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { AccessControlTab } from "./components/access-control-tab";
-import { NetworkingTab } from "./components/networking-tab";
+import { ConfigrationProfilesTab } from "./components/configration-profiles-tab";
 import { LogsTab } from "./components/logs-tab";
 
 export default async function ExecutionClientPage({
@@ -36,9 +36,7 @@ export default async function ExecutionClientPage({
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
   const secrets = await getSecrets(workspaceId);
-  const executionClientPrivateKeys = secrets.filter(
-    ({ type }) => type === SecretType["Execution Client Private Key"]
-  );
+
   const jwtSecrets = secrets.filter(
     ({ type }) => type === SecretType["JWT Secret"]
   );
@@ -120,13 +118,9 @@ export default async function ExecutionClientPage({
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
-              value="networking"
+              value="configrationProfiles"
             >
-              <NetworkingTab
-                node={node}
-                role={role}
-                secrets={executionClientPrivateKeys}
-              />
+              <ConfigrationProfilesTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={jwtSecrets} />
