@@ -1,14 +1,9 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import {
-  ExecutionClientClients,
-  ExecutionClientNetworks,
-  Roles,
-} from "@/enums";
-import { getClientUrl, getEnumKey } from "@/lib/utils";
-import { ExecutionClientNode, Version } from "@/types";
+import { Roles } from "@/enums";
+import { IPFSPeer, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: ExecutionClientNode;
+  node: IPFSPeer;
   role: Roles;
   versions: Version[];
 }
@@ -18,31 +13,29 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
   role,
   versions,
 }) => {
-  const { network, image, name, client } = node;
+  const { image, name } = node;
   return (
     <>
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Protocol</span>
-          <span className="text-sm text-foreground/50">Ethereum</span>
+          <span className="text-sm text-foreground/50">IPFS</span>
         </li>
 
         <li className="flex flex-col">
-          <span className="text-sm font-medium text-foreground">Network</span>
-          <span className="text-sm text-foreground/50">
-            {getEnumKey(ExecutionClientNetworks, network)}
-          </span>
+          <span className="text-sm font-medium text-foreground">Chain</span>
+          <span className="text-sm text-foreground/50">public-swarm</span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Client</span>
           <a
-            href={getClientUrl(client)}
+            href="https://github.com/ipfs/kubo"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            {getEnumKey(ExecutionClientClients, client)}
+            Kubo
           </a>
         </li>
       </ul>
@@ -50,7 +43,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/ethereum/nodes/${name}`}
+        updateUrl={`/ipfs/peers/${name}`}
       />
     </>
   );

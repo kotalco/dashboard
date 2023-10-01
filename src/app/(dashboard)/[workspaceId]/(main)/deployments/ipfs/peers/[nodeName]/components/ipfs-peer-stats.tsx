@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
-import { ExecutionClientStats, StatsError } from "@/types";
+import { ExecutionClientStats, IpfsPeerStats, StatsError } from "@/types";
 import {
   Tooltip,
   TooltipContent,
@@ -18,7 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface ExecutionClientNodeStatsProps {
+interface IPFSPeerStatsProps {
   nodeName: string;
   token: string;
   workspaceId: string;
@@ -26,12 +26,14 @@ interface ExecutionClientNodeStatsProps {
 
 const WS_URL = getWsBaseURL();
 
-export const ExecutionClientNodeStats: React.FC<
-  ExecutionClientNodeStatsProps
-> = ({ nodeName, token, workspaceId }) => {
+export const IPFSPeerStats: React.FC<IPFSPeerStatsProps> = ({
+  nodeName,
+  token,
+  workspaceId,
+}) => {
   const subscription: SWRSubscription<
     string,
-    ExecutionClientStats | StatsError,
+    IpfsPeerStats | StatsError,
     string
   > = (key, { next }) => {
     const socket = new WebSocket(key);
@@ -44,7 +46,7 @@ export const ExecutionClientNodeStats: React.FC<
     return () => socket.close();
   };
   const { data, error } = useSWRSubscription(
-    `${WS_URL}/ethereum/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
+    `${WS_URL}/ipfs/peers/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription
   );
 
@@ -69,12 +71,6 @@ export const ExecutionClientNodeStats: React.FC<
       </>
     );
 
-  const syncPercentage =
-    !("error" in data) &&
-    (!+data.highestBlock
-      ? "00%"
-      : `${((+data.currentBlock / +data.highestBlock) * 100).toFixed(2)}%`);
-
   return (
     <div className="relative lg:col-span-2">
       <div
@@ -85,41 +81,18 @@ export const ExecutionClientNodeStats: React.FC<
       >
         <Card>
           <CardHeader>
-            <CardTitle className="items-start">
-              Blocks
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <AlertCircle className="w-4 h-4 ml-2" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{syncPercentage}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </CardTitle>
+            <CardTitle className="items-start">Peers</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center text-3xl font-light text-gray-500 truncate gap-x-2">
-            {!("error" in data) && (
-              <>
-                {!data.peersCount ? (
-                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                ) : (
-                  <RefreshCw className="w-5 h-5 animate-spin" />
-                )}
-                <span>
-                  {new Intl.NumberFormat("en-US").format(+data.currentBlock)}
-                </span>
-              </>
-            )}
+            {!("error" in data) && data.PeerCount}
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Peers</CardTitle>
+            <CardTitle>Pins</CardTitle>
           </CardHeader>
           <CardContent className="text-3xl font-light text-gray-500 truncate">
-            {!("error" in data) && data.peersCount}
+            {!("error" in data) && data.PinCount}
           </CardContent>
         </Card>
       </div>

@@ -48,6 +48,7 @@ export enum Protocol {
   ethereum2 = "ethereum2",
   chainlink = "chainlink",
   filecoin = "filecoin",
+  ipfs = "ipfs",
 }
 
 export enum IPFSConfigProfile {

@@ -18,7 +18,7 @@ interface NodeStatusProps {
   protocol: Protocol;
   token: string;
   workspaceId: string;
-  component?: "nodes" | "beaconnodes" | "validators";
+  component?: "nodes" | "beaconnodes" | "validators" | "peers";
 }
 
 const WS_URL = getWsBaseURL();

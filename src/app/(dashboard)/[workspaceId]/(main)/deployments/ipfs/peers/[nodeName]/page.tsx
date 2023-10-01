@@ -13,13 +13,13 @@ import {
   SecretType,
   StorageItems,
 } from "@/enums";
-import { ExecutionClientNode } from "@/types";
+import { ExecutionClientNode, IPFSPeer } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
-import { ExecutionClientNodeStats } from "./components/execution-client-node-stats";
+import { IPFSPeerStats } from "./components/ipfs-peer-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
@@ -44,16 +44,16 @@ export default async function ExecutionClientPage({
   );
 
   try {
-    const node = await getNode<ExecutionClientNode>(
+    const node = await getNode<IPFSPeer>(
       workspaceId,
-      `/ethereum/nodes/${nodeName}`
+      `/ipfs/peers/${nodeName}`
     );
 
     const { versions } = await getClientVersions(
       {
-        protocol: "ethereum",
-        component: "executionEngine",
-        client: node.client,
+        protocol: "ipfs",
+        component: "peer",
+        client: "kubo",
       },
       node.image
     );
@@ -65,7 +65,8 @@ export default async function ExecutionClientPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.ethereum}
+                protocol={Protocol.ipfs}
+                component="peers"
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -81,7 +82,7 @@ export default async function ExecutionClientPage({
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
               <>
-                <ExecutionClientNodeStats
+                <IPFSPeerStats
                   nodeName={node.name}
                   token={token.value}
                   workspaceId={workspaceId}
@@ -98,11 +99,11 @@ export default async function ExecutionClientPage({
           <Tabs defaultValue="protocol">
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
-              <TabsTrigger value="networking">Networking</TabsTrigger>
+              <TabsTrigger value="configrationProfiles">
+                Configration Profiles
+              </TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
-              {node.client !== ExecutionClientClients.Nethermind && (
-                <TabsTrigger value="accessControl">Access Control</TabsTrigger>
-              )}
+              <TabsTrigger value="accessControl">Routing</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (

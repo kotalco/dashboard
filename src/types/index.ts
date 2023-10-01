@@ -227,3 +227,10 @@ export interface BeaconStats {
   peersCount: number;
   syncing: boolean;
 }
+
+export interface IpfsPeerStats {
+  PeerCount: number;
+  PinCount: number;
+  Blocks: number;
+  CumulativeSize: number;
+}
