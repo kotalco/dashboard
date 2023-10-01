@@ -3,17 +3,10 @@ import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
 import { getWorkspace } from "@/services/get-workspace";
-import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
-import {
-  ExecutionClientClients,
-  Protocol,
-  Roles,
-  SecretType,
-  StorageItems,
-} from "@/enums";
-import { ExecutionClientNode, IPFSPeer } from "@/types";
+import { Protocol, Roles, StorageItems } from "@/enums";
+import { IPFSPeer } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
