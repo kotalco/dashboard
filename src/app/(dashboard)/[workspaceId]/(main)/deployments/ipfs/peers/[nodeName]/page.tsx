@@ -23,9 +23,9 @@ import { IPFSPeerStats } from "./components/ipfs-peer-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
-import { AccessControlTab } from "./components/access-control-tab";
+import { RoutingTab } from "./components/routing-tab";
 import { ConfigrationProfilesTab } from "./components/configration-profiles-tab";
-import { LogsTab } from "./components/logs-tab";
+import { Logs } from "@/components/logs";
 
 export default async function ExecutionClientPage({
   params,
@@ -35,11 +35,6 @@ export default async function ExecutionClientPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId);
-
-  const jwtSecrets = secrets.filter(
-    ({ type }) => type === SecretType["JWT Secret"]
-  );
 
   try {
     const node = await getNode<IPFSPeer>(
@@ -101,7 +96,7 @@ export default async function ExecutionClientPage({
                 Configration Profiles
               </TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
-              <TabsTrigger value="accessControl">Routing</TabsTrigger>
+              <TabsTrigger value="routing">Routing</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -123,18 +118,17 @@ export default async function ExecutionClientPage({
               <ConfigrationProfilesTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} secrets={jwtSecrets} />
+              <APITab node={node} role={role} />
             </TabsContent>
-            {node.client !== ExecutionClientClients.Nethermind && (
-              <TabsContent
-                className="px-4 py-3 sm:px-6 sm:py-4"
-                value="accessControl"
-              >
-                <AccessControlTab node={node} role={role} />
-              </TabsContent>
-            )}
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="routing">
+              <RoutingTab node={node} role={role} />
+            </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && <LogsTab node={node} role={role} token={token.value} />}
+              {token && (
+                <Logs
+                  url={`ipfs/peers/${node.name}/logs?authorization=Bearer ${token}&workspace_id=${params.workspaceId}`}
+                />
+              )}
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"

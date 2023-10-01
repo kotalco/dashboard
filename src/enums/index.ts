@@ -64,10 +64,10 @@ export enum IPFSConfigProfile {
 }
 
 export enum IPFSRouting {
-  none = "none",
-  dht = "dht",
-  dhtclient = "dhtclient",
-  dhtserver = "dhtserver",
+  None = "none",
+  DHT = "dht",
+  "DHT Client" = "dhtclient",
+  "DHT Server" = "dhtserver",
 }
 
 export enum ConsensusAlgorithm {

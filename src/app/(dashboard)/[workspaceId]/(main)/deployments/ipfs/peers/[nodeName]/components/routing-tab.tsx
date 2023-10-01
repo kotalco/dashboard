@@ -7,37 +7,46 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
 import { IPFSPeer } from "@/types";
-import { Roles } from "@/enums";
+import { IPFSRouting, Roles } from "@/enums";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getSelectItems } from "@/lib/utils";
 
-interface APITabProps {
+interface RoutingTabProps {
   node: IPFSPeer;
   role: Roles;
 }
 
 const schema = z.object({
-  api: z.boolean(),
-  gateway: z.boolean(),
+  routing: z.nativeEnum(IPFSRouting, {
+    required_error: "Routing is required",
+  }),
 });
 
-type Schema = z.infer<typeof schema>;
+type Schema = z.input<typeof schema>;
 
-export const APITab: React.FC<APITabProps> = ({ node, role }) => {
-  const { api, gateway } = node;
+export const RoutingTab: React.FC<RoutingTabProps> = ({ node, role }) => {
+  const { routing } = node;
 
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: { api, gateway },
+    defaultValues: { routing },
   });
 
   const {
@@ -59,8 +68,8 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         `/ipfs/peers/${node.name}`,
         values
       );
-      const { api, gateway } = data;
-      reset({ api, gateway });
+      const { routing } = data;
+      reset({ routing });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -81,34 +90,30 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
       >
         <FormField
           control={form.control}
-          name="api"
+          name="routing"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">API</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="gateway"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">Gateway</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
+            <FormItem className="max-w-sm">
+              <FormLabel>Content Routing Mechanism</FormLabel>
+              <Select
+                disabled={isSubmitting || role === Roles.Reader}
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger data-testid="routing" className="bg-white">
+                    <SelectValue placeholder="Choose routing option" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {getSelectItems(IPFSRouting).map(({ value, label }) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -116,7 +121,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
             <AlertDescription>
-              API settings have been updated successfully.
+              Routing settings have been updated successfully.
             </AlertDescription>
           </Alert>
         )}
