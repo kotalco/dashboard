@@ -126,7 +126,7 @@ export default async function ExecutionClientPage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
                 <Logs
-                  url={`ipfs/peers/${node.name}/logs?authorization=Bearer ${token}&workspace_id=${params.workspaceId}`}
+                  url={`ipfs/peers/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
                 />
               )}
             </TabsContent>
@@ -137,7 +137,7 @@ export default async function ExecutionClientPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/ethereum/nodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/ipfs/peers/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (
