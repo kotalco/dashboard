@@ -53,10 +53,10 @@ export enum Protocol {
 export enum IPFSConfigProfile {
   server = "server",
   randomports = "randomports",
-  defaultDatastore = "default-datastore",
-  localDiscovery = "local-discovery",
+  "default-datastore" = "default-datastore",
+  "local-discovery" = "local-discovery",
   test = "test",
-  defaultNetworking = "default-networking",
+  "default-networking" = "default-networking",
   flatfs = "flatfs",
   badgerds = "badgerds",
   lowpower = "lowpower",

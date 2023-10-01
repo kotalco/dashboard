@@ -67,7 +67,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
           <SelectTrigger
             className={cn(
               selected === "other" ? "rounded-b-none" : "",
-              "bg-white max-w-xs"
+              "bg-white max-w-sm"
             )}
           >
             <SelectValue placeholder={placeholder} />
@@ -106,7 +106,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="-mt-1.5 border-t-0 rounded-t-none max-w-xs"
+            className="-mt-1.5 border-t-0 rounded-t-none max-w-sm"
           />
         </div>
       )}
