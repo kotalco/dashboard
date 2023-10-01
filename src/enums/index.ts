@@ -69,6 +69,11 @@ export enum IPFSRouting {
   dhtserver = "dhtserver",
 }
 
+export enum ConsensusAlgorithm {
+  crdt = "crdt",
+  raft = "raft",
+}
+
 export enum NodeStatuses {
   "Connection Error" = "ConnectionError",
   "Loading Info" = "LoadingInfo",
