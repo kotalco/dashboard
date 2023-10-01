@@ -1,6 +1,7 @@
 import {
   BeaconNodeClients,
   ChainlinkLogging,
+  ConsensusAlgorithm,
   ExecutionClientAPI,
   ExecutionClientClients,
   ExecutionClientLogging,
@@ -188,6 +189,15 @@ export interface IPFSPeer extends ClientImage, ResourcesInfo {
   api: boolean;
   gateway: boolean;
   routing: IPFSRouting;
+  createdAt: string;
+}
+
+export interface IPFSClusterPeer extends ClientImage, ResourcesInfo {
+  name: string;
+  consensus: ConsensusAlgorithm;
+  id: string;
+  privatekeySecretName?: string;
+  trustedPeers: string[];
   createdAt: string;
 }
 
