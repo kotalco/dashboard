@@ -9,11 +9,11 @@ import { DeleteNodeForm } from "@/components/delete-node-form";
 import { useToast } from "@/components/ui/use-toast";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { AptosNode } from "@/types";
+import { FilecoinNode } from "@/types";
 import { client } from "@/lib/client-instance";
 
 interface DangerZoneTabProps {
-  node: AptosNode;
+  node: FilecoinNode;
 }
 
 export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
@@ -23,16 +23,16 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
 
   const [open, setOpen] = useState(false);
 
-  async function onDeleteAptosNode() {
+  async function onDeleteFilecoinNode() {
     const url = qs.stringifyUrl({
-      url: `/aptos/nodes/${node.name}`,
+      url: `/filecoin/nodes/${node.name}`,
       query: { workspace_id: params.workspaceId },
     });
     await client.delete(url);
-    router.push(`/${params.workspaceId}/deployments/aptos`);
+    router.push(`/${params.workspaceId}/deployments/filecoin`);
     router.refresh();
     toast({
-      title: "Aptos node has been deleted",
+      title: "Filecoin node has been deleted",
       description: `${node.name} node has been deleted successfully.`,
     });
     setOpen(false);
@@ -66,10 +66,10 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        title="Delete Aptos Node"
-        description={`This action cann't be undone. This will permnantly delete (${node.name}) Aptos Node.`}
+        title="Delete Filecoin Node"
+        description={`This action cann't be undone. This will permnantly delete (${node.name}) Filecoin Node.`}
       >
-        <DeleteNodeForm nodeName={node.name} onDelete={onDeleteAptosNode} />
+        <DeleteNodeForm nodeName={node.name} onDelete={onDeleteFilecoinNode} />
       </AlertModal>
     </>
   );

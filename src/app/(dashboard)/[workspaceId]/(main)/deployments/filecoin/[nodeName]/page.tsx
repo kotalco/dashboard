@@ -114,7 +114,7 @@ export default async function AptosPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/filecoin/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (
