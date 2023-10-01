@@ -1,7 +1,6 @@
 "use client";
 
 import * as z from "zod";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
@@ -9,17 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
 import { getSelectItems } from "@/lib/utils";
-import { ExecutionClientNode, IPFSPeer, Secret } from "@/types";
-import {
-  ExecutionClientSyncMode,
-  IPFSConfigProfile,
-  Roles,
-  SecretType,
-} from "@/enums";
+import { IPFSPeer } from "@/types";
+import { IPFSConfigProfile, Roles } from "@/enums";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,14 +21,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
