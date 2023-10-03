@@ -21,6 +21,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
 import { SelectWithInput } from "@/components/ui/select-with-input";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { Label } from "@/components/ui/label";
 
 interface PeersTabProps {
   node: IPFSClusterPeer;
@@ -45,7 +46,7 @@ export const PeersTab: React.FC<PeersTabProps> = ({
   peers,
   clusterPeers,
 }) => {
-  const { peerEndpoint, bootstrapPeers } = node;
+  const { peerEndpoint, bootstrapPeers, trustedPeers } = node;
   const peerEndpoints = peers.map(({ name }) => ({
     label: name,
     value: `/dns4/${name}/tcp/5001`,
@@ -149,6 +150,19 @@ export const PeersTab: React.FC<PeersTabProps> = ({
             </FormItem>
           )}
         />
+
+        {!!trustedPeers && (
+          <div className="max-w-xs mt-4">
+            <Label>Trusted Cluster Peers</Label>
+            <ul className="ml-5 text-sm">
+              {trustedPeers.map((peer) => (
+                <li key={peer} className="text-foreground/50 list-disc">
+                  {peer}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
