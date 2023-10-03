@@ -1,10 +1,10 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import { BeaconNodeClients, BeaconNodeNetworks, Roles } from "@/enums";
-import { getClientUrl, getEnumKey } from "@/lib/utils";
-import { BeaconNode, Version } from "@/types";
+import { ConsensusAlgorithm, Roles } from "@/enums";
+import { getEnumKey } from "@/lib/utils";
+import { IPFSClusterPeer, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: BeaconNode;
+  node: IPFSClusterPeer;
   role: Roles;
   versions: Version[];
 }
@@ -14,39 +14,60 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
   role,
   versions,
 }) => {
-  const { network, image, name, client } = node;
+  const { image, name, consensus, id, privatekeySecretName } = node;
   return (
     <>
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Protocol</span>
-          <span className="text-sm text-foreground/50">Ethereum</span>
+          <span className="text-sm text-foreground/50">IPFS</span>
         </li>
 
         <li className="flex flex-col">
-          <span className="text-sm font-medium text-foreground">Network</span>
-          <span className="text-sm text-foreground/50">
-            {getEnumKey(BeaconNodeNetworks, network)}
-          </span>
+          <span className="text-sm font-medium text-foreground">Chain</span>
+          <span className="text-sm text-foreground/50">public-swarm</span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Client</span>
           <a
-            href={getClientUrl(client)}
+            href="https://github.com/ipfs/ipfs-cluster"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            {getEnumKey(BeaconNodeClients, client)}
+            ipfs-cluster-service
           </a>
         </li>
+
+        <li className="flex flex-col">
+          <span className="text-sm font-medium text-foreground">Consensus</span>
+          <span className="text-sm text-foreground/50">
+            {getEnumKey(ConsensusAlgorithm, consensus)}
+          </span>
+        </li>
+
+        {id && (
+          <li className="flex flex-col">
+            <span className="text-sm font-medium text-foreground">ID</span>
+            <span className="text-sm text-foreground/50">{id}</span>
+          </li>
+        )}
+
+        {privatekeySecretName && (
+          <li className="flex flex-col">
+            <span className="text-sm font-medium text-foreground">From</span>
+            <span className="text-sm text-foreground/50">
+              {privatekeySecretName}
+            </span>
+          </li>
+        )}
       </ul>
       <EditImageVersionForm
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/ethereum2/beaconnodes/${name}`}
+        updateUrl={`/ipfs/clusterpeers/${name}`}
       />
     </>
   );
