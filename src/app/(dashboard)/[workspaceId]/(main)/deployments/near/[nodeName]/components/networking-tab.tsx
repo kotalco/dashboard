@@ -8,9 +8,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { getSelectItems } from "@/lib/utils";
-import { ExecutionClientNode, NEARNode, Secret } from "@/types";
-import { ExecutionClientSyncMode, Roles, SecretType } from "@/enums";
+import { NEARNode, Secret } from "@/types";
+import { Roles, SecretType } from "@/enums";
 import {
   Form,
   FormControl,

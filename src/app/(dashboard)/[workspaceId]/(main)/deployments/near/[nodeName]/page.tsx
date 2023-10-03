@@ -16,7 +16,7 @@ import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
 import { NEARNodeStats } from "./components/near-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
-import { APITab } from "./components/api-tab";
+import { RPCTab } from "./components/rpc-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { WalletTab } from "./components/wallet-tab";
 import { NetworkingTab } from "./components/networking-tab";
@@ -87,7 +87,7 @@ export default async function BitcoinPage({
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="networking">Networking</TabsTrigger>
-              <TabsTrigger value="api">API</TabsTrigger>
+              <TabsTrigger value="rpc">RPC</TabsTrigger>
               <TabsTrigger value="wallet">Wallet</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
@@ -109,8 +109,8 @@ export default async function BitcoinPage({
             >
               <NetworkingTab node={node} role={role} secrets={secrets} />
             </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} secrets={secrets} />
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="rpc">
+              <RPCTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
               <WalletTab node={node} role={role} />
