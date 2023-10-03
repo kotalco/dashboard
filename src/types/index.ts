@@ -212,7 +212,7 @@ export interface NEARNode extends ClientImage, ResourcesInfo {
   nodePrivateKeySecretName: string;
   minPeers: number;
   p2pPort: number;
-  bootnodes: string[];
+  bootnodes: string[] | null;
   validatorSecretName: string;
   telemetryURL: string;
   prometheusPort: number;

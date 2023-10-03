@@ -7,7 +7,7 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { BitcoinNode } from "@/types";
+import { BitcoinNode, NEARNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
@@ -19,6 +19,7 @@ import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { WalletTab } from "./components/wallet-tab";
+import { NetworkingTab } from "./components/networking-tab";
 
 export default async function BitcoinPage({
   params,
@@ -31,7 +32,7 @@ export default async function BitcoinPage({
   const secrets = await getSecrets(workspaceId, SecretType["NEAR Private Key"]);
 
   try {
-    const node = await getNode<BitcoinNode>(
+    const node = await getNode<NEARNode>(
       workspaceId,
       `/near/nodes/${nodeName}`
     );
@@ -85,6 +86,7 @@ export default async function BitcoinPage({
           <Tabs defaultValue="protocol">
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
+              <TabsTrigger value="networking">Networking</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
               <TabsTrigger value="wallet">Wallet</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
@@ -100,6 +102,12 @@ export default async function BitcoinPage({
             </TabsList>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
+            </TabsContent>
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="networking"
+            >
+              <NetworkingTab node={node} role={role} secrets={secrets} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} secrets={secrets} />
