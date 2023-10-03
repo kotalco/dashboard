@@ -18,7 +18,7 @@ import { NEARNodeStats } from "./components/near-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { RPCTab } from "./components/rpc-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
-import { WalletTab } from "./components/wallet-tab";
+import { ValidatorTab } from "./components/validator-tab";
 import { NetworkingTab } from "./components/networking-tab";
 
 export default async function BitcoinPage({
@@ -88,7 +88,7 @@ export default async function BitcoinPage({
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="networking">Networking</TabsTrigger>
               <TabsTrigger value="rpc">RPC</TabsTrigger>
-              <TabsTrigger value="wallet">Wallet</TabsTrigger>
+              <TabsTrigger value="validator">Validator</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -112,8 +112,11 @@ export default async function BitcoinPage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="rpc">
               <RPCTab node={node} role={role} />
             </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
-              <WalletTab node={node} role={role} />
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="validator"
+            >
+              <ValidatorTab node={node} role={role} secrets={secrets} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
