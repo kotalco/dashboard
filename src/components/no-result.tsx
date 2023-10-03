@@ -2,8 +2,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Roles } from "@/enums";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -20,6 +21,7 @@ interface NoResultProps {
   description: string;
   createUrl: string;
   buttonText: string;
+  className?: string;
 }
 
 export const NoResult: React.FC<NoResultProps> = ({
@@ -29,17 +31,18 @@ export const NoResult: React.FC<NoResultProps> = ({
   description,
   createUrl,
   buttonText,
+  className,
 }) => {
   const router = useRouter();
   return (
-    <Card className="flex flex-col items-center text-center">
+    <Card className={cn("flex flex-col items-center text-center", className)}>
       <CardHeader className="flex flex-col items-center">
         <Image
           width={64}
           height={64}
           alt="decoration"
           src={imageUrl}
-          className="mb-3"
+          className="w-16 h-16 mb-3"
         />
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

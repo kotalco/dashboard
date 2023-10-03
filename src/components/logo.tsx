@@ -9,6 +9,7 @@ export const Logo = () => {
         width={80}
         height={80}
         priority
+        className="w-20 h-20"
       />
       <p className="mt-3 text-4xl font-bold leading-4">
         Kotal <br />

@@ -8,13 +8,16 @@ export default async function AptosPage({
 }: {
   params: { workspaceId: string };
 }) {
-  const nodes = await getNodes<AptosNode>(params.workspaceId, "/aptos/nodes");
+  const { data } = await getNodes<AptosNode>(
+    params.workspaceId,
+    "/aptos/nodes"
+  );
   const { role } = await getWorkspace(params.workspaceId);
 
   return (
     <div className="flex-col">
       <div className="flex-1 p-8 pt-6 space-y-4">
-        <AptosClient data={nodes} role={role} />
+        <AptosClient data={data} role={role} />
       </div>
     </div>
   );

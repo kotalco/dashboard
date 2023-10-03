@@ -94,20 +94,23 @@ export default async function AptosPage({
                 </TabsTrigger>
               )}
             </TabsList>
-            <TabsContent value="protocol">
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
-            <TabsContent value="api">
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} />
             </TabsContent>
-            <TabsContent value="logs">
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
                 <Logs
                   url={`aptos/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
                 />
               )}
             </TabsContent>
-            <TabsContent value="resources">
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="resources"
+            >
               <ResourcesForm
                 node={node}
                 role={role}
@@ -115,7 +118,7 @@ export default async function AptosPage({
               />
             </TabsContent>
             {role === Roles.Admin && (
-              <TabsContent value="danger">
+              <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
                 <DangerZoneTab node={node} />
               </TabsContent>
             )}

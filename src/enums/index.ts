@@ -39,6 +39,8 @@ export enum BitcoinNetworks {
 export enum Protocol {
   aptos = "aptos",
   bitcoin = "bitcoin",
+  ethereum = "ethereum",
+  ethereum2 = "ethereum2",
 }
 
 export enum NodeStatuses {
@@ -58,4 +60,66 @@ export enum StorageUnits {
   Megabyte = "Mi",
   Gigabyte = "Gi",
   Terabyte = "Ti",
+}
+
+export enum ExecutionClientClients {
+  "Go Ethereum" = "geth",
+  "Hyperledger Besu" = "besu",
+  Nethermind = "nethermind",
+}
+
+export enum ExecutionClientSyncMode {
+  Fast = "fast",
+  Full = "full",
+  Light = "light",
+  Snap = "snap",
+}
+
+export enum ExecutionClientAPI {
+  ETH = "eth",
+  Net = "net",
+  Web3 = "web3",
+}
+
+export enum ExecutionClientLogging {
+  All = "all",
+  Debug = "debug",
+  Error = "error",
+  Fatal = "fatal",
+  Info = "info",
+  Warn = "warn",
+  Trace = "trace",
+  Off = "off",
+}
+
+export enum BeaconNodeClients {
+  "ConsenSys Teku" = "teku",
+  "Prysatic Labs Prysm" = "prysm",
+  "Sigma Prime Lighthouse" = "lighthouse",
+  "Status.im Nimbus" = "nimbus",
+}
+
+export enum ValidatorClients {
+  "ConsenSys Teku" = "teku",
+  "Prysatic Labs Prysm" = "prysm",
+  "Sigma Prime Lighthouse" = "lighthouse",
+  "Status.im Nimbus" = "nimbus",
+}
+
+export enum ExecutionClientNetworks {
+  Mainnet = "mainnet",
+  Sepolia = "sepolia",
+  Goerli = "goerli",
+}
+
+export enum BeaconNodeNetworks {
+  Mainnet = "mainnet",
+  Sepolia = "sepolia",
+  Goerli = "goerli",
+}
+
+export enum ValidatorNetworks {
+  Mainnet = "mainnet",
+  Sepolia = "sepolia",
+  Goerli = "goerli",
 }

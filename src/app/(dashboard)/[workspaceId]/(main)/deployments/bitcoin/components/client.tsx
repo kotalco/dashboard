@@ -5,10 +5,11 @@ import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import { Roles } from "@/enums";
+import { DeploymentsList } from "@/components/deployments-list";
+import { BitcoinNetworks, Roles } from "@/enums";
+import { getEnumKey } from "@/lib/utils";
 import { NoResult } from "@/components/no-result";
 import { BitcoinNode } from "@/types";
-import { DeploymentsList } from "@/components/deployments-list";
 
 interface BitcoinClientProps {
   data: BitcoinNode[];
@@ -21,7 +22,7 @@ export const BitcoinClient: React.FC<BitcoinClientProps> = ({ data, role }) => {
 
   const mainNodesInfo = data.map(({ name, network }) => ({
     name,
-    network,
+    network: getEnumKey(BitcoinNetworks, network),
     client: "Bitcoin Core",
     url: `/${params.workspaceId}/deployments/bitcoin/${name}`,
   }));
