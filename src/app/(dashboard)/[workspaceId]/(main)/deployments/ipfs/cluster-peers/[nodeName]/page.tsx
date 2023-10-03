@@ -28,7 +28,7 @@ import { ResourcesForm } from "@/components/resources-form";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
-import { ExecutionClientTab } from "./components/execution-client-tab";
+import { PeersTab } from "./components/peers-tab";
 import { CheckpointSyncTab } from "./components/checkpoint-sync-tab";
 import { Logs } from "@/components/logs";
 
@@ -115,17 +115,14 @@ export default async function BeaconNodePage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
-            {/* <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="executionClient"
-            >
-              <ExecutionClientTab
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="peers">
+              <PeersTab
                 node={node}
                 role={role}
-                secrets={secrets}
-                executionClients={data}
+                peers={peers}
+                clusterPeers={clusterPeers}
               />
-            </TabsContent> */}
+            </TabsContent>
             {/* <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="checkpointSync"
