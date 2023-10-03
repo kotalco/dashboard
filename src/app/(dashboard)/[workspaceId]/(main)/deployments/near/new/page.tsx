@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateBitcoinNodeForm } from "../components/create-bitcoin-node-form";
+import { CreateNEARNodeForm } from "../components/create-near-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
@@ -17,18 +17,18 @@ export default async function CreateNewBitcoinNodePage({
   if (role === Roles.Reader) notFound();
 
   const { versions } = await getClientVersions({
-    protocol: "bitcoin",
+    protocol: "near",
     component: "node",
-    client: "bitcoin-core",
+    client: "nearcore",
   });
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create New Bitcoin Node</CardTitle>
+        <CardTitle>Create New NEAR Node</CardTitle>
       </CardHeader>
       <CardContent>
-        <CreateBitcoinNodeForm images={versions} />
+        <CreateNEARNodeForm images={versions} />
       </CardContent>
     </Card>
   );

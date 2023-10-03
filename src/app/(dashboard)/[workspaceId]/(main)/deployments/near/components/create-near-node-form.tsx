@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { BitcoinNetworks } from "@/enums";
+import { NEARNetworks } from "@/enums";
 import {
   Select,
   SelectContent,
@@ -29,6 +29,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { getSelectItems } from "@/lib/utils";
 import { client } from "@/lib/client-instance";
 import { Version } from "@/types";
+import { Switch } from "@/components/ui/switch";
 
 const schema = z.object({
   name: z
@@ -39,16 +40,17 @@ const schema = z.object({
     .refine((value) => /^\S*$/.test(value), {
       message: "Invalid character used",
     }),
-  network: z.nativeEnum(BitcoinNetworks, {
-    required_error: "Please select a Network",
+  network: z.nativeEnum(NEARNetworks, {
+    required_error: "Network is required",
   }),
+  archive: z.boolean().optional().default(false),
   workspace_id: z.string().min(1),
   image: z.string().min(1),
 });
 
-type SchemaType = z.infer<typeof schema>;
+type Schema = z.infer<typeof schema>;
 
-export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
+export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
   images,
 }) => {
   const { toast } = useToast();
@@ -57,10 +59,9 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
 
   const defaultValues = {
     name: "",
-    network: undefined,
     image: images[0].image,
   };
-  const form = useForm<SchemaType>({
+  const form = useForm<Schema>({
     resolver: zodResolver(schema),
     defaultValues,
   });
@@ -70,13 +71,13 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
     setError,
   } = form;
 
-  async function onSubmit(values: z.infer<typeof schema>) {
+  async function onSubmit(values: Schema) {
     try {
-      await client.post("/bitcoin/nodes", values);
-      router.push(`/${workspaceId}/deployments/bitcoin`);
+      await client.post("/near/nodes", values);
+      router.push(`/${workspaceId}/deployments/near`);
       router.refresh();
       toast({
-        title: "Bitcoin node has been created",
+        title: "NEAR node has been created",
         description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
       });
     } catch (error) {
@@ -153,7 +154,7 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {getSelectItems(BitcoinNetworks).map(({ value, label }) => (
+                  {getSelectItems(NEARNetworks).map(({ value, label }) => (
                     <SelectItem key={value} value={value}>
                       {label}
                     </SelectItem>
@@ -169,14 +170,31 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
         <p className="text-sm">
           Client:{" "}
           <a
-            href="https://github.com/bitcoin/bitcoin"
+            href="https://github.com/near/nearcore"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline underline-offset-4"
           >
-            Bitcoin Core
+            NEAR Core
           </a>
         </p>
+
+        <FormField
+          control={form.control}
+          name="archive"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center gap-x-3">
+              <FormLabel className="mt-2">Archive Node</FormLabel>
+              <FormControl>
+                <Switch
+                  disabled={isSubmitting}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
         <Button
           data-testid="submit"
