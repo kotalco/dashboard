@@ -235,6 +235,16 @@ export interface BitcoinStats {
   peerCount: number;
 }
 
+export interface NEARStats {
+  activePeersCount: number;
+  maxPeersCount: number;
+  sentBytesPerSecond: number;
+  receivedBytesPerSecond: number;
+  latestBlockHeight: number;
+  earliestBlockHeight: number;
+  syncing: boolean;
+}
+
 export interface ExecutionClientStats {
   currentBlock: string;
   highestBlock: string;

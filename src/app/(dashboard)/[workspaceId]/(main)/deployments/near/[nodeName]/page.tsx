@@ -14,7 +14,7 @@ import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
-import { BitcoinNodeStats } from "./components/bitcoin-node-stats";
+import { NEARNodeStats } from "./components/near-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
@@ -28,19 +28,19 @@ export default async function BitcoinPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType.Password);
+  const secrets = await getSecrets(workspaceId, SecretType["NEAR Private Key"]);
 
   try {
     const node = await getNode<BitcoinNode>(
       workspaceId,
-      `/bitcoin/nodes/${nodeName}`
+      `/near/nodes/${nodeName}`
     );
 
     const { versions } = await getClientVersions(
       {
-        protocol: "bitcoin",
+        protocol: "near",
         component: "node",
-        client: "bitcoin-core",
+        client: "nearcore",
       },
       node.image
     );
@@ -52,7 +52,7 @@ export default async function BitcoinPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.bitcoin}
+                protocol={Protocol.near}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -68,7 +68,7 @@ export default async function BitcoinPage({
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
               <>
-                <BitcoinNodeStats
+                <NEARNodeStats
                   nodeName={node.name}
                   token={token.value}
                   workspaceId={workspaceId}

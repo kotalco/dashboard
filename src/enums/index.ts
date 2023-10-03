@@ -55,6 +55,7 @@ export enum Protocol {
   chainlink = "chainlink",
   filecoin = "filecoin",
   ipfs = "ipfs",
+  near = "near",
 }
 
 export enum IPFSConfigProfile {
