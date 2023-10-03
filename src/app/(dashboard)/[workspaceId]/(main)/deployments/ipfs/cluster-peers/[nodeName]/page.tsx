@@ -125,29 +125,29 @@ export default async function BeaconNodePage({
               <SecurityTab node={node} />
             </TabsContent>
 
-            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
                 <Logs
-                  url={`ethereum2/beaconnodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
+                  url={`ipfs/clusterpeers/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
                 />
               )}
-            </TabsContent> */}
+            </TabsContent>
 
-            {/* <TabsContent
+            <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="resources"
             >
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
               />
-            </TabsContent> */}
-            {/* {role === Roles.Admin && (
+            </TabsContent>
+            {role === Roles.Admin && (
               <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
                 <DangerZoneTab node={node} />
               </TabsContent>
-            )} */}
+            )}
           </Tabs>
         </div>
       </div>

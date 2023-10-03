@@ -9,11 +9,11 @@ import { DeleteNodeForm } from "@/components/delete-node-form";
 import { useToast } from "@/components/ui/use-toast";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { BeaconNode } from "@/types";
+import { IPFSClusterPeer } from "@/types";
 import { client } from "@/lib/client-instance";
 
 interface DangerZoneTabProps {
-  node: BeaconNode;
+  node: IPFSClusterPeer;
 }
 
 export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
@@ -23,19 +23,19 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
 
   const [open, setOpen] = useState(false);
 
-  async function onDeleteBeaconNode() {
+  async function onDeleteIPFSClusterPeer() {
     const url = qs.stringifyUrl({
-      url: `/ethereum2/beaconnodes/${node.name}`,
+      url: `/ipfs/clusterpeers/${node.name}`,
       query: { workspace_id: params.workspaceId },
     });
     await client.delete(url);
     router.push(
-      `/${params.workspaceId}/deployments/ethereum?deployment=beacon-nodes`
+      `/${params.workspaceId}/deployments/ipfs?deployment=cluster-peers`
     );
     router.refresh();
     toast({
-      title: "Beacon node has been deleted",
-      description: `${node.name} node has been deleted successfully.`,
+      title: "Cluster peer has been deleted",
+      description: `${node.name} peer has been deleted successfully.`,
     });
     setOpen(false);
   }
@@ -44,15 +44,15 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
     <>
       <div>
         <p className="text-muted-foreground">
-          By deleting this node, all connected apps will lose access to the
+          By deleting this peer, all connected apps will lose access to the
           Blockchain Network.
         </p>
         <p className="text-muted-foreground">
-          Node attached volume that persists Blockchain data will not be
+          Peer attached volume that persists Blockchain data will not be
           removed, you need to delete it yourself.
         </p>
         <p className="text-muted-foreground">
-          Are you sure you want to delete this node?
+          Are you sure you want to delete this peer?
         </p>
         <TabsFooter>
           <Button
@@ -60,7 +60,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
             className="btn btn-alert"
             onClick={() => setOpen(true)}
           >
-            Delete Node
+            Delete Peer
           </Button>
         </TabsFooter>
       </div>
@@ -68,10 +68,13 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        title="Delete Beacon Node"
-        description={`This action cann't be undone. This will permnantly delete (${node.name}) Beacon Node.`}
+        title="Delete Cluster Peer"
+        description={`This action cann't be undone. This will permnantly delete (${node.name}) Cluster Peer.`}
       >
-        <DeleteNodeForm nodeName={node.name} onDelete={onDeleteBeaconNode} />
+        <DeleteNodeForm
+          nodeName={node.name}
+          onDelete={onDeleteIPFSClusterPeer}
+        />
       </AlertModal>
     </>
   );
