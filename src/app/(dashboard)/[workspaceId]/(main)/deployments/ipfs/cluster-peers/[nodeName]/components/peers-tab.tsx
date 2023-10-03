@@ -1,7 +1,6 @@
 "use client";
 
 import * as z from "zod";
-import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,7 +45,6 @@ export const PeersTab: React.FC<PeersTabProps> = ({
   peers,
   clusterPeers,
 }) => {
-  const params = useParams();
   const { peerEndpoint, bootstrapPeers } = node;
   const peerEndpoints = peers.map(({ name }) => ({
     label: name,
@@ -133,7 +131,7 @@ export const PeersTab: React.FC<PeersTabProps> = ({
                 <div className="max-w-xs">
                   <MultiSelect
                     defaultValue={field.value}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || role === Roles.Reader}
                     value={field.value}
                     placeholder="Select bootstrap peers"
                     options={ipfsClusterPeers}

@@ -26,10 +26,9 @@ import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
 import { ProtocolTab } from "./components/protocol-tab";
-import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { PeersTab } from "./components/peers-tab";
-import { CheckpointSyncTab } from "./components/checkpoint-sync-tab";
+import { SecurityTab } from "./components/security-tab";
 import { Logs } from "@/components/logs";
 
 export default async function BeaconNodePage({
@@ -40,7 +39,6 @@ export default async function BeaconNodePage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType["JWT Secret"]);
   const { data: peers } = await getNodes<IPFSPeer>(
     params.workspaceId,
     "/ipfs/peers"
@@ -123,15 +121,9 @@ export default async function BeaconNodePage({
                 clusterPeers={clusterPeers}
               />
             </TabsContent>
-            {/* <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="checkpointSync"
-            >
-              <CheckpointSyncTab node={node} role={role} />
-            </TabsContent> */}
-            {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} />
-            </TabsContent> */}
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="security">
+              <SecurityTab node={node} />
+            </TabsContent>
 
             {/* <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (

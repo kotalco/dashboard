@@ -130,6 +130,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                   e.preventDefault();
                   e.stopPropagation();
                 }}
+                disabled
                 onClick={() => handleUnselect(option)}
               >
                 <X className="w-3 h-3 text-muted-foreground hover:text-foreground" />
