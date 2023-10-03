@@ -1,10 +1,10 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import { BitcoinNetworks, Roles } from "@/enums";
+import { NEARNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
-import { BitcoinNode, Version } from "@/types";
+import { NEARNode, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: BitcoinNode;
+  node: NEARNode;
   role: Roles;
   versions: Version[];
 }
@@ -20,25 +20,25 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Protocol</span>
-          <span className="text-sm text-foreground/50">Bitcoin</span>
+          <span className="text-sm text-foreground/50">NEAR</span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Network</span>
           <span className="text-sm text-foreground/50">
-            {getEnumKey(BitcoinNetworks, network)}
+            {getEnumKey(NEARNetworks, network)}
           </span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Client</span>
           <a
-            href="https://github.com/bitcoin/bitcoin"
+            href="https://github.com/near/nearcore"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            Bitcoin Core
+            NEAR Core
           </a>
         </li>
       </ul>
@@ -46,7 +46,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/bitcoin/nodes/${name}`}
+        updateUrl={`/near/nodes/${name}`}
       />
     </>
   );
