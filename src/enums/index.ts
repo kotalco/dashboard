@@ -71,8 +71,8 @@ export enum IPFSRouting {
 }
 
 export enum ConsensusAlgorithm {
-  crdt = "crdt",
-  raft = "raft",
+  CRDT = "crdt",
+  RAFT = "raft",
 }
 
 export enum NodeStatuses {

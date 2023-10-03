@@ -87,7 +87,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
           </SelectContent>
         </Select>
 
-        {selected && selected !== "other" && (
+        {selected && selected !== "other" && allowClear && (
           <Button
             type="button"
             variant="ghost"
