@@ -41,6 +41,12 @@ export enum FilecoinNetworks {
   Calibration = "calibration",
 }
 
+export enum NEARNetworks {
+  Mainnet = "mainnet",
+  Testnet = "testnet",
+  Betanet = "betanet",
+}
+
 export enum Protocol {
   aptos = "aptos",
   bitcoin = "bitcoin",
