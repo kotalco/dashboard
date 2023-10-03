@@ -198,6 +198,8 @@ export interface IPFSClusterPeer extends ClientImage, ResourcesInfo {
   id: string;
   privatekeySecretName?: string;
   trustedPeers: string[];
+  peerEndpoint: string;
+  bootstrapPeers: string[];
   createdAt: string;
 }
 
