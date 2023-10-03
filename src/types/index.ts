@@ -8,6 +8,7 @@ import {
   ExecutionClientSyncMode,
   IPFSConfigProfile,
   IPFSRouting,
+  NEARNetworks,
   ValidatorClients,
 } from "@/enums";
 
@@ -201,6 +202,22 @@ export interface IPFSClusterPeer extends ClientImage, ResourcesInfo {
   peerEndpoint: string;
   bootstrapPeers: string[];
   clusterSecretName: string;
+  createdAt: string;
+}
+
+export interface NEARNode extends ClientImage, ResourcesInfo {
+  name: string;
+  network: NEARNetworks;
+  archive: boolean;
+  nodePrivateKeySecretName: string;
+  minPeers: number;
+  p2pPort: number;
+  bootnodes: string[];
+  validatorSecretName: string;
+  telemetryURL: string;
+  prometheusPort: number;
+  rpc: boolean;
+  rpcPort: number;
   createdAt: string;
 }
 
