@@ -7,10 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
 import { ChainlinkNode, ExecutionClientNode } from "@/types";
-import { Roles, SecretType } from "@/enums";
+import { Roles } from "@/enums";
 import {
   Form,
-  FormControl,
   FormDescription,
   FormField,
   FormItem,
