@@ -20,6 +20,7 @@ import { RPCTab } from "./components/rpc-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { ValidatorTab } from "./components/validator-tab";
 import { NetworkingTab } from "./components/networking-tab";
+import { PrometheusTab } from "./components/prometheus-tab";
 
 export default async function BitcoinPage({
   params,
@@ -89,6 +90,7 @@ export default async function BitcoinPage({
               <TabsTrigger value="networking">Networking</TabsTrigger>
               <TabsTrigger value="rpc">RPC</TabsTrigger>
               <TabsTrigger value="validator">Validator</TabsTrigger>
+              <TabsTrigger value="prometheus">Prometheus</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -117,6 +119,12 @@ export default async function BitcoinPage({
               value="validator"
             >
               <ValidatorTab node={node} role={role} secrets={secrets} />
+            </TabsContent>
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="prometheus"
+            >
+              <PrometheusTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
