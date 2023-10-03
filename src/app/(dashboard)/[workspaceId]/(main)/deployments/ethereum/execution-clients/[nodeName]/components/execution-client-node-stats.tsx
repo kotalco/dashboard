@@ -99,7 +99,7 @@ export const ExecutionClientNodeStats: React.FC<
               </TooltipProvider>
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center text-3xl font-light text-gray-500 truncate gap-x-2">
+          <CardContent className="flex items-center text-3xl font-light text-foreground/50 truncate gap-x-2">
             {!("error" in data) && (
               <>
                 {!data.peersCount ? (
@@ -118,7 +118,7 @@ export const ExecutionClientNodeStats: React.FC<
           <CardHeader>
             <CardTitle>Peers</CardTitle>
           </CardHeader>
-          <CardContent className="text-3xl font-light text-gray-500 truncate">
+          <CardContent className="text-3xl font-light text-foreground/50 truncate">
             {!("error" in data) && data.peersCount}
           </CardContent>
         </Card>

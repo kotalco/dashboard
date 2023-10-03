@@ -8,10 +8,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
-import { AlertTriangle } from "lucide-react";
-import { BitcoinStats, StatsError } from "@/types";
+import { AlertCircle, AlertTriangle, RefreshCw } from "lucide-react";
+import { BitcoinStats, NEARStats, StatsError } from "@/types";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-interface BitcoinNodeStatsProps {
+interface NEARNodeStatsProps {
   nodeName: string;
   token: string;
   workspaceId: string;
@@ -19,14 +25,14 @@ interface BitcoinNodeStatsProps {
 
 const WS_URL = getWsBaseURL();
 
-export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
+export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
   nodeName,
   token,
   workspaceId,
 }) => {
   const subscription: SWRSubscription<
     string,
-    BitcoinStats | StatsError,
+    NEARStats | StatsError,
     string
   > = (key, { next }) => {
     const socket = new WebSocket(key);
@@ -39,7 +45,7 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
     return () => socket.close();
   };
   const { data, error } = useSWRSubscription(
-    `${WS_URL}/bitcoin/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
+    `${WS_URL}/near/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription
   );
 
@@ -52,6 +58,7 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
       </Alert>
     );
   }
+
   if (!data)
     return (
       <>
@@ -74,19 +81,58 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
       >
         <Card>
           <CardHeader>
-            <CardTitle>Blocks</CardTitle>
+            <CardTitle className="items-start">
+              Blocks
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AlertCircle className="w-4 h-4 ml-2" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    If block number doesn&apos;t change, it means node is not
+                    syncing or syncing headers
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </CardTitle>
           </CardHeader>
-          <CardContent className="text-3xl font-light text-gray-500 truncate">
-            {!("error" in data) &&
-              new Intl.NumberFormat("en-US").format(+data.blockCount)}
+          <CardContent className="flex items-center text-3xl font-light text-foreground/50 truncate gap-x-2">
+            {!("error" in data) && (
+              <>
+                {data.syncing ? (
+                  <RefreshCw className="w-5 h-5 animate-spin" />
+                ) : (
+                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                )}
+                <span>
+                  {new Intl.NumberFormat("en-US").format(
+                    +data.latestBlockHeight
+                  )}
+                </span>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Peers</CardTitle>
+            <CardTitle className="items-start">
+              Peers
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AlertCircle className="w-4 h-4 ml-2" />
+                  </TooltipTrigger>
+                  <TooltipContent>Active peers / Max peers</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </CardTitle>
           </CardHeader>
-          <CardContent className="text-3xl font-light text-gray-500 truncate">
-            {!("error" in data) && data.peerCount}
+          <CardContent className="text-3xl font-light text-foreground/50 truncate">
+            {!("error" in data) && (
+              <>
+                {data.activePeersCount} / {data.maxPeersCount}
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
