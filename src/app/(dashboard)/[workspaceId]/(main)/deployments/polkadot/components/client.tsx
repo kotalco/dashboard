@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { DeploymentsList } from "@/components/deployments-list";
-import { NEARNetworks, PolkadotNetworks, Roles } from "@/enums";
+import { PolkadotNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
 import { NoResult } from "@/components/no-result";
 import { PolkadotNode } from "@/types";

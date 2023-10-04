@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { NEARNetworks } from "@/enums";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { NEARNetworks, PolkadotNetworks } from "@/enums";
 import {
   Select,
   SelectContent,
@@ -40,17 +40,17 @@ const schema = z.object({
     .refine((value) => /^\S*$/.test(value), {
       message: "Invalid character used",
     }),
-  network: z.nativeEnum(NEARNetworks, {
+  network: z.nativeEnum(PolkadotNetworks, {
     required_error: "Network is required",
   }),
-  archive: z.boolean().optional().default(false),
+  pruning: z.boolean().default(false),
   workspace_id: z.string().min(1),
   image: z.string().min(1),
 });
 
 type Schema = z.infer<typeof schema>;
 
-export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
+export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
   images,
 }) => {
   const { toast } = useToast();
@@ -73,17 +73,16 @@ export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
 
   async function onSubmit(values: Schema) {
     try {
-      await client.post("/near/nodes", values);
-      router.push(`/${workspaceId}/deployments/near`);
+      await client.post("/polkadot/nodes", values);
+      router.push(`/${workspaceId}/deployments/polkadot`);
       router.refresh();
       toast({
-        title: "NEAR node has been created",
+        title: "Polkadot node has been created",
         description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
       });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
-
         if (response?.status === 400) {
           setError("root", {
             type: response?.status.toString(),
@@ -91,7 +90,6 @@ export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
           });
           return;
         }
-
         if (response?.status === 403) {
           setError("root", {
             type: response?.status.toString(),
@@ -99,7 +97,6 @@ export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
           });
           return;
         }
-
         setError("root", {
           type: response?.status.toString(),
           message: "Something went wrong.",
@@ -154,7 +151,7 @@ export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {getSelectItems(NEARNetworks).map(({ value, label }) => (
+                  {getSelectItems(PolkadotNetworks).map(({ value, label }) => (
                     <SelectItem key={value} value={value}>
                       {label}
                     </SelectItem>
@@ -170,21 +167,21 @@ export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
         <p className="text-sm">
           Client:{" "}
           <a
-            href="https://github.com/near/nearcore"
+            href="https://github.com/paritytech/polkadot"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline underline-offset-4"
           >
-            NEAR Core
+            Parity Polkadot
           </a>
         </p>
 
         <FormField
           control={form.control}
-          name="archive"
+          name="pruning"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2">Archive Node</FormLabel>
+              <FormLabel className="mt-2">Pruning</FormLabel>
               <FormControl>
                 <Switch
                   disabled={isSubmitting}
@@ -195,6 +192,20 @@ export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
             </FormItem>
           )}
         />
+
+        <Alert variant="warn">
+          <AlertTitle>Attension</AlertTitle>
+          <AlertDescription>
+            <ul className="list-disc list-inside">
+              <li>Validator nodes must run in archive mode.</li>
+              <li>Disable pruning to enable archive mode.</li>
+              <li>
+                You can enable validator mode after node is up and running &amp;
+                fully synced
+              </li>
+            </ul>
+          </AlertDescription>
+        </Alert>
 
         <Button
           data-testid="submit"
