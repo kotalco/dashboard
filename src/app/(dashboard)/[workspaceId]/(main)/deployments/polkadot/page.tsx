@@ -3,7 +3,7 @@ import { getNodes } from "@/services/get-nodes";
 import { PolkadotNode } from "@/types";
 import { PolkadotClient } from "./components/client";
 
-export default async function BitcoinPage({
+export default async function PolkadotPage({
   params,
 }: {
   params: { workspaceId: string };

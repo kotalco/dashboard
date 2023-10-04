@@ -3,7 +3,7 @@ import { getNodes } from "@/services/get-nodes";
 import { NEARNode } from "@/types";
 import { NEARClient } from "./components/client";
 
-export default async function BitcoinPage({
+export default async function NEARPage({
   params,
 }: {
   params: { workspaceId: string };
