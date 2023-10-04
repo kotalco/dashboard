@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertCircle, AlertTriangle, RefreshCw } from "lucide-react";
-import { BitcoinStats, NEARStats, StatsError } from "@/types";
+import { PolkadotStats, StatsError } from "@/types";
 import {
   Tooltip,
   TooltipContent,
@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface NEARNodeStatsProps {
+interface PolkadotNodeStatsProps {
   nodeName: string;
   token: string;
   workspaceId: string;
@@ -25,14 +25,14 @@ interface NEARNodeStatsProps {
 
 const WS_URL = getWsBaseURL();
 
-export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
+export const PolkadotNodeStats: React.FC<PolkadotNodeStatsProps> = ({
   nodeName,
   token,
   workspaceId,
 }) => {
   const subscription: SWRSubscription<
     string,
-    NEARStats | StatsError,
+    PolkadotStats | StatsError,
     string
   > = (key, { next }) => {
     const socket = new WebSocket(key);
@@ -45,7 +45,7 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
     return () => socket.close();
   };
   const { data, error } = useSWRSubscription(
-    `${WS_URL}/near/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
+    `${WS_URL}/polkadot/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription
   );
 
@@ -71,6 +71,12 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
       </>
     );
 
+  const syncPercentage =
+    !("error" in data) &&
+    (!+data.highestBlock
+      ? "00%"
+      : `${((+data.currentBlock / +data.highestBlock) * 100).toFixed(2)}%`);
+
   return (
     <div className="relative lg:col-span-2">
       <div
@@ -88,10 +94,7 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
                   <TooltipTrigger>
                     <AlertCircle className="w-4 h-4 ml-2" />
                   </TooltipTrigger>
-                  <TooltipContent>
-                    If block number doesn&apos;t change, it means node is not
-                    syncing or syncing headers
-                  </TooltipContent>
+                  <TooltipContent>{syncPercentage}</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </CardTitle>
@@ -105,9 +108,7 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
                   <AlertTriangle className="w-5 h-5 text-yellow-600" />
                 )}
                 <span>
-                  {new Intl.NumberFormat("en-US").format(
-                    +data.latestBlockHeight
-                  )}
+                  {new Intl.NumberFormat("en-US").format(+data.currentBlock)}
                 </span>
               </>
             )}
@@ -115,24 +116,10 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="items-start">
-              Peers
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <AlertCircle className="w-4 h-4 ml-2" />
-                  </TooltipTrigger>
-                  <TooltipContent>Active peers / Max peers</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </CardTitle>
+            <CardTitle className="items-start">Peers</CardTitle>
           </CardHeader>
           <CardContent className="text-3xl font-light text-foreground/50 truncate">
-            {!("error" in data) && (
-              <>
-                {data.activePeersCount} / {data.maxPeersCount}
-              </>
-            )}
+            {!("error" in data) && data.peersCount}
           </CardContent>
         </Card>
       </div>
