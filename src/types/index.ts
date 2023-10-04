@@ -270,6 +270,13 @@ export interface NEARStats {
   syncing: boolean;
 }
 
+export interface PolkadotStats {
+  currentBlock: number;
+  highestBlock: number;
+  peersCount: number;
+  syncing: boolean;
+}
+
 export interface ExecutionClientStats {
   currentBlock: string;
   highestBlock: string;

@@ -56,6 +56,8 @@ export enum Protocol {
   filecoin = "filecoin",
   ipfs = "ipfs",
   near = "near",
+  polkadot = "polkadot",
+  stacks = "stacks",
 }
 
 export enum IPFSConfigProfile {

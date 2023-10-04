@@ -7,14 +7,14 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { BitcoinNode, NEARNode } from "@/types";
+import { NEARNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
-import { NEARNodeStats } from "./components/near-node-stats";
+import { PolkadotNodeStats } from "./components/polkadot-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { RPCTab } from "./components/rpc-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
@@ -31,19 +31,22 @@ export default async function BitcoinPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType["NEAR Private Key"]);
+  const secrets = await getSecrets(
+    workspaceId,
+    SecretType["Polkadot Private Key"]
+  );
 
   try {
     const node = await getNode<NEARNode>(
       workspaceId,
-      `/near/nodes/${nodeName}`
+      `/polkadot/nodes/${nodeName}`
     );
 
     const { versions } = await getClientVersions(
       {
-        protocol: "near",
+        protocol: "polkadot",
         component: "node",
-        client: "nearcore",
+        client: "polkadot",
       },
       node.image
     );
@@ -55,7 +58,7 @@ export default async function BitcoinPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.near}
+                protocol={Protocol.polkadot}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -71,7 +74,7 @@ export default async function BitcoinPage({
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
               <>
-                <NEARNodeStats
+                <PolkadotNodeStats
                   nodeName={node.name}
                   token={token.value}
                   workspaceId={workspaceId}
