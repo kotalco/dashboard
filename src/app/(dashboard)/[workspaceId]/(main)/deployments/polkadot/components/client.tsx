@@ -6,40 +6,43 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { DeploymentsList } from "@/components/deployments-list";
-import { NEARNetworks, Roles } from "@/enums";
+import { NEARNetworks, PolkadotNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
 import { NoResult } from "@/components/no-result";
-import { NEARNode } from "@/types";
+import { PolkadotNode } from "@/types";
 
-interface NEARClientProps {
-  data: NEARNode[];
+interface PolkadotClientProps {
+  data: PolkadotNode[];
   role: Roles;
 }
 
-export const NEARClient: React.FC<NEARClientProps> = ({ data, role }) => {
+export const PolkadotClient: React.FC<PolkadotClientProps> = ({
+  data,
+  role,
+}) => {
   const router = useRouter();
   const params = useParams();
 
   const mainNodesInfo = data.map(({ name, network }) => ({
     name,
-    network: getEnumKey(NEARNetworks, network),
-    client: "Near Core",
-    url: `/${params.workspaceId}/deployments/near/${name}`,
+    network: getEnumKey(PolkadotNetworks, network),
+    client: "Parity Polkadot",
+    url: `/${params.workspaceId}/deployments/polkadot/${name}`,
   }));
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <Heading title="NEAR Deployments" />
+        <Heading title="Polkadot Deployments" />
 
         {role !== Roles.Reader && !!data.length && (
           <Button
             onClick={() =>
-              router.push(`/${params.workspaceId}/deployments/near/new`)
+              router.push(`/${params.workspaceId}/deployments/polkadot/new`)
             }
           >
             <Plus className="w-4 h-4 mr-2" />
-            Create New NEAR Node
+            Create New Polkadot Node
           </Button>
         )}
       </div>
@@ -47,11 +50,11 @@ export const NEARClient: React.FC<NEARClientProps> = ({ data, role }) => {
       <DeploymentsList data={mainNodesInfo} />
       {!data.length && (
         <NoResult
-          imageUrl="/images/near.svg"
-          title="No NEAR Nodes"
-          description="NEAR node syncs NEAR Blockchain network, and propagates transactions to the connected peers."
-          createUrl={`/${params.workspaceId}/deployments/near/new`}
-          buttonText="Create New NEAR Node"
+          imageUrl="/images/polkadot.svg"
+          title="No Polkadot Nodes"
+          description="Polkadot node syncs Polkadot different networks and propagates transactions to the connected peers."
+          createUrl={`/${params.workspaceId}/deployments/polkadot/new`}
+          buttonText="Create New Polkadot Node"
           role={role}
         />
       )}
