@@ -9,11 +9,11 @@ import { DeleteNodeForm } from "@/components/delete-node-form";
 import { useToast } from "@/components/ui/use-toast";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { NEARNode, PolkadotNode } from "@/types";
+import { StacksNode } from "@/types";
 import { client } from "@/lib/client-instance";
 
 interface DangerZoneTabProps {
-  node: PolkadotNode;
+  node: StacksNode;
 }
 
 export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
@@ -23,16 +23,16 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
 
   const [open, setOpen] = useState(false);
 
-  async function onDeletePolkadotNode() {
+  async function onDeleteStacksNode() {
     const url = qs.stringifyUrl({
-      url: `/polkadot/nodes/${node.name}`,
+      url: `/stacks/nodes/${node.name}`,
       query: { workspace_id: params.workspaceId },
     });
     await client.delete(url);
-    router.push(`/${params.workspaceId}/deployments/polkadot`);
+    router.push(`/${params.workspaceId}/deployments/stacks`);
     router.refresh();
     toast({
-      title: "Polkadot node has been deleted",
+      title: "Stacks node has been deleted",
       description: `${node.name} node has been deleted successfully.`,
     });
     setOpen(false);
@@ -66,10 +66,10 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        title="Delete Polkadot Node"
-        description={`This action cann't be undone. This will permnantly delete (${node.name}) Polkadot Node.`}
+        title="Delete Stacks Node"
+        description={`This action cann't be undone. This will permnantly delete (${node.name}) Stacks Node.`}
       >
-        <DeleteNodeForm nodeName={node.name} onDelete={onDeletePolkadotNode} />
+        <DeleteNodeForm nodeName={node.name} onDelete={onDeleteStacksNode} />
       </AlertModal>
     </>
   );
