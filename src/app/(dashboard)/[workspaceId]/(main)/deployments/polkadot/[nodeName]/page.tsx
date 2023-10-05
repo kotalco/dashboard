@@ -7,7 +7,7 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { NEARNode } from "@/types";
+import { PolkadotNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
@@ -37,7 +37,7 @@ export default async function BitcoinPage({
   );
 
   try {
-    const node = await getNode<NEARNode>(
+    const node = await getNode<PolkadotNode>(
       workspaceId,
       `/polkadot/nodes/${nodeName}`
     );
@@ -92,10 +92,11 @@ export default async function BitcoinPage({
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="networking">Networking</TabsTrigger>
-              <TabsTrigger value="rpc">RPC</TabsTrigger>
               <TabsTrigger value="validator">Validator</TabsTrigger>
-              <TabsTrigger value="prometheus">Prometheus</TabsTrigger>
               <TabsTrigger value="telemetry">Telemetry</TabsTrigger>
+              <TabsTrigger value="prometheus">Prometheus</TabsTrigger>
+              <TabsTrigger value="api">API</TabsTrigger>
+              <TabsTrigger value="accessControl">Access Control</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
