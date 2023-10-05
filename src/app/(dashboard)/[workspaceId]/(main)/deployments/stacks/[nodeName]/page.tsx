@@ -16,7 +16,7 @@ import { ResourcesForm } from "@/components/resources-form";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
-import { ValidatorTab } from "./components/validator-tab";
+import { BitconTab } from "./components/bitcoin-tab";
 import { NetworkingTab } from "./components/networking-tab";
 import { PrometheusTab } from "./components/prometheus-tab";
 import { TelemetryTab } from "./components/telemetry-tab";
@@ -117,7 +117,7 @@ export default async function StacksNodePage({
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="validator"
             >
-              <ValidatorTab node={node} role={role} />
+              <BitconTab node={node} role={role} bitcoinNodes={data} />
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
