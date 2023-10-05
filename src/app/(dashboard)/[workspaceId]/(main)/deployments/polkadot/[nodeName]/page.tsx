@@ -16,7 +16,7 @@ import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
 import { PolkadotNodeStats } from "./components/polkadot-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
-import { RPCTab } from "./components/rpc-tab";
+import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { ValidatorTab } from "./components/validator-tab";
 import { NetworkingTab } from "./components/networking-tab";
@@ -136,8 +136,8 @@ export default async function BitcoinPage({
               <PrometheusTab node={node} role={role} />
             </TabsContent>
 
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="rpc">
-              <RPCTab node={node} role={role} />
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
+              <APITab node={node} role={role} />
             </TabsContent>
 
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
