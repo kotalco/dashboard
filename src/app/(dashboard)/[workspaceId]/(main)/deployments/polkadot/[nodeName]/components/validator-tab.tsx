@@ -5,6 +5,7 @@ import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { client } from "@/lib/client-instance";
 import { PolkadotNode } from "@/types";
@@ -12,6 +13,7 @@ import { Roles } from "@/enums";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,6 +31,7 @@ interface ValidatorTabProps {
 
 export const ValidatorTab: React.FC<ValidatorTabProps> = ({ node, role }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const { validator, pruning, rpc } = node;
 
   const schema = z
@@ -77,6 +80,7 @@ export const ValidatorTab: React.FC<ValidatorTabProps> = ({ node, role }) => {
       );
       const { validator } = data;
       reset({ validator });
+      router.refresh();
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -100,32 +104,31 @@ export const ValidatorTab: React.FC<ValidatorTabProps> = ({ node, role }) => {
             control={form.control}
             name="validator"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center gap-x-3">
-                <FormLabel className="mt-2">Validator</FormLabel>
-                <FormControl>
-                  <Switch
-                    disabled={isSubmitting || role === Roles.Reader || !pruning}
-                    checked={field.value}
-                    onCheckedChange={(value) => {
-                      if (value && rpc) {
-                        setIsOpen(true);
-                        return;
+              <FormItem>
+                <div className="flex flex-row items-center gap-x-3">
+                  <FormLabel>Validator</FormLabel>
+                  <FormControl>
+                    <Switch
+                      disabled={
+                        isSubmitting || role === Roles.Reader || pruning
                       }
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
+                      checked={field.value}
+                      onCheckedChange={(value) => {
+                        if (value && rpc) {
+                          setIsOpen(true);
+                          return;
+                        }
+                        field.onChange(value);
+                      }}
+                    />
+                  </FormControl>
+                </div>
+                <FormDescription>
+                  Node started with pruning disabled.
+                </FormDescription>
               </FormItem>
             )}
           />
-
-          {!pruning && (
-            <Alert role="info">
-              <AlertDescription>
-                Node started with pruning disabled.
-              </AlertDescription>
-            </Alert>
-          )}
 
           {isSubmitSuccessful && (
             <Alert variant="success" className="text-center">
