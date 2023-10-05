@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreatePolkadotNodeForm } from "../components/create-polkadot-node-form";
+import { CreateStacksNodeForm } from "../components/create-stacks-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
+import { getNodes } from "@/services/get-nodes";
+import { BitcoinNode } from "@/types";
 
 export default async function CreateNewPolkadotPage({
   params,
@@ -13,22 +15,23 @@ export default async function CreateNewPolkadotPage({
 }) {
   const { workspaceId } = params;
   const { role } = await getWorkspace(workspaceId);
+  const { data } = await getNodes<BitcoinNode>(workspaceId, "/bitcoin/nodes");
 
   if (role === Roles.Reader) notFound();
 
   const { versions } = await getClientVersions({
-    protocol: "polkadot",
+    protocol: "stacks",
     component: "node",
-    client: "polkadot",
+    client: "stacks-node",
   });
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create New Polkadot Node</CardTitle>
+        <CardTitle>Create New Stacks Node</CardTitle>
       </CardHeader>
       <CardContent>
-        <CreatePolkadotNodeForm images={versions} />
+        <CreateStacksNodeForm images={versions} bitcoinNodes={data} />
       </CardContent>
     </Card>
   );
