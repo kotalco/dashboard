@@ -8,12 +8,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { NEARNode, PolkadotNode, Secret } from "@/types";
+import { PolkadotNode, Secret } from "@/types";
 import { PolkadotSyncModes, Roles, SecretType } from "@/enums";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,7 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { getSelectItems } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
