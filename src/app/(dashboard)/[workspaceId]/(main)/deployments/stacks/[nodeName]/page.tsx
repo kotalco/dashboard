@@ -19,7 +19,7 @@ import { DangerZoneTab } from "./components/danger-zone-tab";
 import { BitconTab } from "./components/bitcoin-tab";
 import { NetworkingTab } from "./components/networking-tab";
 import { PrometheusTab } from "./components/prometheus-tab";
-import { TelemetryTab } from "./components/telemetry-tab";
+import { MiningTab } from "./components/mining-tab";
 import { AccessControlTab } from "./components/access-control-tab";
 import { LogsTab } from "./components/logs-tab";
 import { getNodes } from "@/services/get-nodes";
@@ -123,7 +123,7 @@ export default async function StacksNodePage({
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="telemetry"
             >
-              <TelemetryTab node={node} role={role} />
+              <MiningTab node={node} role={role} secrets={secrets} />
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
