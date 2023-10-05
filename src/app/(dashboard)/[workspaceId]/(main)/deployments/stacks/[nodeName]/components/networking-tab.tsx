@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
 import { Secret, StacksNode } from "@/types";
-import { PolkadotSyncModes, Roles, SecretType } from "@/enums";
+import { Roles, SecretType } from "@/enums";
 import {
   Form,
   FormControl,
@@ -28,9 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { getSelectItems } from "@/lib/utils";
-import { Switch } from "@/components/ui/switch";
 
 interface NetWorkingTabProps {
   node: StacksNode;

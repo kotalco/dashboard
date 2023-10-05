@@ -110,6 +110,9 @@ export default async function StacksNodePage({
             >
               <NetworkingTab node={node} role={role} secrets={secrets} />
             </TabsContent>
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
+              <APITab node={node} role={role} />
+            </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="validator"
@@ -127,10 +130,6 @@ export default async function StacksNodePage({
               value="prometheus"
             >
               <PrometheusTab node={node} role={role} />
-            </TabsContent>
-
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} />
             </TabsContent>
 
             <TabsContent
