@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
 import { client } from "@/lib/client-instance";
-import { BitcoinNode, PolkadotNode, StacksNode } from "@/types";
+import { BitcoinNode, StacksNode } from "@/types";
 import { Roles } from "@/enums";
 import {
   Form,
