@@ -47,6 +47,11 @@ export enum NEARNetworks {
   Betanet = "betanet",
 }
 
+export enum StacksNetworks {
+  Mainnet = "mainnet",
+  Testnet = "testnet",
+}
+
 export enum Protocol {
   aptos = "aptos",
   bitcoin = "bitcoin",
