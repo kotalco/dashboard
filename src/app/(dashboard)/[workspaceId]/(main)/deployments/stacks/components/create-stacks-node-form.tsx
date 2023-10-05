@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -222,7 +223,9 @@ export const CreateStacksNodeForm: React.FC<CreateStacksNodeFormProps> = ({
                     ))}
                 </SelectContent>
               </Select>
-
+              <FormDescription>
+                Bitcoin nodes with JSON-RPC server enabled
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

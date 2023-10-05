@@ -1,10 +1,10 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
-import { NEARNetworks, PolkadotNetworks, Roles } from "@/enums";
+import { Roles, StacksNetworks } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
-import { PolkadotNode, Version } from "@/types";
+import { StacksNode, Version } from "@/types";
 
 interface ProtocolTabProps {
-  node: PolkadotNode;
+  node: StacksNode;
   role: Roles;
   versions: Version[];
 }
@@ -20,25 +20,25 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Protocol</span>
-          <span className="text-sm text-foreground/50">Polkadot</span>
+          <span className="text-sm text-foreground/50">Stacks</span>
         </li>
 
         <li className="flex flex-col">
-          <span className="text-sm font-medium text-foreground">Network</span>
+          <span className="text-sm font-medium text-foreground">Chain</span>
           <span className="text-sm text-foreground/50">
-            {getEnumKey(PolkadotNetworks, network)}
+            {getEnumKey(StacksNetworks, network)}
           </span>
         </li>
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Client</span>
           <a
-            href="https://github.com/paritytech/polkadot"
+            href="https://github.com/stacks-network/stacks-blockchain"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            Parity Polkadot
+            Stacks
           </a>
         </li>
       </ul>
@@ -46,7 +46,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/polkadot/nodes/${name}`}
+        updateUrl={`/stacks/nodes/${name}`}
       />
     </>
   );

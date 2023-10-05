@@ -7,14 +7,12 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { PolkadotNode } from "@/types";
+import { BitcoinNode, PolkadotNode, StacksNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
-import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
-import { PolkadotNodeStats } from "./components/polkadot-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
@@ -24,8 +22,9 @@ import { PrometheusTab } from "./components/prometheus-tab";
 import { TelemetryTab } from "./components/telemetry-tab";
 import { AccessControlTab } from "./components/access-control-tab";
 import { LogsTab } from "./components/logs-tab";
+import { getNodes } from "@/services/get-nodes";
 
-export default async function BitcoinPage({
+export default async function StacksNodePage({
   params,
 }: {
   params: { workspaceId: string; nodeName: string };
@@ -35,20 +34,21 @@ export default async function BitcoinPage({
   const { role } = await getWorkspace(workspaceId);
   const secrets = await getSecrets(
     workspaceId,
-    SecretType["Polkadot Private Key"]
+    SecretType["Stacks Private Key"]
   );
+  const { data } = await getNodes<BitcoinNode>(workspaceId, "/bitcoin/nodes");
 
   try {
-    const node = await getNode<PolkadotNode>(
+    const node = await getNode<StacksNode>(
       workspaceId,
-      `/polkadot/nodes/${nodeName}`
+      `/stacks/nodes/${nodeName}`
     );
 
     const { versions } = await getClientVersions(
       {
-        protocol: "polkadot",
+        protocol: "stacks",
         component: "node",
-        client: "polkadot",
+        client: "stacks-node",
       },
       node.image
     );
@@ -60,7 +60,7 @@ export default async function BitcoinPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.polkadot}
+                protocol={Protocol.stacks}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -75,30 +75,21 @@ export default async function BitcoinPage({
           </div>
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
-              <>
-                <PolkadotNodeStats
-                  nodeName={node.name}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-                <NodeMetrics
-                  nodeName={node.name}
-                  protocol={Protocol.bitcoin}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-              </>
+              <NodeMetrics
+                nodeName={node.name}
+                protocol={Protocol.bitcoin}
+                token={token.value}
+                workspaceId={workspaceId}
+              />
             )}
           </div>
           <Tabs defaultValue="protocol">
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="networking">Networking</TabsTrigger>
-              <TabsTrigger value="validator">Validator</TabsTrigger>
-              <TabsTrigger value="telemetry">Telemetry</TabsTrigger>
-              <TabsTrigger value="prometheus">Prometheus</TabsTrigger>
               <TabsTrigger value="api">API</TabsTrigger>
-              <TabsTrigger value="accessControl">Access Control</TabsTrigger>
+              <TabsTrigger value="validator">Bitcoin</TabsTrigger>
+              <TabsTrigger value="telemetry">Mining</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
