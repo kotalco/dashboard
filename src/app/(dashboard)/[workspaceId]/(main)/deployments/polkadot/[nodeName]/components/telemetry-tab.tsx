@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { NEARNode } from "@/types";
+import { PolkadotNode } from "@/types";
 import { Roles } from "@/enums";
 import {
   Form,
@@ -20,24 +20,26 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 interface TelemetryTabProps {
-  node: NEARNode;
+  node: PolkadotNode;
   role: Roles;
 }
 
 const schema = z.object({
+  telemetry: z.boolean(),
   telemetryURL: z.string().optional(),
 });
 
 type Schema = z.input<typeof schema>;
 
 export const TelemetryTab: React.FC<TelemetryTabProps> = ({ node, role }) => {
-  const { telemetryURL } = node;
+  const { telemetryURL, telemetry } = node;
 
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: { telemetryURL },
+    defaultValues: { telemetryURL, telemetry },
   });
 
   const {
@@ -50,17 +52,18 @@ export const TelemetryTab: React.FC<TelemetryTabProps> = ({ node, role }) => {
       errors,
     },
     reset,
+    watch,
     setError,
   } = form;
 
   const onSubmit = async (values: Schema) => {
     try {
-      const { data } = await client.put<NEARNode>(
-        `/near/nodes/${node.name}`,
+      const { data } = await client.put<PolkadotNode>(
+        `/polkadot/nodes/${node.name}`,
         values
       );
-      const { telemetryURL } = data;
-      reset({ telemetryURL });
+      const { telemetryURL, telemetry } = data;
+      reset({ telemetryURL, telemetry });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -81,13 +84,32 @@ export const TelemetryTab: React.FC<TelemetryTabProps> = ({ node, role }) => {
       >
         <FormField
           control={form.control}
+          name="telemetry"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center gap-x-3">
+              <FormLabel className="mt-2">Telemetry</FormLabel>
+              <FormControl>
+                <Switch
+                  disabled={isSubmitting || role === Roles.Reader}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="telemetryURL"
           render={({ field }) => (
             <FormItem className="max-w-sm">
               <FormLabel>Telemetry Service URL</FormLabel>
               <FormControl>
                 <Input
-                  disabled={isSubmitting || role === Roles.Reader}
+                  disabled={
+                    isSubmitting || role === Roles.Reader || !watch("telemetry")
+                  }
                   {...field}
                 />
               </FormControl>

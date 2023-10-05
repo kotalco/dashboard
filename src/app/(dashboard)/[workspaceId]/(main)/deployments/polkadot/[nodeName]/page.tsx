@@ -123,6 +123,12 @@ export default async function BitcoinPage({
             >
               <ValidatorTab node={node} role={role} />
             </TabsContent>
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="telemetry"
+            >
+              <TelemetryTab node={node} role={role} />
+            </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="rpc">
               <RPCTab node={node} role={role} />
             </TabsContent>
@@ -132,12 +138,7 @@ export default async function BitcoinPage({
             >
               <PrometheusTab node={node} role={role} />
             </TabsContent>
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="telemetry"
-            >
-              <TelemetryTab node={node} role={role} />
-            </TabsContent>
+
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
                 <Logs
