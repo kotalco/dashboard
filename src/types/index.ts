@@ -246,6 +246,27 @@ export interface PolkadotNode extends ClientImage, ResourcesInfo {
   logging: PolkadotLogging;
 }
 
+export interface StacksNode extends ClientImage, ResourcesInfo {
+  name: string;
+  network: string;
+  image: string;
+  bitcoinNode: {
+    endpoint: string;
+    p2pPort: string;
+    rpcPort: string;
+    rpcUsername: string;
+    rpcPasswordSecretName: string;
+  };
+  nodePrivateKeySecretName: string;
+  rpc: boolean;
+  mineMicroBlocks: boolean;
+  miner: boolean;
+  seedPrivateKeySecretName: string;
+  createdAt: string;
+  p2pPort: number;
+  rpcPort: number;
+}
+
 export interface StatsError {
   error: string;
 }
