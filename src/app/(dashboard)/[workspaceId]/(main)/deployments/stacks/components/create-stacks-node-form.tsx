@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { NEARNetworks, PolkadotNetworks } from "@/enums";
+import { NEARNetworks, PolkadotNetworks, StacksNetworks } from "@/enums";
 import {
   Select,
   SelectContent,
@@ -28,7 +28,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { getSelectItems } from "@/lib/utils";
 import { client } from "@/lib/client-instance";
-import { Version } from "@/types";
+import { BitcoinNode, Version } from "@/types";
 import { Switch } from "@/components/ui/switch";
 
 const schema = z.object({
@@ -40,18 +40,37 @@ const schema = z.object({
     .refine((value) => /^\S*$/.test(value), {
       message: "Invalid character used",
     }),
-  network: z.nativeEnum(PolkadotNetworks, {
+  network: z.nativeEnum(StacksNetworks, {
     required_error: "Network is required",
   }),
-  pruning: z.boolean().default(false),
+  bitcoinNode: z
+    .string({ required_error: "Bitcoin node is required" })
+    .transform((value) => {
+      const { name, p2pPort, rpcPort, rpcUsers } = JSON.parse(
+        value
+      ) as BitcoinNode;
+      return {
+        endpoint: name,
+        p2pPort,
+        rpcPort,
+        rpcUsername: rpcUsers[0].username,
+        rpcPasswordSecretName: rpcUsers[0].passwordSecretName,
+      };
+    }),
   workspace_id: z.string().min(1),
   image: z.string().min(1),
 });
 
-type Schema = z.infer<typeof schema>;
+type Schema = z.input<typeof schema>;
 
-export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
+export interface CreateStacksNodeFormProps {
+  images: Version[];
+  bitcoinNodes: BitcoinNode[];
+}
+
+export const CreateStacksNodeForm: React.FC<CreateStacksNodeFormProps> = ({
   images,
+  bitcoinNodes,
 }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -73,11 +92,11 @@ export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
 
   async function onSubmit(values: Schema) {
     try {
-      await client.post("/polkadot/nodes", values);
-      router.push(`/${workspaceId}/deployments/polkadot`);
+      await client.post("/stacks/nodes", values);
+      router.push(`/${workspaceId}/deployments/stacks`);
       router.refresh();
       toast({
-        title: "Polkadot node has been created",
+        title: "Stacks node has been created",
         description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
       });
     } catch (error) {
@@ -151,7 +170,7 @@ export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {getSelectItems(PolkadotNetworks).map(({ value, label }) => (
+                  {getSelectItems(StacksNetworks).map(({ value, label }) => (
                     <SelectItem key={value} value={value}>
                       {label}
                     </SelectItem>
@@ -167,45 +186,47 @@ export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
         <p className="text-sm">
           Client:{" "}
           <a
-            href="https://github.com/paritytech/polkadot"
+            href="https://github.com/stacks-network/stacks-blockchain"
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline underline-offset-4"
           >
-            Parity Polkadot
+            Stacks
           </a>
         </p>
 
         <FormField
           control={form.control}
-          name="pruning"
+          name="bitcoinNode"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2">Pruning</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
+            <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
+              <FormLabel>Bitcoin Node</FormLabel>
+              <Select
+                disabled={isSubmitting}
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger data-testid="network" className="bg-white">
+                    <SelectValue placeholder="Select a Node" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {bitcoinNodes
+                    .filter(({ rpc }) => rpc)
+                    .map((node) => (
+                      <SelectItem key={node.name} value={JSON.stringify(node)}>
+                        {node.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+
+              <FormMessage />
             </FormItem>
           )}
         />
-
-        <Alert variant="warn">
-          <AlertTitle>Attension</AlertTitle>
-          <AlertDescription>
-            <ul className="list-disc list-inside">
-              <li>Validator nodes must run in archive mode.</li>
-              <li>Disable pruning to enable archive mode.</li>
-              <li>
-                You can enable validator mode after node is up and running &amp;
-                fully synced
-              </li>
-            </ul>
-          </AlertDescription>
-        </Alert>
 
         <Button
           data-testid="submit"
