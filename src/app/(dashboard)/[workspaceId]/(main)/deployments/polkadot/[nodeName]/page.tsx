@@ -23,6 +23,7 @@ import { NetworkingTab } from "./components/networking-tab";
 import { PrometheusTab } from "./components/prometheus-tab";
 import { TelemetryTab } from "./components/telemetry-tab";
 import { AccessControlTab } from "./components/access-control-tab";
+import { LogsTab } from "./components/logs-tab";
 
 export default async function BitcoinPage({
   params,
@@ -149,12 +150,9 @@ export default async function BitcoinPage({
             </TabsContent>
 
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && (
-                <Logs
-                  url={`near/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-                />
-              )}
+              {token && <LogsTab node={node} role={role} token={token.value} />}
             </TabsContent>
+
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="resources"
@@ -162,7 +160,7 @@ export default async function BitcoinPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/near/nodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/polkadot/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (
