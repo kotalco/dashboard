@@ -18,11 +18,9 @@ import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { BitconTab } from "./components/bitcoin-tab";
 import { NetworkingTab } from "./components/networking-tab";
-import { PrometheusTab } from "./components/prometheus-tab";
 import { MiningTab } from "./components/mining-tab";
-import { AccessControlTab } from "./components/access-control-tab";
-import { LogsTab } from "./components/logs-tab";
 import { getNodes } from "@/services/get-nodes";
+import { Logs } from "@/components/logs";
 
 export default async function StacksNodePage({
   params,
@@ -125,22 +123,13 @@ export default async function StacksNodePage({
             >
               <MiningTab node={node} role={role} secrets={secrets} />
             </TabsContent>
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="prometheus"
-            >
-              <PrometheusTab node={node} role={role} />
-            </TabsContent>
-
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="accessControl"
-            >
-              <AccessControlTab node={node} role={role} />
-            </TabsContent>
 
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && <LogsTab node={node} role={role} token={token.value} />}
+              {token && (
+                <Logs
+                  url={`stacks/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
+                />
+              )}
             </TabsContent>
 
             <TabsContent
@@ -150,7 +139,7 @@ export default async function StacksNodePage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/polkadot/nodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/stacks/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (
