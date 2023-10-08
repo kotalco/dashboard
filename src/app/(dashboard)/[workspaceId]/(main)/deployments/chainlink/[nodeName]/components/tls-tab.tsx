@@ -1,20 +1,17 @@
 "use client";
 
 import * as z from "zod";
-import Link from "next/link";
-import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
 
 import { client } from "@/lib/client-instance";
-import { getSelectItems } from "@/lib/utils";
-import { ExecutionClientNode, Secret } from "@/types";
-import { ExecutionClientSyncMode, Roles, SecretType } from "@/enums";
+import { ChainlinkNode, Secret } from "@/types";
+import { Roles, SecretType } from "@/enums";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,47 +27,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Link from "next/link";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 
-interface NetWorkingTabProps {
-  node: ExecutionClientNode;
+interface TLSTabProps {
+  node: ChainlinkNode;
   role: Roles;
   secrets: Secret[];
 }
 
-const schema = z.object({
-  nodePrivateKeySecretName: z.string().optional().default(""),
-  syncMode: z.nativeEnum(ExecutionClientSyncMode),
-  staticNodes: z
-    .string()
-    .transform((value) =>
-      value ? value.split("\n").filter((value) => !!value) : []
-    ),
-  bootnodes: z
-    .string()
-    .transform((value) =>
-      value ? value.split("\n").filter((value) => !!value) : []
-    ),
-});
+const schema = z
+  .object({
+    certSecretName: z.string().optional(),
+    tlsPort: z.coerce.number().optional(),
+    secureCookies: z.boolean(),
+  })
+  .transform((values) =>
+    values.certSecretName
+      ? values
+      : { certSecretName: "", secureCookies: false }
+  );
 
-type Schema = z.input<typeof schema>;
+type Schema = z.infer<typeof schema>;
 
-export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
-  node,
-  role,
-  secrets,
-}) => {
+export const TLSTab: React.FC<TLSTabProps> = ({ node, role, secrets }) => {
   const params = useParams();
-  const { nodePrivateKeySecretName, syncMode, staticNodes, bootnodes } = node;
+  const { certSecretName, tlsPort, secureCookies } = node;
 
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      nodePrivateKeySecretName,
-      syncMode,
-      staticNodes: staticNodes.join("\n"),
-      bootnodes: bootnodes.join("\n"),
-    },
+    defaultValues: { certSecretName, tlsPort, secureCookies },
   });
 
   const {
@@ -84,22 +71,19 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
     },
     reset,
     setError,
+    watch,
+    setValue,
   } = form;
+  const certificate = watch("certSecretName");
 
   const onSubmit = async (values: Schema) => {
     try {
-      const { data } = await client.put<ExecutionClientNode>(
-        `/ethereum/nodes/${node.name}`,
+      const { data } = await client.put<ChainlinkNode>(
+        `/chainlink/nodes/${node.name}`,
         values
       );
-      const { nodePrivateKeySecretName, syncMode, staticNodes, bootnodes } =
-        data;
-      reset({
-        nodePrivateKeySecretName,
-        syncMode,
-        staticNodes: staticNodes.join("\n"),
-        bootnodes: bootnodes.join("\n"),
-      });
+      const { certSecretName, tlsPort, secureCookies } = data;
+      reset({ certSecretName, tlsPort, secureCookies });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -120,10 +104,10 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
       >
         <FormField
           control={form.control}
-          name="nodePrivateKeySecretName"
+          name="certSecretName"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Node Private Key</FormLabel>
+            <FormItem className="mt-2">
+              <FormLabel>Certificate</FormLabel>
               <div className="flex items-center gap-x-2">
                 <Select
                   disabled={isSubmitting || role === Roles.Reader}
@@ -133,10 +117,10 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
                 >
                   <FormControl>
                     <SelectTrigger
-                      data-testid="secret-private-key"
+                      data-testid="certificate"
                       className="max-w-sm bg-white"
                     >
-                      <SelectValue placeholder="Select a Secret" />
+                      <SelectValue placeholder="Select a password" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -146,10 +130,10 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
                       </SelectItem>
                     ))}
                     <Link
-                      href={`/${params.workspaceId}/secrets/new?type=${SecretType["Execution Client Private Key"]}`}
+                      href={`/${params.workspaceId}/secrets/new?type=${SecretType["TLS Certificate"]}`}
                       className="text-sm text-primary hover:underline underline-offset-4"
                     >
-                      Create New Private Key
+                      Create New Certificate
                     </Link>
                   </SelectContent>
                 </Select>
@@ -158,7 +142,10 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
                     type="button"
                     variant="ghost"
                     className="text-destructive hover:bg-transparent hover:text-destructive/70"
-                    onClick={() => field.onChange("")}
+                    onClick={() => {
+                      field.onChange("");
+                      setValue("secureCookies", false);
+                    }}
                   >
                     Clear
                   </Button>
@@ -171,70 +158,41 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
 
         <FormField
           control={form.control}
-          name="syncMode"
+          name="secureCookies"
           render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Sync Mode</FormLabel>
-              <Select
-                disabled={isSubmitting || role === Roles.Reader}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
+            <FormItem>
+              <div className="flex flex-row items-center gap-x-3">
+                <FormLabel className="text-base">Secure Cookies</FormLabel>
                 <FormControl>
-                  <SelectTrigger data-testid="sync-mode" className="bg-white">
-                    <SelectValue />
-                  </SelectTrigger>
+                  <Switch
+                    disabled={
+                      role === Roles.Reader || isSubmitting || !certificate
+                    }
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
                 </FormControl>
-                <SelectContent>
-                  {getSelectItems(ExecutionClientSyncMode).map(
-                    ({ label, value }) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
-
-              <FormMessage />
+              </div>
             </FormItem>
           )}
         />
 
         <FormField
           control={form.control}
-          name="staticNodes"
+          name="tlsPort"
           render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Static Nodes</FormLabel>
+            <FormItem>
+              <FormLabel>TLS Port</FormLabel>
               <FormControl>
-                <Textarea
-                  disabled={isSubmitting || role === Roles.Reader}
-                  className="resize-none"
+                <Input
+                  data-testid="tls-port"
+                  className="max-w-sm"
+                  disabled={
+                    isSubmitting || role === Roles.Reader || !certificate
+                  }
                   {...field}
                 />
               </FormControl>
-              <FormDescription>One enodeURL per line</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="bootnodes"
-          render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Boot Nodes</FormLabel>
-              <FormControl>
-                <Textarea
-                  disabled={isSubmitting || role === Roles.Reader}
-                  className="resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>One enodeURL per line</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -243,7 +201,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
             <AlertDescription>
-              Networking settings have been updated successfully.
+              TLS settings have been updated successfully.
             </AlertDescription>
           </Alert>
         )}

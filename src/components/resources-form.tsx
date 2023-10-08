@@ -108,7 +108,7 @@ export function ResourcesForm<T extends ResourcesInfo>({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-8"
+        className="relative space-y-4"
       >
         <div className="max-w-sm space-y-4">
           <FormField

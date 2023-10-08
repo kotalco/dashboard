@@ -8,8 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
 import { getSelectItems } from "@/lib/utils";
-import { ExecutionClientNode } from "@/types";
-import { ExecutionClientLogging, Roles } from "@/enums";
+import { ChainlinkNode } from "@/types";
+import { ChainlinkLogging, Roles } from "@/enums";
 import {
   Form,
   FormControl,
@@ -31,13 +31,13 @@ import {
 import { Logs } from "@/components/logs";
 
 interface LogsTabProps {
-  node: ExecutionClientNode;
+  node: ChainlinkNode;
   role: Roles;
   token: string;
 }
 
 const schema = z.object({
-  logging: z.nativeEnum(ExecutionClientLogging),
+  logging: z.nativeEnum(ChainlinkLogging),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -68,8 +68,8 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
 
   const onSubmit = async (values: Schema) => {
     try {
-      const { data } = await client.put<ExecutionClientNode>(
-        `/ethereum/nodes/${node.name}`,
+      const { data } = await client.put<ChainlinkNode>(
+        `/chainlink/nodes/${node.name}`,
         values
       );
       const { logging } = data;
@@ -116,7 +116,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {getSelectItems(ExecutionClientLogging).map(
+                    {getSelectItems(ChainlinkLogging).map(
                       ({ label, value }) => (
                         <SelectItem key={value} value={value}>
                           {label}
@@ -132,7 +132,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
           />
 
           <Logs
-            url={`ethereum/nodes/${node.name}/logs?authorization=Bearer ${token}&workspace_id=${params.workspaceId}`}
+            url={`chainlink/nodes/${node.name}/logs?authorization=Bearer ${token}&workspace_id=${params.workspaceId}`}
           />
 
           {isSubmitSuccessful && (

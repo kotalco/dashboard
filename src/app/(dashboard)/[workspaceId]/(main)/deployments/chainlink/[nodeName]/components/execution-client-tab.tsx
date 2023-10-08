@@ -1,14 +1,12 @@
 "use client";
 
 import * as z from "zod";
-import Link from "next/link";
-import { useParams } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { BeaconNode, ExecutionClientNode, Secret } from "@/types";
+import { ChainlinkNode, ExecutionClientNode } from "@/types";
 import { Roles, SecretType } from "@/enums";
 import {
   Form,
@@ -22,30 +20,33 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { SelectWithInput } from "@/components/ui/select-with-input";
+import { MultiSelect } from "@/components/ui/multi-select";
 
 interface ExecutionClientTabProps {
-  node: BeaconNode;
-  executionClients: ExecutionClientNode[];
+  node: ChainlinkNode;
   role: Roles;
-  secrets: Secret[];
+  executionClients: ExecutionClientNode[];
 }
 
 const schema = z.object({
-  executionEngineEndpoint: z
-    .string({
-      required_error: "Execution engine is required",
-    })
-    .min(1, "Execution engine is required")
-    .trim(),
-  jwtSecretName: z.string().min(1, "JWT secret is required"),
+  ethereumWsEndpoint: z
+    .string({ required_error: "Ethereum websocket is required" })
+    .min(1, "Ethereum websocket is required")
+    .trim()
+    .refine((value) => /wss?:\/\//.test(value), {
+      message: "Invalid websocket URL",
+    }),
+  ethereumHttpEndpoints: z
+    .array(z.string())
+    .nullable()
+    .refine(
+      (value) =>
+        !value || value.every((endpoint) => /https?:\/\//.test(endpoint)),
+      {
+        message: "Invalid HTTP URL",
+      }
+    ),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -53,24 +54,26 @@ type Schema = z.infer<typeof schema>;
 export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
   node,
   role,
-  secrets,
   executionClients,
 }) => {
-  const params = useParams();
-  const { executionEngineEndpoint, jwtSecretName } = node;
-  const activeExecutionClients = executionClients
-    .filter(({ engine }) => engine)
-    .map(({ enginePort, name }) => ({
+  const { ethereumWsEndpoint, ethereumHttpEndpoints } = node;
+  const wsActiveExecutionClients = executionClients
+    .filter(({ ws }) => ws)
+    .map(({ name, wsPort }) => ({
       label: name,
-      value: `http://${name}:${enginePort}`,
+      value: `ws://${name}:${wsPort}`,
+    }));
+
+  const rpcActiveExecutionClients = executionClients
+    .filter(({ rpc }) => rpc)
+    .map(({ name, rpcPort }) => ({
+      label: name,
+      value: `http://${name}:${rpcPort}`,
     }));
 
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      executionEngineEndpoint,
-      jwtSecretName,
-    },
+    defaultValues: { ethereumHttpEndpoints, ethereumWsEndpoint },
   });
 
   const {
@@ -88,15 +91,12 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
 
   const onSubmit = async (values: Schema) => {
     try {
-      const { data } = await client.put<BeaconNode>(
-        `/ethereum2/beaconnodes/${node.name}`,
+      const { data } = await client.put<ChainlinkNode>(
+        `/chainlink/nodes/${node.name}`,
         values
       );
-      const { executionEngineEndpoint, jwtSecretName } = data;
-      reset({
-        executionEngineEndpoint,
-        jwtSecretName,
-      });
+      const { ethereumWsEndpoint, ethereumHttpEndpoints } = data;
+      reset({ ethereumWsEndpoint, ethereumHttpEndpoints });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -108,7 +108,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
       }
     }
   };
-
+  console.log(errors);
   return (
     <Form {...form}>
       <form
@@ -117,21 +117,21 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
       >
         <FormField
           control={form.control}
-          name="executionEngineEndpoint"
+          name="ethereumWsEndpoint"
           render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Execution Engine Endpoint</FormLabel>
+            <FormItem className="max-w-md">
+              <FormLabel>Execution Client Websocket Endpoint</FormLabel>
               <SelectWithInput
-                placeholder="Select a Node"
+                placeholder="Select a Execution Client"
                 disabled={isSubmitting || role === Roles.Reader}
                 onChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
-                options={activeExecutionClients}
-                otherLabel="Use External Node"
+                options={wsActiveExecutionClients}
+                otherLabel="Externally Managed Node"
               />
               <FormDescription>
-                Nodes must have activated engine port
+                Execution client nodes with WebSocket enabled
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -140,40 +140,26 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
 
         <FormField
           control={form.control}
-          name="jwtSecretName"
+          name="ethereumHttpEndpoints"
           render={({ field }) => (
-            <FormItem className="mt-2">
-              <FormLabel>JWT Secret</FormLabel>
-              <div className="flex items-center gap-x-2">
-                <Select
-                  disabled={isSubmitting || role === Roles.Reader}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger
-                      data-testid="jwt-secret"
-                      className="max-w-sm bg-white"
-                    >
-                      <SelectValue placeholder="Select a Secret" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {secrets.map(({ name }) => (
-                      <SelectItem key={name} value={name}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                    <Link
-                      href={`/${params.workspaceId}/secrets/new?type=${SecretType["JWT Secret"]}`}
-                      className="text-sm text-primary hover:underline underline-offset-4"
-                    >
-                      Create New JWT Secret
-                    </Link>
-                  </SelectContent>
-                </Select>
+            <FormItem>
+              <FormLabel>Execution Clients HTTP Endpints</FormLabel>
+              <div className="max-w-md">
+                <MultiSelect
+                  defaultValue={field.value || []}
+                  disabled={role === Roles.Reader || isSubmitting}
+                  value={field.value || []}
+                  placeholder="Select execution clients nodes or enter your own endpoints"
+                  options={rpcActiveExecutionClients}
+                  onChange={field.onChange}
+                  emptyText="Enter your own endpoints"
+                  allowCustomValues
+                />
+                <FormDescription>
+                  Select execution client nodes or enter your own endpoints
+                </FormDescription>
               </div>
+
               <FormMessage />
             </FormItem>
           )}

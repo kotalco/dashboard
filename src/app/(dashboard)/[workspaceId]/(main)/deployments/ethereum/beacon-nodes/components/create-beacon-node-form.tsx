@@ -299,7 +299,7 @@ export const CreateBeaconNodeForm: React.FC<CreateBeaconNodeFormProps> = ({
                   <FormControl>
                     <SelectTrigger
                       data-testid="jwt-secret"
-                      className="max-w-xs bg-white"
+                      className="max-w-sm bg-white"
                     >
                       <SelectValue placeholder="Select a Secret" />
                     </SelectTrigger>

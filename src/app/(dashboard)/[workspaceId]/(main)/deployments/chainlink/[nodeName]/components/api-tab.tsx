@@ -8,20 +8,21 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { BeaconNode, ExecutionClientNode, Secret } from "@/types";
+import { BitcoinNode, ChainlinkNode, Secret } from "@/types";
 import { Roles, SecretType } from "@/enums";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -29,48 +30,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SelectWithInput } from "@/components/ui/select-with-input";
 
-interface ExecutionClientTabProps {
-  node: BeaconNode;
-  executionClients: ExecutionClientNode[];
+interface APITabProps {
+  node: ChainlinkNode;
   role: Roles;
   secrets: Secret[];
 }
 
 const schema = z.object({
-  executionEngineEndpoint: z
-    .string({
-      required_error: "Execution engine is required",
-    })
-    .min(1, "Execution engine is required")
-    .trim(),
-  jwtSecretName: z.string().min(1, "JWT secret is required"),
+  api: z.boolean(),
+  apiCredentials: z.object({
+    email: z
+      .string({ required_error: "Email is required" })
+      .email("Invalid Email")
+      .trim(),
+    passwordSecretName: z.string({ required_error: "Password is required" }),
+  }),
 });
 
 type Schema = z.infer<typeof schema>;
 
-export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
-  node,
-  role,
-  secrets,
-  executionClients,
-}) => {
+export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
   const params = useParams();
-  const { executionEngineEndpoint, jwtSecretName } = node;
-  const activeExecutionClients = executionClients
-    .filter(({ engine }) => engine)
-    .map(({ enginePort, name }) => ({
-      label: name,
-      value: `http://${name}:${enginePort}`,
-    }));
+  const { api, apiCredentials } = node;
 
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      executionEngineEndpoint,
-      jwtSecretName,
-    },
+    defaultValues: { api, apiCredentials },
   });
 
   const {
@@ -88,15 +74,12 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
 
   const onSubmit = async (values: Schema) => {
     try {
-      const { data } = await client.put<BeaconNode>(
-        `/ethereum2/beaconnodes/${node.name}`,
+      const { data } = await client.put<ChainlinkNode>(
+        `/chainlink/nodes/${node.name}`,
         values
       );
-      const { executionEngineEndpoint, jwtSecretName } = data;
-      reset({
-        executionEngineEndpoint,
-        jwtSecretName,
-      });
+      const { api, apiCredentials } = data;
+      reset({ api, apiCredentials });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -117,22 +100,35 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
       >
         <FormField
           control={form.control}
-          name="executionEngineEndpoint"
+          name="api"
           render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Execution Engine Endpoint</FormLabel>
-              <SelectWithInput
-                placeholder="Select a Node"
-                disabled={isSubmitting || role === Roles.Reader}
-                onChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-                options={activeExecutionClients}
-                otherLabel="Use External Node"
-              />
-              <FormDescription>
-                Nodes must have activated engine port
-              </FormDescription>
+            <FormItem className="flex flex-row items-center gap-x-3">
+              <FormLabel className="mt-2 text-base">API</FormLabel>
+              <FormControl>
+                <Switch
+                  disabled={role === Roles.Reader || isSubmitting}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="apiCredentials.email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  data-testid="email"
+                  className="max-w-sm"
+                  disabled={isSubmitting || role === Roles.Reader}
+                  {...field}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -140,10 +136,10 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
 
         <FormField
           control={form.control}
-          name="jwtSecretName"
+          name="apiCredentials.passwordSecretName"
           render={({ field }) => (
             <FormItem className="mt-2">
-              <FormLabel>JWT Secret</FormLabel>
+              <FormLabel>Password</FormLabel>
               <div className="flex items-center gap-x-2">
                 <Select
                   disabled={isSubmitting || role === Roles.Reader}
@@ -153,10 +149,10 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
                 >
                   <FormControl>
                     <SelectTrigger
-                      data-testid="jwt-secret"
+                      data-testid="password"
                       className="max-w-sm bg-white"
                     >
-                      <SelectValue placeholder="Select a Secret" />
+                      <SelectValue placeholder="Select a password" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -166,10 +162,10 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
                       </SelectItem>
                     ))}
                     <Link
-                      href={`/${params.workspaceId}/secrets/new?type=${SecretType["JWT Secret"]}`}
+                      href={`/${params.workspaceId}/secrets/new?type=${SecretType.Password}`}
                       className="text-sm text-primary hover:underline underline-offset-4"
                     >
-                      Create New JWT Secret
+                      Create New Password
                     </Link>
                   </SelectContent>
                 </Select>
@@ -182,7 +178,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
             <AlertDescription>
-              Execution client settings have been updated successfully.
+              API settings have been updated successfully.
             </AlertDescription>
           </Alert>
         )}

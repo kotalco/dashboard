@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { AptosNode } from "@/types";
+import { ChainlinkNode } from "@/types";
 import { Roles } from "@/enums";
 import {
   Form,
@@ -14,29 +14,36 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 
-interface APITabProps {
-  node: AptosNode;
+interface DatabaseTabProps {
+  node: ChainlinkNode;
   role: Roles;
 }
 
 const schema = z.object({
-  api: z.boolean(),
+  databaseURL: z
+    .string({ required_error: "Database connection URL is required" })
+    .min(1, "Database connection URL is required")
+    .trim()
+    .refine((value) => /postgres:\/\//.test(value), {
+      message: "Invalid database URL",
+    }),
 });
 
 type Schema = z.infer<typeof schema>;
 
-export const APITab: React.FC<APITabProps> = ({ node, role }) => {
-  const { api } = node;
+export const DatabaseTab: React.FC<DatabaseTabProps> = ({ node, role }) => {
+  const { databaseURL } = node;
 
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: { api },
+    defaultValues: { databaseURL },
   });
 
   const {
@@ -54,11 +61,12 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
 
   const onSubmit = async (values: Schema) => {
     try {
-      const { data } = await client.put<AptosNode>(
-        `/aptos/nodes/${node.name}`,
+      const { data } = await client.put<ChainlinkNode>(
+        `/chainlink/nodes/${node.name}`,
         values
       );
-      reset({ api: data.api });
+      const { databaseURL } = data;
+      reset({ databaseURL });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -79,17 +87,19 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
       >
         <FormField
           control={form.control}
-          name="api"
+          name="databaseURL"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">REST</FormLabel>
+            <FormItem className="max-w-md">
+              <FormLabel>Database Connection URL</FormLabel>
               <FormControl>
-                <Switch
+                <Input
+                  data-testid="database-url"
                   disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+                  placeholder="postgres://"
+                  {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -97,7 +107,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
             <AlertDescription>
-              API settings have been updated successfully.
+              Database settings have been updated successfully.
             </AlertDescription>
           </Alert>
         )}

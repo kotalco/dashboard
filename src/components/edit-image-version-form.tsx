@@ -86,7 +86,7 @@ export const EditImageVersionForm: React.FC<EditImageVersionFormProps> = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-4">
         <FormField
           control={form.control}
           name="image"
@@ -136,6 +136,14 @@ export const EditImageVersionForm: React.FC<EditImageVersionFormProps> = ({
             </FormItem>
           )}
         />
+
+        {versions?.find((version) => version.image === image)
+          ?.canBeUpgraded && (
+          <Alert variant="info">
+            New image version is avaliable. It is recommended to update to
+            latest version.
+          </Alert>
+        )}
 
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">

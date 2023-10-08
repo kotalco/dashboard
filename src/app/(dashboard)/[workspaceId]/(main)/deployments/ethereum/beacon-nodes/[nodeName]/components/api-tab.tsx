@@ -82,7 +82,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-8"
+        className="relative space-y-4"
       >
         {(node.client === BeaconNodeClients["ConsenSys Teku"] ||
           node.client === BeaconNodeClients["Sigma Prime Lighthouse"] ||
