@@ -36,13 +36,8 @@ export const DeleteNodeForm: React.FC<DeleteNodeFormProps> = ({
   });
 
   const {
-    formState: {
-      isSubmitting,
-
-      errors,
-    },
+    formState: { isSubmitting, errors },
     watch,
-    reset,
     setError,
   } = form;
 

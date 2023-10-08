@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +8,6 @@ import { Roles } from "@/enums";
 import { getDomainInfo } from "@/services/get-domain-info";
 import { getServices } from "@/services/get-services";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import Link from "next/link";
 
 export default async function CreateNewAptosNodePage({
   params,
