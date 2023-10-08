@@ -52,7 +52,7 @@ export default async function AptosPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.filecoin}
+                protocol={Protocol.Filecoin}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -69,7 +69,7 @@ export default async function AptosPage({
             {token && (
               <NodeMetrics
                 nodeName={node.name}
-                protocol={Protocol.filecoin}
+                protocol={Protocol.Filecoin}
                 token={token.value}
                 workspaceId={workspaceId}
               />

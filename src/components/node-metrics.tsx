@@ -16,6 +16,7 @@ interface NodeMetricsProps {
   protocol: Protocol;
   token: string;
   workspaceId: string;
+  component?: "nodes" | "beaconnodes" | "validators" | "peers" | "clusterpeers";
 }
 
 interface Metrics {
@@ -31,6 +32,7 @@ export const NodeMetrics: React.FC<NodeMetricsProps> = ({
   protocol,
   token,
   workspaceId,
+  component = "nodes",
 }) => {
   const subscription: SWRSubscription<string, Metrics, string> = (
     key,
@@ -65,7 +67,7 @@ export const NodeMetrics: React.FC<NodeMetricsProps> = ({
     return () => socket.close();
   };
   const { data, error } = useSWRSubscription(
-    `${WS_URL}/${protocol}/nodes/${nodeName}/metrics?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
+    `${WS_URL}/${protocol}/${component}/${nodeName}/metrics?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription
   );
 

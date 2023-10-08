@@ -53,16 +53,16 @@ export enum StacksNetworks {
 }
 
 export enum Protocol {
-  aptos = "aptos",
-  bitcoin = "bitcoin",
-  ethereum = "ethereum",
-  ethereum2 = "ethereum2",
-  chainlink = "chainlink",
-  filecoin = "filecoin",
-  ipfs = "ipfs",
-  near = "near",
-  polkadot = "polkadot",
-  stacks = "stacks",
+  Aptos = "aptos",
+  Bitcoin = "bitcoin",
+  Ethereum = "ethereum",
+  Ethereum2 = "ethereum2",
+  Chainlink = "chainlink",
+  Filecoin = "filecoin",
+  IPFS = "ipfs",
+  NEAR = "near",
+  Polkadot = "polkadot",
+  Stacks = "stacks",
 }
 
 export enum IPFSConfigProfile {
