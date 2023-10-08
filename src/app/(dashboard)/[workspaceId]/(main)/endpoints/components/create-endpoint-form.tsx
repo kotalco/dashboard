@@ -1,7 +1,7 @@
 "use client";
 
 import * as z from "zod";
-import { useEffect } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AptosNetworks } from "@/enums";
+import { Protocol } from "@/enums";
 import {
   Select,
   SelectContent,
@@ -26,10 +26,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
-import { getLatestVersion, getSelectItems } from "@/lib/utils";
 import { client } from "@/lib/client-instance";
-import { Clients } from "@/types";
+import { Service } from "@/types";
+import { Switch } from "@/components/ui/switch";
 
 const schema = z.object({
   name: z
@@ -40,57 +39,40 @@ const schema = z.object({
     .refine((value) => /^\S*$/.test(value), {
       message: "Invalid character used",
     }),
-  network: z.nativeEnum(AptosNetworks, {
-    required_error: "Please select a Network",
-  }),
+  service_name: z.string({ required_error: "Service name is required" }),
+  use_basic_auth: z.boolean().optional(),
   workspace_id: z.string().min(1),
-  image: z.string().min(1),
 });
 
-type SchemaType = z.infer<typeof schema>;
+type Schema = z.infer<typeof schema>;
 
-const defaultValues = {
-  name: "",
-  network: undefined,
-};
+export interface CreateEndpointFormProps {
+  services: Service[];
+}
 
-export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
-  images,
+export const CreateEndpointForm: React.FC<CreateEndpointFormProps> = ({
+  services,
 }) => {
-  const { toast } = useToast();
   const router = useRouter();
   const { workspaceId } = useParams();
 
-  const form = useForm<SchemaType>({
+  const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues,
+    defaultValues: { name: "" },
+    shouldUnregister: true,
   });
 
   const {
     formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
     watch,
     setError,
-    setValue,
   } = form;
-
-  const [network] = watch(["network"]);
-
-  useEffect(() => {
-    if (network)
-      setValue("image", getLatestVersion(images, "aptos-core", network), {
-        shouldValidate: true,
-      });
-  }, [images, network, setValue]);
 
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
-      await client.post("/aptos/nodes", values);
-      router.push(`/${workspaceId}/deployments/aptos`);
+      await client.post("/endpoints", values);
+      router.push(`/${workspaceId}/endpoints`);
       router.refresh();
-      toast({
-        title: "Aptos node has been created",
-        description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
-      });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -99,14 +81,6 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
           setError("root", {
             type: response?.status.toString(),
             message: "Name already exists.",
-          });
-          return;
-        }
-
-        if (response?.status === 403) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Reached Nodes Limit.",
           });
           return;
         }
@@ -122,7 +96,7 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
   return (
     <Form {...form}>
       <form
-        data-testid="create-node"
+        data-testid="create-endpoint"
         onSubmit={form.handleSubmit(onSubmit)}
         className="max-w-sm space-y-4"
       >
@@ -138,7 +112,7 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Node Name</FormLabel>
+              <FormLabel>Endpoint Name</FormLabel>
               <FormControl>
                 <Input data-testid="name" disabled={isSubmitting} {...field} />
               </FormControl>
@@ -149,10 +123,10 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
 
         <FormField
           control={form.control}
-          name="network"
+          name="service_name"
           render={({ field }) => (
             <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-              <FormLabel>Network</FormLabel>
+              <FormLabel>Service Name</FormLabel>
               <Select
                 disabled={isSubmitting}
                 onValueChange={field.onChange}
@@ -160,14 +134,25 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
                 value={field.value}
               >
                 <FormControl>
-                  <SelectTrigger data-testid="network" className="bg-white">
-                    <SelectValue placeholder="Select a Network" />
+                  <SelectTrigger data-testid="services" className="bg-white">
+                    <SelectValue placeholder="Choose a service" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {getSelectItems(AptosNetworks).map(({ value, label }) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
+                  {services.map(({ name, protocol }) => (
+                    <SelectItem
+                      key={name}
+                      value={name}
+                      className="items-center"
+                    >
+                      <Image
+                        width={24}
+                        height={24}
+                        alt="decoration"
+                        src={`/images/${protocol}.svg`}
+                        className="w-6 h-6 inline-block mr-3"
+                      />
+                      <span>{name}</span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -178,17 +163,28 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
           )}
         />
 
-        <p className="text-sm">
-          Client:{" "}
-          <a
-            href="https://github.com/aptos-labs/aptos-core"
-            target="_blank"
-            rel="noreferrer"
-            className="text-primary hover:underline underline-offset-4"
-          >
-            aptos-core
-          </a>
-        </p>
+        {services?.find(({ name }) => name === watch("service_name"))
+          ?.protocol !== Protocol.Bitcoin && (
+          <FormField
+            control={form.control}
+            name="use_basic_auth"
+            defaultValue={false}
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex flex-row items-center gap-x-3">
+                  <FormLabel>Use Basic Authentication</FormLabel>
+                  <FormControl>
+                    <Switch
+                      disabled={isSubmitting}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          />
+        )}
 
         <Button
           data-testid="submit"

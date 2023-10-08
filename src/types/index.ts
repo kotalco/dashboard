@@ -280,6 +280,11 @@ export interface Endpoint {
   created_at: string;
 }
 
+export interface Service {
+  name: string;
+  protocol: Protocol;
+}
+
 export interface StatsError {
   error: string;
 }
