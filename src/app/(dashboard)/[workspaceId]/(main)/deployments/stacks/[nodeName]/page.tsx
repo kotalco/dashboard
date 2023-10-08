@@ -58,7 +58,7 @@ export default async function StacksNodePage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.stacks}
+                protocol={Protocol.Stacks}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -75,7 +75,7 @@ export default async function StacksNodePage({
             {token && (
               <NodeMetrics
                 nodeName={node.name}
-                protocol={Protocol.bitcoin}
+                protocol={Protocol.Stacks}
                 token={token.value}
                 workspaceId={workspaceId}
               />
