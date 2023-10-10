@@ -36,12 +36,37 @@ export enum BitcoinNetworks {
   Testnet = "testnet",
 }
 
+export enum FilecoinNetworks {
+  Mainnet = "mainnet",
+  Calibration = "calibration",
+}
+
 export enum Protocol {
   aptos = "aptos",
   bitcoin = "bitcoin",
   ethereum = "ethereum",
   ethereum2 = "ethereum2",
   chainlink = "chainlink",
+  filecoin = "filecoin",
+}
+
+export enum IPFSConfigProfile {
+  server = "server",
+  randomports = "randomports",
+  defaultDatastore = "default-datastore",
+  localDiscovery = "local-discovery",
+  test = "test",
+  defaultNetworking = "default-networking",
+  flatfs = "flatfs",
+  badgerds = "badgerds",
+  lowpower = "lowpower",
+}
+
+export enum IPFSRouting {
+  none = "none",
+  dht = "dht",
+  dhtclient = "dhtclient",
+  dhtserver = "dhtserver",
 }
 
 export enum NodeStatuses {

@@ -5,6 +5,8 @@ import {
   ExecutionClientClients,
   ExecutionClientLogging,
   ExecutionClientSyncMode,
+  IPFSConfigProfile,
+  IPFSRouting,
   ValidatorClients,
 } from "@/enums";
 
@@ -162,6 +164,30 @@ export interface ChainlinkNode extends ClientImage, ResourcesInfo {
   secureCookies: boolean;
   corsDomains: string[];
   logging: ChainlinkLogging;
+  createdAt: string;
+}
+
+export interface FilecoinNode extends ClientImage, ResourcesInfo {
+  name: string;
+  network: string;
+  api: boolean;
+  apiRequestTimeout: number;
+  ipfsForRetrieval: boolean;
+  ipfsPeerEndpoint: string;
+  ipfsOnlineMode: boolean;
+  disableMetadataLog: boolean;
+  createdAt: string;
+  apiPort: number;
+  p2pPort: number;
+}
+
+export interface IPFSPeer extends ClientImage, ResourcesInfo {
+  name: string;
+  initProfiles: IPFSConfigProfile[];
+  profiles: IPFSConfigProfile[];
+  api: boolean;
+  gateway: boolean;
+  routing: IPFSRouting;
   createdAt: string;
 }
 
