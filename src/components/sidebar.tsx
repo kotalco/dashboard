@@ -5,8 +5,10 @@ import { findUser } from "@/services/find-user";
 import { getWorkspaces } from "@/services/get-workspaces";
 
 export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
-  const user = await findUser();
+  const { user } = await findUser();
   const workspaces = await getWorkspaces();
+
+  if (!user) return null;
 
   return (
     <div className="flex flex-col w-64 px-3 py-4 space-y-4 bg-white">
@@ -22,7 +24,7 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
       </div>
       <WorkspaceSwitcher
         workspaces={workspaces}
-        userId={user.id}
+        userId={user?.id}
         className="w-full"
       />
       <WorkspaceCreator />
