@@ -107,7 +107,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
       }
     }
   };
-  console.log(errors);
+
   return (
     <Form {...form}>
       <form
