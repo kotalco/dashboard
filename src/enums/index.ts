@@ -48,25 +48,31 @@ export enum Protocol {
   ethereum2 = "ethereum2",
   chainlink = "chainlink",
   filecoin = "filecoin",
+  ipfs = "ipfs",
 }
 
 export enum IPFSConfigProfile {
   server = "server",
   randomports = "randomports",
-  defaultDatastore = "default-datastore",
-  localDiscovery = "local-discovery",
+  "default-datastore" = "default-datastore",
+  "local-discovery" = "local-discovery",
   test = "test",
-  defaultNetworking = "default-networking",
+  "default-networking" = "default-networking",
   flatfs = "flatfs",
   badgerds = "badgerds",
   lowpower = "lowpower",
 }
 
 export enum IPFSRouting {
-  none = "none",
-  dht = "dht",
-  dhtclient = "dhtclient",
-  dhtserver = "dhtserver",
+  None = "none",
+  DHT = "dht",
+  "DHT Client" = "dhtclient",
+  "DHT Server" = "dhtserver",
+}
+
+export enum ConsensusAlgorithm {
+  CRDT = "crdt",
+  RAFT = "raft",
 }
 
 export enum NodeStatuses {

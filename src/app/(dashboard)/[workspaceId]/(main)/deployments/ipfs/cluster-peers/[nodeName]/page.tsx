@@ -13,19 +13,22 @@ import {
   SecretType,
   StorageItems,
 } from "@/enums";
-import { BeaconNode, ExecutionClientNode } from "@/types";
+import {
+  BeaconNode,
+  ExecutionClientNode,
+  IPFSClusterPeer,
+  IPFSPeer,
+} from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
-import { BeaconNodeStats } from "./components/beacon-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
-import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
-import { ExecutionClientTab } from "./components/execution-client-tab";
-import { CheckpointSyncTab } from "./components/checkpoint-sync-tab";
+import { PeersTab } from "./components/peers-tab";
+import { SecurityTab } from "./components/security-tab";
 import { Logs } from "@/components/logs";
 
 export default async function BeaconNodePage({
@@ -36,23 +39,26 @@ export default async function BeaconNodePage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType["JWT Secret"]);
-  const { data } = await getNodes<ExecutionClientNode>(
+  const { data: peers } = await getNodes<IPFSPeer>(
     params.workspaceId,
-    "/ethereum/nodes"
+    "/ipfs/peers"
+  );
+  const { data: clusterPeers } = await getNodes<IPFSClusterPeer>(
+    params.workspaceId,
+    "/ipfs/clusterpeers"
   );
 
   try {
-    const node = await getNode<BeaconNode>(
+    const node = await getNode<IPFSClusterPeer>(
       workspaceId,
-      `/ethereum2/beaconnodes/${nodeName}`
+      `/ipfs/clusterpeers/${nodeName}`
     );
 
     const { versions } = await getClientVersions(
       {
-        protocol: "ethereum",
-        component: "beaconNode",
-        client: node.client,
+        protocol: "ipfs",
+        component: "clusterPeer",
+        client: "ipfs-cluster",
       },
       node.image
     );
@@ -64,10 +70,10 @@ export default async function BeaconNodePage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.ethereum2}
+                protocol={Protocol.ipfs}
                 token={token.value}
                 workspaceId={workspaceId}
-                component="beaconnodes"
+                component="clusterpeers"
               />
             )}
             <Heading
@@ -80,29 +86,19 @@ export default async function BeaconNodePage({
           </div>
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
-              <>
-                <BeaconNodeStats
-                  nodeName={node.name}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-                <NodeMetrics
-                  nodeName={node.name}
-                  protocol={Protocol.ethereum}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
-              </>
+              <NodeMetrics
+                nodeName={node.name}
+                protocol={Protocol.ethereum}
+                token={token.value}
+                workspaceId={workspaceId}
+              />
             )}
           </div>
           <Tabs defaultValue="protocol">
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
-              <TabsTrigger value="executionClient">
-                Execution Client
-              </TabsTrigger>
-              <TabsTrigger value="checkpointSync">Checkpoint Sync</TabsTrigger>
-              <TabsTrigger value="api">API</TabsTrigger>
+              <TabsTrigger value="peers">Peers</TabsTrigger>
+              <TabsTrigger value="security">Security</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -117,31 +113,22 @@ export default async function BeaconNodePage({
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
               <ProtocolTab node={node} role={role} versions={versions} />
             </TabsContent>
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="executionClient"
-            >
-              <ExecutionClientTab
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="peers">
+              <PeersTab
                 node={node}
                 role={role}
-                secrets={secrets}
-                executionClients={data}
+                peers={peers}
+                clusterPeers={clusterPeers}
               />
             </TabsContent>
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="checkpointSync"
-            >
-              <CheckpointSyncTab node={node} role={role} />
-            </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} />
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="security">
+              <SecurityTab node={node} />
             </TabsContent>
 
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
               {token && (
                 <Logs
-                  url={`ethereum2/beaconnodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
+                  url={`ipfs/clusterpeers/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
                 />
               )}
             </TabsContent>
@@ -153,7 +140,7 @@ export default async function BeaconNodePage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

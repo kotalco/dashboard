@@ -1,6 +1,7 @@
 import {
   BeaconNodeClients,
   ChainlinkLogging,
+  ConsensusAlgorithm,
   ExecutionClientAPI,
   ExecutionClientClients,
   ExecutionClientLogging,
@@ -191,6 +192,18 @@ export interface IPFSPeer extends ClientImage, ResourcesInfo {
   createdAt: string;
 }
 
+export interface IPFSClusterPeer extends ClientImage, ResourcesInfo {
+  name: string;
+  consensus: ConsensusAlgorithm;
+  id: string;
+  privatekeySecretName?: string;
+  trustedPeers: string[];
+  peerEndpoint: string;
+  bootstrapPeers: string[];
+  clusterSecretName: string;
+  createdAt: string;
+}
+
 export interface StatsError {
   error: string;
 }
@@ -216,4 +229,11 @@ export interface BeaconStats {
   targetSlot: number;
   peersCount: number;
   syncing: boolean;
+}
+
+export interface IpfsPeerStats {
+  PeerCount: number;
+  PinCount: number;
+  Blocks: number;
+  CumulativeSize: number;
 }

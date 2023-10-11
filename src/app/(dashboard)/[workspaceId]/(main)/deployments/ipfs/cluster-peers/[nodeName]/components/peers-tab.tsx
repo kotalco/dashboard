@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { ChainlinkNode, ExecutionClientNode } from "@/types";
+import { IPFSClusterPeer, IPFSPeer } from "@/types";
 import { Roles } from "@/enums";
 import {
   Form,
@@ -21,58 +21,45 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
 import { SelectWithInput } from "@/components/ui/select-with-input";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { Label } from "@/components/ui/label";
 
-interface ExecutionClientTabProps {
-  node: ChainlinkNode;
+interface PeersTabProps {
+  node: IPFSClusterPeer;
   role: Roles;
-  executionClients: ExecutionClientNode[];
+  peers: IPFSPeer[];
+  clusterPeers: IPFSClusterPeer[];
 }
 
 const schema = z.object({
-  ethereumWsEndpoint: z
-    .string({ required_error: "Ethereum websocket is required" })
-    .min(1, "Ethereum websocket is required")
-    .trim()
-    .refine((value) => /wss?:\/\//.test(value), {
-      message: "Invalid websocket URL",
-    }),
-  ethereumHttpEndpoints: z
-    .array(z.string())
-    .nullable()
-    .refine(
-      (value) =>
-        !value || value.every((endpoint) => /https?:\/\//.test(endpoint)),
-      {
-        message: "Invalid HTTP URL",
-      }
-    ),
+  peerEndpoint: z
+    .string({ required_error: "Peer endpoint is required" })
+    .min(1, "Peer endpoint is required")
+    .trim(),
+  bootstrapPeers: z.string().array().optional(),
 });
 
 type Schema = z.infer<typeof schema>;
 
-export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
+export const PeersTab: React.FC<PeersTabProps> = ({
   node,
   role,
-  executionClients,
+  peers,
+  clusterPeers,
 }) => {
-  const { ethereumWsEndpoint, ethereumHttpEndpoints } = node;
-  const wsActiveExecutionClients = executionClients
-    .filter(({ ws }) => ws)
-    .map(({ name, wsPort }) => ({
-      label: name,
-      value: `ws://${name}:${wsPort}`,
-    }));
+  const { peerEndpoint, bootstrapPeers, trustedPeers } = node;
+  const peerEndpoints = peers.map(({ name }) => ({
+    label: name,
+    value: `/dns4/${name}/tcp/5001`,
+  }));
 
-  const rpcActiveExecutionClients = executionClients
-    .filter(({ rpc }) => rpc)
-    .map(({ name, rpcPort }) => ({
-      label: name,
-      value: `http://${name}:${rpcPort}`,
-    }));
+  const ipfsClusterPeers = clusterPeers.map(({ name, id }) => ({
+    label: name,
+    value: `/dns4/${name}/tcp/9096/p2p/${id}`,
+  }));
 
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: { ethereumHttpEndpoints, ethereumWsEndpoint },
+    defaultValues: { peerEndpoint, bootstrapPeers },
   });
 
   const {
@@ -90,12 +77,12 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
 
   const onSubmit = async (values: Schema) => {
     try {
-      const { data } = await client.put<ChainlinkNode>(
-        `/chainlink/nodes/${node.name}`,
+      const { data } = await client.put<IPFSClusterPeer>(
+        `/ipfs/clusterpeers/${node.name}`,
         values
       );
-      const { ethereumWsEndpoint, ethereumHttpEndpoints } = data;
-      reset({ ethereumWsEndpoint, ethereumHttpEndpoints });
+      const { peerEndpoint, bootstrapPeers } = data;
+      reset({ peerEndpoint, bootstrapPeers });
     } catch (error) {
       if (isAxiosError(error)) {
         const { response } = error;
@@ -107,7 +94,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
       }
     }
   };
-  console.log(errors);
+
   return (
     <Form {...form}>
       <form
@@ -116,46 +103,46 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
       >
         <FormField
           control={form.control}
-          name="ethereumWsEndpoint"
+          name="peerEndpoint"
           render={({ field }) => (
-            <FormItem className="max-w-md">
-              <FormLabel>Execution Client Websocket Endpoint</FormLabel>
+            <FormItem className="max-w-xs">
+              <FormLabel>IPFS Peer</FormLabel>
               <SelectWithInput
-                placeholder="Select a Execution Client"
+                placeholder="Select a Peer"
                 disabled={isSubmitting || role === Roles.Reader}
                 onChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
-                options={wsActiveExecutionClients}
-                otherLabel="Externally Managed Node"
+                options={peerEndpoints}
+                otherLabel="Use External Peer"
               />
-              <FormDescription>
-                Execution client nodes with WebSocket enabled
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
         <FormField
+          shouldUnregister={true}
           control={form.control}
-          name="ethereumHttpEndpoints"
+          name="bootstrapPeers"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Execution Clients HTTP Endpints</FormLabel>
-              <div className="max-w-md">
-                <MultiSelect
-                  defaultValue={field.value || []}
-                  disabled={role === Roles.Reader || isSubmitting}
-                  value={field.value || []}
-                  placeholder="Select execution clients nodes or enter your own endpoints"
-                  options={rpcActiveExecutionClients}
-                  onChange={field.onChange}
-                  emptyText="Enter your own endpoints"
-                  allowCustomValues
-                />
+              <FormLabel>Bootstrap Cluster Peers</FormLabel>
+              <div>
+                <div className="max-w-xs">
+                  <MultiSelect
+                    defaultValue={field.value}
+                    disabled={isSubmitting || role === Roles.Reader}
+                    value={field.value}
+                    placeholder="Select bootstrap peers"
+                    options={ipfsClusterPeers}
+                    onChange={field.onChange}
+                    emptyText="Enter your own peers"
+                    allowCustomValues
+                  />
+                </div>
                 <FormDescription>
-                  Select execution client nodes or enter your own endpoints
+                  Select cluster peers or enter your own peers
                 </FormDescription>
               </div>
 
@@ -164,10 +151,23 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
           )}
         />
 
+        {!!trustedPeers && (
+          <div className="max-w-xs mt-4">
+            <Label>Trusted Cluster Peers</Label>
+            <ul className="ml-5 text-sm">
+              {trustedPeers.map((peer) => (
+                <li key={peer} className="text-foreground/50 list-disc">
+                  {peer}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">
             <AlertDescription>
-              Execution client settings have been updated successfully.
+              Peers settings have been updated successfully.
             </AlertDescription>
           </Alert>
         )}
