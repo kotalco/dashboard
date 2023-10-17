@@ -8,6 +8,7 @@ import {
   ExecutionClientSyncMode,
   IPFSConfigProfile,
   IPFSRouting,
+  NEARNetworks,
   ValidatorClients,
 } from "@/enums";
 
@@ -204,6 +205,22 @@ export interface IPFSClusterPeer extends ClientImage, ResourcesInfo {
   createdAt: string;
 }
 
+export interface NEARNode extends ClientImage, ResourcesInfo {
+  name: string;
+  network: NEARNetworks;
+  archive: boolean;
+  nodePrivateKeySecretName: string;
+  minPeers: number;
+  p2pPort: number;
+  bootnodes: string[] | null;
+  validatorSecretName: string;
+  telemetryURL: string;
+  prometheusPort: number;
+  rpc: boolean;
+  rpcPort: number;
+  createdAt: string;
+}
+
 export interface StatsError {
   error: string;
 }
@@ -216,6 +233,16 @@ export interface AptosStats {
 export interface BitcoinStats {
   blockCount: number;
   peerCount: number;
+}
+
+export interface NEARStats {
+  activePeersCount: number;
+  maxPeersCount: number;
+  sentBytesPerSecond: number;
+  receivedBytesPerSecond: number;
+  latestBlockHeight: number;
+  earliestBlockHeight: number;
+  syncing: boolean;
 }
 
 export interface ExecutionClientStats {

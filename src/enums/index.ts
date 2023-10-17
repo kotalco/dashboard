@@ -41,6 +41,12 @@ export enum FilecoinNetworks {
   Calibration = "calibration",
 }
 
+export enum NEARNetworks {
+  Mainnet = "mainnet",
+  Testnet = "testnet",
+  Betanet = "betanet",
+}
+
 export enum Protocol {
   aptos = "aptos",
   bitcoin = "bitcoin",
@@ -49,6 +55,7 @@ export enum Protocol {
   chainlink = "chainlink",
   filecoin = "filecoin",
   ipfs = "ipfs",
+  near = "near",
 }
 
 export enum IPFSConfigProfile {

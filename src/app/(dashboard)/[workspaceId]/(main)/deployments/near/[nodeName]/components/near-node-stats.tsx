@@ -1,16 +1,15 @@
 "use client";
 
 import useSWRSubscription from "swr/subscription";
-import { cx } from "class-variance-authority";
-import { AlertCircle, RefreshCw } from "lucide-react";
 import type { SWRSubscription } from "swr/subscription";
+import { cx } from "class-variance-authority";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
-import { AlertTriangle } from "lucide-react";
-import { ExecutionClientStats, StatsError } from "@/types";
+import { AlertCircle, AlertTriangle, RefreshCw } from "lucide-react";
+import { BitcoinStats, NEARStats, StatsError } from "@/types";
 import {
   Tooltip,
   TooltipContent,
@@ -18,7 +17,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface ExecutionClientNodeStatsProps {
+interface NEARNodeStatsProps {
   nodeName: string;
   token: string;
   workspaceId: string;
@@ -26,12 +25,14 @@ interface ExecutionClientNodeStatsProps {
 
 const WS_URL = getWsBaseURL();
 
-export const ExecutionClientNodeStats: React.FC<
-  ExecutionClientNodeStatsProps
-> = ({ nodeName, token, workspaceId }) => {
+export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
+  nodeName,
+  token,
+  workspaceId,
+}) => {
   const subscription: SWRSubscription<
     string,
-    ExecutionClientStats | StatsError,
+    NEARStats | StatsError,
     string
   > = (key, { next }) => {
     const socket = new WebSocket(key);
@@ -44,7 +45,7 @@ export const ExecutionClientNodeStats: React.FC<
     return () => socket.close();
   };
   const { data, error } = useSWRSubscription(
-    `${WS_URL}/ethereum/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
+    `${WS_URL}/near/nodes/${nodeName}/stats?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription
   );
 
@@ -57,6 +58,7 @@ export const ExecutionClientNodeStats: React.FC<
       </Alert>
     );
   }
+
   if (!data)
     return (
       <>
@@ -68,12 +70,6 @@ export const ExecutionClientNodeStats: React.FC<
         </div>
       </>
     );
-
-  const syncPercentage =
-    !("error" in data) &&
-    (!+data.highestBlock
-      ? "00%"
-      : `${((+data.currentBlock / +data.highestBlock) * 100).toFixed(2)}%`);
 
   return (
     <div className="relative lg:col-span-2">
@@ -93,7 +89,8 @@ export const ExecutionClientNodeStats: React.FC<
                     <AlertCircle className="w-4 h-4 ml-2" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{syncPercentage}</p>
+                    If block number doesn&apos;t change, it means node is not
+                    syncing or syncing headers
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -102,13 +99,15 @@ export const ExecutionClientNodeStats: React.FC<
           <CardContent className="flex items-center text-3xl font-light text-foreground/50 truncate gap-x-2">
             {!("error" in data) && (
               <>
-                {!data.peersCount ? (
-                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                ) : (
+                {data.syncing ? (
                   <RefreshCw className="w-5 h-5 animate-spin" />
+                ) : (
+                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
                 )}
                 <span>
-                  {new Intl.NumberFormat("en-US").format(+data.currentBlock)}
+                  {new Intl.NumberFormat("en-US").format(
+                    +data.latestBlockHeight
+                  )}
                 </span>
               </>
             )}
@@ -116,10 +115,24 @@ export const ExecutionClientNodeStats: React.FC<
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Peers</CardTitle>
+            <CardTitle className="items-start">
+              Peers
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AlertCircle className="w-4 h-4 ml-2" />
+                  </TooltipTrigger>
+                  <TooltipContent>Active peers / Max peers</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-3xl font-light text-foreground/50 truncate">
-            {!("error" in data) && data.peersCount}
+            {!("error" in data) && (
+              <>
+                {data.activePeersCount} / {data.maxPeersCount}
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
