@@ -7,21 +7,23 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { NEARNode } from "@/types";
+import { PolkadotNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
-import { NEARNodeStats } from "./components/near-node-stats";
+import { PolkadotNodeStats } from "./components/polkadot-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
-import { RPCTab } from "./components/rpc-tab";
+import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { ValidatorTab } from "./components/validator-tab";
 import { NetworkingTab } from "./components/networking-tab";
 import { PrometheusTab } from "./components/prometheus-tab";
 import { TelemetryTab } from "./components/telemetry-tab";
+import { AccessControlTab } from "./components/access-control-tab";
+import { LogsTab } from "./components/logs-tab";
 
 export default async function BitcoinPage({
   params,
@@ -31,19 +33,22 @@ export default async function BitcoinPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType["NEAR Private Key"]);
+  const secrets = await getSecrets(
+    workspaceId,
+    SecretType["Polkadot Private Key"]
+  );
 
   try {
-    const node = await getNode<NEARNode>(
+    const node = await getNode<PolkadotNode>(
       workspaceId,
-      `/near/nodes/${nodeName}`
+      `/polkadot/nodes/${nodeName}`
     );
 
     const { versions } = await getClientVersions(
       {
-        protocol: "near",
+        protocol: "polkadot",
         component: "node",
-        client: "nearcore",
+        client: "polkadot",
       },
       node.image
     );
@@ -55,7 +60,7 @@ export default async function BitcoinPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.near}
+                protocol={Protocol.polkadot}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -71,7 +76,7 @@ export default async function BitcoinPage({
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
               <>
-                <NEARNodeStats
+                <PolkadotNodeStats
                   nodeName={node.name}
                   token={token.value}
                   workspaceId={workspaceId}
@@ -89,10 +94,11 @@ export default async function BitcoinPage({
             <TabsList>
               <TabsTrigger value="protocol">Protocol</TabsTrigger>
               <TabsTrigger value="networking">Networking</TabsTrigger>
-              <TabsTrigger value="rpc">RPC</TabsTrigger>
               <TabsTrigger value="validator">Validator</TabsTrigger>
-              <TabsTrigger value="prometheus">Prometheus</TabsTrigger>
               <TabsTrigger value="telemetry">Telemetry</TabsTrigger>
+              <TabsTrigger value="prometheus">Prometheus</TabsTrigger>
+              <TabsTrigger value="api">API</TabsTrigger>
+              <TabsTrigger value="accessControl">Access Control</TabsTrigger>
               <TabsTrigger value="logs">Logs</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
               {role === Roles.Admin && (
@@ -113,20 +119,11 @@ export default async function BitcoinPage({
             >
               <NetworkingTab node={node} role={role} secrets={secrets} />
             </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="rpc">
-              <RPCTab node={node} role={role} />
-            </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="validator"
             >
-              <ValidatorTab node={node} role={role} secrets={secrets} />
-            </TabsContent>
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="prometheus"
-            >
-              <PrometheusTab node={node} role={role} />
+              <ValidatorTab node={node} role={role} />
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
@@ -134,13 +131,28 @@ export default async function BitcoinPage({
             >
               <TelemetryTab node={node} role={role} />
             </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && (
-                <Logs
-                  url={`near/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-                />
-              )}
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="prometheus"
+            >
+              <PrometheusTab node={node} role={role} />
             </TabsContent>
+
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
+              <APITab node={node} role={role} />
+            </TabsContent>
+
+            <TabsContent
+              className="px-4 py-3 sm:px-6 sm:py-4"
+              value="accessControl"
+            >
+              <AccessControlTab node={node} role={role} />
+            </TabsContent>
+
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
+              {token && <LogsTab node={node} role={role} token={token.value} />}
+            </TabsContent>
+
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="resources"
@@ -148,7 +160,7 @@ export default async function BitcoinPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/near/nodes/${node.name}?workspace_id=${workspaceId}`}
+                updateUrl={`/polkadot/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

@@ -9,6 +9,9 @@ import {
   IPFSConfigProfile,
   IPFSRouting,
   NEARNetworks,
+  PolkadotLogging,
+  PolkadotNetworks,
+  PolkadotSyncModes,
   ValidatorClients,
 } from "@/enums";
 
@@ -221,6 +224,28 @@ export interface NEARNode extends ClientImage, ResourcesInfo {
   createdAt: string;
 }
 
+export interface PolkadotNode extends ClientImage, ResourcesInfo {
+  name: string;
+  network: PolkadotNetworks;
+  p2pPort: number;
+  nodePrivateKeySecretName: string;
+  syncMode: PolkadotSyncModes;
+  retainedBlocks: number;
+  pruning: boolean;
+  validator: boolean;
+  telemetry: boolean;
+  telemetryURL: string;
+  prometheus: boolean;
+  prometheusPort?: number;
+  rpc: boolean;
+  rpcPort?: number;
+  ws: boolean;
+  wsPort: number;
+  corsDomains: string[];
+  createdAt: string;
+  logging: PolkadotLogging;
+}
+
 export interface StatsError {
   error: string;
 }
@@ -242,6 +267,13 @@ export interface NEARStats {
   receivedBytesPerSecond: number;
   latestBlockHeight: number;
   earliestBlockHeight: number;
+  syncing: boolean;
+}
+
+export interface PolkadotStats {
+  currentBlock: number;
+  highestBlock: number;
+  peersCount: number;
   syncing: boolean;
 }
 

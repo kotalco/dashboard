@@ -56,6 +56,8 @@ export enum Protocol {
   filecoin = "filecoin",
   ipfs = "ipfs",
   near = "near",
+  polkadot = "polkadot",
+  stacks = "stacks",
 }
 
 export enum IPFSConfigProfile {
@@ -191,4 +193,24 @@ export enum ChainlinkNetworks {
   "Huobi Eco Chain Mainnet" = "128:0x9e004545c59D359F6B7BFB06a26390b087717b42",
   "Optimism Mainnet" = "10:0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6",
   "Optimism Kovan Testnet" = "69:0x4911b761993b9c8c0d14Ba2d86902AF6B0074F5B",
+}
+
+export enum PolkadotNetworks {
+  Polkadot = "polkadot",
+  Kusama = "kusama",
+  Rococo = "rococo",
+  Westend = "westend",
+}
+
+export enum PolkadotSyncModes {
+  Fast = "fast",
+  Full = "full",
+}
+
+export enum PolkadotLogging {
+  Error = "error",
+  Warn = "warn",
+  Info = "info",
+  Debug = "debug",
+  Trace = "trace",
 }
