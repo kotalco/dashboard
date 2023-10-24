@@ -22,12 +22,16 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
           </nav>
         </div>
       </div>
-      <WorkspaceSwitcher
-        workspaces={workspaces}
-        userId={user?.id}
-        className="w-full"
-      />
-      <WorkspaceCreator />
+      {!user.is_customer && (
+        <>
+          <WorkspaceSwitcher
+            workspaces={workspaces}
+            userId={user?.id}
+            className="w-full"
+          />
+          <WorkspaceCreator />
+        </>
+      )}
     </div>
   );
 };

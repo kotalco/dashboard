@@ -25,6 +25,20 @@ export enum SecretType {
   "TLS Certificate" = "tls_certificate",
 }
 
+export enum Networks {
+  Mainnet = "mainnet",
+  Testnet = "testnet",
+  Devnet = "devnet",
+  Calibration = "calibration",
+  Betanet = "betanet",
+  Sepolia = "sepolia",
+  Goerli = "goerli",
+  Polkadot = "polkadot",
+  Kusama = "kusama",
+  Rococo = "rococo",
+  Westend = "westend",
+}
+
 export enum AptosNetworks {
   Mainnet = "mainnet",
   Testnet = "testnet",

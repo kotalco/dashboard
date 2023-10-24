@@ -11,6 +11,7 @@ export default async function SetupLayout({
   children: React.ReactNode;
 }) {
   const { user, error } = await findUser();
+
   // No user and Invalid Subscription
   if (!user && error?.response?.data.name === "INVALID_SUBSCRIPTION")
     return <>{children}</>;
@@ -21,6 +22,8 @@ export default async function SetupLayout({
 
   // No user and no auth token or invalid token
   if (!user) redirect("/sign-in");
+
+  if (user.is_customer) redirect("/virtual-endpoints");
 
   const workspaceId = cookies().get(StorageItems.LAST_WORKSPACE_ID);
   if (workspaceId?.value) redirect(`/${workspaceId.value}`);
