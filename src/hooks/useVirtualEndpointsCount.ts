@@ -2,7 +2,7 @@ import useSWR from "swr";
 
 import { client } from "@/lib/client-instance";
 
-export const useVirtualEndpointsCount = (workspaceId: string) => {
+export const useVirtualEndpointsCount = () => {
   const fetcher = async (url: string) => {
     const { headers } = await client.head(url);
     return headers;

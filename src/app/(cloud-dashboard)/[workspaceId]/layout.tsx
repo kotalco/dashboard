@@ -1,6 +1,7 @@
+import { findUser } from "@/services/find-user";
 import { getWorkspace } from "@/services/get-workspace";
 import { getWorkspaces } from "@/services/get-workspaces";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function Layout({
   children,
@@ -9,6 +10,10 @@ export default async function Layout({
   children: React.ReactNode;
   params: { workspaceId: string };
 }) {
+  const { user } = await findUser();
+
+  if (user?.is_customer) notFound();
+
   try {
     await getWorkspace(params.workspaceId);
   } catch (error) {
