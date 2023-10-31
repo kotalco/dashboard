@@ -8,6 +8,7 @@ import {
   ExecutionClientSyncMode,
   IPFSConfigProfile,
   IPFSRouting,
+  InvoiceStatus,
   NEARNetworks,
   PolkadotLogging,
   PolkadotNetworks,
@@ -286,14 +287,6 @@ export interface Service {
   protocol: Protocol;
 }
 
-export interface Subscription {
-  status: SubscriptionStatus;
-  name: string;
-  start_date: number;
-  end_date: number;
-  canceled_at?: number;
-}
-
 export interface StatsError {
   error: string;
 }
@@ -343,4 +336,62 @@ export interface IpfsPeerStats {
   PinCount: number;
   Blocks: number;
   CumulativeSize: number;
+}
+
+export interface InvoiceItem {
+  amount: number;
+  currency: "usd";
+  description: string;
+  end_date: number;
+  start_date: number;
+}
+
+export interface Invoice {
+  id: string;
+  amount_paid: number;
+  amount_due: number;
+  amount_remaining: number;
+  currency: "usd";
+  start_date: number;
+  end_date: number;
+  period: "monthly" | "yearly";
+  created_at: number;
+  status: InvoiceStatus;
+  description: string;
+  hosted_url: string;
+  invoice_pdf: string;
+  next_payment_attempt: number;
+  provider_payment_intent_id: string;
+  items: InvoiceItem[];
+}
+
+export interface PlanPrice {
+  id: string;
+  period: "monthly" | "yearly";
+  price: number;
+  currency: "usd";
+  default: boolean;
+}
+
+export interface Plan {
+  id: string;
+  name: string;
+  description: string;
+  features: string[];
+  prices: PlanPrice[];
+  request_limit: number;
+}
+
+export interface Subscription {
+  id: string;
+  status: SubscriptionStatus;
+  name?: string;
+  start_date: number;
+  end_date: number;
+  canceled_at?: number;
+  trial_start_at?: number;
+  trial_end_at?: number;
+  default_payment_method_id: string;
+  request_limit: number;
+  invoice: Invoice & { plan: Omit<Plan, "prices">; price: PlanPrice };
 }

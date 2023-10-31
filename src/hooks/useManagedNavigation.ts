@@ -1,14 +1,14 @@
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   ArrowLeft,
   Cog,
-  Globe,
   Link,
   Lock,
   LogOut,
   User2,
-  UserPlus2,
-  Users2,
+  CreditCard,
+  FileText,
+  Zap,
 } from "lucide-react";
 
 import { SidebarNavItem } from "@/types";
@@ -26,6 +26,24 @@ export function useManagedNavigation() {
       active: pathname.includes("endpoints"),
       Icon: Link,
       count: endpointsCount,
+    },
+    {
+      title: "Subscription",
+      label: "Manage Plan",
+      href: `/billing/plan`,
+      Icon: Zap,
+    },
+    {
+      label: "Invoices",
+      href: `/billing/invoices`,
+      active: pathname.includes("invoices"),
+      Icon: FileText,
+    },
+    {
+      label: "Payment Methods",
+      href: `/billing/payment-methods`,
+      active: pathname.includes("payment-methods"),
+      Icon: CreditCard,
     },
     {
       title: "Account",

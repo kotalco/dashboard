@@ -254,4 +254,13 @@ export enum SubscriptionStatus {
   Incomplete = "incomplete",
   "Incomplete Expired" = "incomplete_expired",
   Unpaid = "unpaid",
+  Trial = "trialing",
+}
+
+export enum InvoiceStatus {
+  Paid = "paid",
+  Failed = "failed",
+  Open = "open",
+  Draft = "draft",
+  Uncollectible = "uncollectible",
 }
