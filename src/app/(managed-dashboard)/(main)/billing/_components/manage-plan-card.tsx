@@ -118,7 +118,9 @@ export const ManagePlanCard = async () => {
           </>
         )}
 
-        {!!subscription.canceled_at && <ReactivatePlan />}
+        {!!subscription.canceled_at && (
+          <ReactivatePlan subscriptionId={subscription.id} />
+        )}
       </CardFooter>
     </Card>
   );

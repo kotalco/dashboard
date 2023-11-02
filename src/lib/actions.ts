@@ -33,3 +33,17 @@ export const cancelSubscription = async (subscription_id: string) => {
     return { message: "Something went wrong. Please try again." };
   }
 };
+
+export const reactivatePlan = async (subscription_id: string) => {
+  try {
+    await server.post("/subscriptions/reactivate", {
+      subscription_id,
+      provider: "stripe",
+    });
+
+    revalidatePath("/billing/plan");
+    return { message: null };
+  } catch (e) {
+    return { message: "Something went wrong. Please try again." };
+  }
+};
