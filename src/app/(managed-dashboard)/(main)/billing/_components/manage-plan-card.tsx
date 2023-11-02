@@ -13,12 +13,13 @@ import { getCurrentSubscription } from "@/services/get-current-subscription";
 import { calculateRemainingDays, formatCurrency } from "@/lib/utils";
 import { getUpcomingInvoice } from "@/services/get-upcoming-payment";
 import ChangePlan from "./change-plan";
-import CancelPlan from "./cancel-plan";
+import { CancelPlan } from "./cancel-plan";
 import { ReactivatePlan } from "./reactivate-plan";
 
 export const ManagePlanCard = async () => {
   const { subscription } = await getCurrentSubscription();
-  const { invoice } = await getUpcomingInvoice(subscription.id);
+  const { invoice, message } = await getUpcomingInvoice(subscription.id);
+
   const remainingDays = calculateRemainingDays(subscription.end_date);
   // console.log("Subscription", subscription);
   // console.log("Invoice", invoice);
@@ -73,7 +74,7 @@ export const ManagePlanCard = async () => {
 
             {/* If subscription is canceled */}
             {!!subscription.canceled_at && (
-              <div className="flex items-center bg-red-500 bg-opacity-20 px-3 rounded-xl py-2 space-x-3">
+              <div className="flex items-center bg-destructive/30 px-3 rounded-xl py-2 space-x-3">
                 <p className="text-xs font-bold leading-5">
                   <span className="font-normal opacity-50">
                     Subscription was canceled at
@@ -86,8 +87,14 @@ export const ManagePlanCard = async () => {
               </div>
             )}
 
+            {message && (
+              <p className="text-xs font-bold leading-5 text-destructive">
+                {message}
+              </p>
+            )}
+
             {/* If subscription is not canceled show upcoming Payment */}
-            {!subscription.canceled_at && (
+            {invoice && (
               <div className="flex items-center space-x-3">
                 <CreditCard className="w-6 h-6 text-foreground" />
                 <p className="text-xs font-bold leading-5">
@@ -106,7 +113,7 @@ export const ManagePlanCard = async () => {
       <CardFooter className="flex flex-row-reverse gap-x-2">
         {!subscription.canceled_at && (
           <>
-            <CancelPlan />
+            <CancelPlan subscriptionId={subscription.id} />
             <ChangePlan />
           </>
         )}

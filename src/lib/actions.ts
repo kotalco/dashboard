@@ -22,3 +22,14 @@ export const prepareInvoicePayment = async (payment_intent_id: string) => {
     };
   }
 };
+
+export const cancelSubscription = async (subscription_id: string) => {
+  try {
+    await server.post("/subscriptions/cancel", { subscription_id });
+
+    revalidatePath("/billing/plan");
+    return { message: null };
+  } catch (e) {
+    return { message: "Something went wrong. Please try again." };
+  }
+};
