@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
 
 interface ValidatorTabProps {
   node: PolkadotNode;
@@ -157,7 +157,7 @@ export const ValidatorTab: React.FC<ValidatorTabProps> = ({ node, role }) => {
           )}
         </form>
       </Form>
-      <AlertModal
+      <DeprecatedAlertModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="Warning"

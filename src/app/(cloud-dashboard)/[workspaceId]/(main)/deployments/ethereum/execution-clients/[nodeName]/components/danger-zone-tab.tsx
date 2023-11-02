@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import qs from "query-string";
 
-import { AlertModal } from "@/components/modals/alert-modal";
+import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
 import { DeleteNodeForm } from "@/components/delete-node-form";
 import { useToast } from "@/components/ui/use-toast";
 import { TabsFooter } from "@/components/ui/tabs";
@@ -65,7 +65,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
         </TabsFooter>
       </div>
 
-      <AlertModal
+      <DeprecatedAlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         title="Delete Execution Client Node"
@@ -75,7 +75,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
           nodeName={node.name}
           onDelete={onDeleteExecutionClientNode}
         />
-      </AlertModal>
+      </DeprecatedAlertModal>
     </>
   );
 };

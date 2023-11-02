@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AlertModal } from "@/components/modals/alert-modal";
+import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
 import { Button } from "@/components/ui/button";
 import { client } from "@/lib/client-instance";
 import { useParams, useRouter } from "next/navigation";
@@ -77,7 +77,7 @@ export const DeleteEndpoint: React.FC<DeleteEndpointProps> = ({ name }) => {
       <div onClick={() => setOpen(true)} className="mt-5 flex justify-end">
         <Button variant="destructive">Delete Endpoint</Button>
       </div>
-      <AlertModal
+      <DeprecatedAlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         title="Delete Endpoint"
@@ -118,7 +118,7 @@ export const DeleteEndpoint: React.FC<DeleteEndpointProps> = ({ name }) => {
             </Button>
           </form>
         </Form>
-      </AlertModal>
+      </DeprecatedAlertModal>
     </>
   );
 };

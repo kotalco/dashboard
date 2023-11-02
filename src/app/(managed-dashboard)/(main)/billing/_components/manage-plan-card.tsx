@@ -14,6 +14,7 @@ import { calculateRemainingDays, formatCurrency } from "@/lib/utils";
 import { getUpcomingInvoice } from "@/services/get-upcoming-payment";
 import ChangePlan from "./change-plan";
 import CancelPlan from "./cancel-plan";
+import { ReactivatePlan } from "./reactivate-plan";
 
 export const ManagePlanCard = async () => {
   const { subscription } = await getCurrentSubscription();
@@ -103,8 +104,14 @@ export const ManagePlanCard = async () => {
         </div>
       </CardContent>
       <CardFooter className="flex flex-row-reverse gap-x-2">
-        <CancelPlan />
-        {!subscription.canceled_at && <ChangePlan />}
+        {!subscription.canceled_at && (
+          <>
+            <CancelPlan />
+            <ChangePlan />
+          </>
+        )}
+
+        {!!subscription.canceled_at && <ReactivatePlan />}
       </CardFooter>
     </Card>
   );

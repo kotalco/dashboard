@@ -8,7 +8,7 @@ import { useWorkspace } from "@/hooks/useWorkspace";
 import { Roles } from "@/enums";
 import { client } from "@/lib/client-instance";
 import { Button } from "@/components/ui/button";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SecretColumn } from "./colums";
 
@@ -55,7 +55,7 @@ export const CellAction: React.FC<CellRoleProps> = ({ data }) => {
 
   return (
     <>
-      <AlertModal
+      <DeprecatedAlertModal
         isOpen={open}
         onClose={onClose}
         onConfirm={onDeleteSecret}
@@ -68,7 +68,7 @@ export const CellAction: React.FC<CellRoleProps> = ({ data }) => {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-      </AlertModal>
+      </DeprecatedAlertModal>
       <div className="flex justify-end transition opacity-0 group-hover:opacity-100">
         <Button
           onClick={() => setOpen(true)}

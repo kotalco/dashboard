@@ -7,7 +7,7 @@ import { useWorkspace } from "@/hooks/useWorkspace";
 import { Roles } from "@/enums";
 import { client } from "@/lib/client-instance";
 import { Button } from "@/components/ui/button";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TeamMemberColumn } from "./columns";
 
@@ -49,7 +49,7 @@ export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
 
   return (
     <>
-      <AlertModal
+      <DeprecatedAlertModal
         isOpen={open}
         onClose={onClose}
         onConfirm={onDeleteMember}
@@ -62,7 +62,7 @@ export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-      </AlertModal>
+      </DeprecatedAlertModal>
       <div className="flex justify-end">
         <Button
           onClick={() => setOpen(true)}

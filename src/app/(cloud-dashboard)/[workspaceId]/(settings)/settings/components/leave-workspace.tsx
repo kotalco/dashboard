@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
 
 import { Button } from "@/components/ui/button";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
 import { client } from "@/lib/client-instance";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -47,7 +47,7 @@ export const LeaveWorkspace: React.FC<LeaveWorkspaceProps> = ({
 
   return (
     <>
-      <AlertModal
+      <DeprecatedAlertModal
         title="Leave Workspace"
         description="Are you sure you want to leave this workspace? You might not be able to join this workspace again if not invited"
         isOpen={open}
@@ -60,7 +60,7 @@ export const LeaveWorkspace: React.FC<LeaveWorkspaceProps> = ({
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-      </AlertModal>
+      </DeprecatedAlertModal>
 
       <div className="flex justify-between gap-x-4">
         <p>

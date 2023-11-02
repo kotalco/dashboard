@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { isAxiosError } from "axios";
 
 import { Button } from "@/components/ui/button";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
 import { client } from "@/lib/client-instance";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Workspace } from "@/types";
@@ -53,7 +53,7 @@ export const DeleteWorkspace: React.FC<DeleteWorkspaceProps> = ({
 
   return (
     <>
-      <AlertModal
+      <DeprecatedAlertModal
         title="Delete Workspace"
         description="Are you sure you want to delete your workspace? all of your deployments will be permenantly removed from our servers forever. This action can't be undone"
         isOpen={open}
@@ -66,7 +66,7 @@ export const DeleteWorkspace: React.FC<DeleteWorkspaceProps> = ({
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-      </AlertModal>
+      </DeprecatedAlertModal>
 
       <Separator />
       <div className="flex justify-between gap-x-4">

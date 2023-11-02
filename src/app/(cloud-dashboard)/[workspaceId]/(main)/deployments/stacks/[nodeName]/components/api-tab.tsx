@@ -22,7 +22,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { AlertModal } from "@/components/modals/deprecated-alert-modal";
 
 interface APITabProps {
   node: StacksNode;
