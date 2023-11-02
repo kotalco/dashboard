@@ -20,6 +20,7 @@ const CancelPlan = () => {
         isOpen={open}
         onClose={() => setOpen(false)}
         // onConfirm={handleCancelSubscription}
+        onConfirm={() => {}}
       />
     </>
   );

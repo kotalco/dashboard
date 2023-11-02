@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 interface AlertModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm?: () => void;
+  onConfirm: () => void;
   loading?: boolean;
   title: string;
   description: string;
-  children?: React.ReactNode;
 }
 
 export const AlertModal: React.FC<AlertModalProps> = ({
@@ -20,7 +19,6 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   loading,
   title,
   description,
-  children,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -37,7 +35,6 @@ export const AlertModal: React.FC<AlertModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
     >
-      {children}
       <div className="flex items-center w-full pt-6 space-x-2">
         <Button
           data-testid="cancel-button"
@@ -48,16 +45,14 @@ export const AlertModal: React.FC<AlertModalProps> = ({
           Cancel
         </Button>
 
-        {onConfirm && (
-          <Button
-            data-testid="confirm-button"
-            disabled={loading}
-            variant="destructive"
-            onClick={onConfirm}
-          >
-            Continue
-          </Button>
-        )}
+        <Button
+          data-testid="confirm-button"
+          disabled={loading}
+          variant="destructive"
+          onClick={onConfirm}
+        >
+          Continue
+        </Button>
       </div>
     </Modal>
   );
