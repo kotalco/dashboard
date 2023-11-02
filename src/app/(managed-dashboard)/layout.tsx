@@ -9,11 +9,11 @@ export default async function PrivatePageLayout({
 }) {
   const { user } = await findUser();
 
-  // Make sure user is a customer
-  if (!user?.is_customer) notFound();
-
   // No user and no auth token or invalid token
   if (!user) redirect("/sign-in");
+
+  // Make sure user is a customer
+  if (!user?.is_customer) notFound();
 
   return <>{children}</>;
 }

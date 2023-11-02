@@ -15,12 +15,12 @@ import { getUpcomingInvoice } from "@/services/get-upcoming-payment";
 import ChangePlan from "./change-plan";
 import CancelPlan from "./cancel-plan";
 
-const ManagePlanCard = async () => {
+export const ManagePlanCard = async () => {
   const { subscription } = await getCurrentSubscription();
   const { invoice } = await getUpcomingInvoice(subscription.id);
   const remainingDays = calculateRemainingDays(subscription.end_date);
-  console.log("Subscription", subscription);
-  console.log("Invoice", invoice);
+  // console.log("Subscription", subscription);
+  // console.log("Invoice", invoice);
 
   return (
     <Card>
@@ -109,4 +109,3 @@ const ManagePlanCard = async () => {
     </Card>
   );
 };
-export default ManagePlanCard;
