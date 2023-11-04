@@ -3,7 +3,7 @@ import {
   ExecutionClientClients,
   NodeStatuses,
 } from "@/enums";
-import { Clients } from "@/types";
+import { Clients, Plan } from "@/types";
 import { AxiosResponse } from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -125,3 +125,8 @@ export function formatCurrency(valueInCents: number): string {
     currency: "USD",
   }).format(valueInCents / 100);
 }
+
+export const findPrice = (plan: Plan) =>
+  plan.prices.find(({ period }) => period === "monthly");
+
+export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));

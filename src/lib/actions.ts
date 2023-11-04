@@ -1,7 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { server } from "./server-instance";
+import { server } from "@/lib/server-instance";
+import { Proration, ProrationFormState } from "@/types";
 
 export const prepareInvoicePayment = async (payment_intent_id: string) => {
   try {
@@ -46,4 +47,41 @@ export const reactivatePlan = async (subscription_id: string) => {
   } catch (e) {
     return { message: "Something went wrong. Please try again." };
   }
+};
+
+export const getProration = async (subscription_id: string, value: string) => {
+  const [, price_id, price] = value.split(",");
+
+  try {
+    const { data } = await server.post<Proration>("/subscriptions/prorations", {
+      subscription_id,
+      price_id,
+      provider: "stripe",
+    });
+
+    return {
+      proration: data,
+      price,
+    };
+  } catch (e) {
+    return {
+      message: "Something went wrong. Please try again.",
+    };
+  }
+};
+
+export const updatePlan = async (
+  subscription_id: string,
+  _: { message: string | null },
+  formData: FormData
+) => {
+  const plan = formData.get("plan");
+  if (typeof plan === "string") {
+    const [plan_id, price_id] = plan?.split(",");
+    console.log("Subscription ID: ", subscription_id);
+    console.log("Plan ID: ", plan_id);
+    console.log("Price ID: ", price_id);
+  }
+
+  return { message: "Something went wrong. Please try again." };
 };

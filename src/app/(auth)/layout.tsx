@@ -24,6 +24,8 @@ export default async function PublicPageLayout({
   // No user and no auth token or invalid token
   if (!user) return <>{children}</>;
 
+  if (user && user.is_customer) redirect("/virtual-endpoints");
+
   const workspaceId = cookies().get(StorageItems.LAST_WORKSPACE_ID);
   if (workspaceId?.value) redirect(`/${workspaceId.value}`);
 

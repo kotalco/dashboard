@@ -354,7 +354,7 @@ export interface Invoice {
   currency: "usd";
   start_date: number;
   end_date: number;
-  period: "monthly" | "yearly";
+  period: "monthly";
   created_at: number;
   status: InvoiceStatus;
   description: string;
@@ -367,7 +367,7 @@ export interface Invoice {
 
 export interface PlanPrice {
   id: string;
-  period: "monthly" | "yearly";
+  period: "monthly";
   price: number;
   currency: "usd";
   default: boolean;
@@ -394,4 +394,57 @@ export interface Subscription {
   default_payment_method_id: string;
   request_limit: number;
   invoice: Invoice & { plan: Omit<Plan, "prices">; price: PlanPrice };
+}
+
+export interface Plan {
+  id: string;
+  name: string;
+  description: string;
+  features: string[];
+  prices: PlanPrice[];
+  request_limit: number;
+  endpoint_limit: number;
+}
+
+export interface Proration {
+  credit_balance: number;
+  total: number;
+  amount_due: number;
+  currency: "usd";
+  items: {
+    amount: number;
+    description: string;
+    currency: "usd";
+  }[];
+}
+
+export interface ProrationFormState {
+  message: string | null;
+  proration: Proration | null;
+  price: string | null;
+  metadata: {
+    subscription_id: string;
+    plan_id: string;
+    price_id: string;
+  } | null;
+}
+
+export interface PaymentCard {
+  id: string;
+  provider: "stripe";
+  provider_id: string;
+  brand:
+    | "visa"
+    | "amex"
+    | "diners"
+    | "discover"
+    | "jcb"
+    | "mastercard"
+    | "unionppay"
+    | "unknown";
+  country: string;
+  exp_month: number;
+  exp_year: number;
+  last4: string;
+  default: boolean;
 }

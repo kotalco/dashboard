@@ -5,13 +5,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 export interface ModalProps {
   title: string;
-  description: string;
+  description?: string;
   isOpen: boolean;
   onClose: () => void;
   children?: React.ReactNode;
+  size?: "md" | "lg" | "xl";
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -19,6 +21,7 @@ export const Modal: React.FC<ModalProps> = ({
   description,
   isOpen,
   onClose,
+  size = "md",
   children,
 }) => {
   const onChange = (open: boolean) => {
@@ -27,10 +30,16 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onChange}>
-      <DialogContent>
+      <DialogContent
+        className={cn({
+          "max-w-lg": size === "md",
+          "max-w-3xl": size === "lg",
+          "max-w-7xl": size === "xl",
+        })}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+          {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
         <div className="relative">{children}</div>
