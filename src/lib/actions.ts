@@ -85,3 +85,24 @@ export const updatePlan = async (
 
   return { message: "Something went wrong. Please try again." };
 };
+
+export const createSetupIntent = async (_: {
+  message: null | string;
+  si_secret: null | string;
+}) => {
+  try {
+    const { data } = await server.post<{ si_secret: string }>(
+      "/payment-methods/setup-intent",
+      {
+        provider: "stripe",
+      }
+    );
+
+    return { si_secret: data.si_secret, message: null };
+  } catch (e) {
+    return {
+      si_secret: null,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+};
