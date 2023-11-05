@@ -61,7 +61,7 @@ export default async function BeaconNodePage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.ethereum2}
+                protocol={Protocol.Ethereum2}
                 token={token.value}
                 workspaceId={workspaceId}
                 component="validators"
@@ -79,9 +79,10 @@ export default async function BeaconNodePage({
             {token && (
               <NodeMetrics
                 nodeName={node.name}
-                protocol={Protocol.ethereum}
+                protocol={Protocol.Ethereum2}
                 token={token.value}
                 workspaceId={workspaceId}
+                component="validators"
               />
             )}
           </div>

@@ -73,9 +73,9 @@ export const CellAction: React.FC<CellRoleProps> = ({ data }) => {
         <Button
           onClick={() => setOpen(true)}
           disabled={loading}
-          variant="outline"
+          variant="ghost"
           size="icon"
-          className="border-destructive"
+          className="border-destructive h-7 w-7"
         >
           <Trash2 className="w-4 h-4 text-destructive" />
         </Button>

@@ -70,7 +70,7 @@ export default async function BeaconNodePage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.ipfs}
+                protocol={Protocol.IPFS}
                 token={token.value}
                 workspaceId={workspaceId}
                 component="clusterpeers"
@@ -88,9 +88,10 @@ export default async function BeaconNodePage({
             {token && (
               <NodeMetrics
                 nodeName={node.name}
-                protocol={Protocol.ethereum}
+                protocol={Protocol.IPFS}
                 token={token.value}
                 workspaceId={workspaceId}
+                component="clusterpeers"
               />
             )}
           </div>

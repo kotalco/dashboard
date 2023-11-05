@@ -52,7 +52,7 @@ export default async function BitcoinPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.bitcoin}
+                protocol={Protocol.Bitcoin}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -75,7 +75,7 @@ export default async function BitcoinPage({
                 />
                 <NodeMetrics
                   nodeName={node.name}
-                  protocol={Protocol.bitcoin}
+                  protocol={Protocol.Bitcoin}
                   token={token.value}
                   workspaceId={workspaceId}
                 />

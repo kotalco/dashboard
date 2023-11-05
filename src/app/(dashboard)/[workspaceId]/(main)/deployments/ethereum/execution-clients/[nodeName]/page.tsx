@@ -65,7 +65,7 @@ export default async function ExecutionClientPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.ethereum}
+                protocol={Protocol.Ethereum}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -88,7 +88,7 @@ export default async function ExecutionClientPage({
                 />
                 <NodeMetrics
                   nodeName={node.name}
-                  protocol={Protocol.ethereum}
+                  protocol={Protocol.Ethereum}
                   token={token.value}
                   workspaceId={workspaceId}
                 />

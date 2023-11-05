@@ -7,7 +7,7 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { BitcoinNode, PolkadotNode, StacksNode } from "@/types";
+import { BitcoinNode, StacksNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
@@ -58,7 +58,7 @@ export default async function StacksNodePage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.stacks}
+                protocol={Protocol.Stacks}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -75,7 +75,7 @@ export default async function StacksNodePage({
             {token && (
               <NodeMetrics
                 nodeName={node.name}
-                protocol={Protocol.bitcoin}
+                protocol={Protocol.Stacks}
                 token={token.value}
                 workspaceId={workspaceId}
               />

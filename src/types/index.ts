@@ -12,6 +12,7 @@ import {
   PolkadotLogging,
   PolkadotNetworks,
   PolkadotSyncModes,
+  Protocol,
   ValidatorClients,
 } from "@/enums";
 
@@ -265,6 +266,23 @@ export interface StacksNode extends ClientImage, ResourcesInfo {
   createdAt: string;
   p2pPort: number;
   rpcPort: number;
+}
+
+export interface Endpoint {
+  name: string;
+  protocol: Protocol;
+  routes: {
+    name: string;
+    route: string;
+    example: string;
+    references: string[];
+  }[];
+  created_at: string;
+}
+
+export interface Service {
+  name: string;
+  protocol: Protocol;
 }
 
 export interface StatsError {

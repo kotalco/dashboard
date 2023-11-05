@@ -65,7 +65,7 @@ export default async function ChainlinkPage({
             {token && (
               <NodeStatus
                 nodeName={node.name}
-                protocol={Protocol.chainlink}
+                protocol={Protocol.Chainlink}
                 token={token.value}
                 workspaceId={workspaceId}
               />
@@ -82,7 +82,7 @@ export default async function ChainlinkPage({
             {token && (
               <NodeMetrics
                 nodeName={node.name}
-                protocol={Protocol.chainlink}
+                protocol={Protocol.Chainlink}
                 token={token.value}
                 workspaceId={workspaceId}
               />
