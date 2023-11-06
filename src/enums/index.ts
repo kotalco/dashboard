@@ -65,6 +65,7 @@ export enum Protocol {
   Stacks = "stacks",
 }
 
+
 export enum ProtocolsWithoutEthereum2 {
   APTOS = "aptos",
   BITCOIN = "bitcoin",
