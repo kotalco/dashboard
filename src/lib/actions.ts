@@ -127,7 +127,7 @@ export const deletePaymentCard = async (id: string) => {
     url: `/payment-methods/${id}`,
     query: { provider: "stripe" },
   });
-  console.log(qUrl);
+
   try {
     await server.delete(qUrl);
     revalidatePath("/billing/payment-methods");

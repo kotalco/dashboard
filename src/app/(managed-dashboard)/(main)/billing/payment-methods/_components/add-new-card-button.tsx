@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,6 @@ export const AddNewCardButton = () => {
   const [message, setMessage] = useState<string>();
   const stripe = useStripe();
   const elements = useElements();
-  const router = useRouter();
 
   const addNewPaymentMethod = async () => {
     if (!stripe || !elements) {
@@ -27,10 +25,10 @@ export const AddNewCardButton = () => {
         return_url: `${process.env["NEXT_PUBLIC_RETURN_URL_ROOT"]}/payments`,
       },
     });
-    console.log("setupIntent", setupIntent);
+
     if (setupIntent) {
       await delay(300);
-      router.refresh();
+      window.location.reload();
     }
 
     if (error) {
@@ -43,7 +41,7 @@ export const AddNewCardButton = () => {
     <>
       {message && (
         <Alert variant="destructive" className="text-center">
-          message
+          {message}
         </Alert>
       )}
       <Button disabled={isLoading} onClick={addNewPaymentMethod}>
