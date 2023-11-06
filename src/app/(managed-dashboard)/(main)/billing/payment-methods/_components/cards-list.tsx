@@ -2,6 +2,8 @@ import Image from "next/image";
 
 import { PaymentCard } from "@/types";
 import { Badge } from "@/components/ui/badge";
+import { SetDefaultCard } from "./set-default-card";
+import { DeleteCard } from "./delete-card";
 
 export const paymentBrands = {
   visa: "/images/visa.svg",
@@ -27,15 +29,20 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
             key={id}
             className="col-span-12 p-5 transition-all bg-white border shadow border-secondary space-y-7 lg:col-span-6 hover:border-primary 2xl:col-span-3 xl:col-span-4 rounded-xl"
           >
-            <div className="flex items-start justify-between">
-              <Image
-                alt={brand}
-                src={paymentBrands[brand]}
-                width={44}
-                height={44}
-              />
-              {defaultCard && <Badge variant="secondary" content="Default" />}
-              {/* {!defaultCard && <CardMenu cardId={id} />} */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Image
+                  alt={brand}
+                  src={paymentBrands[brand]}
+                  width={44}
+                  height={44}
+                />
+                {defaultCard && <Badge variant="outline">Default</Badge>}
+              </div>
+              <div className="flex space-x-2">
+                <SetDefaultCard id={id} isDefault={defaultCard} />
+                <DeleteCard id={id} />
+              </div>
             </div>
 
             <div className="flex justify-between">

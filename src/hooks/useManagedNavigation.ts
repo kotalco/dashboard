@@ -34,12 +34,6 @@ export function useManagedNavigation() {
       Icon: Zap,
     },
     {
-      label: "Invoices",
-      href: `/billing/invoices`,
-      active: pathname.includes("invoices"),
-      Icon: FileText,
-    },
-    {
       label: "Payment Methods",
       href: `/billing/payment-methods`,
       active: pathname.includes("payment-methods"),

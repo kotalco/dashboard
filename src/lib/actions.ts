@@ -1,8 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import qs from "query-string";
+
 import { server } from "@/lib/server-instance";
-import { Proration, ProrationFormState } from "@/types";
+import { Proration } from "@/types";
 
 export const prepareInvoicePayment = async (payment_intent_id: string) => {
   try {
@@ -104,5 +106,33 @@ export const createSetupIntent = async (_: {
       si_secret: null,
       message: "Something went wrong. Please try again.",
     };
+  }
+};
+
+export const setDefaultCard = async (payment_method_id: string) => {
+  try {
+    await server.post("/payment-methods/set-default", {
+      payment_method_id,
+      provider: "stripe",
+    });
+    revalidatePath("/billing/payment-methods");
+    return { message: null };
+  } catch (e) {
+    return { message: "Something went wrong. Please try again." };
+  }
+};
+
+export const deletePaymentCard = async (id: string) => {
+  const qUrl = qs.stringifyUrl({
+    url: `/payment-methods/${id}`,
+    query: { provider: "stripe" },
+  });
+  console.log(qUrl);
+  try {
+    await server.delete(qUrl);
+    revalidatePath("/billing/payment-methods");
+    return { message: null };
+  } catch (e) {
+    return { message: "Something went wrong. Please try again." };
   }
 };
