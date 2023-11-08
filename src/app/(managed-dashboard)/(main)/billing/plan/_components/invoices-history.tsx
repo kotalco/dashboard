@@ -78,25 +78,6 @@ export const InvoicesHistory = async () => {
           </tbody>
         </table>
       </CardContent>
-
-      {/* {clientSecret && (
-        <Elements
-          options={{ clientSecret, appearance: { theme: "stripe" } }}
-          stripe={stripe}
-        >
-          <Modal
-            open={open}
-            onClose={onClose}
-            title="Invoice Payment"
-            withCancelButton={false}
-          >
-            <ProcessInvoicePayment
-              clientSecret={clientSecret}
-              onClose={onClose}
-            />
-          </Modal>
-        </Elements>
-      )} */}
     </Card>
   );
 };

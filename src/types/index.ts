@@ -423,6 +423,11 @@ export interface UpdatePlanStatus {
   status: SubscriptionStatus;
 }
 
+export interface CreditBalance {
+  balance: number;
+  currency: string;
+}
+
 export interface ProrationFormState {
   message: string | null;
   data: {

@@ -6,8 +6,6 @@ import qs from "query-string";
 import { server } from "@/lib/server-instance";
 import { Proration, ProrationFormState, UpdatePlanStatus } from "@/types";
 import { SubscriptionStatus } from "@/enums";
-import { type } from "os";
-import { redirect } from "next/navigation";
 
 export const prepareInvoicePayment = async (payment_intent_id: string) => {
   try {
@@ -19,7 +17,6 @@ export const prepareInvoicePayment = async (payment_intent_id: string) => {
       }
     );
 
-    revalidatePath("/billing/plan");
     return { pi_secret: data.pi_secret, message: null };
   } catch (e) {
     return {

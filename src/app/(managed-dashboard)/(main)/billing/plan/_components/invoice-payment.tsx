@@ -5,6 +5,14 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { prepareInvoicePayment } from "@/lib/actions";
 import { Loader2 } from "lucide-react";
+import { InvoicePaymentForm } from "./invoice-payment-form";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 type PaymentIntentState = {
   pi_secret: null | string;
@@ -21,16 +29,21 @@ export const InvoicePayment: React.FC<{ intentId: string }> = ({
   );
 
   return (
-    <div className="bg-[#F2C94C] px-2 bg-opacity-20 rounded-md inline-block">
-      <form action={dispatch}>
-        <ContinuePaymentButton />
-      </form>
-      {state.message && (
-        <p className="text-red-700" key={state.message}>
-          {state.message}
-        </p>
-      )}
-    </div>
+    <Dialog>
+      <div className="bg-[#F2C94C] px-2 bg-opacity-20 rounded-md inline-block">
+        <DialogTrigger asChild>
+          <form action={dispatch}>
+            <ContinuePaymentButton />
+          </form>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Invoice Payment</DialogTitle>
+          </DialogHeader>
+          <InvoicePaymentForm state={state} />
+        </DialogContent>
+      </div>
+    </Dialog>
   );
 };
 
