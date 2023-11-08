@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import qs from "query-string";
 
 import { server } from "@/lib/server-instance";
-import { Proration } from "@/types";
+import { Proration, ProrationFormState, UpdatePlanStatus } from "@/types";
+import { SubscriptionStatus } from "@/enums";
+import { type } from "os";
+import { redirect } from "next/navigation";
 
 export const prepareInvoicePayment = async (payment_intent_id: string) => {
   try {
@@ -51,8 +54,11 @@ export const reactivatePlan = async (subscription_id: string) => {
   }
 };
 
-export const getProration = async (subscription_id: string, value: string) => {
-  const [, price_id, price] = value.split(",");
+export const getProration = async (
+  subscription_id: string,
+  value: string
+): Promise<ProrationFormState> => {
+  const [plan_id, price_id, price] = value.split(",");
 
   try {
     const { data } = await server.post<Proration>("/subscriptions/prorations", {
@@ -62,30 +68,70 @@ export const getProration = async (subscription_id: string, value: string) => {
     });
 
     return {
-      proration: data,
-      price,
+      message: null,
+      data: {
+        proration: data,
+        price,
+        subscription_id,
+        plan_id,
+        price_id,
+      },
     };
   } catch (e) {
     return {
       message: "Something went wrong. Please try again.",
+      data: null,
     };
   }
 };
 
 export const updatePlan = async (
-  subscription_id: string,
-  _: { message: string | null },
+  data: Exclude<ProrationFormState["data"], null>,
+  _: {
+    message: string | null;
+    data: { clientSecret: string; cardId: string; isLoading?: boolean } | null;
+  },
   formData: FormData
 ) => {
-  const plan = formData.get("plan");
-  if (typeof plan === "string") {
-    const [plan_id, price_id] = plan?.split(",");
-    console.log("Subscription ID: ", subscription_id);
-    console.log("Plan ID: ", plan_id);
-    console.log("Price ID: ", price_id);
-  }
+  const { subscription_id, price_id, plan_id, proration } = data;
+  try {
+    const cardId = formData.get("cardId");
+    if (!cardId && proration.amount_due) {
+      return {
+        message: "Please select a payment method.",
+        data: null,
+      };
+    }
 
-  return { message: "Something went wrong. Please try again." };
+    const { data } = await server.post<UpdatePlanStatus>(
+      "/subscriptions/change",
+      {
+        subscription_id,
+        price_id,
+        plan_id,
+        provider: "stripe",
+      }
+    );
+    if (!proration.amount_due || data.status === SubscriptionStatus.Trial) {
+      revalidatePath("/billing/plan");
+      return {
+        message: null,
+        data: { clientSecret: "", cardId: "", isLoading: true },
+      };
+    }
+
+    if (typeof cardId === "string" && proration.amount_due) {
+      return {
+        message: null,
+        data: { clientSecret: data.client_secret, cardId, isLoading: true },
+      };
+    }
+
+    return { message: "Something went wrong. Please try again.", data: null };
+  } catch (e) {
+    console.log(e);
+    return { message: "Something went wrong. Please try again.", data: null };
+  }
 };
 
 export const createSetupIntent = async (_: {

@@ -12,7 +12,7 @@ import { CardsList } from "./_components/cards-list";
 import { AddPaymentCard } from "./_components/add-payment-card";
 
 export default async function PaymentMethodsPage() {
-  const { cards, defaultCard } = await getPaymentMethods();
+  const { cards } = await getPaymentMethods();
 
   return (
     <div className="flex-col">

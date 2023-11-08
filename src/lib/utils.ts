@@ -130,3 +130,14 @@ export const findPrice = (plan: Plan) =>
   plan.prices.find(({ period }) => period === "monthly");
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+export const dispatchLocalStorageUpdate = (
+  key: string,
+  value: string | null
+) => {
+  window.dispatchEvent(
+    new CustomEvent("local-storage", {
+      detail: { key, value },
+    })
+  );
+};

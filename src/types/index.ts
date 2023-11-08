@@ -418,11 +418,16 @@ export interface Proration {
   }[];
 }
 
+export interface UpdatePlanStatus {
+  client_secret: string;
+  status: SubscriptionStatus;
+}
+
 export interface ProrationFormState {
   message: string | null;
-  proration: Proration | null;
-  price: string | null;
-  metadata: {
+  data: {
+    proration: Proration;
+    price: string;
     subscription_id: string;
     plan_id: string;
     price_id: string;
