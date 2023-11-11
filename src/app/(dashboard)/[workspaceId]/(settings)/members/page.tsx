@@ -20,11 +20,13 @@ export default async function MembersPage({
   const teamMembersData = getTeamMembers(params.workspaceId);
   const userData = findUser();
 
-  const [workspace, teamMembers, user] = await Promise.all([
+  const [workspace, teamMembers, { user }] = await Promise.all([
     workspaceData,
     teamMembersData,
     userData,
   ]);
+
+  if (!user) return null;
 
   const formattedTeamMembers: TeamMemberColumn[] = teamMembers.map(
     ({ id, email, role }) => ({

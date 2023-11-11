@@ -1,7 +1,5 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { StorageItems } from "@/enums";
 import { findUser } from "@/services/find-user";
 
 export default async function PrivatePageLayout({
@@ -9,14 +7,17 @@ export default async function PrivatePageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const token = cookies().get(StorageItems.AUTH_TOKEN);
-  if (!token?.value) redirect("/sign-in");
+  const { user, error } = await findUser();
 
-  try {
-    await findUser();
-  } catch (error) {
-    redirect("/sign-in");
-  }
+  // No user and Invalid Subscription
+  if (!user && error?.response?.data.name === "INVALID_SUBSCRIPTION")
+    redirect("/");
+
+  // No user and Subscription Conflict
+  if (!user && error?.response?.data.name === "Conflict") redirect("/");
+
+  // No user and no auth token or invalid token
+  if (!user) redirect("/sign-in");
 
   return <>{children}</>;
 }

@@ -13,6 +13,7 @@ import {
   PolkadotNetworks,
   PolkadotSyncModes,
   Protocol,
+  SubscriptionStatus,
   ValidatorClients,
 } from "@/enums";
 
@@ -283,6 +284,14 @@ export interface Endpoint {
 export interface Service {
   name: string;
   protocol: Protocol;
+}
+
+export interface Subscription {
+  status: SubscriptionStatus;
+  name: string;
+  start_date: number;
+  end_date: number;
+  canceled_at?: number;
 }
 
 export interface StatsError {

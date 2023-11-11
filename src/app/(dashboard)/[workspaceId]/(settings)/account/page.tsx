@@ -9,7 +9,9 @@ import { findUser } from "@/services/find-user";
 import { ChangeEmailForm } from "./components/change-email-form";
 
 export default async function AccountPage() {
-  const user = await findUser();
+  const { user } = await findUser();
+
+  if (!user) return null;
 
   return (
     <Card className="max-w-3xl mx-auto">

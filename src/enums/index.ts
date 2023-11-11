@@ -65,6 +65,19 @@ export enum Protocol {
   Stacks = "stacks",
 }
 
+
+export enum ProtocolsWithoutEthereum2 {
+  APTOS = "aptos",
+  BITCOIN = "bitcoin",
+  CHAINLINK = "chainlink",
+  ETHEREUM = "ethereum",
+  FILECOIN = "filecoin",
+  IPFS = "ipfs",
+  NEAR = "near",
+  POLKADOT = "polkadot",
+  STACKS = "stacks",
+}
+
 export enum IPFSConfigProfile {
   server = "server",
   randomports = "randomports",
@@ -218,4 +231,13 @@ export enum PolkadotLogging {
   Info = "info",
   Debug = "debug",
   Trace = "trace",
+}
+
+export enum SubscriptionStatus {
+  Active = "active",
+  Cancelled = "cancelled",
+  "Past Due" = "past_due",
+  Incomplete = "incomplete",
+  "Incomplete Expired" = "incomplete_expired",
+  Unpaid = "unpaid",
 }

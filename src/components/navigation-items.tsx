@@ -18,12 +18,12 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
   return (
     <>
       {items.map(
-        ({ title, label, href, active, Icon, prefetch, items }, index) =>
+        ({ title, label, href, active, Icon, prefetch, items, count }, index) =>
           href ? (
             <li key={index}>
               {title && (
                 <div className="mt-3 mb-1 text-xs font-normal text-gray-500">
-                  Account
+                  {title}
                 </div>
               )}
               <Button
@@ -38,6 +38,11 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
                 <Link href={href} prefetch={prefetch}>
                   <Icon className={cn(`w-6 h-6`, label ? "mr-3" : "")} />
                   {label}
+                  {!!count && (
+                    <span className="flex ml-auto items-center justify-center w-6 h-6 rounded-full bg-foreground/10 text-primary">
+                      {count}
+                    </span>
+                  )}
                 </Link>
               </Button>
             </li>
@@ -66,7 +71,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
                   open ? "max-h-full" : "max-h-0"
                 )}
               >
-                {items?.map(({ label, href, active }) => (
+                {items?.map(({ label, href, active, count }) => (
                   <li key={label}>
                     <Button
                       asChild
@@ -76,7 +81,14 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
                         active ? "text-primary hover:text-primary" : ""
                       )}
                     >
-                      <Link href={href}>{label}</Link>
+                      <Link href={href}>
+                        {label}
+                        {!!count && (
+                          <span className="flex items-center justify-center w-6 h-6 ml-auto rounded-full bg-foreground/10 text-primary">
+                            {count}
+                          </span>
+                        )}
+                      </Link>
                     </Button>
                   </li>
                 ))}

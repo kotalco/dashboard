@@ -4,6 +4,7 @@ export type NavItem = {
   label: string;
   href: string;
   active: boolean;
+  count?: number;
 };
 
 export type SidebarNavItem = {
@@ -11,6 +12,7 @@ export type SidebarNavItem = {
   label?: string;
   active?: boolean;
   prefetch?: boolean;
+  count?: number;
   Icon: LucideIcon;
 } & (
   | {
