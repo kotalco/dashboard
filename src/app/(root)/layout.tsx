@@ -11,7 +11,6 @@ export default async function SetupLayout({
   children: React.ReactNode;
 }) {
   const { user, error } = await findUser();
-
   // No user and Invalid Subscription
   if (!user && error?.response?.data.name === "INVALID_SUBSCRIPTION")
     return <>{children}</>;

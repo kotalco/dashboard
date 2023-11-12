@@ -126,7 +126,6 @@ export const updatePlan = async (
 
     return { message: "Something went wrong. Please try again.", data: null };
   } catch (e) {
-    console.log(e);
     return { message: "Something went wrong. Please try again.", data: null };
   }
 };

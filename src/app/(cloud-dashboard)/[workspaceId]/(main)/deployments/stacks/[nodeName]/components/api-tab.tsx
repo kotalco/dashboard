@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { client } from "@/lib/client-instance";
-import { PolkadotNode, StacksNode } from "@/types";
+import { StacksNode } from "@/types";
 import { Roles } from "@/enums";
 import {
   Form,
@@ -14,15 +14,11 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { AlertModal } from "@/components/modals/deprecated-alert-modal";
 
 interface APITabProps {
   node: StacksNode;
@@ -30,7 +26,6 @@ interface APITabProps {
 }
 
 export const APITab: React.FC<APITabProps> = ({ node, role }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const { rpc } = node;
 
   const schema = z.object({

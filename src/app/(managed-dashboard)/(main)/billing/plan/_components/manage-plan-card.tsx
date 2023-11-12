@@ -28,7 +28,7 @@ export const ManagePlanCard = async () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{subscription.invoice.plan.name} Plan</CardTitle>
+        <CardTitle>{subscription.plan.name} Plan</CardTitle>
       </CardHeader>
       <CardContent>
         <PlanDetails />

@@ -21,9 +21,9 @@ export const PlanSelection: React.FC<PlanSelectionProps> = ({
   plans,
 }) => {
   const [isPending, startTransition] = useTransition();
-  const currentPlanId = currentSubscription.invoice.plan.id;
-  const currentPriceId = currentSubscription.invoice.price.id;
-  const currentPrice = currentSubscription.invoice.price.price;
+  const currentPlanId = currentSubscription.plan.id;
+  const currentPriceId = currentSubscription.price.id;
+  const currentPrice = currentSubscription.price.price;
   const subscriptionId = currentSubscription.id;
 
   const handlePlanChange = async (value: string) => {

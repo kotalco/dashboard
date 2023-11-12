@@ -385,15 +385,13 @@ export interface Plan {
 export interface Subscription {
   id: string;
   status: SubscriptionStatus;
-  name?: string;
   start_date: number;
   end_date: number;
   canceled_at?: number;
-  trial_start_at?: number;
-  trial_end_at?: number;
-  default_payment_method_id: string;
+  plan: Omit<Plan, "prices">;
+  price: PlanPrice;
   request_limit: number;
-  invoice: Invoice & { plan: Omit<Plan, "prices">; price: PlanPrice };
+  endpoint_limit: number;
 }
 
 export interface Plan {
