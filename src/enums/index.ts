@@ -4,6 +4,7 @@ export enum StorageItems {
   AUTH_TOKEN = "AUTH_TOKEN",
   LAST_WORKSPACE_ID = "LAST_WORKSPACE_ID",
   CHANGE_PLAN_DATA = "CHANGE_PLAN_DATA",
+  INVOICE_DATA = "INVOICE_DATA",
 }
 
 export enum Roles {

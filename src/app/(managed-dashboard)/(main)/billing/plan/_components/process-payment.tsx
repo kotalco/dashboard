@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 
@@ -9,6 +10,7 @@ interface ProcessPaymentProps {
 
 export const ProcessPayment: React.FC<ProcessPaymentProps> = ({ data }) => {
   const [message, setMessage] = useState<string>();
+  const router = useRouter();
   const stripe = useStripe();
   const elements = useElements();
   const { clientSecret, cardId } = data;
@@ -29,6 +31,7 @@ export const ProcessPayment: React.FC<ProcessPaymentProps> = ({ data }) => {
 
       if (error) {
         setMessage(error.message);
+        router.refresh();
         return;
       }
 
