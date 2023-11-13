@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
-import { useElements, useStripe } from "@stripe/react-stripe-js";
-import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
 import { Alert } from "@/components/ui/alert";
+import {
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 import { Loader2 } from "lucide-react";
 
-interface PayWithSavedCardProps {
+import { Button } from "@/components/ui/button";
+import { formatCurrency } from "@/lib/utils";
+
+interface PayWithNewCardProps {
   clientSecret: string;
-  cardId: string | null;
 }
 
-export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
+export const PayWithNewCard: React.FC<PayWithNewCardProps> = ({
   clientSecret,
-  cardId,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState<number>();
   const stripe = useStripe();
   const elements = useElements();
@@ -45,12 +48,14 @@ export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
   }, [clientSecret, elements, stripe]);
 
   const payInvoice = async () => {
-    if (!stripe || !cardId) return;
+    if (!stripe || !elements) return;
 
     setIsLoading(true);
-    const { error } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: cardId,
-      return_url: `${process.env["NEXT_PUBLIC_RETURN_URL_ROOT"]}/billing/plan`,
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${process.env["NEXT_PUBLIC_RETURN_URL_ROOT"]}/billing/plan`,
+      },
     });
 
     if (error) {
@@ -66,11 +71,14 @@ export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
 
   return (
     <>
+      <PaymentElement />
       {errorMessage && <Alert variant="destructive">{errorMessage}</Alert>}
-      <Button className="w-full" disabled={isLoading} onClick={payInvoice}>
-        {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Pay{" "}
-        {formatCurrency(amount)}
-      </Button>
+      <div className="mt-5">
+        <Button className="w-full" disabled={isLoading} onClick={payInvoice}>
+          {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Pay{" "}
+          {formatCurrency(amount)}
+        </Button>
+      </div>
     </>
   );
 };

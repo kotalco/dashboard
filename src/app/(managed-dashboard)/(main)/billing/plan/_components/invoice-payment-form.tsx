@@ -1,17 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { useFormState } from "react-dom";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { Loader2 } from "lucide-react";
 
 import { Alert } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { StorageItems } from "@/enums";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PayWithSavedCard } from "./pay-with-saved-card";
+import { Button } from "@/components/ui/button";
+import { CreditCard } from "lucide-react";
+import { PayWithNewCard } from "./pay-with-new-card";
 
 interface InvoicePaymentFormProps {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 export const InvoicePaymentForm: React.FC<InvoicePaymentFormProps> = ({
   children,
 }) => {
+  const [showCards, setShowCards] = useState(true);
   const intentState = useLocalStorage<PaymentIntentState>(
     StorageItems.INVOICE_DATA
   );
@@ -68,11 +70,28 @@ export const InvoicePaymentForm: React.FC<InvoicePaymentFormProps> = ({
         stripe={stripe}
       >
         <form action={dispatch} className="space-y-2">
-          {children}
+          {showCards && children}
           {state.message && (
             <Alert variant="destructive">{state.message}</Alert>
           )}
-          <PayWithSavedCard clientSecret={pi_secret} cardId={state.cardId} />
+          {showCards && (
+            <>
+              <Button
+                onClick={() => setShowCards(false)}
+                variant="link"
+                className="w-full"
+              >
+                <CreditCard className="w-6 h-6 mr-2" />
+                <span>Use Another Payment Card</span>
+              </Button>
+              <PayWithSavedCard
+                clientSecret={pi_secret}
+                cardId={state.cardId}
+              />
+            </>
+          )}
+
+          {!showCards && <PayWithNewCard clientSecret={pi_secret} />}
         </form>
       </Elements>
     );
