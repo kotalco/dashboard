@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -15,6 +16,8 @@ import { ReactivatePlan } from "./reactivate-plan";
 import { PlanDetails } from "./plan-details";
 import { UserCreditBalance } from "./user-credit-balance";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn, getEnumKey } from "@/lib/utils";
+import { SubscriptionStatus } from "@/enums";
 
 export const ManagePlanCard = async () => {
   const supscriptionPromise = getCurrentSubscription();
@@ -28,7 +31,19 @@ export const ManagePlanCard = async () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{subscription.plan.name} Plan</CardTitle>
+        <CardTitle>
+          {subscription.plan.name} Plan{" "}
+          <span
+            className={cn("text-sm font-semibold tracking-wider", {
+              "text-green-600":
+                subscription.status === SubscriptionStatus.Active,
+              "text-destructive":
+                subscription.status !== SubscriptionStatus.Active,
+            })}
+          >
+            {getEnumKey(SubscriptionStatus, subscription.status)}
+          </span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <PlanDetails />

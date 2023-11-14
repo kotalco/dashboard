@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 
 import { Alert } from "@/components/ui/alert";
+import { delay } from "@/lib/utils";
 
 interface ProcessPaymentProps {
   data: { clientSecret: string; cardId: string };
@@ -10,7 +11,7 @@ interface ProcessPaymentProps {
 
 export const ProcessPayment: React.FC<ProcessPaymentProps> = ({ data }) => {
   const [message, setMessage] = useState<string>();
-  const router = useRouter();
+  const { refresh } = useRouter();
   const stripe = useStripe();
   const elements = useElements();
   const { clientSecret, cardId } = data;
@@ -31,17 +32,18 @@ export const ProcessPayment: React.FC<ProcessPaymentProps> = ({ data }) => {
 
       if (error) {
         setMessage(error.message);
-        router.refresh();
+        refresh();
         return;
       }
 
       if (paymentIntent) {
+        await delay(1000);
         window.location.reload();
       }
     };
 
     processPayment();
-  }, [cardId, clientSecret, elements, stripe]);
+  }, [cardId, clientSecret, elements, refresh, stripe]);
 
   if (message) {
     return (

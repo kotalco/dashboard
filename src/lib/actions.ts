@@ -109,7 +109,7 @@ export const updatePlan = async (
         provider: "stripe",
       }
     );
-    if (!proration.amount_due || data.status === SubscriptionStatus.Trial) {
+    if (!proration.amount_due || data.status === SubscriptionStatus.Active) {
       revalidatePath("/billing/plan");
       return {
         message: null,

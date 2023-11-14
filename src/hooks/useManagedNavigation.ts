@@ -7,7 +7,6 @@ import {
   LogOut,
   User2,
   CreditCard,
-  FileText,
   Zap,
 } from "lucide-react";
 
@@ -22,7 +21,7 @@ export function useManagedNavigation() {
   const managed: SidebarNavItem[] = [
     {
       label: "Endpoints",
-      href: `/endpoints`,
+      href: `/virtual-endpoints`,
       active: pathname.includes("endpoints"),
       Icon: Link,
       count: endpointsCount,

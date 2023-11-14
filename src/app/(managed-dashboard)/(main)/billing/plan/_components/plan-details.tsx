@@ -39,7 +39,9 @@ export const PlanDetails = async () => {
                     ,{` `}
                   </span>
                 )}
-                {format(fromUnixTime(subscription.end_date), "MMMM do, yyyy")}
+                {subscription.end_date
+                  ? format(fromUnixTime(subscription.end_date), "MMMM do, yyyy")
+                  : "-"}
               </div>
             </div>
           </div>
@@ -73,7 +75,9 @@ export const PlanDetails = async () => {
               </span>{" "}
               {formatCurrency(invoice.amount_due)}
               <span className="font-normal opacity-50">, due at</span>{" "}
-              {format(fromUnixTime(subscription.end_date), "MMMM do, yyyy")}
+              {subscription.end_date
+                ? format(fromUnixTime(subscription.end_date), "MMMM do, yyyy")
+                : "-"}
             </p>
           </div>
         )}
