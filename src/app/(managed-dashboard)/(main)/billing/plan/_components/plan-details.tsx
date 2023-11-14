@@ -23,7 +23,7 @@ export const PlanDetails = async () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
+          {/* <div className="flex items-center space-x-3">
             <Calendar className="w-6 h-6 text-foreground" />
 
             <div>
@@ -44,7 +44,7 @@ export const PlanDetails = async () => {
                   : "-"}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* If subscription is canceled */}
@@ -74,7 +74,15 @@ export const PlanDetails = async () => {
                 Next payment amount
               </span>{" "}
               {formatCurrency(invoice.amount_due)}
-              <span className="font-normal opacity-50">, due at</span>{" "}
+              <span className="font-normal opacity-50">, due </span> (
+              {remainingDays && (
+                <span className="font-bold text-foreground">
+                  {remainingDays !== 1
+                    ? `${remainingDays} Days`
+                    : `${remainingDays} Day`}
+                </span>
+              )}
+              )<span className="font-normal opacity-50">, at </span>
               {subscription.end_date
                 ? format(fromUnixTime(subscription.end_date), "MMMM do, yyyy")
                 : "-"}
