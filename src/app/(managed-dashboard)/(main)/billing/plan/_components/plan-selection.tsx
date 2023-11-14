@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getProration } from "@/lib/actions";
 import { StorageItems } from "@/enums";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 interface PlanSelectionProps {
   currentSubscription: Subscription;
@@ -21,6 +22,7 @@ export const PlanSelection: React.FC<PlanSelectionProps> = ({
   plans,
 }) => {
   const [isPending, startTransition] = useTransition();
+  const planData = useLocalStorage(StorageItems.CHANGE_PLAN_DATA);
   const currentPlanId = currentSubscription.plan.id;
   const currentPriceId = currentSubscription.price.id;
   const currentPrice = currentSubscription.price.price;
@@ -65,18 +67,30 @@ export const PlanSelection: React.FC<PlanSelectionProps> = ({
               >
                 {({ checked }) => (
                   <>
-                    {`${currentPlanId},${currentPriceId},${currentPrice}` ===
-                      `${plan.id},${price?.id},${price?.price}` && (
-                      <Badge className="absolute top-3 right-4">
-                        Current Plan
-                      </Badge>
-                    )}
                     <div>
-                      <p className="mb-1 text-xs font-medium leading-3">
-                        {plan.name}
-                      </p>
+                      <div className="flex space-x-5 items-center">
+                        <p className="text-lg font-bold font-nunito">
+                          {plan.name}
+                        </p>
+                        {`${currentPlanId},${currentPriceId},${currentPrice}` ===
+                          `${plan.id},${price?.id},${price?.price}` && (
+                          <Badge className="">Current Plan</Badge>
+                        )}
+                      </div>
+                      <div className="flex gap-x-4 w-full mb-3">
+                        <p className="text-base font-semibold">
+                          {plan.endpoint_limit}{" "}
+                          {plan.endpoint_limit > 1 ? "endpoints" : "endpoint"}
+                        </p>
+                        <p className="text-base font-semibold">
+                          {plan.request_limit}{" "}
+                          {plan.request_limit > 1
+                            ? "requests/sec"
+                            : "request/sec"}
+                        </p>
+                      </div>
 
-                      <p className="mb-1 text-base font-bold leading-9">
+                      <p className="text-sm">
                         $
                         {
                           plan.prices.find(({ period }) => period === "monthly")
@@ -84,18 +98,6 @@ export const PlanSelection: React.FC<PlanSelectionProps> = ({
                         }{" "}
                         / Month
                       </p>
-                      <div className="flex gap-x-4 w-full">
-                        <p className="text-xs font-medium leading-3">
-                          {plan.endpoint_limit}{" "}
-                          {plan.endpoint_limit > 1 ? "endpoints" : "endpoint"}
-                        </p>
-                        <p className="text-xs font-medium leading-3">
-                          {plan.request_limit}{" "}
-                          {plan.request_limit > 1
-                            ? "requests/min"
-                            : "request/min"}
-                        </p>
-                      </div>
                     </div>
                     <div
                       className={cn("inline-block w-4 h-4 rounded-full", {
@@ -133,6 +135,12 @@ export const PlanSelection: React.FC<PlanSelectionProps> = ({
 
             <Skeleton className="w-full h-10 mt-20" />
           </div>
+        </div>
+      )}
+
+      {!planData && !isPending && (
+        <div className="w-7/12 pl-6 flex justify-center items-center border text-xl font-semibold rounded-lg text-accent-foreground">
+          <p>Please select your new plan</p>
         </div>
       )}
     </>
