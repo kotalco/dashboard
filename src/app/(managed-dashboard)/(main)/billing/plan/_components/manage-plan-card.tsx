@@ -43,7 +43,7 @@ export const ManagePlanCard = async () => {
       )}
       <Card>
         <CardHeader>
-          <CardTitle>
+          <CardTitle className="text-3xl">
             {subscription.plan.name} Plan{" "}
             <span
               className={cn("text-sm font-semibold tracking-wider", {

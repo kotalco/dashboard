@@ -1,5 +1,5 @@
 import { format, fromUnixTime } from "date-fns";
-import { Calendar, CreditCard } from "lucide-react";
+import { Calendar, CreditCard, Sparkles } from "lucide-react";
 
 import { getCurrentSubscription } from "@/services/get-current-subscription";
 import { getUpcomingInvoice } from "@/services/get-upcoming-payment";
@@ -12,7 +12,27 @@ export const PlanDetails = async () => {
 
   return (
     <div className="flex items-center space-x-10">
-      <div className="space-y-5">
+      <div className="space-y-3">
+        <div className="flex items-center space-x-3">
+          <Sparkles className="w-6 h-6 text-foreground" />
+          <p className="text-xs font-bold">
+            <span className="font-normal opacity-50">
+              This plan provides you with
+            </span>{" "}
+            <span>
+              {subscription.plan.endpoint_limit}{" "}
+              {subscription.plan.endpoint_limit > 1 ? "endpoints" : "endpoint"}
+            </span>{" "}
+            <span className="font-normal opacity-50">and</span>{" "}
+            <span>
+              {subscription.plan.request_limit}{" "}
+              {subscription.plan.request_limit > 1
+                ? "requests/sec"
+                : "request/sec"}
+            </span>
+          </p>
+        </div>
+
         <div className="flex space-x-5">
           <div className="flex items-center space-x-3">
             <Calendar className="w-6 h-6 text-foreground" />
