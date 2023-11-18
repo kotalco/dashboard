@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useFormState } from "react-dom";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -23,8 +22,6 @@ type PaymentIntentState = {
   message: null | string;
 };
 
-type PayInvoiceState = { message: null | string; cardId: null | string };
-
 const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export const InvoicePaymentForm: React.FC<InvoicePaymentFormProps> = ({
@@ -34,17 +31,6 @@ export const InvoicePaymentForm: React.FC<InvoicePaymentFormProps> = ({
   const intentState = useLocalStorage<PaymentIntentState>(
     StorageItems.INVOICE_DATA
   );
-  const getCardId = async (_: PayInvoiceState, formData: FormData) => {
-    const cardId = formData.get("cardId");
-    if (typeof cardId === "string") {
-      return { cardId, message: null };
-    }
-    return { cardId: null, message: "Please select a card" };
-  };
-  const [state, dispatch] = useFormState(getCardId, {
-    message: null,
-    cardId: null,
-  });
 
   if (!intentState)
     return (
@@ -69,30 +55,24 @@ export const InvoicePaymentForm: React.FC<InvoicePaymentFormProps> = ({
         }}
         stripe={stripe}
       >
-        <form action={dispatch} className="space-y-2">
-          {showCards && children}
-          {state.message && (
-            <Alert variant="destructive">{state.message}</Alert>
-          )}
-          {showCards && (
-            <>
-              <Button
-                onClick={() => setShowCards(false)}
-                variant="link"
-                className="w-full"
-              >
-                <CreditCard className="w-6 h-6 mr-2" />
-                <span>Use Another Payment Card</span>
-              </Button>
-              <PayWithSavedCard
-                clientSecret={pi_secret}
-                cardId={state.cardId}
-              />
-            </>
-          )}
+        {showCards && (
+          <>
+            <PayWithSavedCard clientSecret={pi_secret}>
+              {children}
+            </PayWithSavedCard>
+            <Button
+              onClick={() => setShowCards(false)}
+              type="button"
+              variant="link"
+              className="w-full"
+            >
+              <CreditCard className="w-6 h-6 mr-2" />
+              <span>Use Another Payment Card</span>
+            </Button>
+          </>
+        )}
 
-          {!showCards && <PayWithNewCard clientSecret={pi_secret} />}
-        </form>
+        {!showCards && <PayWithNewCard clientSecret={pi_secret} />}
       </Elements>
     );
   }

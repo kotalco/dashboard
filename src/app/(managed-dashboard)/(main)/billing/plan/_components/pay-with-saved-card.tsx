@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
@@ -7,12 +7,12 @@ import { Loader2 } from "lucide-react";
 
 interface PayWithSavedCardProps {
   clientSecret: string;
-  cardId: string | null;
+  children: React.ReactNode;
 }
 
 export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
   clientSecret,
-  cardId,
+  children,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -44,7 +44,11 @@ export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
     getPaymentAmount();
   }, [clientSecret, elements, stripe]);
 
-  const payInvoice = async () => {
+  const payInvoice = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const cardId = formData.get("cardId") as string;
+
     if (!stripe || !cardId) return;
 
     setIsLoading(true);
@@ -65,12 +69,13 @@ export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
   if (!amount) return null;
 
   return (
-    <>
+    <form onSubmit={payInvoice} className="space-y-2">
+      {children}
       {errorMessage && <Alert variant="destructive">{errorMessage}</Alert>}
-      <Button className="w-full" disabled={isLoading} onClick={payInvoice}>
+      <Button className="w-full" disabled={isLoading}>
         {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Pay{" "}
         {formatCurrency(amount)}
       </Button>
-    </>
+    </form>
   );
 };
