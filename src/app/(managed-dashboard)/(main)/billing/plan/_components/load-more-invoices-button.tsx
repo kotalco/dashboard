@@ -4,7 +4,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 
 import Link from "next/link";
 
-const INVOICES_LIMIT = 5;
+const INVOICES_LIMIT = 3;
 
 export const LoadMoreInvoicesButton = () => {
   const pathname = usePathname();

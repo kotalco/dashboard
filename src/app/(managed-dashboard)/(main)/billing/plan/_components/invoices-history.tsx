@@ -11,7 +11,7 @@ import { DownloadInvoice } from "./download-invoice";
 import { InvoicePayment } from "./invoice-payment";
 import { LoadMoreInvoicesButton } from "./load-more-invoices-button";
 
-const INVOICES_LIMIT = 5;
+const INVOICES_LIMIT = 3;
 
 interface InvoicesHistoryProps {
   limit?: string;
@@ -85,7 +85,7 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
             )}
           </tbody>
         </table>
-        <LoadMoreInvoicesButton />
+        {!(currentLimit > invoices.length) && <LoadMoreInvoicesButton />}
       </CardContent>
     </Card>
   );

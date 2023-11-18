@@ -10,9 +10,9 @@ export const getInvoices = async (limit: number) => {
   noStore();
   const url = qs.stringifyUrl({
     url: `/invoice`,
-    query: { page: 1, limit },
+    query: { page: 0, limit },
   });
-
+  console.log(url);
   const { data } = await server.get<Invoice[]>(url);
   return { invoices: data };
 };
