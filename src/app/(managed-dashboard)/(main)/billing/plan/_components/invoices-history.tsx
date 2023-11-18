@@ -3,24 +3,32 @@ import { Fragment } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format, fromUnixTime } from "date-fns";
 
-import { getCurrentSubscription } from "@/services/get-current-subscription";
 import { getInvoices } from "@/services/get-invoices";
 import { File } from "lucide-react";
 import { InvoiceStatus } from "@/enums";
 import { formatCurrency } from "@/lib/utils";
 import { DownloadInvoice } from "./download-invoice";
 import { InvoicePayment } from "./invoice-payment";
+import { LoadMoreInvoicesButton } from "./load-more-invoices-button";
 
-export const InvoicesHistory = async () => {
-  const { subscription } = await getCurrentSubscription();
-  const { invoices } = await getInvoices(subscription.id);
+const INVOICES_LIMIT = 5;
+
+interface InvoicesHistoryProps {
+  limit?: string;
+}
+
+export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
+  limit,
+}) => {
+  const currentLimit = Number(limit) || INVOICES_LIMIT;
+  const { invoices } = await getInvoices(currentLimit);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Invoices</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="text-center">
         <table className="w-full">
           <tbody>
             {invoices.map(
@@ -77,6 +85,7 @@ export const InvoicesHistory = async () => {
             )}
           </tbody>
         </table>
+        <LoadMoreInvoicesButton />
       </CardContent>
     </Card>
   );

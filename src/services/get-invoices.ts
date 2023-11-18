@@ -1,14 +1,18 @@
 import "server-only";
 
-import { server } from "@/lib/server-instance";
-import { Invoice } from "@/types";
+import qs from "query-string";
 import { unstable_noStore as noStore } from "next/cache";
 
-export const getInvoices = async (subscription_id: string) => {
-  noStore();
-  const { data } = await server.get<Invoice[]>(
-    `/subscriptions/${subscription_id}/invoices`
-  );
+import { server } from "@/lib/server-instance";
+import { Invoice } from "@/types";
 
+export const getInvoices = async (limit: number) => {
+  noStore();
+  const url = qs.stringifyUrl({
+    url: `/invoice`,
+    // query: { page: 1, limit },
+  });
+
+  const { data } = await server.get<Invoice[]>(url);
   return { invoices: data };
 };

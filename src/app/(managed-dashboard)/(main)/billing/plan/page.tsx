@@ -1,11 +1,15 @@
 import { InvoicesHistory } from "./_components/invoices-history";
 import { ManagePlanCard } from "./_components/manage-plan-card";
 
-export default async function PlanPage() {
+export default async function PlanPage({
+  searchParams,
+}: {
+  searchParams: { limit?: string };
+}) {
   return (
     <div className="space-y-8">
       <ManagePlanCard />
-      <InvoicesHistory />
+      <InvoicesHistory limit={searchParams.limit} />
     </div>
   );
 }
