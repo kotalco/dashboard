@@ -12,8 +12,13 @@ import { createSetupIntent } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { AddNewCardForm } from "./add-new-card-form";
 
+type InitialState = {
+  message: null | string;
+  si_secret: null | string;
+};
+
 export const AddPaymentCard = () => {
-  const initialState = { message: null, si_secret: null };
+  const initialState: InitialState = { message: null, si_secret: null };
 
   const [state, dispatch] = useFormState(createSetupIntent, initialState);
 

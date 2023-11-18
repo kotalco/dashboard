@@ -15,11 +15,16 @@ interface UpdatePlanFormProps {
   data: Exclude<ProrationFormState["data"], null>;
 }
 
+type InitialState = {
+  message: string | null;
+  data: { clientSecret: string; cardId: string; isLoading?: boolean } | null;
+};
+
 export const UpdatePlanForm: React.FC<UpdatePlanFormProps> = ({
   children,
   data,
 }) => {
-  const initialState = { message: null, data: null };
+  const initialState: InitialState = { message: null, data: null };
   const [state, dispatch] = useFormState(
     updatePlan.bind(null, data),
     initialState
