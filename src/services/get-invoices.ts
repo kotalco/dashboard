@@ -12,7 +12,7 @@ export const getInvoices = async (limit: number) => {
     url: `/invoice`,
     query: { page: 0, limit },
   });
-  console.log(url);
+
   const { data } = await server.get<Invoice[]>(url);
   return { invoices: data };
 };
