@@ -383,6 +383,7 @@ export interface Plan {
 }
 
 export interface Subscription {
+  name?: string;
   id: string;
   status: SubscriptionStatus;
   start_date: number;
@@ -390,8 +391,8 @@ export interface Subscription {
   canceled_at?: number;
   plan: Omit<Plan, "prices">;
   price: PlanPrice;
-  request_limit: number;
-  endpoint_limit: number;
+  request_limit?: number;
+  endpoint_limit?: number;
 }
 
 export interface Plan {
