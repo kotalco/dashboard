@@ -2,7 +2,9 @@ name: Build-Push dashboard
 
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - managed-dashboard
 
 jobs:
 
