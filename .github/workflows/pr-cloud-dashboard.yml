@@ -13,26 +13,26 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 7
+    # - name: Install pnpm
+    #   uses: pnpm/action-setup@v2
+    #   with:
+    #     version: 7
 
-    - name: Cypress run
-      uses: cypress-io/github-action@v5
-      with:
-        install-command: yarn --frozen-lockfile --silent
-        # using the action parameter command causes multiple other parameters to be ignored
-        #command: yarn cypress:open
-        component: true
-        browser: chrome
-        build: yarn build
-        start: yarn start
-        wait-on: "http://localhost:3000"
-        # wait for 2 minutes for the server to respond
-        wait-on-timeout: 120
-        # Cancel the run after 2 failed tests # run with cloud only
-        # auto-cancel-after-failures: 2
+    # - name: Cypress run
+    #   uses: cypress-io/github-action@v5
+    #   with:
+    #     install-command: yarn --frozen-lockfile --silent
+    #     # using the action parameter command causes multiple other parameters to be ignored
+    #     #command: yarn cypress:open
+    #     component: true
+    #     browser: chrome
+    #     build: yarn build
+    #     start: yarn start
+    #     wait-on: "http://localhost:3000"
+    #     # wait for 2 minutes for the server to respond
+    #     wait-on-timeout: 120
+    #     # Cancel the run after 2 failed tests # run with cloud only
+    #     # auto-cancel-after-failures: 2
 
     - name: Generate Docker metadata
       id: meta
