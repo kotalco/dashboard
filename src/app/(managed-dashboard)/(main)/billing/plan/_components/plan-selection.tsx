@@ -1,16 +1,17 @@
 "use client";
 
 import { Fragment, useTransition } from "react";
-import { RadioGroup } from "@headlessui/react";
 
 import { Plan, Subscription } from "@/types";
-import { cn, dispatchLocalStorageUpdate, findPrice } from "@/lib/utils";
+import { dispatchLocalStorageUpdate, findPrice } from "@/lib/utils";
 
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getProration } from "@/lib/actions";
 import { StorageItems } from "@/enums";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface PlanSelectionProps {
   currentSubscription: Subscription;
@@ -50,66 +51,55 @@ export const PlanSelection: React.FC<PlanSelectionProps> = ({
         <RadioGroup
           name="plan"
           defaultValue={`${currentPlanId},${currentPriceId},${currentPrice}`}
-          onChange={handlePlanChange}
+          onValueChange={handlePlanChange}
           className="space-y-3"
         >
           {plans?.map((plan) => {
             const price = findPrice(plan);
             return (
-              <RadioGroup.Option
-                disabled={
-                  `${currentPlanId},${currentPriceId},${currentPrice}` ===
-                  `${plan.id},${price?.id},${price?.price}`
-                }
-                value={`${plan.id},${price?.id},${price?.price}`}
+              <Label
                 key={plan.id}
-                className={`p-4 relative rounded-lg ui-disabled:pointer-events-none ui-disabled:cursor-default border ui-not-checked:border-gray-200 ui-checked:border-primary flex justify-between items-center cursor-pointer`}
+                className={`p-4 relative rounded-lg border flex justify-between items-center cursor-pointer`}
               >
-                {({ checked }) => (
-                  <>
-                    <div>
-                      <div className="flex space-x-5 items-center">
-                        <p className="text-lg font-bold font-nunito">
-                          {plan.name}
-                        </p>
-                        {`${currentPlanId},${currentPriceId},${currentPrice}` ===
-                          `${plan.id},${price?.id},${price?.price}` && (
-                          <Badge className="">Current Plan</Badge>
-                        )}
-                      </div>
-                      <div className="flex gap-x-4 w-full mb-3">
-                        <p className="text-base font-semibold">
-                          {plan.endpoint_limit}{" "}
-                          {plan.endpoint_limit > 1 ? "endpoints" : "endpoint"}
-                        </p>
-                        <p className="text-base font-semibold">
-                          {plan.request_limit}{" "}
-                          {plan.request_limit > 1
-                            ? "requests/sec"
-                            : "request/sec"}
-                        </p>
-                      </div>
+                <div>
+                  <div className="flex space-x-5 items-center">
+                    <p className="text-lg font-bold font-nunito">{plan.name}</p>
+                    {`${currentPlanId},${currentPriceId},${currentPrice}` ===
+                      `${plan.id},${price?.id},${price?.price}` && (
+                      <Badge className="">Current Plan</Badge>
+                    )}
+                  </div>
+                  <div className="flex gap-x-4 w-full mb-3">
+                    <p className="text-base font-semibold">
+                      {plan.endpoint_limit}{" "}
+                      {plan.endpoint_limit > 1 ? "endpoints" : "endpoint"}
+                    </p>
+                    <p className="text-base font-semibold">
+                      {plan.request_limit}{" "}
+                      {plan.request_limit > 1 ? "requests/sec" : "request/sec"}
+                    </p>
+                  </div>
 
-                      <p className="text-sm">
-                        $
-                        {
-                          plan.prices.find(({ period }) => period === "monthly")
-                            ?.price
-                        }{" "}
-                        / Month
-                      </p>
-                    </div>
-                    <div
-                      className={cn("inline-block w-4 h-4 rounded-full", {
-                        "border-2 border-primary": checked,
-                        "border border-gray-300": !checked,
-                      })}
-                    >
-                      <div className="w-2 h-2 m-auto mt-0.5 rounded-full ui-checked:border-2 ui-checked:border-primary ui-checked:bg-primary" />
-                    </div>
-                  </>
-                )}
-              </RadioGroup.Option>
+                  <p className="text-sm">
+                    $
+                    {
+                      plan.prices.find(({ period }) => period === "monthly")
+                        ?.price
+                    }{" "}
+                    / Month
+                  </p>
+                </div>
+                <div className="inline-block w-4 h-4 rounded-full">
+                  <div className="w-2 h-2 m-auto mt-0.5 rounded-full ui-checked:border-2 ui-checked:border-primary ui-checked:bg-primary" />
+                </div>
+                <RadioGroupItem
+                  disabled={
+                    `${currentPlanId},${currentPriceId},${currentPrice}` ===
+                    `${plan.id},${price?.id},${price?.price}`
+                  }
+                  value={`${plan.id},${price?.id},${price?.price}`}
+                />
+              </Label>
             );
           })}
         </RadioGroup>
