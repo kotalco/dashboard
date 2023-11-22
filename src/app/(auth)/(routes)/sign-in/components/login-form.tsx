@@ -4,7 +4,6 @@ import * as z from "zod";
 import Link from "next/link";
 import axios, { isAxiosError } from "axios";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -45,7 +44,6 @@ const defaultValues = { email: "", password: "", remember_me: false };
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>();
   const [open, setOpen] = useState(false);
-  const router = useRouter();
 
   const form = useForm<SchemaType>({
     resolver: zodResolver(schema),
@@ -69,7 +67,7 @@ export const LoginForm = () => {
           name: StorageItems.AUTH_TOKEN,
           value: token,
         });
-        router.replace("/");
+        window.location.reload();
       } else {
         setOpen(true);
       }
