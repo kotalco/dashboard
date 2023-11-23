@@ -1,11 +1,12 @@
 import "server-only";
 
-import { cache } from "react";
+import { unstable_noStore as noStore } from "next/cache";
 import qs from "query-string";
 
 import { server } from "@/lib/server-instance";
 
-export const getNodes = cache(async <T>(workspace_id: string, url: string) => {
+export const getNodes = async <T>(workspace_id: string, url: string) => {
+  noStore();
   const qUrl = qs.stringifyUrl({
     url,
     query: { workspace_id },
@@ -13,4 +14,4 @@ export const getNodes = cache(async <T>(workspace_id: string, url: string) => {
   const { data, headers } = await server.get<T[]>(qUrl);
 
   return { data, count: +headers["x-total-count"] };
-});
+};
