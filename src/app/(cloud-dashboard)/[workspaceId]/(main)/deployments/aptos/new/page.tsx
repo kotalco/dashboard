@@ -14,14 +14,18 @@ export default async function CreateNewAptosNodePage({
   params: { workspaceId: string };
 }) {
   const { workspaceId } = params;
-  const { role } = await getWorkspace(workspaceId);
-
-  if (role === Roles.Reader) notFound();
-
-  const { component } = await getClientVersions({
+  const workspaceData = getWorkspace(workspaceId);
+  const clientVersionData = getClientVersions({
     protocol: "aptos",
     component: "node",
   });
+
+  const [{ role }, { component }] = await Promise.all([
+    workspaceData,
+    clientVersionData,
+  ]);
+
+  if (role === Roles.Reader) notFound();
 
   return (
     <Card>

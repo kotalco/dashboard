@@ -55,8 +55,8 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
         options={getSelectItems(AptosNetworks)}
       />
 
-      <p className="text-sm">
-        Client:{" "}
+      <p className="text-sm font-medium leading-none space-y-1">
+        <span>Client: </span>
         <ExternalLink href="https://github.com/aptos-labs/aptos-core">
           aptos-core
         </ExternalLink>

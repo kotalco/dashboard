@@ -11,7 +11,7 @@ export const ExternalLink = ({ href, children }: ExternalLinkProps) => {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="text-primary group hover:underline flex underline-offset-4"
+      className="text-primary group font-normal hover:underline flex underline-offset-4"
     >
       {children}
       <ExternalLinkIcon className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 duration-150 transition-all" />
