@@ -4,7 +4,6 @@ import { format, parseISO } from "date-fns";
 
 import { getWorkspace } from "@/services/get-workspace";
 import { getNode } from "@/services/get-node";
-import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, StorageItems } from "@/enums";
 import { AptosNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

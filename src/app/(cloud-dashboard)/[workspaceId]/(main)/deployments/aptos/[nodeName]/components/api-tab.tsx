@@ -1,125 +1,63 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
-import { AptosNode } from "@/types";
-import { Roles } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitButton } from "@/components/form/submit-button";
+
+import { AptosNode } from "@/types";
+import { Roles } from "@/enums";
+import { useAction } from "@/hooks/use-action";
+import { editAptosNode } from "@/actions/edit-aptos";
 
 interface APITabProps {
   node: AptosNode;
   role: Roles;
 }
 
-const schema = z.object({
-  api: z.boolean(),
-});
-
-type Schema = z.infer<typeof schema>;
-
 export const APITab: React.FC<APITabProps> = ({ node, role }) => {
-  const { api } = node;
+  const { workspaceId } = useParams();
+  const { execute, fieldErrors, error, data } = useAction(editAptosNode);
+  const { api, name } = node;
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { api },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<AptosNode>(
-        `/aptos/nodes/${node.name}`,
-        values
-      );
-      reset({ api: data.api });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+  const onSubmit = (formData: FormData) => {
+    const api = formData.get("api") === "on";
+    execute({ api }, { name, workspaceId: workspaceId as string });
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="api"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">REST</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="relative space-y-4">
+      <Toggle
+        id="api"
+        label="REST"
+        disabled={role === Roles.Reader}
+        errors={fieldErrors}
+        defaultChecked={api}
+      />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              API settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      {!!data && (
+        <Alert variant="success" className="text-center">
+          <AlertDescription>
+            API settings have been updated successfully.
+          </AlertDescription>
+        </Alert>
+      )}
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
+      {error && (
+        <Alert variant="destructive" className="text-center">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton data-testid="submit" type="submit">
+            Save
+          </SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };
