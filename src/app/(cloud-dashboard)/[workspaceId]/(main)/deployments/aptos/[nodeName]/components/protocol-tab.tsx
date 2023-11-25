@@ -1,20 +1,31 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
+import { ExternalLink } from "@/components/ui/external-link";
 import { AptosNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
-import { AptosNode, Version } from "@/types";
+import { getClientVersions } from "@/services/get-client-versions";
+import { AptosNode } from "@/types";
 
 interface ProtocolTabProps {
   node: AptosNode;
   role: Roles;
-  versions: Version[];
 }
 
-export const ProtocolTab: React.FC<ProtocolTabProps> = ({
+export const ProtocolTab: React.FC<ProtocolTabProps> = async ({
   node,
   role,
-  versions,
 }) => {
   const { network, image, name } = node;
+
+  const { versions } = await getClientVersions(
+    {
+      protocol: "aptos",
+      component: "node",
+      client: "aptos-core",
+      network,
+    },
+    image
+  );
+
   return (
     <>
       <ul className="space-y-3">
@@ -32,21 +43,17 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
 
         <li className="flex flex-col">
           <span className="text-sm font-medium text-foreground">Client</span>
-          <a
-            href="https://github.com/aptos-labs/aptos-core"
-            target="_blank"
-            rel="noreferrer"
-            className="text-primary hover:underline"
-          >
+          <ExternalLink href="https://github.com/aptos-labs/aptos-core">
             aptos-core
-          </a>
+          </ExternalLink>
         </li>
       </ul>
+
       <EditImageVersionForm
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/aptos/nodes/${name}`}
+        url={`/aptos/nodes/${name}`}
       />
     </>
   );

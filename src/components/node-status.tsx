@@ -1,5 +1,6 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import useSWRSubscription from "swr/subscription";
 import type { SWRSubscription } from "swr/subscription";
 
@@ -17,7 +18,6 @@ interface NodeStatusProps {
   nodeName: string;
   protocol: Protocol;
   token: string;
-  workspaceId: string;
   component?: "nodes" | "beaconnodes" | "validators" | "peers" | "clusterpeers";
 }
 
@@ -27,9 +27,9 @@ export const NodeStatus: React.FC<NodeStatusProps> = ({
   nodeName,
   protocol,
   token,
-  workspaceId,
   component = "nodes",
 }) => {
+  const { workspaceId } = useParams();
   const subscription: SWRSubscription<string, NodeStatuses, string> = (
     key,
     { next }
@@ -41,6 +41,7 @@ export const NodeStatus: React.FC<NodeStatusProps> = ({
 
     return () => socket.close();
   };
+
   const { data } = useSWRSubscription(
     `${WS_URL}/${protocol}/${component}/${nodeName}/status?authorization=Bearer ${token}&workspace_id=${workspaceId}`,
     subscription

@@ -2,8 +2,9 @@ import { useCallback, useState } from "react";
 
 import { ActionState, FieldErrors } from "@/lib/create-action";
 
-type Action<TInput, TOutput> = (
-  data: TInput
+export type Action<TInput, TOutput> = (
+  data: TInput,
+  indentifiers: Record<string, string>
 ) => Promise<ActionState<TInput, TOutput>>;
 
 interface UseActionOptions<TOutput> {
@@ -22,12 +23,12 @@ export const useAction = <TInput, TOutput>(
   const [isLoading, setIsLoading] = useState(false);
 
   const execute = useCallback(
-    async (input: TInput) => {
+    async (input: TInput, identifiers: Record<string, string> = {}) => {
       setError(undefined);
       setIsLoading(true);
 
       try {
-        const result = await action(input);
+        const result = await action(input, identifiers);
 
         if (!result) {
           return;

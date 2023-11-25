@@ -32,15 +32,6 @@ export default async function AptosPage({
       workspaceId,
       `/aptos/nodes/${nodeName}`
     );
-    const { versions } = await getClientVersions(
-      {
-        protocol: "aptos",
-        component: "node",
-        client: "aptos-core",
-        network: node.network,
-      },
-      node.image
-    );
 
     return (
       <div className="flex-col">
@@ -51,7 +42,6 @@ export default async function AptosPage({
                 nodeName={node.name}
                 protocol={Protocol.Aptos}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
             <Heading
@@ -95,7 +85,7 @@ export default async function AptosPage({
               )}
             </TabsList>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-              <ProtocolTab node={node} role={role} versions={versions} />
+              <ProtocolTab node={node} role={role} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} />
