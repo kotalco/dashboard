@@ -1,6 +1,8 @@
 "use client";
 
 import useSWRSubscription from "swr/subscription";
+import { useParams } from "next/navigation";
+import { cx } from "class-variance-authority";
 import type { SWRSubscription } from "swr/subscription";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,12 +11,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
 import { AptosStats, StatsError } from "@/types";
-import { cx } from "class-variance-authority";
 
 interface AptosNodeStatsProps {
   nodeName: string;
   token: string;
-  workspaceId: string;
 }
 
 const WS_URL = getWsBaseURL();
@@ -22,8 +22,8 @@ const WS_URL = getWsBaseURL();
 export const AptosNodeStats: React.FC<AptosNodeStatsProps> = ({
   nodeName,
   token,
-  workspaceId,
 }) => {
+  const { workspaceId } = useParams();
   const subscription: SWRSubscription<
     string,
     AptosStats | StatsError,

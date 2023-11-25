@@ -1,98 +1,62 @@
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+"use client";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "./ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+import { SubmitError } from "@/components/form/submit-error";
+import { Input } from "@/components/form/input";
+import { SubmitButton } from "@/components/form/submit-button";
+
+import { useAction } from "@/hooks/use-action";
+import { deleteNode } from "@/actions/delete-node";
+import { CloseDialogButton } from "./ui/close-dialog-button";
 
 interface DeleteNodeFormProps {
-  onDelete: () => Promise<void>;
   nodeName: string;
+  url: string;
+  redirectUrl: string;
 }
 
-const schema = z.object({
-  name: z.string().min(1, "Please confirm node name"),
-});
-
-type Schema = z.infer<typeof schema>;
-
 export const DeleteNodeForm: React.FC<DeleteNodeFormProps> = ({
-  onDelete,
+  url,
+  redirectUrl,
   nodeName,
 }) => {
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { name: "" },
+  const [value, setValue] = useState("");
+  const router = useRouter();
+  const { execute, error } = useAction(deleteNode, {
+    onSuccess: () => {
+      toast(`${nodeName} node has been deleted successfully.`);
+      router.push(redirectUrl);
+    },
   });
 
-  const {
-    formState: { isSubmitting, errors },
-    watch,
-    setError,
-  } = form;
-
-  const name = watch("name");
-
-  const onSubmit = async () => {
-    try {
-      await onDelete();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+  const onSubmit = (formData: FormData) => {
+    const name = formData.get("name") as string;
+    execute({ name }, { url, redirectUrl });
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Please type node name <strong>({nodeName})</strong> to confirm
-              </FormLabel>
-              <FormControl>
-                <Input disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="space-y-4">
+      <p className="text-foreground/70 text-sm">
+        This action cann&apos;t be undone. This will permnantly delete (
+        <strong>{nodeName}</strong>) Aptos Node.
+      </p>
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
+      <Input
+        id="name"
+        label={`Please type node name (${nodeName}) to confirm`}
+        onChange={(e) => setValue(e.target.value)}
+      />
 
-        <Button
-          disabled={isSubmitting || nodeName !== name}
-          data-testid="submit"
-          variant="destructive"
-          type="submit"
-          className="absolute bottom-0 left-24"
-        >
+      <SubmitError error={error} />
+
+      <CloseDialogButton>
+        <SubmitButton variant="destructive" disabled={nodeName !== value}>
           Delete
-        </Button>
-      </form>
-    </Form>
+        </SubmitButton>
+      </CloseDialogButton>
+    </form>
   );
 };

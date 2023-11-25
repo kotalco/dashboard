@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { isAxiosError } from "axios";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";

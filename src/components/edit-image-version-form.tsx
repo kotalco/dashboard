@@ -8,6 +8,8 @@ import { ExternalLink } from "@/components/ui/external-link";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
 import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
 
 import { Roles } from "@/enums";
 import { Version } from "@/types";
@@ -30,7 +32,7 @@ export const EditImageVersionForm = ({
   const [currentImage, setCurrentImage] = useState(image);
   const pathname = usePathname();
 
-  const { execute, fieldErrors, error, data } = useAction(editImageVersion);
+  const { execute, fieldErrors, error, success } = useAction(editImageVersion);
 
   const options = versions.map(({ name, image, disabled }) => ({
     label: name.toUpperCase(),
@@ -74,19 +76,11 @@ export const EditImageVersionForm = ({
         </Alert>
       )}
 
-      {!!data && (
-        <Alert variant="success" className="text-center">
-          <AlertDescription>
-            Client version has been updated successfully.
-          </AlertDescription>
-        </Alert>
-      )}
+      <SubmitSuccess success={success}>
+        Client version has been updated successfully.
+      </SubmitSuccess>
 
-      {error && (
-        <Alert variant="destructive" className="text-center">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+      <SubmitError error={error} />
 
       {role !== Roles.Reader && (
         <TabsFooter>

@@ -55,16 +55,11 @@ export default async function AptosPage({
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
               <>
-                <AptosNodeStats
-                  nodeName={node.name}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
+                <AptosNodeStats nodeName={node.name} token={token.value} />
                 <NodeMetrics
                   nodeName={node.name}
                   protocol={Protocol.Aptos}
                   token={token.value}
-                  workspaceId={workspaceId}
                 />
               </>
             )}
@@ -106,7 +101,7 @@ export default async function AptosPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                url={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
+                url={`/aptos/nodes/${node.name}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

@@ -7,6 +7,7 @@ import { Input as ShadInput } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { FormErrors } from "./form-errors";
+import { cn } from "@/lib/utils";
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
@@ -15,7 +16,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, errors, id, disabled, ...props }, ref) => {
+  ({ label, errors, id, disabled, className, ...props }, ref) => {
     const { pending } = useFormStatus();
 
     return (
@@ -32,6 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             name={id}
             disabled={pending || disabled}
             aria-describedby={`${id}-error`}
+            className={cn(className)}
             {...props}
           />
         </div>

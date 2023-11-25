@@ -2,10 +2,11 @@
 
 import { useParams } from "next/navigation";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
 
 import { AptosNode } from "@/types";
 import { Roles } from "@/enums";
@@ -19,7 +20,7 @@ interface APITabProps {
 
 export const APITab: React.FC<APITabProps> = ({ node, role }) => {
   const { workspaceId } = useParams();
-  const { execute, fieldErrors, error, data } = useAction(editAptosNode);
+  const { execute, fieldErrors, error, success } = useAction(editAptosNode);
   const { api, name } = node;
 
   const onSubmit = (formData: FormData) => {
@@ -37,19 +38,11 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         defaultChecked={api}
       />
 
-      {!!data && (
-        <Alert variant="success" className="text-center">
-          <AlertDescription>
-            API settings have been updated successfully.
-          </AlertDescription>
-        </Alert>
-      )}
+      <SubmitSuccess success={success}>
+        API settings have been updated successfully.
+      </SubmitSuccess>
 
-      {error && (
-        <Alert variant="destructive" className="text-center">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+      <SubmitError error={error} />
 
       {role !== Roles.Reader && (
         <TabsFooter>

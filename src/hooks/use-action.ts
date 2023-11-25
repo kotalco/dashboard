@@ -19,6 +19,7 @@ export const useAction = <TInput, TOutput>(
 ) => {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<TInput>>();
   const [error, setError] = useState<string>();
+  const [success, setSuccess] = useState(false);
   const [data, setData] = useState<TOutput>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,6 +27,7 @@ export const useAction = <TInput, TOutput>(
     async (input: TInput, identifiers: Record<string, string> = {}) => {
       setError(undefined);
       setIsLoading(true);
+      setSuccess(false);
 
       try {
         const result = await action(input, identifiers);
@@ -43,6 +45,7 @@ export const useAction = <TInput, TOutput>(
 
         if (result.data) {
           setData(result.data);
+          setSuccess(true);
           options.onSuccess?.(result.data);
         }
       } finally {
@@ -53,5 +56,5 @@ export const useAction = <TInput, TOutput>(
     [action, options]
   );
 
-  return { execute, fieldErrors, error, data, isLoading };
+  return { execute, fieldErrors, success, error, data, isLoading };
 };
