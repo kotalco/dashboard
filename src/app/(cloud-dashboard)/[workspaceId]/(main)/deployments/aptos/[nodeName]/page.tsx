@@ -16,6 +16,7 @@ import { AptosNodeStats } from "./components/aptos-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
+import { Suspense } from "react";
 
 export default async function AptosPage({
   params,
@@ -84,7 +85,9 @@ export default async function AptosPage({
               )}
             </TabsList>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-              <ProtocolTab node={node} role={role} />
+              <Suspense fallback={<ProtocolTab.Skeleton />}>
+                <ProtocolTab node={node} role={role} />
+              </Suspense>
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} />
@@ -103,7 +106,7 @@ export default async function AptosPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
+                url={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

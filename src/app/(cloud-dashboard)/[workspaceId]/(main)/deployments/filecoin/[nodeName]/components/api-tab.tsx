@@ -20,7 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import { InputWithUnit } from "@/components/ui/input-with-unit";
+import { InputWithUnit } from "@/components/form/input-with-unit";
 
 interface APITabProps {
   node: FilecoinNode;
