@@ -4,38 +4,38 @@ import { Plus } from "lucide-react";
 import { getWorkspace } from "@/services/get-workspace";
 import { getEnumKey } from "@/lib/utils";
 import { getNodes } from "@/services/get-nodes";
-import { AptosNetworks, Roles } from "@/enums";
-import { AptosNode } from "@/types";
+import { BitcoinNetworks, Roles } from "@/enums";
+import { BitcoinNode } from "@/types";
 
 import { DeploymentsList } from "@/components/deployments-list";
 import { NoResult } from "@/components/no-result";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 
-export default async function AptosPage({
+export default async function BitcoinPage({
   params,
 }: {
   params: { workspaceId: string };
 }) {
   const { workspaceId } = params;
-  const { data } = await getNodes<AptosNode>(workspaceId, "/aptos/nodes");
+  const { data } = await getNodes<BitcoinNode>(workspaceId, "/bitcoin/nodes");
   const { role } = await getWorkspace(params.workspaceId);
   const mainNodesInfo = data.map(({ name, network }) => ({
     name,
-    network: getEnumKey(AptosNetworks, network),
-    client: "aptos-core",
-    url: `/${params.workspaceId}/deployments/aptos/${name}`,
+    network: getEnumKey(BitcoinNetworks, network),
+    client: "Bitcoin Core",
+    url: `/${params.workspaceId}/deployments/bitcoin/${name}`,
   }));
 
   return (
     <div className="flex-col">
       <div className="flex-1 p-8 pt-6 space-y-4">
         <div className="flex items-center justify-between">
-          <Heading title="Aptos Deployments" />
+          <Heading title="Bitcoin Deployments" />
 
           {role !== Roles.Reader && !!data.length && (
             <Button asChild>
-              <Link href={`/${params.workspaceId}/deployments/aptos/new`}>
+              <Link href={`/${params.workspaceId}/deployments/bitcoin/new`}>
                 <Plus className="w-4 h-4 mr-2" />
                 Create New Aptos Node
               </Link>
@@ -46,11 +46,11 @@ export default async function AptosPage({
         <DeploymentsList data={mainNodesInfo} />
         {!data.length && (
           <NoResult
-            imageUrl="/images/aptos.svg"
-            title="No Aptos Nodes"
-            description="Aptos node listens to new transactions broadcasted in the network, executes them in EVM, and holds the latest state."
-            createUrl={`/${params.workspaceId}/deployments/aptos/new`}
-            buttonText="Create New Aptos Node"
+            imageUrl="/images/bitcoin.svg"
+            title="No Bitcoin Nodes"
+            description="Bitcoin nodes retrieve and store data on the Bitcoin network."
+            createUrl={`/${params.workspaceId}/deployments/bitcoin/new`}
+            buttonText="Create New Bitcoin Node"
             role={role}
           />
         )}
