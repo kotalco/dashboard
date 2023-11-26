@@ -1,28 +1,24 @@
 "use client";
 
-import * as z from "zod";
-import Link from "next/link";
+import { useState } from "react";
 import { useParams } from "next/navigation";
-
 import { MinusCircle, PlusCircle } from "lucide-react";
-
-import { BitcoinNode, RPCUser, Secret } from "@/types";
-import { Roles, SecretType } from "@/enums";
 
 import { Button } from "@/components/ui/button";
 import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/form/input";
 import { Select } from "@/components/form/select";
-import { useAction } from "@/hooks/use-action";
-import { editBitcoinAPI } from "@/actions/edit-bitcoin";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
 import { SubmitButton } from "@/components/form/submit-button";
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
-import { FormErrors } from "@/components/form/form-errors";
+
 import { cn } from "@/lib/utils";
+import { BitcoinNode, RPCUser } from "@/types";
+import { Roles, SecretType } from "@/enums";
+import { useAction } from "@/hooks/use-action";
+import { editBitcoinAPI } from "@/actions/edit-bitcoin";
 
 interface APITabProps {
   node: BitcoinNode;

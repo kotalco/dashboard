@@ -12,3 +12,7 @@ export const EditBitcoinAPI = z.object({
     )
     .nonempty(),
 });
+
+export const EditBitcoinWallet = z.object({
+  wallet: z.boolean(),
+});

@@ -5,14 +5,14 @@ import { revalidatePath } from "next/cache";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 
-import { APIInputType, APIReturnType } from "./types";
-import { EditBitcoinAPI } from "./schema";
+import { InputType, ReturnType } from "./types";
+import { EditBitcoinAPI, EditBitcoinWallet } from "./schema";
 import { BitcoinNode } from "@/types";
 
 const handler = async (
-  data: APIInputType,
+  data: InputType,
   identifiers: Record<string, string>
-): Promise<APIReturnType> => {
+): Promise<ReturnType> => {
   let node;
   try {
     const response = await server.put<BitcoinNode>(
@@ -29,3 +29,4 @@ const handler = async (
 };
 
 export const editBitcoinAPI = createAction(EditBitcoinAPI, handler);
+export const editBitcoinWallet = createAction(EditBitcoinWallet, handler);
