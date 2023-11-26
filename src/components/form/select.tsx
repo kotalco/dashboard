@@ -1,5 +1,6 @@
 import React, { ComponentPropsWithoutRef } from "react";
 import { useFormStatus } from "react-dom";
+import Link from "next/link";
 import { Root } from "@radix-ui/react-select";
 
 import {
@@ -23,6 +24,7 @@ interface SelectProps extends ComponentPropsWithoutRef<typeof Root> {
   placeholder?: string;
   description?: string | React.ReactNode;
   className?: string;
+  link?: { title: string; href: string };
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -34,6 +36,7 @@ export const Select: React.FC<SelectProps> = ({
   options,
   description,
   className,
+  link,
   ...props
 }) => {
   const { pending } = useFormStatus();
@@ -65,6 +68,14 @@ export const Select: React.FC<SelectProps> = ({
                 {label}
               </SelectItem>
             ))}
+            {link && (
+              <Link
+                href={link.href}
+                className="text-sm text-primary hover:underline underline-offset-4"
+              >
+                {link.title}
+              </Link>
+            )}
           </SelectContent>
         </ShadSelect>
       </div>

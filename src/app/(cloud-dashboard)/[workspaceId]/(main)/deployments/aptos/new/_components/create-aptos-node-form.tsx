@@ -53,6 +53,7 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
         label="Network"
         placeholder="Select Network"
         options={getSelectItems(AptosNetworks)}
+        errors={fieldErrors}
       />
 
       <p className="text-sm font-medium leading-none space-y-1">

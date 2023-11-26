@@ -3,6 +3,7 @@
 import useSWRSubscription from "swr/subscription";
 import type { SWRSubscription } from "swr/subscription";
 import { cx } from "class-variance-authority";
+import { useParams } from "next/navigation";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -14,7 +15,6 @@ import { BitcoinStats, StatsError } from "@/types";
 interface BitcoinNodeStatsProps {
   nodeName: string;
   token: string;
-  workspaceId: string;
 }
 
 const WS_URL = getWsBaseURL();
@@ -22,8 +22,8 @@ const WS_URL = getWsBaseURL();
 export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
   nodeName,
   token,
-  workspaceId,
 }) => {
+  const { workspaceId } = useParams();
   const subscription: SWRSubscription<
     string,
     BitcoinStats | StatsError,

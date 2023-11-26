@@ -15,7 +15,7 @@ export const getSecrets = cache(
     });
 
     const { data } = await server.get<Secret[]>(url);
-
-    return data;
+    const options = data.map(({ name }) => ({ label: name, value: name }));
+    return { data, options };
   }
 );

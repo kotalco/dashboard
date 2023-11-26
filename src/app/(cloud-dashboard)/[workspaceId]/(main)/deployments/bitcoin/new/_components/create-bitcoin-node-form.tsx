@@ -53,6 +53,7 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
         label="Network"
         placeholder="Select Network"
         options={getSelectItems(BitcoinNetworks)}
+        errors={fieldErrors}
       />
 
       <p className="text-sm font-medium leading-none space-y-1">

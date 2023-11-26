@@ -1,22 +1,25 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
-import { getWorkspace } from "@/services/get-workspace";
-import { getNode } from "@/services/get-node";
-import { Protocol, Roles, StorageItems } from "@/enums";
-import { AptosNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
+import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
 import { ResourcesForm } from "@/components/resources-form";
-import { AptosNodeStats } from "./components/aptos-node-stats";
-import { ProtocolTab } from "./components/protocol-tab";
-import { APITab } from "./components/api-tab";
-import { DangerZoneTab } from "./components/danger-zone-tab";
-import { Suspense } from "react";
+
+import { getNode } from "@/services/get-node";
+import { getWorkspace } from "@/services/get-workspace";
+import { Protocol, Roles, StorageItems } from "@/enums";
+import { AptosNode } from "@/types";
+
+import { AptosNodeStats } from "./_components/aptos-node-stats";
+import { ProtocolTab } from "./_components/protocol-tab";
+import { APITab } from "./_components/api-tab";
+import { DangerZoneTab } from "./_components/danger-zone-tab";
 
 export default async function AptosPage({
   params,
@@ -80,7 +83,7 @@ export default async function AptosPage({
               )}
             </TabsList>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-              <Suspense fallback={<ProtocolTab.Skeleton />}>
+              <Suspense fallback={<ProtocolSkeleton />}>
                 <ProtocolTab node={node} role={role} />
               </Suspense>
             </TabsContent>

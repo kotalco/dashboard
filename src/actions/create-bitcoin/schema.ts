@@ -12,7 +12,7 @@ export const CreateBitcoin = z.object({
       message: "Invalid character used",
     }),
   network: z.nativeEnum(BitcoinNetworks, {
-    required_error: "Please select a Network",
+    errorMap: () => ({ message: "Please select a Network" }),
   }),
   workspace_id: z.string().min(1),
   image: z.string().min(1),
