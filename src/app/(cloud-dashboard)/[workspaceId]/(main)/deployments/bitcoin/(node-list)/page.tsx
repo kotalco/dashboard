@@ -19,12 +19,12 @@ export default async function BitcoinPage({
 }) {
   const { workspaceId } = params;
   const { data } = await getNodes<BitcoinNode>(workspaceId, "/bitcoin/nodes");
-  const { role } = await getWorkspace(params.workspaceId);
+  const { role } = await getWorkspace(workspaceId);
   const mainNodesInfo = data.map(({ name, network }) => ({
     name,
     network: getEnumKey(BitcoinNetworks, network),
     client: "Bitcoin Core",
-    url: `/${params.workspaceId}/deployments/bitcoin/${name}`,
+    url: `/${workspaceId}/deployments/bitcoin/${name}`,
   }));
 
   return (
@@ -35,7 +35,7 @@ export default async function BitcoinPage({
 
           {role !== Roles.Reader && !!data.length && (
             <Button asChild>
-              <Link href={`/${params.workspaceId}/deployments/bitcoin/new`}>
+              <Link href={`/${workspaceId}/deployments/bitcoin/new`}>
                 <Plus className="w-4 h-4 mr-2" />
                 Create New Aptos Node
               </Link>
@@ -49,7 +49,7 @@ export default async function BitcoinPage({
             imageUrl="/images/bitcoin.svg"
             title="No Bitcoin Nodes"
             description="Bitcoin nodes retrieve and store data on the Bitcoin network."
-            createUrl={`/${params.workspaceId}/deployments/bitcoin/new`}
+            createUrl={`/${workspaceId}/deployments/bitcoin/new`}
             buttonText="Create New Bitcoin Node"
             role={role}
           />

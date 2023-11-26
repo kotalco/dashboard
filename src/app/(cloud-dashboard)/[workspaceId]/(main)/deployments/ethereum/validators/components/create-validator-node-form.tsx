@@ -36,7 +36,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { SelectWithInput } from "@/components/ui/select-with-input";
+import { SelectWithInput } from "@/components/form/select-with-input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MultiSelect } from "@/components/ui/multi-select";
 

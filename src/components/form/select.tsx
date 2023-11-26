@@ -1,6 +1,6 @@
 import React, { ComponentPropsWithoutRef } from "react";
-import { useFormStatus } from "react-dom";
 import Link from "next/link";
+import { useFormStatus } from "react-dom";
 import { Root } from "@radix-ui/react-select";
 
 import {
@@ -27,7 +27,7 @@ interface SelectProps extends ComponentPropsWithoutRef<typeof Root> {
   link?: { title: string; href: string };
 }
 
-export const Select: React.FC<SelectProps> = ({
+export const Select = ({
   disabled,
   label,
   id,
@@ -38,7 +38,7 @@ export const Select: React.FC<SelectProps> = ({
   className,
   link,
   ...props
-}) => {
+}: SelectProps) => {
   const { pending } = useFormStatus();
 
   return (

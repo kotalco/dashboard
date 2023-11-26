@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import { SelectWithInput } from "@/components/ui/select-with-input";
+import { SelectWithInput } from "@/components/form/select-with-input";
 import { MultiSelect } from "@/components/ui/multi-select";
 
 interface ExecutionClientTabProps {

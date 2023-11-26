@@ -10,17 +10,17 @@ export type ActionState<TInput, TOutput = unknown> = {
   data?: TOutput;
 };
 
-export const createAction = <TInput, TOutput>(
-  schema: z.Schema<TInput>,
+export const createAction = <TInput, TOutput, Transformed>(
+  schema: z.ZodType<Transformed, any, TInput>,
   handler: (
-    valiadatedData: TInput,
+    valiadatedData: Transformed,
     identifiers: Record<string, string>
   ) => Promise<ActionState<TInput, TOutput>>
 ) => {
   return async (
     data: TInput,
     identifiers: Record<string, string>
-  ): Promise<ActionState<TInput, TOutput>> => {
+  ): Promise<ActionState<Transformed | TInput, TOutput>> => {
     const validationResult = schema.safeParse(data);
 
     if (!validationResult.success) {
@@ -40,6 +40,9 @@ export const createAction = <TInput, TOutput>(
       return { fieldErrors: fieldErrors as FieldErrors<TInput> };
     }
 
-    return handler(validationResult.data, identifiers);
+    return handler(
+      validationResult.data as unknown as Transformed,
+      identifiers
+    );
   };
 };

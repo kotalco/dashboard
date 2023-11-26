@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SelectWithInput } from "@/components/ui/select-with-input";
+import { SelectWithInput } from "@/components/form/select-with-input";
 
 interface ExecutionClientTabProps {
   node: BeaconNode;

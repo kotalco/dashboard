@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
@@ -7,11 +8,11 @@ import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
+import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
 
 import { getWorkspace } from "@/services/get-workspace";
 import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
-import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { BitcoinNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,8 +22,6 @@ import { ProtocolTab } from "./_components/protocol-tab";
 import { APITab } from "./_components/api-tab";
 import { DangerZoneTab } from "./_components/danger-zone-tab";
 import { WalletTab } from "./_components/wallet-tab";
-import { Suspense } from "react";
-import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
 
 export default async function BitcoinPage({
   params,

@@ -30,7 +30,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { getLatestVersion, getSelectItems } from "@/lib/utils";
 import { client } from "@/lib/client-instance";
 import { Clients } from "@/types";
-import { SelectWithInput } from "@/components/ui/select-with-input";
+import { SelectWithInput } from "@/components/form/select-with-input";
 
 const schema = z.object({
   name: z
@@ -56,7 +56,7 @@ type SchemaType = z.infer<typeof schema>;
 
 const defaultValues = {
   name: "",
-  network: undefined,
+  network: "mainnet",
   client: undefined,
 };
 
