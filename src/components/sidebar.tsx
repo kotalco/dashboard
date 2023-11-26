@@ -1,12 +1,9 @@
 import { Logo } from "@/components/logo";
-import { WorkspaceCreator } from "@/components/workspace-creator";
-import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { findUser } from "@/services/find-user";
-import { getWorkspaces } from "@/services/get-workspaces";
+import Workspaces from "@/components/workspaces";
 
 export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
   const { user } = await findUser();
-  const workspaces = await getWorkspaces();
 
   if (!user) return null;
 
@@ -22,12 +19,7 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
           </nav>
         </div>
       </div>
-      <WorkspaceSwitcher
-        workspaces={workspaces}
-        userId={user?.id}
-        className="w-full"
-      />
-      <WorkspaceCreator />
+      {!user.is_customer && <Workspaces />}
     </div>
   );
 };

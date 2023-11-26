@@ -3,6 +3,8 @@ export enum StorageItems {
   EMAIL_VERIFIED = "EMAIL_VERIFIED",
   AUTH_TOKEN = "AUTH_TOKEN",
   LAST_WORKSPACE_ID = "LAST_WORKSPACE_ID",
+  CHANGE_PLAN_DATA = "CHANGE_PLAN_DATA",
+  INVOICE_DATA = "INVOICE_DATA",
 }
 
 export enum Roles {
@@ -23,6 +25,20 @@ export enum SecretType {
   "Polkadot Private Key" = "polkadot_private_key",
   "Stacks Private Key" = "stacks_private_key",
   "TLS Certificate" = "tls_certificate",
+}
+
+export enum Networks {
+  Mainnet = "mainnet",
+  Testnet = "testnet",
+  Devnet = "devnet",
+  Calibration = "calibration",
+  Betanet = "betanet",
+  Sepolia = "sepolia",
+  Goerli = "goerli",
+  Polkadot = "polkadot",
+  Kusama = "kusama",
+  Rococo = "rococo",
+  Westend = "westend",
 }
 
 export enum AptosNetworks {
@@ -240,4 +256,13 @@ export enum SubscriptionStatus {
   Incomplete = "incomplete",
   "Incomplete Expired" = "incomplete_expired",
   Unpaid = "unpaid",
+  Trial = "trialing",
+}
+
+export enum InvoiceStatus {
+  Paid = "paid",
+  Failed = "failed",
+  Open = "open",
+  Draft = "draft",
+  Uncollectible = "uncollectible",
 }

@@ -8,6 +8,7 @@ import {
   ExecutionClientSyncMode,
   IPFSConfigProfile,
   IPFSRouting,
+  InvoiceStatus,
   NEARNetworks,
   PolkadotLogging,
   PolkadotNetworks,
@@ -286,14 +287,6 @@ export interface Service {
   protocol: Protocol;
 }
 
-export interface Subscription {
-  status: SubscriptionStatus;
-  name: string;
-  start_date: number;
-  end_date: number;
-  canceled_at?: number;
-}
-
 export interface StatsError {
   error: string;
 }
@@ -343,4 +336,123 @@ export interface IpfsPeerStats {
   PinCount: number;
   Blocks: number;
   CumulativeSize: number;
+}
+
+export interface InvoiceItem {
+  amount: number;
+  currency: "usd";
+  description: string;
+  end_date: number;
+  start_date: number;
+}
+
+export interface Invoice {
+  id: string;
+  amount_paid: number;
+  amount_due: number;
+  amount_remaining: number;
+  currency: "usd";
+  start_date: number;
+  end_date: number;
+  period: "monthly";
+  created_at: number;
+  status: InvoiceStatus;
+  description: string;
+  hosted_url: string;
+  invoice_pdf: string;
+  next_payment_attempt: number;
+  provider_payment_intent_id: string;
+  items: InvoiceItem[];
+}
+
+export interface PlanPrice {
+  id: string;
+  period: "monthly";
+  price: number;
+  currency: "usd";
+  default: boolean;
+}
+
+export interface Plan {
+  id: string;
+  name: string;
+  description: string;
+  features: string[];
+  prices: PlanPrice[];
+  request_limit: number;
+}
+
+export interface Subscription {
+  id: string;
+  status: SubscriptionStatus;
+  start_date: number;
+  end_date: number;
+  canceled_at?: number;
+  plan: Omit<Plan, "prices">;
+  price: PlanPrice;
+  request_limit: number;
+  endpoint_limit: number;
+}
+
+export interface Plan {
+  id: string;
+  name: string;
+  description: string;
+  features: string[];
+  prices: PlanPrice[];
+  request_limit: number;
+  endpoint_limit: number;
+}
+
+export interface Proration {
+  credit_balance: number;
+  total: number;
+  amount_due: number;
+  currency: "usd";
+  items: {
+    amount: number;
+    description: string;
+    currency: "usd";
+  }[];
+}
+
+export interface UpdatePlanStatus {
+  client_secret: string;
+  status: SubscriptionStatus;
+}
+
+export interface CreditBalance {
+  balance: number;
+  currency: string;
+}
+
+export interface ProrationFormState {
+  message: string | null;
+  data: {
+    proration: Proration;
+    price: string;
+    subscription_id: string;
+    plan_id: string;
+    price_id: string;
+  } | null;
+}
+
+export interface PaymentCard {
+  id: string;
+  provider: "stripe";
+  provider_id: string;
+  brand:
+    | "visa"
+    | "amex"
+    | "diners"
+    | "discover"
+    | "jcb"
+    | "mastercard"
+    | "unionppay"
+    | "unknown";
+  country: string;
+  exp_month: number;
+  exp_year: number;
+  last4: string;
+  default: boolean;
 }

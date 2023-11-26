@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
 
 import { ModalProvider } from "@/providers/modal-provider";
@@ -12,10 +12,14 @@ const nunito = Nunito({
   variable: "--font-nunito",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "Kotal Pro",
   icons: { icon: "/images/logo.svg" },
-  viewport: { width: "device-width", initialScale: 1 },
 };
 
 export default function RootLayout({

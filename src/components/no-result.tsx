@@ -17,7 +17,7 @@ import {
 interface NoResultProps {
   imageUrl: string;
   title: string;
-  role: Roles;
+  role?: Roles;
   description: string;
   createUrl: string;
   buttonText: string;

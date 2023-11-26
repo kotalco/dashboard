@@ -3,7 +3,7 @@ import {
   ExecutionClientClients,
   NodeStatuses,
 } from "@/enums";
-import { Clients } from "@/types";
+import { Clients, Plan } from "@/types";
 import { AxiosResponse } from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -107,4 +107,37 @@ export const getClientUrl = (client: string) => {
     default:
       return "#";
   }
+};
+
+export function calculateRemainingDays(secondsInUnix: number) {
+  return (
+    secondsInUnix !== 0 &&
+    Math.ceil(
+      (new Date(secondsInUnix * 1000).getTime() - new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
+    )
+  );
+}
+
+export function formatCurrency(valueInCents: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(valueInCents / 100);
+}
+
+export const findPrice = (plan: Plan) =>
+  plan.prices.find(({ period }) => period === "monthly");
+
+export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+export const dispatchLocalStorageUpdate = (
+  key: string,
+  value: string | null
+) => {
+  window.dispatchEvent(
+    new CustomEvent("local-storage", {
+      detail: { key, value },
+    })
+  );
 };
