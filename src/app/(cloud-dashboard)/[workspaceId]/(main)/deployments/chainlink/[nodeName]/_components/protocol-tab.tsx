@@ -1,20 +1,27 @@
 import { EditImageVersionForm } from "@/components/edit-image-version-form";
 import { ChainlinkNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
+import { getClientVersions } from "@/services/get-client-versions";
 import { ChainlinkNode, Version } from "@/types";
 
 interface ProtocolTabProps {
   node: ChainlinkNode;
   role: Roles;
-  versions: Version[];
 }
 
-export const ProtocolTab: React.FC<ProtocolTabProps> = ({
+export const ProtocolTab: React.FC<ProtocolTabProps> = async ({
   node,
   role,
-  versions,
 }) => {
   const { ethereumChainId, linkContractAddress, image, name } = node;
+  const { versions } = await getClientVersions(
+    {
+      protocol: "chainlink",
+      component: "node",
+      client: "chainlink",
+    },
+    node.image
+  );
   return (
     <>
       <ul className="space-y-3">
@@ -63,7 +70,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/chainlink/nodes/${name}`}
+        url={`/chainlink/nodes/${name}`}
       />
     </>
   );

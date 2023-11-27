@@ -12,18 +12,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
-import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
-import { ProtocolTab } from "./components/protocol-tab";
-import { APITab } from "./components/api-tab";
-import { DangerZoneTab } from "./components/danger-zone-tab";
-import { WalletTab } from "./components/wallet-tab";
-import { DatabaseTab } from "./components/database-tab";
-import { ExecutionClientTab } from "./components/execution-client-tab";
+import { ProtocolTab } from "./_components/protocol-tab";
+import { APITab } from "./_components/api-tab";
+import { DangerZoneTab } from "./_components/danger-zone-tab";
+import { WalletTab } from "./_components/wallet-tab";
+import { DatabaseTab } from "./_components/database-tab";
+import { ExecutionClientTab } from "./_components/execution-client-tab";
 import { getNodes } from "@/services/get-nodes";
-import { TLSTab } from "./components/tls-tab";
-import { AccessControlTab } from "./components/access-control-tab";
-import { LogsTab } from "./components/logs-tab";
+import { TLSTab } from "./_components/tls-tab";
+import { AccessControlTab } from "./_components/access-control-tab";
+import { LogsTab } from "./_components/logs-tab";
+import { Suspense } from "react";
+import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
 
 export default async function ChainlinkPage({
   params,
@@ -33,11 +34,15 @@ export default async function ChainlinkPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId);
-  const passwords = secrets.filter(({ type }) => type === SecretType.Password);
-  const tls = secrets.filter(
-    ({ type }) => type === SecretType["TLS Certificate"]
+  const { options: passwordOptions } = await getSecrets(
+    workspaceId,
+    SecretType.Password
   );
+  const { options: tlsOptions } = await getSecrets(
+    workspaceId,
+    SecretType["TLS Certificate"]
+  );
+
   const { data } = await getNodes<ExecutionClientNode>(
     workspaceId,
     "/ethereum/nodes"
@@ -49,15 +54,6 @@ export default async function ChainlinkPage({
       `/chainlink/nodes/${nodeName}`
     );
 
-    const { versions } = await getClientVersions(
-      {
-        protocol: "chainlink",
-        component: "node",
-        client: "chainlink",
-      },
-      node.image
-    );
-
     return (
       <div className="flex-col">
         <div className="flex-1 p-8 pt-6 space-y-4">
@@ -67,7 +63,6 @@ export default async function ChainlinkPage({
                 nodeName={node.name}
                 protocol={Protocol.Chainlink}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
             <Heading
@@ -84,7 +79,6 @@ export default async function ChainlinkPage({
                 nodeName={node.name}
                 protocol={Protocol.Chainlink}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
           </div>
@@ -111,7 +105,9 @@ export default async function ChainlinkPage({
               )}
             </TabsList>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-              <ProtocolTab node={node} role={role} versions={versions} />
+              <Suspense fallback={<ProtocolSkeleton />}>
+                <ProtocolTab node={node} role={role} />
+              </Suspense>
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="database">
               <DatabaseTab node={node} role={role} />
@@ -127,13 +123,13 @@ export default async function ChainlinkPage({
               />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
-              <WalletTab node={node} role={role} passwords={passwords} />
+              <WalletTab node={node} role={role} passwords={passwordOptions} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="tls">
-              <TLSTab node={node} role={role} secrets={tls} />
+              <TLSTab node={node} role={role} secrets={tlsOptions} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-              <APITab node={node} role={role} secrets={passwords} />
+              <APITab node={node} role={role} secrets={passwordOptions} />
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
@@ -151,7 +147,7 @@ export default async function ChainlinkPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/chainlink/nodes/${node.name}?workspace_id=${workspaceId}`}
+                url={`/chainlink/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

@@ -1,3 +1,4 @@
+import { useFormStatus } from "react-dom";
 import React, { ComponentPropsWithoutRef, useState } from "react";
 import { Root } from "@radix-ui/react-select";
 
@@ -9,11 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useFormStatus } from "react-dom";
+import { FormDescription } from "@/components/form/form-description";
 import { FormErrors } from "@/components/form/form-errors";
+
+import { cn } from "@/lib/utils";
 
 interface SelectWithInputProps extends ComponentPropsWithoutRef<typeof Root> {
   id: string;
@@ -113,15 +115,12 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
               disabled={pending || disabled}
               type="text"
               className="-mt-1.5 border-t-0 rounded-t-none max-w-sm"
+              defaultValue={selected === "other" ? defaultValue : undefined}
             />
           </div>
         )}
 
-        {typeof description === "string" ? (
-          <p className="text-sm text-foreground">{description}</p>
-        ) : (
-          description
-        )}
+        <FormDescription description={description} />
 
         <FormErrors id={id} errors={errors} />
       </div>

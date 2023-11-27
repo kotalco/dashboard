@@ -38,7 +38,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
     const rpcUsers = readFieldArray<RPCUser>(
       { rpcUsers: ["username", "passwordSecretName"] },
       formData
-    );
+    ) as [RPCUser, ...RPCUser[]];
 
     execute(
       { rpc, txIndex, rpcUsers },

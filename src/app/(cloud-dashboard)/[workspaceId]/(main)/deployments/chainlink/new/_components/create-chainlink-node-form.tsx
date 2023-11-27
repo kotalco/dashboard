@@ -97,7 +97,7 @@ export const CreateChainlinkNodeForm: React.FC<
 
       <SelectWithInput
         id="ethereumWsEndpoint"
-        label="Ethereum Websocket Endpoint"
+        label="Execution Client Websocket Endpoint"
         placeholder="Select an Execution Client"
         options={activeExecutionClients}
         otherLabel="Externally Managed Node"

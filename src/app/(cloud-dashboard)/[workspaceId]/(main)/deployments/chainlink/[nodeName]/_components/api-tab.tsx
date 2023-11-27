@@ -34,7 +34,7 @@ import {
 interface APITabProps {
   node: ChainlinkNode;
   role: Roles;
-  secrets: Secret[];
+  secrets: { label: string; value: string }[];
 }
 
 const schema = z.object({
@@ -134,7 +134,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="apiCredentials.passwordSecretName"
           render={({ field }) => (
@@ -156,7 +156,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {secrets.map(({ name }) => (
+                    {secrets.map(({ label, value }) => (
                       <SelectItem key={name} value={name}>
                         {name}
                       </SelectItem>
@@ -173,7 +173,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {isSubmitSuccessful && (
           <Alert variant="success" className="text-center">

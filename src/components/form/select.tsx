@@ -11,6 +11,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { FormDescription } from "@/components/form/form-description";
 
 import { cn } from "@/lib/utils";
 
@@ -78,13 +79,9 @@ export const Select = ({
             )}
           </SelectContent>
         </ShadSelect>
-      </div>
 
-      {typeof description === "string" ? (
-        <p className="text-sm text-foreground">{description}</p>
-      ) : (
-        description
-      )}
+        <FormDescription description={description} />
+      </div>
 
       <FormErrors id={id} errors={errors} />
     </div>

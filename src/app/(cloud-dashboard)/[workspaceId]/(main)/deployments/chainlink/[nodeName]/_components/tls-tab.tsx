@@ -34,7 +34,7 @@ import { Input } from "@/components/ui/input";
 interface TLSTabProps {
   node: ChainlinkNode;
   role: Roles;
-  secrets: Secret[];
+  secrets: { label: string; value: string }[];
 }
 
 const schema = z
@@ -102,7 +102,7 @@ export const TLSTab: React.FC<TLSTabProps> = ({ node, role, secrets }) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="relative space-y-4"
       >
-        <FormField
+        {/* <FormField
           control={form.control}
           name="certSecretName"
           render={({ field }) => (
@@ -154,7 +154,7 @@ export const TLSTab: React.FC<TLSTabProps> = ({ node, role, secrets }) => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <FormField
           control={form.control}

@@ -1,10 +1,11 @@
 import { ComponentPropsWithoutRef } from "react";
 import { useFormStatus } from "react-dom";
-
 import { Root } from "@radix-ui/react-switch";
+
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { FormErrors } from "@/components/form/form-errors";
+import { FormDescription } from "@/components/form/form-description";
 
 interface ToggleProps extends ComponentPropsWithoutRef<typeof Root> {
   id: string;
@@ -35,11 +36,7 @@ export const Toggle = ({
         <Switch disabled={pending || disabled} name={id} id={id} {...props} />
       </div>
 
-      {typeof description === "string" ? (
-        <p className="text-sm text-foreground">{description}</p>
-      ) : (
-        description
-      )}
+      <FormDescription description={description} />
 
       <FormErrors id={id} errors={errors} />
     </div>

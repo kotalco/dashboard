@@ -15,7 +15,7 @@ export const createAction = <TInput, TOutput, Transformed>(
   handler: (
     valiadatedData: Transformed,
     identifiers: Record<string, string>
-  ) => Promise<ActionState<TInput, TOutput>>
+  ) => Promise<ActionState<any, TOutput>>
 ) => {
   return async (
     data: TInput,
