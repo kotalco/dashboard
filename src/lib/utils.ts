@@ -141,3 +141,38 @@ export const dispatchLocalStorageUpdate = (
     })
   );
 };
+
+export const readSelectWithInputValue = (id: string, formData: FormData) => {
+  const selectValue = formData.get(`${id}-select`) as string;
+  const inputValue = formData.get(`${id}-input`) as string;
+  return selectValue !== "other" ? selectValue : inputValue;
+};
+
+export const readFieldArray = <T extends Record<string, any>>(
+  fieldArray: { [key: string]: (keyof T)[] },
+  formData: FormData
+) => {
+  const values: Record<string, T> = {};
+  const prefix = Object.keys(fieldArray)[0];
+  const fields = fieldArray[prefix].join("|");
+  const regex = new RegExp(`^${prefix}\\.(\\d+)\\.(${fields})$`);
+
+  for (const [key, value] of Array.from(formData.entries())) {
+    const match = key.match(regex);
+    console.log(match);
+    if (match) {
+      const [, index, field] = match;
+
+      if (!values[index]) {
+        values[index] = fieldArray[prefix].reduce((obj, fieldName) => {
+          obj[fieldName] = "" as any;
+          return obj;
+        }, {} as T);
+      }
+
+      values[index][field as keyof T] = value as T[keyof T];
+    }
+  }
+
+  return Object.values(values);
+};

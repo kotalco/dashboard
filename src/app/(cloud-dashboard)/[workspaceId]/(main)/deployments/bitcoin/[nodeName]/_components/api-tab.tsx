@@ -14,7 +14,7 @@ import { SubmitError } from "@/components/form/submit-error";
 import { SubmitButton } from "@/components/form/submit-button";
 import { Label } from "@/components/ui/label";
 
-import { cn } from "@/lib/utils";
+import { cn, readFieldArray } from "@/lib/utils";
 import { BitcoinNode, RPCUser } from "@/types";
 import { Roles, SecretType } from "@/enums";
 import { useAction } from "@/hooks/use-action";
@@ -35,24 +35,10 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
   const onSubmit = (formData: FormData) => {
     const rpc = formData.get("rpc") === "on";
     const txIndex = formData.get("txIndex") === "on";
-    const users: {
-      [key: string]: RPCUser;
-    } = {};
-    for (const [key, value] of Array.from(formData.entries())) {
-      const match = key.match(
-        /^rpcUsers\.(\d+)\.(username|passwordSecretName)$/
-      );
-      if (match) {
-        const [, index, field] = match;
-
-        if (!users[index]) {
-          users[index] = { username: "", passwordSecretName: "" };
-        }
-
-        users[index][field as keyof RPCUser] = value as string; // Assuming all values are strings
-      }
-    }
-    const rpcUsers = Object.values(users);
+    const rpcUsers = readFieldArray<RPCUser>(
+      { rpcUsers: ["username", "passwordSecretName"] },
+      formData
+    );
 
     execute(
       { rpc, txIndex, rpcUsers },

@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/form/input";
 import { ChainlinkNetworks, SecretType } from "@/enums";
 import { Select } from "@/components/form/select";
-import { getSelectItems } from "@/lib/utils";
+import { getSelectItems, readSelectWithInputValue } from "@/lib/utils";
 import { ExecutionClientNode, Version } from "@/types";
 import { Label } from "@/components/ui/label";
 import { useAction } from "@/hooks/use-action";
@@ -45,16 +45,10 @@ export const CreateChainlinkNodeForm: React.FC<
   const onSubmit = (formData: FormData) => {
     const name = formData.get("name") as string;
     const evmChain = formData.get("evmChain") as ChainlinkNetworks;
-    const ethereumWsEndpointSelect = formData.get(
-      "ethereumWsEndpoint-select"
-    ) as string;
-    const ethereumWsEndpointInput = formData.get(
-      "ethereumWsEndpoint-input"
-    ) as string;
-    const ethereumWsEndpoint =
-      ethereumWsEndpointSelect !== "other"
-        ? ethereumWsEndpointSelect
-        : ethereumWsEndpointInput;
+    const ethereumWsEndpoint = readSelectWithInputValue(
+      "ethereumWsEndpoint",
+      formData
+    );
     const databaseURL = formData.get("databaseURL") as string;
     const keystorePasswordSecretName = formData.get(
       "keystorePasswordSecretName"
