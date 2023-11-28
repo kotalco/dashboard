@@ -17,7 +17,6 @@ export const handler = async (
     const response = await server.put(identifiers.url, data);
     node = response.data;
   } catch (error) {
-    console.log(error);
     return { error: "Something went wrong." };
   }
 

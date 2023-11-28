@@ -64,7 +64,7 @@ export const Select = ({
             <SelectTrigger
               id={id}
               data-testid={id}
-              className={cn(className, "bg-white max-w-xs")}
+              className={cn(className, "bg-white")}
             >
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>

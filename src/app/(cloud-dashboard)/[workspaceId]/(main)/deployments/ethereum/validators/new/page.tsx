@@ -16,11 +16,15 @@ export default async function CreateNewValidatorNodePage({
 }) {
   const { workspaceId } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId);
-  const passwords = secrets.filter((s) => s.type === SecretType.Password);
-  const keystores = secrets.filter(
-    (s) => s.type === SecretType["Ethereum Keystore"]
+  const { options: passwords } = await getSecrets(
+    workspaceId,
+    SecretType.Password
   );
+  const { options: keystores } = await getSecrets(
+    workspaceId,
+    SecretType["Ethereum Keystore"]
+  );
+
   const { data } = await getNodes<BeaconNode>(
     params.workspaceId,
     "/ethereum2/beaconnodes"

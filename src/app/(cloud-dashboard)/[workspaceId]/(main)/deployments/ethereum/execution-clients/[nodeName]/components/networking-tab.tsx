@@ -46,7 +46,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
       { name, workspaceId: workspaceId as string }
     );
   };
-  console.log(nodePrivateKeySecretName);
+
   return (
     <form action={onSubmit} className="relative space-y-4">
       <Select

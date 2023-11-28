@@ -20,6 +20,7 @@ import { FormErrors } from "@/components/form/form-errors";
 
 import { cn } from "@/lib/utils";
 import { useFormStatus } from "react-dom";
+import Link from "next/link";
 
 export type OptionType = Record<"value" | "label", string>;
 
@@ -33,6 +34,7 @@ interface MultiSelectProps {
   disabled?: boolean;
   defaultValue?: string[] | null;
   allowCustomValues?: boolean;
+  link?: { title: string; href: string };
 }
 
 const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
@@ -46,6 +48,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       disabled,
       defaultValue,
       allowCustomValues,
+      link,
       ...props
     },
     ref
@@ -232,6 +235,15 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                       {option.label}
                     </CommandItem>
                   ))}
+
+                  {link && (
+                    <Link
+                      href={link.href}
+                      className="text-sm text-primary hover:underline underline-offset-4"
+                    >
+                      {link.title}
+                    </Link>
+                  )}
                 </CommandGroup>
               </Command>
             </PopoverContent>

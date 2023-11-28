@@ -21,7 +21,6 @@ const handler = async (
     );
     node = response.data;
   } catch (error) {
-    console.log(error);
     return { error: "Something went wrong." };
   }
 

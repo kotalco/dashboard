@@ -159,7 +159,7 @@ export const readFieldArray = <T extends Record<string, any>>(
 
   for (const [key, value] of Array.from(formData.entries())) {
     const match = key.match(regex);
-    console.log(match);
+
     if (match) {
       const [, index, field] = match;
 
