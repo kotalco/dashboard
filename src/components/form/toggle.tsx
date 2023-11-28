@@ -7,6 +7,8 @@ import { Switch } from "@/components/ui/switch";
 import { FormErrors } from "@/components/form/form-errors";
 import { FormDescription } from "@/components/form/form-description";
 
+import { cn } from "@/lib/utils";
+
 interface ToggleProps extends ComponentPropsWithoutRef<typeof Root> {
   id: string;
   label?: string;
@@ -20,13 +22,14 @@ export const Toggle = ({
   errors,
   description,
   disabled,
+  className,
   ...props
 }: ToggleProps) => {
   const { pending } = useFormStatus();
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center space-x-2">
+      <div className={cn("flex items-center space-x-2", className)}>
         {label && (
           <Label htmlFor={id} className="font-semibold text-neutral-700">
             {label}

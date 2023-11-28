@@ -2,14 +2,20 @@
 
 import React, { InputHTMLAttributes, forwardRef } from "react";
 import { useFormStatus } from "react-dom";
+import { AlertCircle } from "lucide-react";
 
 import { Textarea as STextarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { FormErrors } from "@/components/form/form-errors";
+import { FormDescription } from "@/components/form/form-description";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { cn } from "@/lib/utils";
-import { FormDescription } from "./form-description";
-import { type } from "os";
 
 export interface TextareaProps
   extends InputHTMLAttributes<HTMLTextAreaElement> {
@@ -17,6 +23,7 @@ export interface TextareaProps
   label?: string;
   errors?: Record<string, string[] | undefined>;
   description?: string | React.ReactNode;
+  tooltip?: string;
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -29,6 +36,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       className,
       description,
       defaultValue,
+      tooltip,
       ...props
     },
     ref
@@ -40,18 +48,31 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="space-y-2">
         <div className="space-y-1">
-          {label && (
-            <Label htmlFor={id} className="font-semibold text-neutral-700">
-              {label}
-            </Label>
-          )}
+          <div>
+            {label && (
+              <Label htmlFor={id} className="font-semibold text-neutral-700">
+                {label}
+              </Label>
+            )}
+            {tooltip && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <AlertCircle className="w-3 h-3 ml-2" />
+                  </TooltipTrigger>
+                  <TooltipContent>{tooltip}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+
           <STextarea
             ref={ref}
             id={id}
             name={id}
             disabled={pending || disabled}
             aria-describedby={`${id}-error`}
-            className={cn(className)}
+            className={cn(className, "resize-none")}
             defaultValue={formattedDefaultValue}
             {...props}
           />
