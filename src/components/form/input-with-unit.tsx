@@ -4,8 +4,10 @@ import { useFormStatus } from "react-dom";
 import { Input, InputProps } from "@/components/form/input";
 import { Select } from "@/components/form/select";
 
+import { OptionType } from "@/types";
+
 export interface InputWithUnitProps extends InputProps {
-  unit: string | { label: string; value: string }[];
+  unit: string | OptionType[];
   defaultValue: string;
 }
 

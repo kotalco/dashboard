@@ -4,10 +4,18 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { ChainlinkNode } from "@/types";
 
 import { InputType, ReturnType } from "./types";
-import { EditDatabase, EditExecutionClient } from "./schema";
-import { ChainlinkNode } from "@/types";
+import {
+  EditAPI,
+  EditAccessControl,
+  EditDatabase,
+  EditExecutionClient,
+  EditLogs,
+  EditTLS,
+  EditWallet,
+} from "./schema";
 
 const handler = async (
   data: InputType,
@@ -32,3 +40,8 @@ const handler = async (
 
 export const editDatabase = createAction(EditDatabase, handler);
 export const editExecutionClient = createAction(EditExecutionClient, handler);
+export const editWallet = createAction(EditWallet, handler);
+export const editTLS = createAction(EditTLS, handler);
+export const editAPI = createAction(EditAPI, handler);
+export const editAccessControl = createAction(EditAccessControl, handler);
+export const editLogs = createAction(EditLogs, handler);

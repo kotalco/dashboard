@@ -13,7 +13,7 @@ interface DangerZoneTabProps {
 }
 
 export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
-  const params = useParams();
+  const { workspaceId } = useParams();
 
   return (
     <div>
@@ -33,7 +33,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
           <DeleteNodeForm
             nodeName={node.name}
             url={`/bitcoin/nodes/${node.name}`}
-            redirectUrl={`/${params.workspaceId}/deployments/bitcoin`}
+            redirectUrl={`/${workspaceId}/deployments/bitcoin`}
           />
         </AlertModal>
       </TabsFooter>

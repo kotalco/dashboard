@@ -15,7 +15,7 @@ import { SubmitButton } from "@/components/form/submit-button";
 import { Label } from "@/components/ui/label";
 
 import { cn, readFieldArray } from "@/lib/utils";
-import { BitcoinNode, RPCUser } from "@/types";
+import { BitcoinNode, OptionType, RPCUser } from "@/types";
 import { Roles, SecretType } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editBitcoinAPI } from "@/actions/edit-bitcoin";
@@ -23,7 +23,7 @@ import { editBitcoinAPI } from "@/actions/edit-bitcoin";
 interface APITabProps {
   node: BitcoinNode;
   role: Roles;
-  secrets: { label: string; value: string }[];
+  secrets: OptionType[];
 }
 
 export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {

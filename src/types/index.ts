@@ -24,6 +24,10 @@ export * from "@/types/nav";
 export * from "@/types/settings";
 export * from "@/types/secrets";
 
+export type OptionType = Record<"label" | "value", string> & {
+  disabled?: boolean;
+};
+
 export interface MainNodeInfo {
   name: string;
   network: string;

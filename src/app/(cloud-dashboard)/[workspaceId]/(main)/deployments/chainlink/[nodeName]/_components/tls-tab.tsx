@@ -1,229 +1,99 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
-import { ChainlinkNode, Secret } from "@/types";
-import { Roles, SecretType } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TabsFooter } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import Link from "next/link";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
+import { Select } from "@/components/form/select";
+import { Input } from "@/components/form/input";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitButton } from "@/components/form/submit-button";
+
+import { ChainlinkNode, OptionType } from "@/types";
+import { Roles, SecretType } from "@/enums";
+import { useAction } from "@/hooks/use-action";
+import { editTLS } from "@/actions/edit-chainlink";
 
 interface TLSTabProps {
   node: ChainlinkNode;
   role: Roles;
-  secrets: { label: string; value: string }[];
+  secrets: OptionType[];
 }
 
-const schema = z
-  .object({
-    certSecretName: z.string().optional(),
-    tlsPort: z.coerce.number().optional(),
-    secureCookies: z.boolean(),
-  })
-  .transform((values) =>
-    values.certSecretName
-      ? values
-      : { certSecretName: "", secureCookies: false }
-  );
-
-type Schema = z.infer<typeof schema>;
-
 export const TLSTab: React.FC<TLSTabProps> = ({ node, role, secrets }) => {
-  const params = useParams();
-  const { certSecretName, tlsPort, secureCookies } = node;
+  const { certSecretName, tlsPort, secureCookies, name } = node;
+  const { workspaceId } = useParams();
+  const [secured, setSecured] = useState(secureCookies);
+  const [certificate, setCertificate] = useState(certSecretName);
+  const { execute, fieldErrors, success, error } = useAction(editTLS);
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { certSecretName, tlsPort, secureCookies },
-  });
+  const onSubmit = async (formData: FormData) => {
+    const certSecretName = formData.get("certSecretName") as string;
+    const tlsPort = formData.get("tlsPort") as string;
+    const secureCookies = formData.get("secureCookies") === "on";
 
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-    watch,
-    setValue,
-  } = form;
-  const certificate = watch("certSecretName");
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<ChainlinkNode>(
-        `/chainlink/nodes/${node.name}`,
-        values
-      );
-      const { certSecretName, tlsPort, secureCookies } = data;
-      reset({ certSecretName, tlsPort, secureCookies });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+    await execute(
+      { certSecretName, tlsPort: Number(tlsPort), secureCookies },
+      { name, workspaceId: workspaceId as string }
+    );
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        {/* <FormField
-          control={form.control}
-          name="certSecretName"
-          render={({ field }) => (
-            <FormItem className="mt-2">
-              <FormLabel>Certificate</FormLabel>
-              <div className="flex items-center gap-x-2">
-                <Select
-                  disabled={isSubmitting || role === Roles.Reader}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger
-                      data-testid="certificate"
-                      className="max-w-sm bg-white"
-                    >
-                      <SelectValue placeholder="Select a password" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {secrets.map(({ name }) => (
-                      <SelectItem key={name} value={name}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                    <Link
-                      href={`/${params.workspaceId}/secrets/new?type=${SecretType["TLS Certificate"]}`}
-                      className="text-sm text-primary hover:underline underline-offset-4"
-                    >
-                      Create New Certificate
-                    </Link>
-                  </SelectContent>
-                </Select>
-                {field.value && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="text-destructive hover:bg-transparent hover:text-destructive/70"
-                    onClick={() => {
-                      field.onChange("");
-                      setValue("secureCookies", false);
-                    }}
-                  >
-                    Clear
-                  </Button>
-                )}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
+    <form action={onSubmit} className="relative space-y-4">
+      <Select
+        id="certSecretName"
+        label="Certificate"
+        disabled={role === Roles.Reader}
+        errors={fieldErrors}
+        defaultValue={certSecretName}
+        options={secrets}
+        placeholder="Select a certificate"
+        link={{
+          href: `/${workspaceId}/secrets/new?type=${SecretType["TLS Certificate"]}`,
+          title: "Create New Certificate",
+        }}
+        value={certificate}
+        onValueChange={setCertificate}
+        clear={{
+          onClear: () => {
+            setCertificate("");
+            setSecured(false);
+          },
+        }}
+      />
 
-        <FormField
-          control={form.control}
-          name="secureCookies"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row items-center gap-x-3">
-                <FormLabel className="text-base">Secure Cookies</FormLabel>
-                <FormControl>
-                  <Switch
-                    disabled={
-                      role === Roles.Reader || isSubmitting || !certificate
-                    }
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </div>
-            </FormItem>
-          )}
-        />
+      <Toggle
+        id="secureCookies"
+        label="Secure Cookies"
+        disabled={role === Roles.Reader || !certificate}
+        defaultChecked={secureCookies}
+        onCheckedChange={setSecured}
+        checked={secured}
+        errors={fieldErrors}
+      />
 
-        <FormField
-          control={form.control}
-          name="tlsPort"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>TLS Port</FormLabel>
-              <FormControl>
-                <Input
-                  data-testid="tls-port"
-                  className="max-w-sm"
-                  disabled={
-                    isSubmitting || role === Roles.Reader || !certificate
-                  }
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Input
+        id="tlsPort"
+        disabled={role === Roles.Reader}
+        label="TLS Port"
+        errors={fieldErrors}
+        defaultValue={tlsPort}
+        className="max-w-xs"
+      />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              TLS settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitSuccess success={success}>
+        TLS settings have been updated successfully.
+      </SubmitSuccess>
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

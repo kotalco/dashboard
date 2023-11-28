@@ -10,10 +10,10 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 
-type Option = { label: string; value: string };
+import { OptionType } from "@/types";
 
 interface MultiSelectProps {
-  options: Option[];
+  options: OptionType[];
   defaultValue?: string[];
   placeholder?: string;
   onChange?: (value: string[]) => void;
@@ -35,7 +35,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<Option[]>(() => {
+  const [selected, setSelected] = useState<OptionType[]>(() => {
     if (!defaultValue) return [];
     const initialValue = options.filter((option) =>
       defaultValue.includes(option.value)
@@ -57,14 +57,14 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   const [inputValue, setInputValue] = useState("");
 
   const handleUnselect = useCallback(
-    (option: Option) => {
+    (option: OptionType) => {
       setSelected((prev) => prev.filter((s) => s !== option));
       onChange && onChange(value.filter((val) => val !== option.value));
     },
     [onChange, value]
   );
 
-  const handleAddNewValue = (option: Option) => {
+  const handleAddNewValue = (option: OptionType) => {
     setInputValue("");
     setSelected((prev) => [...prev, option]);
     onChange && onChange([...value, option.value]);

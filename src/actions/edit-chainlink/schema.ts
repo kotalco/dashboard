@@ -1,3 +1,4 @@
+import { ChainlinkLogging } from "@/enums";
 import { z } from "zod";
 
 export const EditDatabase = z.object({
@@ -28,4 +29,48 @@ export const EditExecutionClient = z.object({
         message: "Invalid HTTP URL",
       }
     ),
+});
+
+export const EditWallet = z.object({
+  keystorePasswordSecretName: z.string({
+    required_error: "Keystore password is required",
+  }),
+});
+
+export const EditTLS = z
+  .object({
+    certSecretName: z.string().optional().nullable(),
+    tlsPort: z.coerce.number().optional(),
+    secureCookies: z.boolean(),
+  })
+  .transform((values) =>
+    values.certSecretName
+      ? values
+      : { certSecretName: "", secureCookies: false }
+  );
+
+export const EditAPI = z.object({
+  api: z.boolean(),
+  apiCredentials: z.object({
+    email: z
+      .string({ required_error: "Email is required" })
+      .email("Invalid Email")
+      .trim(),
+    passwordSecretName: z.string({ required_error: "Password is required" }),
+  }),
+});
+
+export const EditAccessControl = z.object({
+  corsDomains: z
+    .string()
+    .transform((value) =>
+      value ? value.split("\n").filter((value) => !!value) : []
+    )
+    .refine((value) => !!value.length, {
+      message: `Please specify your CORS domains or "*" to whitelist all domains`,
+    }),
+});
+
+export const EditLogs = z.object({
+  logging: z.nativeEnum(ChainlinkLogging),
 });

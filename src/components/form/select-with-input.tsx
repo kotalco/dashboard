@@ -16,11 +16,12 @@ import { FormDescription } from "@/components/form/form-description";
 import { FormErrors } from "@/components/form/form-errors";
 
 import { cn } from "@/lib/utils";
+import { OptionType } from "@/types";
 
 interface SelectWithInputProps extends ComponentPropsWithoutRef<typeof Root> {
   id: string;
   label?: string;
-  options: { label: string; value: string }[];
+  options: OptionType[];
   placeholder?: string;
   otherLabel?: string;
   allowClear?: boolean;

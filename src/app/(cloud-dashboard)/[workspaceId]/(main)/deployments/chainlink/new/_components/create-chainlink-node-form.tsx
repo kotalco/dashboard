@@ -6,7 +6,7 @@ import { Input } from "@/components/form/input";
 import { ChainlinkNetworks, SecretType } from "@/enums";
 import { Select } from "@/components/form/select";
 import { getSelectItems, readSelectWithInputValue } from "@/lib/utils";
-import { ExecutionClientNode, Version } from "@/types";
+import { ExecutionClientNode, OptionType, Version } from "@/types";
 import { Label } from "@/components/ui/label";
 import { useAction } from "@/hooks/use-action";
 import { createChainlink } from "@/actions/create-chainlink";
@@ -19,7 +19,7 @@ import { SelectWithInput } from "@/components/form/select-with-input";
 interface CreateChainlinkNodeFormProps {
   images: Version[];
   executionClients: ExecutionClientNode[];
-  passwords: { label: string; value: string }[];
+  passwords: OptionType[];
 }
 
 export const CreateChainlinkNodeForm: React.FC<

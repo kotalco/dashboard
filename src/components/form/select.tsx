@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef } from "react";
+import React, { ComponentPropsWithoutRef, useState } from "react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { Root } from "@radix-ui/react-select";
@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { FormDescription } from "@/components/form/form-description";
+import { Button } from "@/components/ui/button";
+import { FormErrors } from "@/components/form/form-errors";
 
 import { cn } from "@/lib/utils";
-
-import { FormErrors } from "./form-errors";
 
 interface SelectProps extends ComponentPropsWithoutRef<typeof Root> {
   id: string;
@@ -26,6 +26,7 @@ interface SelectProps extends ComponentPropsWithoutRef<typeof Root> {
   description?: string | React.ReactNode;
   className?: string;
   link?: { title: string; href: string };
+  clear?: { onClear: () => void };
 }
 
 export const Select = ({
@@ -38,6 +39,8 @@ export const Select = ({
   description,
   className,
   link,
+  clear,
+  value,
   ...props
 }: SelectProps) => {
   const { pending } = useFormStatus();
@@ -50,35 +53,49 @@ export const Select = ({
             {label}
           </Label>
         )}
-        <ShadSelect
-          disabled={pending || disabled}
-          name={id}
-          aria-describedby={`${id}-error`}
-          {...props}
-        >
-          <SelectTrigger
-            id={id}
-            data-testid={id}
-            className={cn(className, "bg-white max-w-xs")}
+        <div className="flex">
+          <ShadSelect
+            disabled={pending || disabled}
+            name={id}
+            aria-describedby={`${id}-error`}
+            value={value}
+            {...props}
           >
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
-          <SelectContent>
-            {options.map(({ value, label, disabled }) => (
-              <SelectItem disabled={disabled} key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-            {link && (
-              <Link
-                href={link.href}
-                className="text-sm text-primary hover:underline underline-offset-4"
-              >
-                {link.title}
-              </Link>
-            )}
-          </SelectContent>
-        </ShadSelect>
+            <SelectTrigger
+              id={id}
+              data-testid={id}
+              className={cn(className, "bg-white max-w-xs")}
+            >
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {options.map(({ value, label, disabled }) => (
+                <SelectItem disabled={disabled} key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+              {link && (
+                <Link
+                  href={link.href}
+                  className="text-sm text-primary hover:underline underline-offset-4"
+                >
+                  {link.title}
+                </Link>
+              )}
+            </SelectContent>
+          </ShadSelect>
+
+          {clear && value && (
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-destructive hover:bg-transparent hover:text-destructive/70"
+              onClick={() => clear.onClear()}
+            >
+              Clear
+            </Button>
+          )}
+        </div>
 
         <FormDescription description={description} />
       </div>
