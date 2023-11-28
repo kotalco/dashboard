@@ -37,12 +37,13 @@ export const CreateExecutionClientNodeForm: React.FC<{ images: Clients }> = ({
     const name = formData.get("name") as string;
     const client = formData.get("client") as ExecutionClientClients;
     const network = readSelectWithInputValue("network", formData);
+
     execute({
       name,
       client,
       network,
       workspace_id: workspaceId as string,
-      image: getLatestVersion(images, client),
+      image: getLatestVersion(images, client)!,
     });
   };
 

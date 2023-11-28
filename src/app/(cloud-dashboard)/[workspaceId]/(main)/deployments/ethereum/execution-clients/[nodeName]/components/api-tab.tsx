@@ -81,7 +81,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
             id="jwtSecretName"
             label="JWT Secret"
             options={secrets}
-            defaultValue={jwtSecretName}
+            defaultValue={jwtSecretName || undefined}
             placeholder="Select a Secret"
             disabled={role === Roles.Reader}
             errors={fieldErrors}

@@ -4,10 +4,10 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { BeaconNode } from "@/types";
 
 import { InputType, ReturnType } from "./types";
-import { EditAPI, EditAccessControl, EditLogs, EditNetworking } from "./schema";
-import { ExecutionClientNode } from "@/types";
+import { EditAPI, EditCheckpointSync, EditExecutionClient } from "./schema";
 
 const handler = async (
   data: InputType,
@@ -15,23 +15,21 @@ const handler = async (
 ): Promise<ReturnType> => {
   let node;
   try {
-    const response = await server.put<ExecutionClientNode>(
-      `/ethereum/nodes/${identifiers.name}`,
+    const response = await server.put<BeaconNode>(
+      `/ethereum2/beaconnodes/${identifiers.name}`,
       data
     );
     node = response.data;
   } catch (error) {
-    console.log(error);
     return { error: "Something went wrong." };
   }
 
   revalidatePath(
-    `${identifiers.workspaceId}/deployments/ethereum/execution-clients/${node.name}`
+    `${identifiers.workspaceId}/deployments/ethereum/beacon-nodes/${node.name}`
   );
   return { data: node };
 };
 
 export const editAPI = createAction(EditAPI, handler);
-export const editAccessControl = createAction(EditAccessControl, handler);
-export const editLogs = createAction(EditLogs, handler);
-export const editNetworking = createAction(EditNetworking, handler);
+export const editCheckpointSync = createAction(EditCheckpointSync, handler);
+export const edeitExecutionClient = createAction(EditExecutionClient, handler);

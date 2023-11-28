@@ -8,15 +8,17 @@ import { Label } from "@/components/ui/label";
 
 import { FormErrors } from "./form-errors";
 import { cn } from "@/lib/utils";
+import { FormDescription } from "./form-description";
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label?: string;
   errors?: Record<string, string[] | undefined>;
+  description?: string | React.ReactNode;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, errors, id, disabled, className, ...props }, ref) => {
+  ({ label, errors, id, disabled, className, description, ...props }, ref) => {
     const { pending } = useFormStatus();
 
     return (
@@ -36,6 +38,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className={cn(className)}
             {...props}
           />
+          <FormDescription description={description} />
         </div>
 
         <FormErrors id={id} errors={errors} />

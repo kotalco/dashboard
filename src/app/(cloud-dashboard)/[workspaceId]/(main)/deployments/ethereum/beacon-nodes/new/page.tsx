@@ -16,7 +16,7 @@ export default async function CreateNewBeaconNodePage({
 }) {
   const { workspaceId } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType["JWT Secret"]);
+  const { options } = await getSecrets(workspaceId, SecretType["JWT Secret"]);
   const { data } = await getNodes<ExecutionClientNode>(
     params.workspaceId,
     "/ethereum/nodes"
@@ -38,7 +38,7 @@ export default async function CreateNewBeaconNodePage({
         <CreateBeaconNodeForm
           images={component}
           executionClients={data}
-          secrets={secrets}
+          secrets={options}
         />
       </CardContent>
     </Card>

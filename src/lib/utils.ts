@@ -72,20 +72,20 @@ export const getStatusColor = (value: NodeStatuses) => {
 
 export const getLatestVersion = (
   data: Clients,
-  client: string,
+  client?: string,
   network?: string
 ) => {
-  let versions = data.clients[client].versions;
+  let versions = client && data.clients[client].versions;
 
-  if (network) {
+  if (network && versions) {
     versions = versions.filter((version) => version.network === network);
   }
 
-  if (versions.length > 1) {
+  if (versions && versions.length > 1) {
     versions.reverse();
   }
 
-  return versions[0].image;
+  return versions && versions[0].image;
 };
 
 export const getClientUrl = (client: string) => {

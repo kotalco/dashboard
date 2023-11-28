@@ -45,7 +45,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
 }) => {
   const { pending } = useFormStatus();
   const [selected, setSelected] = useState(() => {
-    if (!defaultValue) return "";
+    if (!defaultValue) return undefined;
     return options.some(({ value }) => value === defaultValue)
       ? defaultValue
       : "other";

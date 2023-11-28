@@ -44,7 +44,7 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
     <form
       data-testid="create-node"
       action={onSubmit}
-      className="max-w-sm space-y-4"
+      className="max-w-xs space-y-4"
     >
       <Input errors={fieldErrors} id="name" label="Node Name" />
 

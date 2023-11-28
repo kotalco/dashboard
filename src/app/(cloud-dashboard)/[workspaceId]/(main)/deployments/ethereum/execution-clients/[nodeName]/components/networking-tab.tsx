@@ -30,29 +30,30 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
   const { nodePrivateKeySecretName, syncMode, staticNodes, bootnodes, name } =
     node;
   const { workspaceId } = useParams();
-  const [privateKey, setPrivateKey] = useState(nodePrivateKeySecretName);
+  const [privateKey, setPrivateKey] = useState<string | undefined>(
+    nodePrivateKeySecretName
+  );
   const { execute, fieldErrors, error, success } = useAction(editNetworking);
 
   const onSubmit = (formData: FormData) => {
-    const nodePrivateKeySecretName = formData.get(
-      "nodePrivateKeySecretName"
-    ) as string;
+    const nodePrivateKeySecretName = privateKey;
     const syncMode = formData.get("syncMode") as ExecutionClientSyncMode;
     const staticNodes = formData.get("staticNodes") as string;
     const bootnodes = formData.get("bootnodes") as string;
+
     execute(
       { nodePrivateKeySecretName, syncMode, staticNodes, bootnodes },
       { name, workspaceId: workspaceId as string }
     );
   };
-
+  console.log(nodePrivateKeySecretName);
   return (
     <form action={onSubmit} className="relative space-y-4">
       <Select
         id="nodePrivateKeySecretName"
         label="Node Private Key"
         options={secrets}
-        defaultValue={nodePrivateKeySecretName}
+        defaultValue={privateKey}
         value={privateKey}
         onValueChange={setPrivateKey}
         disabled={role === Roles.Reader}
