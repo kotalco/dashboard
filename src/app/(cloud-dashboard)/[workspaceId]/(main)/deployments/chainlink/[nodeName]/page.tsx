@@ -5,14 +5,16 @@ import { format, parseISO } from "date-fns";
 import { getWorkspace } from "@/services/get-workspace";
 import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
-import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { ChainlinkNode, ExecutionClientNode } from "@/types";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
+import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
+
 import { ProtocolTab } from "./_components/protocol-tab";
 import { APITab } from "./_components/api-tab";
 import { DangerZoneTab } from "./_components/danger-zone-tab";
@@ -24,7 +26,6 @@ import { TLSTab } from "./_components/tls-tab";
 import { AccessControlTab } from "./_components/access-control-tab";
 import { LogsTab } from "./_components/logs-tab";
 import { Suspense } from "react";
-import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
 
 export default async function ChainlinkPage({
   params,

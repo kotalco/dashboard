@@ -1,13 +1,15 @@
 import { getWorkspace } from "@/services/get-workspace";
 import { getNodes } from "@/services/get-nodes";
 import { BeaconNode, ExecutionClientNode, ValidatorNode } from "@/types";
+import { Roles } from "@/enums";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
-import { ExecutionClientClient } from "./components/execution-client-client";
-import { BeaconNodesClient } from "./components/beacon-node-client";
-import { ValidatorClient } from "./components/validator-client";
-import { Roles } from "@/enums";
 import { ButtonGroup } from "@/components/ui/button-group";
+
+import { ExecutionClientClient } from "../components/execution-client-client";
+import { BeaconNodesClient } from "../components/beacon-node-client";
+import { ValidatorClient } from "../components/validator-client";
 
 export default async function EthereumPage({
   params,
