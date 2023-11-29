@@ -3,22 +3,10 @@ import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
 import { getWorkspace } from "@/services/get-workspace";
-import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
-import {
-  ExecutionClientClients,
-  Protocol,
-  Roles,
-  SecretType,
-  StorageItems,
-} from "@/enums";
-import {
-  BeaconNode,
-  ExecutionClientNode,
-  IPFSClusterPeer,
-  IPFSPeer,
-} from "@/types";
+import { Protocol, Roles, StorageItems } from "@/enums";
+import { IPFSClusterPeer, IPFSPeer } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -72,7 +60,6 @@ export default async function BeaconNodePage({
                 nodeName={node.name}
                 protocol={Protocol.IPFS}
                 token={token.value}
-                workspaceId={workspaceId}
                 component="clusterpeers"
               />
             )}
@@ -90,7 +77,6 @@ export default async function BeaconNodePage({
                 nodeName={node.name}
                 protocol={Protocol.IPFS}
                 token={token.value}
-                workspaceId={workspaceId}
                 component="clusterpeers"
               />
             )}
@@ -141,7 +127,7 @@ export default async function BeaconNodePage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
+                url={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

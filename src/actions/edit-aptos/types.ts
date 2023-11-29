@@ -5,5 +5,8 @@ import { ActionState } from "@/lib/create-action";
 
 import { EditAptosAPI } from "./schema";
 
-export type APIInputType = z.infer<typeof EditAptosAPI>;
-export type APIReturnType = ActionState<APIInputType, AptosNode>;
+type APIInputType = z.infer<typeof EditAptosAPI>;
+type APIReturnType = ActionState<APIInputType, AptosNode>;
+
+export type InputType = APIInputType;
+export type ReturnType = APIReturnType;

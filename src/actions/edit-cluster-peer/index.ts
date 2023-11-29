@@ -4,28 +4,31 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { IPFSClusterPeer } from "@/types";
 
 import { InputType, ReturnType } from "./types";
-import { EditAptosAPI } from "./schema";
-import { AptosNode } from "@/types";
+import { EditPeers } from "./schema";
 
 const handler = async (
   data: InputType,
   identifiers: Record<string, string>
 ): Promise<ReturnType> => {
-  let node;
+  let peer;
   try {
-    const response = await server.put<AptosNode>(
-      `/aptos/nodes/${identifiers.name}`,
+    const response = await server.put<IPFSClusterPeer>(
+      `/ipfs/clusterpeers/${identifiers.name}`,
       data
     );
-    node = response.data;
+
+    peer = response.data;
   } catch (error) {
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(`${identifiers.workspaceId}/deployments/aptos/${node.name}`);
-  return { data: node };
+  revalidatePath(
+    `${identifiers.workspaceId}/deployments/ipfs/cluster-peers/${peer.name}`
+  );
+  return { data: peer };
 };
 
-export const editAptosNode = createAction(EditAptosAPI, handler);
+export const editPeers = createAction(EditPeers, handler);

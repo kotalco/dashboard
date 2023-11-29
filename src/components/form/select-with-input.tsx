@@ -41,6 +41,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
   allowClear = false,
   description,
   errors,
+  className,
   ...props
 }) => {
   const { pending } = useFormStatus();
@@ -75,8 +76,9 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
             <SelectTrigger
               id={id}
               className={cn(
+                className,
                 selected === "other" ? "rounded-b-none" : "",
-                "bg-white max-w-sm"
+                "bg-white"
               )}
             >
               <SelectValue placeholder={placeholder} />
@@ -115,7 +117,10 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
               name={`${id}-input`}
               disabled={pending || disabled}
               type="text"
-              className="-mt-1.5 border-t-0 rounded-t-none max-w-sm"
+              className={cn(
+                "-mt-1.5 border-t-0 rounded-t-none max-w-sm",
+                className
+              )}
               defaultValue={selected === "other" ? defaultValue : undefined}
             />
           </div>

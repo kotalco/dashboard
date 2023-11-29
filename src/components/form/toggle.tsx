@@ -14,6 +14,7 @@ interface ToggleProps extends ComponentPropsWithoutRef<typeof Root> {
   label?: string;
   errors?: Record<string, string[] | undefined>;
   description?: string | React.ReactNode;
+  labelPosition?: "left" | "right";
 }
 
 export const Toggle = ({
@@ -23,6 +24,7 @@ export const Toggle = ({
   description,
   disabled,
   className,
+  labelPosition = "left",
   ...props
 }: ToggleProps) => {
   const { pending } = useFormStatus();
@@ -30,13 +32,19 @@ export const Toggle = ({
   return (
     <div className="space-y-2">
       <div className={cn("flex items-center space-x-2", className)}>
-        {label && (
+        {label && labelPosition === "left" && (
           <Label htmlFor={id} className="font-semibold text-neutral-700">
             {label}
           </Label>
         )}
 
         <Switch disabled={pending || disabled} name={id} id={id} {...props} />
+
+        {label && labelPosition === "right" && (
+          <Label htmlFor={id} className="font-semibold text-neutral-700">
+            {label}
+          </Label>
+        )}
       </div>
 
       <FormDescription description={description} />
