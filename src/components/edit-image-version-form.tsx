@@ -57,6 +57,7 @@ export const EditImageVersionForm = ({
           description="Latest version is recommended"
           options={options}
           errors={fieldErrors}
+          className="max-w-xs"
         />
 
         <ExternalLink

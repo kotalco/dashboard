@@ -36,7 +36,7 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
       name,
       network,
       workspace_id: workspaceId as string,
-      image: getLatestVersion(images, "aptos-core", network),
+      image: getLatestVersion(images, "aptos-core", network)!,
     });
   };
 

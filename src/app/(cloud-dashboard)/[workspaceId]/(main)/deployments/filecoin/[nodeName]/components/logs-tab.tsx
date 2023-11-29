@@ -1,35 +1,18 @@
 "use client";
 
-import * as z from "zod";
 import { useParams } from "next/navigation";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { client } from "@/lib/client-instance";
-import { getSelectItems } from "@/lib/utils";
-import { ExecutionClientNode, FilecoinNode } from "@/types";
-import { ExecutionClientLogging, Roles } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { FilecoinNode } from "@/types";
+import { Roles } from "@/enums";
+import { editLogging } from "@/actions/edit-filecoin";
+
 import { TabsFooter } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Logs } from "@/components/logs";
-import { Switch } from "@/components/ui/switch";
+import { useAction } from "@/hooks/use-action";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface LogsTabProps {
   node: FilecoinNode;
@@ -37,115 +20,46 @@ interface LogsTabProps {
   token: string;
 }
 
-const schema = z.object({
-  disableMetadataLog: z.boolean(),
-});
-
-type Schema = z.infer<typeof schema>;
-
 export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
-  const params = useParams();
-  const { disableMetadataLog } = node;
+  const { workspaceId } = useParams();
+  const { disableMetadataLog, name } = node;
+  const { execute, fieldErrors, error, success } = useAction(editLogging);
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      disableMetadataLog,
-    },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<FilecoinNode>(
-        `/filecoin/nodes/${node.name}`,
-        values
-      );
-      const { disableMetadataLog } = data;
-      reset({
+  const onSubmit = (formData: FormData) => {
+    const disableMetadataLog = formData.get("disableMetadataLog") === "on";
+    execute(
+      {
         disableMetadataLog,
-      });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+      },
+      { name, workspaceId: workspaceId as string }
+    );
   };
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="relative space-y-4"
-        >
-          <FormField
-            control={form.control}
-            name="disableMetadataLog"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center gap-x-3">
-                <FormLabel className="mt-2 text-base">
-                  Disable Metadata Logs
-                </FormLabel>
-                <FormControl>
-                  <Switch
-                    disabled={isSubmitting || role === Roles.Reader}
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+    <form action={onSubmit} className="relative space-y-4">
+      <Toggle
+        id="disableMetadataLog"
+        label="Disable Metadata Logs"
+        disabled={role === Roles.Reader}
+        defaultChecked={disableMetadataLog}
+        errors={fieldErrors}
+      />
 
-          <Logs
-            url={`filecoin/nodes/${node.name}/logs?authorization=Bearer ${token}&workspace_id=${params.workspaceId}`}
-          />
+      <Logs
+        url={`filecoin/nodes/${name}/logs?authorization=Bearer ${token}&workspace_id=${workspaceId}`}
+      />
 
-          {isSubmitSuccessful && (
-            <Alert variant="success" className="text-center">
-              <AlertDescription>
-                Logging settings have been updated successfully.
-              </AlertDescription>
-            </Alert>
-          )}
+      <SubmitSuccess success={success}>
+        Logging settings have been updated successfully.
+      </SubmitSuccess>
 
-          {errors.root && (
-            <Alert variant="destructive" className="text-center">
-              <AlertDescription>{errors.root.message}</AlertDescription>
-            </Alert>
-          )}
+      <SubmitError error={error} />
 
-          {role !== Roles.Reader && (
-            <TabsFooter>
-              <Button
-                disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-                data-testid="submit"
-                type="submit"
-              >
-                Save
-              </Button>
-            </TabsFooter>
-          )}
-        </form>
-      </Form>
-    </>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };
