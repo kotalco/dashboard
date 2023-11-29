@@ -54,7 +54,6 @@ export default async function ExecutionClientPage({
                 protocol={Protocol.IPFS}
                 component="peers"
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
             <Heading
@@ -77,7 +76,6 @@ export default async function ExecutionClientPage({
                   nodeName={node.name}
                   protocol={Protocol.IPFS}
                   token={token.value}
-                  workspaceId={workspaceId}
                   component="peers"
                 />
               </>
@@ -131,7 +129,7 @@ export default async function ExecutionClientPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/ipfs/peers/${node.name}?workspace_id=${workspaceId}`}
+                url={`/ipfs/peers/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

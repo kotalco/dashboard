@@ -16,12 +16,11 @@ import { getSelectItems } from "@/lib/utils";
 
 import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
-import { Checkbox } from "@/components/form/checkbox";
 import { Toggle } from "@/components/form/toggle";
-import { Label } from "@/components/ui/label";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
 import { SubmitButton } from "@/components/form/submit-button";
+import { CheckboxGroup } from "@/components/form/checkbox-group";
 
 interface APITabProps {
   node: ExecutionClientNode;
@@ -106,24 +105,15 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
         />
 
         {rpcState && (
-          <div className="space-y-2">
-            <Label className="text-foreground/50">
-              Select which APIs you want to use
-            </Label>
-            <div className="flex space-x-10">
-              {getSelectItems(ExecutionClientAPI).map(({ value, label }) => (
-                <Checkbox
-                  key={value}
-                  id="rpcAPI"
-                  label={label}
-                  errors={fieldErrors}
-                  value={value}
-                  disabled={role === Roles.Reader}
-                  defaultChecked={rpcAPI.includes(value)}
-                />
-              ))}
-            </div>
-          </div>
+          <CheckboxGroup
+            label="Select which APIs you want to use"
+            className="flex space-x-10"
+            options={getSelectItems(ExecutionClientAPI)}
+            id="rpcAPI"
+            errors={fieldErrors}
+            disabled={role === Roles.Reader}
+            defaultValues={rpcAPI}
+          />
         )}
       </div>
 
@@ -140,24 +130,15 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
         />
 
         {wsState && (
-          <div className="space-y-2">
-            <Label className="text-foreground/50">
-              Select which APIs you want to use
-            </Label>
-            <div className="flex space-x-10">
-              {getSelectItems(ExecutionClientAPI).map(({ value, label }) => (
-                <Checkbox
-                  key={value}
-                  id="wsAPI"
-                  label={label}
-                  value={value}
-                  errors={fieldErrors}
-                  disabled={role === Roles.Reader}
-                  defaultChecked={wsAPI.includes(value)}
-                />
-              ))}
-            </div>
-          </div>
+          <CheckboxGroup
+            label="Select which APIs you want to use"
+            className="flex space-x-10"
+            options={getSelectItems(ExecutionClientAPI)}
+            id="wsAPI"
+            errors={fieldErrors}
+            disabled={role === Roles.Reader}
+            defaultValues={wsAPI}
+          />
         )}
       </div>
 

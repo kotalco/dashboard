@@ -6,16 +6,17 @@ import { isAxiosError } from "axios";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 
+import { IPFSPeer } from "@/types";
+
 import { InputType, ReturnType } from "./types";
-import { CreateAptos } from "./schema";
-import { AptosNode } from "@/types";
+import { CreatePeer } from "./schema";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { workspace_id } = data;
-  let node;
+  let peer;
   try {
-    const response = await server.post<AptosNode>("/aptos/nodes", data);
-    node = response.data;
+    const response = await server.post<IPFSPeer>("/ipfs/peers", data);
+    peer = response.data;
   } catch (error) {
     if (isAxiosError(error)) {
       const { response } = error;
@@ -32,8 +33,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     }
   }
 
-  revalidatePath(`${workspace_id}/deployments/aptos`);
-  return { data: node };
+  revalidatePath(`${workspace_id}/deployments/ipfs?deployment=peers`);
+  return { data: peer };
 };
 
-export const createAptosNode = createAction(CreateAptos, handler);
+export const createPeer = createAction(CreatePeer, handler);

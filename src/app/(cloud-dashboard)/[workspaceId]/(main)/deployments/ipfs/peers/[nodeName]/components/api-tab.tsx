@@ -1,144 +1,63 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
 import { IPFSPeer } from "@/types";
 import { Roles } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { editAPI } from "@/actions/edit-peer";
+
 import { TabsFooter } from "@/components/ui/tabs";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface APITabProps {
   node: IPFSPeer;
   role: Roles;
 }
 
-const schema = z.object({
-  api: z.boolean(),
-  gateway: z.boolean(),
-});
-
-type Schema = z.infer<typeof schema>;
-
 export const APITab: React.FC<APITabProps> = ({ node, role }) => {
-  const { api, gateway } = node;
+  const { api, gateway, name } = node;
+  const { workspaceId } = useParams();
+  const { execute, fieldErrors, error, success } = useAction(editAPI);
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { api, gateway },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<IPFSPeer>(
-        `/ipfs/peers/${node.name}`,
-        values
-      );
-      const { api, gateway } = data;
-      reset({ api, gateway });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+  const onSubmit = (formData: FormData) => {
+    const api = formData.get("api") === "on";
+    const gateway = formData.get("gateway") === "on";
+    execute({ api, gateway }, { name, workspaceId: workspaceId as string });
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="api"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">API</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="relative space-y-4">
+      <Toggle
+        id="api"
+        label="API"
+        disabled={role === Roles.Reader}
+        errors={fieldErrors}
+        defaultChecked={api}
+      />
 
-        <FormField
-          control={form.control}
-          name="gateway"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">Gateway</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+      <Toggle
+        id="gateway"
+        label="Gateway"
+        disabled={role === Roles.Reader}
+        errors={fieldErrors}
+        defaultChecked={gateway}
+      />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              API settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitSuccess success={success}>
+        API settings have been updated successfully.
+      </SubmitSuccess>
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

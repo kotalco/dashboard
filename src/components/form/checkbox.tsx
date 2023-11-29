@@ -6,7 +6,7 @@ import { Checkbox as SCheckbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { FormErrors } from "@/components/form/form-errors";
 
-interface CheckboxProps extends ComponentPropsWithoutRef<typeof Root> {
+export interface CheckboxProps extends ComponentPropsWithoutRef<typeof Root> {
   id: string;
   label?: string;
   errors?: Record<string, string[] | undefined>;
@@ -25,18 +25,17 @@ export const Checkbox = ({
   return (
     <div className="space-y-2">
       <div className="flex items-center space-x-2">
-        {label && (
-          <Label htmlFor={labelId} className="font-semibold text-neutral-700">
-            {label}
-          </Label>
-        )}
-
         <SCheckbox
           disabled={pending || disabled}
           name={id}
           id={labelId}
           {...props}
         />
+        {label && (
+          <Label htmlFor={labelId} className="font-semibold text-neutral-700">
+            {label}
+          </Label>
+        )}
       </div>
 
       <FormErrors id={id} errors={errors} />
