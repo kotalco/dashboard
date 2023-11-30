@@ -11,9 +11,9 @@ export default async function SecretsPage({
 }: {
   params: { workspaceId: string };
 }) {
-  const secrets = await getSecrets(params.workspaceId);
+  const { data } = await getSecrets(params.workspaceId);
   const { role } = await getWorkspace(params.workspaceId);
-  const formattedSecrets = secrets.map(({ type, name, createdAt }) => ({
+  const formattedSecrets = data.map(({ type, name, createdAt }) => ({
     type: getEnumKey(SecretType, type),
     name,
     createdAt: format(parseISO(createdAt), "MMMM do, yyyy"),
