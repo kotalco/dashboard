@@ -2,67 +2,19 @@
 
 import * as z from "zod";
 import { useParams, useRouter } from "next/navigation";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { NEARNetworks, PolkadotNetworks, StacksNetworks } from "@/enums";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { StacksNetworks } from "@/enums";
 import { getSelectItems } from "@/lib/utils";
-import { client } from "@/lib/client-instance";
 import { BitcoinNode, Version } from "@/types";
-import { Switch } from "@/components/ui/switch";
+import { useAction } from "@/hooks/use-action";
+import { createStacksNode } from "@/actions/create-stacks";
 
-const schema = z.object({
-  name: z
-    .string()
-    .min(1, "Node name is required")
-    .max(64, "Too long name")
-    .trim()
-    .refine((value) => /^\S*$/.test(value), {
-      message: "Invalid character used",
-    }),
-  network: z.nativeEnum(StacksNetworks, {
-    required_error: "Network is required",
-  }),
-  bitcoinNode: z
-    .string({ required_error: "Bitcoin node is required" })
-    .transform((value) => {
-      const { name, p2pPort, rpcPort, rpcUsers } = JSON.parse(
-        value
-      ) as BitcoinNode;
-      return {
-        endpoint: name,
-        p2pPort,
-        rpcPort,
-        rpcUsername: rpcUsers[0].username,
-        rpcPasswordSecretName: rpcUsers[0].passwordSecretName,
-      };
-    }),
-  workspace_id: z.string().min(1),
-  image: z.string().min(1),
-});
-
-type Schema = z.input<typeof schema>;
+import { Input } from "@/components/form/input";
+import { Select } from "@/components/form/select";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
+import { ExternalLink } from "@/components/ui/external-link";
 
 export interface CreateStacksNodeFormProps {
   images: Version[];
@@ -73,178 +25,70 @@ export const CreateStacksNodeForm: React.FC<CreateStacksNodeFormProps> = ({
   images,
   bitcoinNodes,
 }) => {
-  const { toast } = useToast();
   const router = useRouter();
   const { workspaceId } = useParams();
-
-  const defaultValues = {
-    name: "",
-    image: images[0].image,
-  };
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues,
+  const { execute, fieldErrors, error } = useAction(createStacksNode, {
+    onSuccess: ({ name }) => {
+      router.push(`/${workspaceId}/deployments/stacks`);
+      toast.message("Stacks node has been created", {
+        description: `${name} node has been created successfully, and will be up and running in few seconds.`,
+      });
+    },
   });
 
-  const {
-    formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
-    setError,
-  } = form;
+  const nodes = bitcoinNodes
+    .filter(({ rpc }) => rpc)
+    .map((node) => ({ label: node.name, value: JSON.stringify(node) }));
 
-  async function onSubmit(values: Schema) {
-    try {
-      await client.post("/stacks/nodes", values);
-      router.push(`/${workspaceId}/deployments/stacks`);
-      router.refresh();
-      toast({
-        title: "Stacks node has been created",
-        description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
-      });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-        if (response?.status === 400) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Name already exists.",
-          });
-          return;
-        }
-        if (response?.status === 403) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Reached Nodes Limit.",
-          });
-          return;
-        }
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
+  const onSubmit = (formData: FormData) => {
+    const name = formData.get("name") as string;
+    const network = formData.get("network") as StacksNetworks;
+    const bitcoinNode = formData.get("bitcoinNode") as string;
+
+    execute({
+      name,
+      network,
+      bitcoinNode,
+      workspace_id: workspaceId as string,
+      image: images[0].image,
+    });
+  };
 
   return (
-    <Form {...form}>
-      <form
-        data-testid="create-node"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-sm space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="workspace_id"
-          defaultValue={workspaceId as string}
-          render={({ field }) => <Input className="sr-only" {...field} />}
-        />
+    <form
+      data-testid="create-node"
+      action={onSubmit}
+      className="max-w-sm space-y-4"
+    >
+      <Input errors={fieldErrors} id="name" label="Node Name" />
 
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Node Name</FormLabel>
-              <FormControl>
-                <Input data-testid="name" disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Select
+        id="network"
+        label="Network"
+        placeholder="Select Network"
+        options={getSelectItems(StacksNetworks)}
+        errors={fieldErrors}
+      />
 
-        <FormField
-          control={form.control}
-          name="network"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-              <FormLabel>Network</FormLabel>
-              <Select
-                disabled={isSubmitting}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger data-testid="network" className="bg-white">
-                    <SelectValue placeholder="Select a Network" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {getSelectItems(StacksNetworks).map(({ value, label }) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      <p className="text-sm font-medium leading-none space-y-1">
+        Client:{" "}
+        <ExternalLink href="https://github.com/stacks-network/stacks-blockchain">
+          Stacks
+        </ExternalLink>
+      </p>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Select
+        id="bitcoinNode"
+        label="Bitcoin Node"
+        placeholder="Select a Node"
+        options={nodes}
+        errors={fieldErrors}
+        description="Bitcoin nodes with JSON-RPC server enabled"
+      />
 
-        <p className="text-sm">
-          Client:{" "}
-          <a
-            href="https://github.com/stacks-network/stacks-blockchain"
-            target="_blank"
-            rel="noreferrer"
-            className="text-primary hover:underline underline-offset-4"
-          >
-            Stacks
-          </a>
-        </p>
+      <SubmitError error={error} />
 
-        <FormField
-          control={form.control}
-          name="bitcoinNode"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-              <FormLabel>Bitcoin Node</FormLabel>
-              <Select
-                disabled={isSubmitting}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger data-testid="network" className="bg-white">
-                    <SelectValue placeholder="Select a Node" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {bitcoinNodes
-                    .filter(({ rpc }) => rpc)
-                    .map((node) => (
-                      <SelectItem key={node.name} value={JSON.stringify(node)}>
-                        {node.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Bitcoin nodes with JSON-RPC server enabled
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button
-          data-testid="submit"
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          type="submit"
-        >
-          Create
-        </Button>
-
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitButton>Create</SubmitButton>
+    </form>
   );
 };

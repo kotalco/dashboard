@@ -87,6 +87,7 @@ export const Select = ({
 
           {clear && value && (
             <Button
+              disabled={pending || disabled}
               type="button"
               variant="ghost"
               className="text-destructive hover:bg-transparent hover:text-destructive/70"
