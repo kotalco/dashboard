@@ -1,28 +1,21 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
 import { PolkadotNode } from "@/types";
 import { Roles } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { editValidator } from "@/actions/edit-polkadot";
+
 import { TabsFooter } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
+import { useAction } from "@/hooks/use-action";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { CloseDialogButton } from "@/components/ui/close-dialog-button";
+import { Button } from "@/components/ui/button";
 
 interface ValidatorTabProps {
   node: PolkadotNode;
@@ -30,141 +23,68 @@ interface ValidatorTabProps {
 }
 
 export const ValidatorTab: React.FC<ValidatorTabProps> = ({ node, role }) => {
+  const { validator, pruning, rpc, name } = node;
+  const { workspaceId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-  const { validator, pruning, rpc } = node;
+  const [isValidator, setIsValidator] = useState(validator);
+  const { execute, fieldErrors, error, success } = useAction(editValidator);
 
-  const schema = z
-    .object({
-      validator: z.boolean(),
-      rpc: z.boolean().optional(),
-    })
-    .transform(({ validator }) => {
-      if (validator && rpc) {
-        return { validator, rpc: false };
-      }
-      return { validator };
-    });
+  const onSubmit = () => {
+    execute(
+      { rpc, validator: isValidator },
+      { name, workspaceId: workspaceId as string }
+    );
+  };
 
-  type Schema = z.infer<typeof schema>;
-
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { validator },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-    setValue,
-  } = form;
-
-  const confirmValidator = () => {
-    setValue("validator", true, { shouldDirty: true });
+  const handleConfirm = () => {
+    setIsValidator(true);
     setIsOpen(false);
   };
 
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<PolkadotNode>(
-        `/polkadot/nodes/${node.name}`,
-        values
-      );
-      const { validator } = data;
-      reset({ validator });
-      router.refresh();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
+  const handleCheckChange = (value: boolean) => {
+    if (value && rpc) {
+      setIsOpen(value);
     }
+    setIsValidator(value);
   };
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="relative space-y-4"
-        >
-          <FormField
-            control={form.control}
-            name="validator"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex flex-row items-center gap-x-3">
-                  <FormLabel>Validator</FormLabel>
-                  <FormControl>
-                    <Switch
-                      disabled={
-                        isSubmitting || role === Roles.Reader || pruning
-                      }
-                      checked={field.value}
-                      onCheckedChange={(value) => {
-                        if (value && rpc) {
-                          setIsOpen(true);
-                          return;
-                        }
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                </div>
-                <FormDescription>
-                  Node started with pruning disabled.
-                </FormDescription>
-              </FormItem>
-            )}
-          />
-
-          {isSubmitSuccessful && (
-            <Alert variant="success" className="text-center">
-              <AlertDescription>
-                Validator settings have been updated successfully.
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {errors.root && (
-            <Alert variant="destructive" className="text-center">
-              <AlertDescription>{errors.root.message}</AlertDescription>
-            </Alert>
-          )}
-
-          {role !== Roles.Reader && (
-            <TabsFooter>
-              <Button
-                disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-                data-testid="submit"
-                type="submit"
-              >
-                Save
-              </Button>
-            </TabsFooter>
-          )}
-        </form>
-      </Form>
-      <DeprecatedAlertModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        title="Warning"
-        description=" Activating validator will disable JSON-RPC Port. Are you sure you want
-          to continue?"
-        onConfirm={confirmValidator}
+    <form action={onSubmit} className="relative space-y-4">
+      <Toggle
+        id="validator"
+        label="Validator"
+        disabled={role === Roles.Reader || pruning}
+        checked={isValidator}
+        defaultChecked={isValidator}
+        onCheckedChange={handleCheckChange}
+        errors={fieldErrors}
+        description={pruning ? "Node started with pruning enabled." : ""}
       />
-    </>
+
+      <SubmitSuccess success={success}>
+        Validator settings have been updated successfully.
+      </SubmitSuccess>
+
+      <SubmitError error={error} />
+
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+
+      <AlertModal open={isOpen} onOpenChange={setIsOpen} title="Warning">
+        <p className="text-foreground/70 text-sm">
+          Activating validator will disable JSON-RPC Port. Are you sure you want
+          to continue?
+        </p>
+
+        <CloseDialogButton>
+          <Button type="button" variant="destructive" onClick={handleConfirm}>
+            Continue
+          </Button>
+        </CloseDialogButton>
+      </AlertModal>
+    </form>
   );
 };

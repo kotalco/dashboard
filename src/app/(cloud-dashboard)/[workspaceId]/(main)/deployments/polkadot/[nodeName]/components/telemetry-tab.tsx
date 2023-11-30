@@ -1,149 +1,75 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
 import { PolkadotNode } from "@/types";
 import { Roles } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { editTelemetry } from "@/actions/edit-polkadot";
+
 import { TabsFooter } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/form/input";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { Toggle } from "@/components/form/toggle";
 
 interface TelemetryTabProps {
   node: PolkadotNode;
   role: Roles;
 }
 
-const schema = z.object({
-  telemetry: z.boolean(),
-  telemetryURL: z.string().optional(),
-});
-
-type Schema = z.input<typeof schema>;
-
 export const TelemetryTab: React.FC<TelemetryTabProps> = ({ node, role }) => {
-  const { telemetryURL, telemetry } = node;
+  const { telemetryURL, telemetry, name } = node;
+  const { workspaceId } = useParams();
+  const [isTelemetry, setIsTelemetry] = useState(telemetry);
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { telemetryURL, telemetry },
-  });
+  const { execute, success, fieldErrors, error } = useAction(editTelemetry);
 
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    watch,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<PolkadotNode>(
-        `/polkadot/nodes/${node.name}`,
-        values
-      );
-      const { telemetryURL, telemetry } = data;
-      reset({ telemetryURL, telemetry });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+  const onSubmit = (formData: FormData) => {
+    const telemetryURL = formData.get("telemetryURL") as string;
+    execute(
+      {
+        telemetryURL,
+        telemetry: isTelemetry,
+      },
+      { name, workspaceId: workspaceId as string }
+    );
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="telemetry"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2">Telemetry</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="relative space-y-4">
+      <Toggle
+        id="telemetry"
+        label="Telemetry"
+        defaultChecked={isTelemetry}
+        checked={isTelemetry}
+        onCheckedChange={setIsTelemetry}
+        errors={fieldErrors}
+        disabled={role === Roles.Reader}
+      />
 
-        <FormField
-          control={form.control}
-          name="telemetryURL"
-          render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Telemetry Service URL</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={
-                    isSubmitting || role === Roles.Reader || !watch("telemetry")
-                  }
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Input
+        className="max-w-xs"
+        id="telemetryURL"
+        label="Telemetry Service URL"
+        disabled={role === Roles.Reader || !isTelemetry}
+        errors={fieldErrors}
+        defaultValue={telemetryURL}
+      />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Telemetry settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitSuccess success={success}>
+        Telemetry settings have been updated successfully.
+      </SubmitSuccess>
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

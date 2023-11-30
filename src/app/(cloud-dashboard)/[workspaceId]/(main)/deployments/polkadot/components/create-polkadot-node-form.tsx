@@ -1,226 +1,92 @@
 "use client";
 
-import * as z from "zod";
+import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { NEARNetworks, PolkadotNetworks } from "@/enums";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { PolkadotNetworks } from "@/enums";
 import { getSelectItems } from "@/lib/utils";
-import { client } from "@/lib/client-instance";
 import { Version } from "@/types";
-import { Switch } from "@/components/ui/switch";
+import { useAction } from "@/hooks/use-action";
+import { createPolkadotNode } from "@/actions/create-polkadot";
 
-const schema = z.object({
-  name: z
-    .string()
-    .min(1, "Node name is required")
-    .max(64, "Too long name")
-    .trim()
-    .refine((value) => /^\S*$/.test(value), {
-      message: "Invalid character used",
-    }),
-  network: z.nativeEnum(PolkadotNetworks, {
-    required_error: "Network is required",
-  }),
-  pruning: z.boolean().default(false),
-  workspace_id: z.string().min(1),
-  image: z.string().min(1),
-});
-
-type Schema = z.infer<typeof schema>;
+import { Input } from "@/components/form/input";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Select } from "@/components/form/select";
+import { ExternalLink } from "@/components/ui/external-link";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
 
 export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
   images,
 }) => {
-  const { toast } = useToast();
   const router = useRouter();
   const { workspaceId } = useParams();
-
-  const defaultValues = {
-    name: "",
-    image: images[0].image,
-  };
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues,
+  const { execute, fieldErrors, error } = useAction(createPolkadotNode, {
+    onSuccess: ({ name }) => {
+      router.push(`/${workspaceId}/deployments/polkadot`);
+      toast.message("Polkadot node has been created", {
+        description: `${name} node has been created successfully, and will be up and running in few seconds.`,
+      });
+    },
   });
 
-  const {
-    formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
-    setError,
-  } = form;
+  const onSubmit = (formData: FormData) => {
+    const name = formData.get("name") as string;
+    const network = formData.get("network") as PolkadotNetworks;
+    const pruning = formData.get("pruning") === "on";
 
-  async function onSubmit(values: Schema) {
-    try {
-      await client.post("/polkadot/nodes", values);
-      router.push(`/${workspaceId}/deployments/polkadot`);
-      router.refresh();
-      toast({
-        title: "Polkadot node has been created",
-        description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
-      });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-        if (response?.status === 400) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Name already exists.",
-          });
-          return;
-        }
-        if (response?.status === 403) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Reached Nodes Limit.",
-          });
-          return;
-        }
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
+    execute({
+      name,
+      network,
+      pruning,
+      workspace_id: workspaceId as string,
+      image: images[0].image,
+    });
+  };
 
   return (
-    <Form {...form}>
-      <form
-        data-testid="create-node"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-sm space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="workspace_id"
-          defaultValue={workspaceId as string}
-          render={({ field }) => <Input className="sr-only" {...field} />}
-        />
+    <form
+      data-testid="create-node"
+      action={onSubmit}
+      className="max-w-xs space-y-4"
+    >
+      <Input errors={fieldErrors} id="name" label="Node Name" />
 
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Node Name</FormLabel>
-              <FormControl>
-                <Input data-testid="name" disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Select
+        id="network"
+        label="Network"
+        placeholder="Select Network"
+        options={getSelectItems(PolkadotNetworks)}
+        errors={fieldErrors}
+      />
 
-        <FormField
-          control={form.control}
-          name="network"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-              <FormLabel>Network</FormLabel>
-              <Select
-                disabled={isSubmitting}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger data-testid="network" className="bg-white">
-                    <SelectValue placeholder="Select a Network" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {getSelectItems(PolkadotNetworks).map(({ value, label }) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      <p className="text-sm font-medium leading-none space-y-1">
+        Client:{" "}
+        <ExternalLink href="https://github.com/paritytech/polkadot">
+          Parity Polkadot
+        </ExternalLink>
+      </p>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Toggle id="pruning" label="Pruning" errors={fieldErrors} />
 
-        <p className="text-sm">
-          Client:{" "}
-          <a
-            href="https://github.com/paritytech/polkadot"
-            target="_blank"
-            rel="noreferrer"
-            className="text-primary hover:underline underline-offset-4"
-          >
-            Parity Polkadot
-          </a>
-        </p>
+      <Alert variant="warn">
+        <AlertTitle>Attension</AlertTitle>
+        <AlertDescription>
+          <ul className="list-disc list-inside">
+            <li>Validator nodes must run in archive mode.</li>
+            <li>Disable pruning to enable archive mode.</li>
+            <li>
+              You can enable validator mode after node is up and running &amp;
+              fully synced
+            </li>
+          </ul>
+        </AlertDescription>
+      </Alert>
 
-        <FormField
-          control={form.control}
-          name="pruning"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2">Pruning</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+      <SubmitError error={error} />
 
-        <Alert variant="warn">
-          <AlertTitle>Attension</AlertTitle>
-          <AlertDescription>
-            <ul className="list-disc list-inside">
-              <li>Validator nodes must run in archive mode.</li>
-              <li>Disable pruning to enable archive mode.</li>
-              <li>
-                You can enable validator mode after node is up and running &amp;
-                fully synced
-              </li>
-            </ul>
-          </AlertDescription>
-        </Alert>
-
-        <Button
-          data-testid="submit"
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          type="submit"
-        >
-          Create
-        </Button>
-
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitButton>Create</SubmitButton>
+    </form>
   );
 };

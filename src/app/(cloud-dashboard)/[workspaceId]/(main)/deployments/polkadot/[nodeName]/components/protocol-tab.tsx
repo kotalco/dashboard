@@ -46,7 +46,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/polkadot/nodes/${name}`}
+        url={`/polkadot/nodes/${name}`}
       />
     </>
   );

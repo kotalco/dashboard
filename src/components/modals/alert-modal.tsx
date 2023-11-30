@@ -1,3 +1,6 @@
+import { ComponentPropsWithoutRef } from "react";
+import { Root } from "@radix-ui/react-dialog";
+
 import {
   Dialog,
   DialogContent,
@@ -7,10 +10,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CloseDialogButton } from "../ui/close-dialog-button";
+import { CloseDialogButton } from "@/components/ui/close-dialog-button";
 
-interface AlertModalProps {
-  triggerText: string;
+interface AlertModalProps extends ComponentPropsWithoutRef<typeof Root> {
+  triggerText?: string;
   title: string;
   description?: string;
   children?: React.ReactNode;
@@ -23,14 +26,17 @@ export const AlertModal = ({
   description,
   children,
   withCancel,
+  ...props
 }: AlertModalProps) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button type="button" variant="destructive">
-          {triggerText}
-        </Button>
-      </DialogTrigger>
+    <Dialog {...props}>
+      {triggerText && (
+        <DialogTrigger asChild>
+          <Button type="button" variant="destructive">
+            {triggerText}
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>

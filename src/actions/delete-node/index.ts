@@ -8,7 +8,6 @@ import { server } from "@/lib/server-instance";
 import { APIInputType, APIReturnType } from "./types";
 
 import { DeleteNode } from "./schema";
-import { redirect } from "next/navigation";
 
 const handler = async (
   _: APIInputType,
