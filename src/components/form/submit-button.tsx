@@ -11,6 +11,7 @@ export const SubmitButton: React.FC<PropsWithChildren<ButtonProps>> = ({
   children,
   disabled,
   className,
+  variant,
   ...props
 }) => {
   const { pending } = useFormStatus();
@@ -20,9 +21,12 @@ export const SubmitButton: React.FC<PropsWithChildren<ButtonProps>> = ({
       disabled={pending || disabled}
       type="submit"
       className={cn(className)}
+      variant={variant}
       {...props}
     >
-      {pending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+      {pending && variant !== "link" && (
+        <Loader2 className={cn("w-4 h-4 mr-2 animate-spin")} />
+      )}
       {children}
     </Button>
   );
