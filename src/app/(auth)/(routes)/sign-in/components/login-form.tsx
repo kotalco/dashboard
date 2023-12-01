@@ -189,12 +189,11 @@ export const LoginForm = () => {
               <AlertDescription>{errors.root.message}</AlertDescription>
             </Alert>
           )}
-
-          {errors.root?.type === "403" && (
-            <ReverifyEmailALert email={email} setError={setError} />
-          )}
         </form>
       </Form>
+      {errors.root?.type === "403" && email && (
+        <ReverifyEmailALert email={email} />
+      )}
     </>
   );
 };
