@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { FilecoinNode } from "@/types";
 
 import { AlertModal } from "@/components/modals/alert-modal";
-import { DeleteNodeForm } from "@/components/delete-node-form";
+import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
 import { TabsFooter } from "@/components/ui/tabs";
 
 interface DangerZoneTabProps {
@@ -30,8 +30,8 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       </p>
       <TabsFooter>
         <AlertModal triggerText="Delete Node" title="Delete Filecoin Node">
-          <DeleteNodeForm
-            nodeName={node.name}
+          <DeleteWithInputForm
+            name={node.name}
             url={`/filecoin/nodes/${node.name}`}
             redirectUrl={`/${workspaceId}/deployments/filecoin`}
           />

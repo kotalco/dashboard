@@ -19,8 +19,16 @@ const handler = async (values: InputType): Promise<ReturnType> => {
       cookies().set(StorageItems.NEW_ACCOUNT, data.email, { maxAge: 5 });
     }
   } catch (error) {
+    console.log(error);
     if (isAxiosError(error) && error.response?.status === 409) {
       return { error: "Email already exists." };
+    }
+
+    if (isAxiosError(error) && error.response?.status === 403) {
+      return {
+        error:
+          "Admin had disabled registeration. Please contact your admin to enable it.",
+      };
     }
 
     return { error: "Something went wrong." };

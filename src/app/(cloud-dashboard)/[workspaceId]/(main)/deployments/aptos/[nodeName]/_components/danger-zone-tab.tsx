@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { DeleteNodeForm } from "@/components/delete-node-form";
+import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
 import { TabsFooter } from "@/components/ui/tabs";
 import { AlertModal } from "@/components/modals/alert-modal";
 
@@ -30,8 +30,8 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       </p>
       <TabsFooter>
         <AlertModal triggerText="Delete Node" title="Delete Aptos Node">
-          <DeleteNodeForm
-            nodeName={node.name}
+          <DeleteWithInputForm
+            name={node.name}
             url={`/aptos/nodes/${node.name}`}
             redirectUrl={`/${params.workspaceId}/deployments/aptos`}
           />

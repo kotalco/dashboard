@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { DeleteNodeForm } from "@/components/delete-node-form";
+import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
 import { TabsFooter } from "@/components/ui/tabs";
 import { AlertModal } from "@/components/modals/alert-modal";
 
@@ -30,8 +30,8 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       </p>
       <TabsFooter>
         <AlertModal triggerText="Delete Peer" title="Delete IPFS Peer">
-          <DeleteNodeForm
-            nodeName={node.name}
+          <DeleteWithInputForm
+            name={node.name}
             url={`/ipfs/peers/${node.name}`}
             redirectUrl={`/${workspaceId}/deployments/ipfs?deployment=peers`}
           />

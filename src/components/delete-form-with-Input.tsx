@@ -12,22 +12,22 @@ import { useAction } from "@/hooks/use-action";
 import { deleteNode } from "@/actions/delete-node";
 import { CloseDialogButton } from "./ui/close-dialog-button";
 
-interface DeleteNodeFormProps {
-  nodeName: string;
+interface DeleteFormWithInputProps {
+  name: string;
   url: string;
   redirectUrl: string;
 }
 
-export const DeleteNodeForm: React.FC<DeleteNodeFormProps> = ({
+export const DeleteWithInputForm: React.FC<DeleteFormWithInputProps> = ({
   url,
   redirectUrl,
-  nodeName,
+  name,
 }) => {
   const [value, setValue] = useState("");
   const router = useRouter();
   const { execute, error } = useAction(deleteNode, {
     onSuccess: () => {
-      toast(`${nodeName} node has been deleted successfully.`);
+      toast(`${name} has been deleted successfully.`);
       router.push(redirectUrl);
     },
   });
@@ -41,19 +41,19 @@ export const DeleteNodeForm: React.FC<DeleteNodeFormProps> = ({
     <form action={onSubmit} className="space-y-4">
       <p className="text-foreground/70 text-sm">
         This action cann&apos;t be undone. This will permnantly delete (
-        <strong>{nodeName}</strong>) Aptos Node.
+        <strong>{name}</strong>).
       </p>
 
       <Input
         id="name"
-        label={`Please type node name (${nodeName}) to confirm`}
+        label={`Please type the name (${name}) to confirm`}
         onChange={(e) => setValue(e.target.value)}
       />
 
       <SubmitError error={error} />
 
       <CloseDialogButton>
-        <SubmitButton variant="destructive" disabled={nodeName !== value}>
+        <SubmitButton variant="destructive" disabled={name !== value}>
           Delete
         </SubmitButton>
       </CloseDialogButton>

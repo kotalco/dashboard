@@ -1,24 +1,23 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
 import { getWorkspace } from "@/services/get-workspace";
-import { Roles, StorageItems } from "@/enums";
+import { Roles } from "@/enums";
 import { Heading } from "@/components/ui/heading";
 
 import { getEndpoint } from "@/services/get-endpoint";
-import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
+
 import { RouteURL } from "./components/route-url";
-import { DeleteEndpoint } from "./components/delete-endpoint";
 
 export default async function EndpointPage({
   params,
 }: {
   params: { workspaceId: string; endpointName: string };
 }) {
-  const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, endpointName } = params;
   const { role } = await getWorkspace(workspaceId);
 
@@ -92,7 +91,17 @@ export default async function EndpointPage({
           </CardContent>
         </Card>
 
-        {role === Roles.Admin && <DeleteEndpoint name={endpoint.name} />}
+        {role === Roles.Admin && (
+          <div className="mt-5 flex justify-end">
+            <AlertModal triggerText="Delete Endpoint" title="Delete Endpoint">
+              <DeleteWithInputForm
+                name={endpoint.name}
+                url={`/endpoints/${endpoint.name}`}
+                redirectUrl={`/${workspaceId}/endpoints`}
+              />
+            </AlertModal>
+          </div>
+        )}
       </div>
     );
   } catch (e) {

@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 
 import { StacksNode } from "@/types";
 
-import { DeleteNodeForm } from "@/components/delete-node-form";
+import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
 import { TabsFooter } from "@/components/ui/tabs";
 import { AlertModal } from "@/components/modals/alert-modal";
 
@@ -30,8 +30,8 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       </p>
       <TabsFooter>
         <AlertModal triggerText="Delete Node" title="Delete Stacks Node">
-          <DeleteNodeForm
-            nodeName={node.name}
+          <DeleteWithInputForm
+            name={node.name}
             url={`/stacks/nodes/${node.name}`}
             redirectUrl={`/${workspaceId}/deployments/stacks`}
           />

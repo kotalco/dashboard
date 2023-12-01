@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 
 import { PolkadotNode } from "@/types";
 
-import { DeleteNodeForm } from "@/components/delete-node-form";
+import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { TabsFooter } from "@/components/ui/tabs";
 
@@ -30,8 +30,8 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       </p>
       <TabsFooter>
         <AlertModal triggerText="Delete Node" title="Delete Polkadot Node">
-          <DeleteNodeForm
-            nodeName={node.name}
+          <DeleteWithInputForm
+            name={node.name}
             url={`/polkadot/nodes/${node.name}`}
             redirectUrl={`/${workspaceId}/deployments/polkadot`}
           />

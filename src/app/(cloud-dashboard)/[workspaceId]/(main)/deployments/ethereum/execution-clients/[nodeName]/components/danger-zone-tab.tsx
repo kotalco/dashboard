@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { DeleteNodeForm } from "@/components/delete-node-form";
+import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
 import { TabsFooter } from "@/components/ui/tabs";
 import { AlertModal } from "@/components/modals/alert-modal";
 
@@ -33,8 +33,8 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
           triggerText="Delete Node"
           title="Delete Execution Client Node"
         >
-          <DeleteNodeForm
-            nodeName={node.name}
+          <DeleteWithInputForm
+            name={node.name}
             url={`/ethereum/nodes/${node.name}`}
             redirectUrl={`/${workspaceId}/deployments/ethereum?deployment=execution-clients`}
           />
