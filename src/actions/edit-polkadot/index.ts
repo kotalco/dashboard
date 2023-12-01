@@ -33,7 +33,7 @@ const handler = async (
   }
 
   revalidatePath(
-    `${identifiers.workspaceId}/deployments/polkadot/${node.name}`
+    `/${identifiers.workspaceId}/deployments/polkadot/${node.name}`
   );
   return { data: node };
 };

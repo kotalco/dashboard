@@ -26,7 +26,7 @@ const handler = async (
   }
 
   revalidatePath(
-    `${identifiers.workspaceId}/deployments/ipfs/cluster-peers/${peer.name}`
+    `/${identifiers.workspaceId}/deployments/ipfs/cluster-peers/${peer.name}`
   );
   return { data: peer };
 };

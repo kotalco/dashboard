@@ -33,7 +33,7 @@ const handler = async (
   }
 
   revalidatePath(
-    `${identifiers.workspaceId}/deployments/chainlink/${node.name}`
+    `/${identifiers.workspaceId}/deployments/chainlink/${node.name}`
   );
   return { data: node };
 };

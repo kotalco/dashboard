@@ -32,7 +32,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     }
   }
 
-  revalidatePath(`${workspace_id}/deployments/filecoin`);
+  revalidatePath(`/${workspace_id}/deployments/filecoin`);
   return { data: node };
 };
 

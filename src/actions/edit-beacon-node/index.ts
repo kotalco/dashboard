@@ -25,7 +25,7 @@ const handler = async (
   }
 
   revalidatePath(
-    `${identifiers.workspaceId}/deployments/ethereum/beacon-nodes/${node.name}`
+    `/${identifiers.workspaceId}/deployments/ethereum/beacon-nodes/${node.name}`
   );
   return { data: node };
 };

@@ -25,7 +25,7 @@ const handler = async (
   }
 
   revalidatePath(
-    `${identifiers.workspaceId}/deployments/filecoin/${node.name}`
+    `/${identifiers.workspaceId}/deployments/filecoin/${node.name}`
   );
   return { data: node };
 };

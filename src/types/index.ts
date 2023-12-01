@@ -26,6 +26,7 @@ export * from "@/types/secrets";
 
 export type OptionType = Record<"label" | "value", string> & {
   disabled?: boolean;
+  image?: string;
 };
 
 export interface MainNodeInfo {

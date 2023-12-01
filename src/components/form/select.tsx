@@ -1,5 +1,6 @@
-import React, { ComponentPropsWithoutRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import React, { ComponentPropsWithoutRef } from "react";
 import { useFormStatus } from "react-dom";
 import { Root } from "@radix-ui/react-select";
 
@@ -16,12 +17,13 @@ import { Button } from "@/components/ui/button";
 import { FormErrors } from "@/components/form/form-errors";
 
 import { cn } from "@/lib/utils";
+import { OptionType } from "@/types";
 
 interface SelectProps extends ComponentPropsWithoutRef<typeof Root> {
   id: string;
   label?: string;
   errors?: Record<string, string[] | undefined>;
-  options: { value: string; label: string; disabled?: boolean }[];
+  options: OptionType[];
   placeholder?: string;
   description?: string | React.ReactNode;
   className?: string;
@@ -69,9 +71,18 @@ export const Select = ({
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
-              {options.map(({ value, label, disabled }) => (
+              {options.map(({ value, label, disabled, image }) => (
                 <SelectItem disabled={disabled} key={value} value={value}>
-                  {label}
+                  {image && (
+                    <Image
+                      width={24}
+                      height={24}
+                      alt="decoration"
+                      src={image}
+                      className="w-6 h-6 inline-block mr-3"
+                    />
+                  )}
+                  <span>{label}</span>
                 </SelectItem>
               ))}
               {link && (

@@ -24,7 +24,7 @@ const handler = async (
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(`${identifiers.workspaceId}/deployments/aptos/${node.name}`);
+  revalidatePath(`/${identifiers.workspaceId}/deployments/aptos/${node.name}`);
   return { data: node };
 };
 
