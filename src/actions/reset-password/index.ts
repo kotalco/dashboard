@@ -12,7 +12,7 @@ const handler = async (values: InputType): Promise<ReturnType> => {
   let message;
   try {
     const { data } = await server.post<{ message: string }>(
-      `/users/reset_password/`,
+      `/users/reset_password`,
       values
     );
     message = data;

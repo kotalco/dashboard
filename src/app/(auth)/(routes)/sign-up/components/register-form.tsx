@@ -1,137 +1,46 @@
 "use client";
 
-import * as z from "zod";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isAxiosError } from "axios";
+import { useAction } from "@/hooks/use-action";
+import { registerUser } from "@/actions/register-user";
 
-import { client } from "@/lib/client-instance";
-import { User } from "@/types";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { StorageItems } from "@/enums";
-
-const schema = z
-  .object({
-    email: z.string().email("Invalid Email").trim().toLowerCase(),
-    password: z.string().min(6, "Password must be not less than 6 characters"),
-    password_confirmation: z
-      .string()
-      .min(1, "Password confirmation is required"),
-  })
-  .refine(
-    ({ password, password_confirmation }) => password === password_confirmation,
-    { message: "Passwords didn't match", path: ["password_confirmation"] }
-  );
-
-type SchemaType = z.infer<typeof schema>;
-
-const defaultValues = { email: "", password: "", password_confirmation: "" };
+import { Input } from "@/components/form/input";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
 
 export const RegisterForm = () => {
-  const router = useRouter();
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
+  const { execute, fieldErrors, error } = useAction(registerUser);
 
-  const {
-    formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
-    setError,
-  } = form;
+  const onSubmit = (formData: FormData) => {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const password_confirmation = formData.get(
+      "password_confirmation"
+    ) as string;
 
-  async function onSubmit(values: SchemaType) {
-    try {
-      const { data } = await client.post<User>(`/users`, values);
-      !data.platform_admin &&
-        localStorage.setItem(StorageItems.NEW_ACCOUNT, data.email);
-      router.push("/sign-in");
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-        response?.status === 409 &&
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Email already exists.",
-          });
-        response?.status !== 409 &&
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Something went wrong.",
-          });
-      }
-    }
-  }
+    execute({ email, password, password_confirmation });
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Address</FormLabel>
-              <FormControl>
-                <Input disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="space-y-4">
+      <Input id="email" label="Email Address" errors={fieldErrors} />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input disabled={isSubmitting} type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Input
+        id="password"
+        label="Password"
+        errors={fieldErrors}
+        type="password"
+      />
 
-        <FormField
-          control={form.control}
-          name="password_confirmation"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password Confirmation</FormLabel>
-              <FormControl>
-                <Input disabled={isSubmitting} type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Input
+        id="password_confirmation"
+        label="Password Confirmation"
+        errors={fieldErrors}
+        type="password"
+      />
 
-        <Button
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          className="w-full"
-          type="submit"
-        >
-          Sign Up
-        </Button>
+      <SubmitButton className="w-full">Sign Up</SubmitButton>
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitError error={error} />
+    </form>
   );
 };
