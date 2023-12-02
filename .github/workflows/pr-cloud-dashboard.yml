@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-      - managed-dashboard
+      - staging
 
 jobs:
 
@@ -41,7 +41,7 @@ jobs:
       uses: docker/metadata-action@v3
       with:
         images: |
-          docker.io/kotalco/cloud-dashboard
+          docker.io/kotalco/cloud-dashboard-pr
         tags: |
           type=ref,event=tag
           type=sha,prefix=,suffix=,format=short
