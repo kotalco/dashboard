@@ -56,7 +56,7 @@ export const BeaconNodeTab: React.FC<BeaconNodeTabProps> = ({
       { name: name, workspaceId: workspaceId as string }
     );
   };
-  console.log(fieldErrors);
+
   return (
     <form action={onSubmit} className="relative space-y-4">
       <MultiSelect

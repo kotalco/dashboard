@@ -1,3 +1,4 @@
+import { FormDataResult } from "@/actions/create-secret/types";
 import {
   BeaconNodeClients,
   ExecutionClientClients,
@@ -175,4 +176,93 @@ export const readFieldArray = <T extends Record<string, any>>(
   }
 
   return Object.values(values);
+};
+
+export const readFileData = (
+  id: string,
+  formData: FormData
+): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const file = formData.get(id) as File;
+    if (!file) {
+      reject("File not found");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (typeof e.target?.result === "string") {
+        const fileData = e.target.result.split(",")[1];
+        resolve(fileData);
+      } else {
+        reject("Failed to read file");
+      }
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(file);
+  });
+};
+
+export const readSecretsForm = async (
+  formData: FormData
+): Promise<FormDataResult> => {
+  let result: FormDataResult;
+  const entries = Array.from(formData.entries());
+
+  // Extract keys that start with 'data.' and map them to their nested keys
+  const dataKeys = Array.from(formData.keys())
+    .filter((key) => key.startsWith("data."))
+    .map((key) => key.substring(5)); // Remove 'data.' prefix
+
+  // Initialize nestedData with empty strings for each key
+  result = dataKeys.reduce((acc, key) => {
+    acc[key] = "";
+    return acc;
+  }, {} as Record<string, string>);
+
+  for (let [key, value] of entries) {
+    // Process only keys that start with 'data.'
+    if (key.startsWith("data.")) {
+      const nestedKey = key.substring(5); // Remove 'data.' prefix
+
+      if (value instanceof File) {
+        try {
+          const fileData = await readFileData(key, formData);
+          assignValue(result, nestedKey, fileData);
+        } catch (error) {
+          console.error("Error reading file data:", error);
+        }
+      } else {
+        assignValue(result, nestedKey, value);
+      }
+    }
+  }
+
+  return result;
+};
+
+const assignValue = (
+  obj: Record<string, any>,
+  key: string,
+  value: string
+): void => {
+  if (key.includes(".")) {
+    const parts = key.split(".");
+    let current: any = obj;
+
+    for (let i = 0; i < parts.length; i++) {
+      if (i === parts.length - 1) {
+        current[parts[i]] = value;
+      } else {
+        current[parts[i]] = current[parts[i]] || {};
+        current = current[parts[i]];
+      }
+    }
+  } else {
+    obj[key] = value;
+  }
 };
