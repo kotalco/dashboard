@@ -32,7 +32,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
         <AlertModal triggerText="Delete Node" title="Delete Stacks Node">
           <DeleteWithInputForm
             name={node.name}
-            url={`/stacks/nodes/${node.name}`}
+            url={`/stacks/nodes/${node.name}?workspace_id=${workspaceId}`}
             redirectUrl={`/${workspaceId}/deployments/stacks`}
           />
         </AlertModal>

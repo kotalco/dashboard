@@ -32,7 +32,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
         <AlertModal triggerText="Delete Peer" title="Delete Cluster Peer">
           <DeleteWithInputForm
             name={node.name}
-            url={`/ipfs/clusterpeers/${node.name}`}
+            url={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
             redirectUrl={`/${workspaceId}/deployments/ipfs?deployment=cluster-peers`}
           />
         </AlertModal>

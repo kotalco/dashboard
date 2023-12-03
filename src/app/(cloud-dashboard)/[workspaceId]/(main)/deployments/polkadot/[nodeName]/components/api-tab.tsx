@@ -53,6 +53,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         rpc: isRpc,
         wsPort,
         ws: isWs,
+        validator,
       },
       { name, workspaceId: workspaceId as string }
     );

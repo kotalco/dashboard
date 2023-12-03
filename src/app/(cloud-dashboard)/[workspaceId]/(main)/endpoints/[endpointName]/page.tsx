@@ -96,7 +96,7 @@ export default async function EndpointPage({
             <AlertModal triggerText="Delete Endpoint" title="Delete Endpoint">
               <DeleteWithInputForm
                 name={endpoint.name}
-                url={`/endpoints/${endpoint.name}`}
+                url={`/endpoints/${endpoint.name}?workspace_id=${workspaceId}`}
                 redirectUrl={`/${workspaceId}/endpoints`}
               />
             </AlertModal>

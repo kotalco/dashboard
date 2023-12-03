@@ -32,7 +32,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
         <AlertModal triggerText="Delete Node" title="Delete Validator">
           <DeleteWithInputForm
             name={node.name}
-            url={`/ethereum2/validators/${node.name}`}
+            url={`/ethereum2/validators/${node.name}?workspace_id=${workspaceId}`}
             redirectUrl={`/${workspaceId}/deployments/ethereum?deployment=validators`}
           />
         </AlertModal>

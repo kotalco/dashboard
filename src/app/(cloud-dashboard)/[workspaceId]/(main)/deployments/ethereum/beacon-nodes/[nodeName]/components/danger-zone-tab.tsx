@@ -32,7 +32,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
         <AlertModal triggerText="Delete Node" title="Delete Beacon Node">
           <DeleteWithInputForm
             name={node.name}
-            url={`/ethereum2/beaconnodes/${node.name}`}
+            url={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
             redirectUrl={`/${workspaceId}/deployments/ethereum?deployment=beacon-nodes`}
           />
         </AlertModal>

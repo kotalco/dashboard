@@ -13,7 +13,7 @@ interface DangerZoneTabProps {
 }
 
 export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
-  const params = useParams();
+  const { workspaceId } = useParams();
 
   return (
     <div>
@@ -32,8 +32,8 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
         <AlertModal triggerText="Delete Node" title="Delete Aptos Node">
           <DeleteWithInputForm
             name={node.name}
-            url={`/aptos/nodes/${node.name}`}
-            redirectUrl={`/${params.workspaceId}/deployments/aptos`}
+            url={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
+            redirectUrl={`/${workspaceId}/deployments/aptos`}
           />
         </AlertModal>
       </TabsFooter>

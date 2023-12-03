@@ -1,12 +1,13 @@
 import "server-only";
 
-import { cache } from "react";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { WorksapcesList } from "@/types";
 import { server } from "@/lib/server-instance";
 
-export const getWorkspaces = cache(async () => {
+export const getWorkspaces = async () => {
+  noStore();
   const { data } = await server.get<WorksapcesList>("/workspaces");
 
   return data;
-});
+};
