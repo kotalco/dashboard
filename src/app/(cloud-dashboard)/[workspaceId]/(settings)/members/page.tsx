@@ -46,7 +46,7 @@ export default async function MembersPage({
       <div className="py-10 mx-auto space-y-5">
         {workspace.role === Roles.Admin && (
           <>
-            <AddMemberForm workspaceId={workspace.id} />
+            <AddMemberForm />
             <Separator />
           </>
         )}
