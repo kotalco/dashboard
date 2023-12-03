@@ -17,6 +17,32 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: update managed-dashboard with secrets values - staging
+      if: github.ref == 'refs/heads/staging'
+      env:
+        NEXT_PUBLIC_BASE_URL: "${{ secrets.STAGING_NEXT_PUBLIC_BASE_URL }}"
+        BASE_URL: "${{ secrets.STAGING_BASE_URL }}"
+        NEXT_PUBLIC_API_URL: "${{ secrets.STAGING_NEXT_PUBLIC_API_URL }}"
+        NEXT_PUBLIC_WS_API_URL: "${{ secrets.STAGING_NEXT_PUBLIC_WS_API_URL }}"
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.STAGING_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
+        NEXT_PUBLIC_RETURN_URL_ROOT: "${{ secrets.STAGING_NEXT_PUBLIC_RETURN_URL_ROOT }}"
+        API_URL: "${{ secrets.STAGING_API_URL }}"
+      run: |
+        envsubst < ./.env.production | tee .env.production
+
+    - name: update managed-dashboard with secrets values - production
+      if: github.ref == 'refs/heads/main'
+      env:
+        NEXT_PUBLIC_BASE_URL: "${{ secrets.PROD_NEXT_PUBLIC_BASE_URL }}"
+        BASE_URL: "${{ secrets.PROD_BASE_URL }}"
+        NEXT_PUBLIC_API_URL: "${{ secrets.PROD_NEXT_PUBLIC_API_URL }}"
+        NEXT_PUBLIC_WS_API_URL: "${{ secrets.PROD_NEXT_PUBLIC_WS_API_URL }}"
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.PROD_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
+        NEXT_PUBLIC_RETURN_URL_ROOT: "${{ secrets.PROD_NEXT_PUBLIC_RETURN_URL_ROOT }}"
+        API_URL: "${{ secrets.PROD_API_URL }}"
+      run: |
+        envsubst < ./.env.production | tee .env.production
+
     # - name: Install pnpm
     #   uses: pnpm/action-setup@v2
     #   with:
@@ -113,34 +139,35 @@ jobs:
         tags: ${{ steps.meta-production.outputs.tags }}
         labels: ${{ steps.meta-production.outputs.labels }}
 
-  # deploy_managed-dashboard_k8s-managed-staging:
-  #   runs-on: ubuntu-latest
-  #   needs: [build]
-  #   if: ${{ (github.event_name == 'push') && (github.ref == 'refs/heads/staging') }}
-  #   steps:
-  #     - uses: actions/checkout@v3
+  deploy_managed-dashboard_k8s-managed-staging:
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: ${{ (github.event_name == 'push') && (github.ref == 'refs/heads/staging') }}
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Add SHORT_SHA env property with commit short sha
-  #       run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
 
-  #     - name: update managed-dashboard with secrets values - staging
-  #       env:
-  #         NEXT_PUBLIC_BASE_URL: '${{ secrets.NEXT_PUBLIC_BASE_URL }}'
-  #       run: |
-  #         envsubst < ./staging-managed-dashboard.yaml | tee staging-managed-dashboard.yaml
+      # environment values are passed in build time, not override in runtime -- replace image tag only in deployment.yaml file
+      - name: update managed-dashboard with secrets values - staging
+        env:
+          NEXT_PUBLIC_BASE_URL: '${{ secrets.STAGING_NEXT_PUBLIC_BASE_URL }}'
+        run: |
+          envsubst < ./staging-managed-dashboard.yaml | tee staging-managed-dashboard.yaml
 
-  #     - name: K8s-set-context to DO managed-staging cluster
-  #       uses: azure/k8s-set-context@v1
-  #       with:
-  #         method: kubeconfig
-  #         kubeconfig: ${{ secrets.KUBECONFIG_DO_MANAGED_STAGING }}
+      - name: K8s-set-context to DO managed-staging cluster
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG_DO_MANAGED_STAGING }}
 
-  #     - name: Deploy to the DO managed-staging cluster
-  #       uses: azure/k8s-deploy@v1
-  #       with:
-  #         namespace: kotal
-  #         manifests: |
-  #           staging-managed-dashboard.yaml
+      - name: Deploy to the DO managed-staging cluster
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: kotal
+          manifests: |
+            staging-managed-dashboard.yaml
 
   # deploy_managed-dashboard_k8s-managed-production:
   #   runs-on: ubuntu-latest
@@ -154,7 +181,7 @@ jobs:
 
   #     - name: update managed-dashboard with secrets values - production
   #       env:
-  #         NEXT_PUBLIC_BASE_URL: '${{ secrets.NEXT_PUBLIC_BASE_URL }}'
+  #         NEXT_PUBLIC_BASE_URL: '${{ secrets.PROD_NEXT_PUBLIC_BASE_URL }}'
   #       run: |
   #         envsubst < ./prod-managed-dashboard.yaml | tee prod-managed-dashboard.yaml
 
