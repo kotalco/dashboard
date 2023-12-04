@@ -14,12 +14,12 @@ export const createAction = <TInput, TOutput, Transformed>(
   schema: z.ZodType<Transformed, any, TInput>,
   handler: (
     valiadatedData: Transformed,
-    identifiers: Record<string, string>
+    identifiers: any
   ) => Promise<ActionState<any, TOutput>>
 ) => {
   return async (
     data: TInput,
-    identifiers: Record<string, string>
+    identifiers: any
   ): Promise<ActionState<Transformed | TInput, TOutput>> => {
     const validationResult = schema.safeParse(data);
 

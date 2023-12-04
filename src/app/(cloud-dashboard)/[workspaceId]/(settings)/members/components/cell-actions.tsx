@@ -31,7 +31,12 @@ export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
   });
   const { isCurrentUser, id, email } = data;
 
-  if (isInitialLoading) return <Skeleton className="w-4 h-4 " />;
+  if (isInitialLoading)
+    return (
+      <div className="flex justify-end">
+        <Skeleton className="w-10 h-10 " />
+      </div>
+    );
 
   if (isCurrentUser || workspace?.role !== Roles.Admin) return null;
 

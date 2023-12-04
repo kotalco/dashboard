@@ -21,7 +21,7 @@ export const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ email }) => {
   const onSubmit = (formData: FormData) => {
     const newEmail = formData.get("email") as string;
     const password = formData.get("password") as string;
-    console.log({ email: newEmail, password, oldEmail: email });
+
     execute({ email: newEmail, password, oldEmail: email }, { pathname });
   };
 

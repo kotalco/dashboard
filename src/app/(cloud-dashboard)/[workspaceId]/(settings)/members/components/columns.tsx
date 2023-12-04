@@ -10,6 +10,7 @@ export type TeamMemberColumn = {
   email: string;
   role: Roles;
   isCurrentUser: boolean;
+  withCustomerRole: boolean;
 };
 
 export const columns: ColumnDef<TeamMemberColumn>[] = [

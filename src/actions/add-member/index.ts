@@ -21,7 +21,7 @@ const handler = async (
   } catch (error) {
     if (isAxiosError(error)) {
       const { response } = error;
-      console.log(response);
+
       if (response?.status === 404) {
         return {
           error: `Cann't find user with email ${data.email}. Please make sure that the user is already registered.`,

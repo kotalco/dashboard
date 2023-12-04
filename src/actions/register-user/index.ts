@@ -19,7 +19,6 @@ const handler = async (values: InputType): Promise<ReturnType> => {
       cookies().set(StorageItems.NEW_ACCOUNT, data.email, { maxAge: 5 });
     }
   } catch (error) {
-    console.log(error);
     if (isAxiosError(error) && error.response?.status === 409) {
       return { error: "Email already exists." };
     }

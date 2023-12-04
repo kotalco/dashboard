@@ -14,6 +14,5 @@ export function useWorkspace(id: string) {
     `/workspaces/${id}`,
     fetcher
   );
-
   return { workspace: data, ...rest };
 }
