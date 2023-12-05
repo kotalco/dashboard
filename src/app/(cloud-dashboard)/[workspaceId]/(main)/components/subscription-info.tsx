@@ -5,11 +5,7 @@ import { format } from "date-fns";
 export const SubscriptionInfo = async () => {
   const subscription = await getSubscriptionInfo();
 
-<<<<<<< HEAD
   if (subscription.endpoint_limit) return null;
-=======
-  if (!subscription) return null;
->>>>>>> a000daa (add env production)
 
   return (
     <div className="col-span-12">
