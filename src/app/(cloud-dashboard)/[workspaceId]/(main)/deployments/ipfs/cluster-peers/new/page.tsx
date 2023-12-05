@@ -24,12 +24,13 @@ export default async function CreateIPFSClusterPeerPage({
     params.workspaceId,
     "/ipfs/clusterpeers"
   );
-  const secrets = await getSecrets(workspaceId);
-  const privateKeys = secrets.filter(
-    ({ type }) => type === SecretType["IPFS Cluster Peer Key"]
+  const { options: peerKeys } = await getSecrets(
+    workspaceId,
+    SecretType["IPFS Cluster Peer Key"]
   );
-  const clusterSecrets = secrets.filter(
-    ({ type }) => type === SecretType["IPFS Cluster Secret"]
+  const { options: secrets } = await getSecrets(
+    workspaceId,
+    SecretType["IPFS Cluster Secret"]
   );
 
   if (role === Roles.Reader) notFound();
@@ -48,8 +49,8 @@ export default async function CreateIPFSClusterPeerPage({
       <CardContent>
         <CreateIPFSClusterPeerForm
           images={versions}
-          privateKeys={privateKeys}
-          clusterSecrets={clusterSecrets}
+          privateKeys={peerKeys}
+          clusterSecrets={secrets}
           peers={peers}
           clsuterPeers={clusterPeers}
         />

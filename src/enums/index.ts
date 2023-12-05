@@ -13,6 +13,13 @@ export enum Roles {
   Reader = "reader",
 }
 
+export enum RolesWithCustomer {
+  Admin = "admin",
+  Writer = "writer",
+  Reader = "reader",
+  Customer = "customer",
+}
+
 export enum SecretType {
   "Execution Client Private Key" = "ethereum_privatekey",
   "Ethereum Keystore" = "ethereum2_keystore",
@@ -80,7 +87,6 @@ export enum Protocol {
   Polkadot = "polkadot",
   Stacks = "stacks",
 }
-
 
 export enum ProtocolsWithoutEthereum2 {
   APTOS = "aptos",

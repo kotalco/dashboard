@@ -7,19 +7,21 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
-import { BeaconNode, ExecutionClientNode, ValidatorNode } from "@/types";
+import { BeaconNode, ValidatorNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
+import { Logs } from "@/components/logs";
+
 import { ProtocolTab } from "./components/protocol-tab";
 import { BeaconNodeTab } from "./components/beacon-node-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { GraffitiTab } from "./components/graffiti-tab";
 import { KeystoreTab } from "./components/keystore-tab";
-import { Logs } from "@/components/logs";
 
 export default async function BeaconNodePage({
   params,
@@ -29,11 +31,15 @@ export default async function BeaconNodePage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId);
-  const passwords = secrets.filter(({ type }) => type === SecretType.Password);
-  const keystores = secrets.filter(
-    ({ type }) => type === SecretType["Ethereum Keystore"]
+  const { options: passwords } = await getSecrets(
+    workspaceId,
+    SecretType.Password
   );
+  const { options: keystores } = await getSecrets(
+    workspaceId,
+    SecretType["Ethereum Keystore"]
+  );
+
   const { data } = await getNodes<BeaconNode>(
     params.workspaceId,
     "/ethereum2/beaconnodes"
@@ -63,7 +69,6 @@ export default async function BeaconNodePage({
                 nodeName={node.name}
                 protocol={Protocol.Ethereum2}
                 token={token.value}
-                workspaceId={workspaceId}
                 component="validators"
               />
             )}
@@ -81,7 +86,6 @@ export default async function BeaconNodePage({
                 nodeName={node.name}
                 protocol={Protocol.Ethereum2}
                 token={token.value}
-                workspaceId={workspaceId}
                 component="validators"
               />
             )}
@@ -114,7 +118,7 @@ export default async function BeaconNodePage({
                 node={node}
                 role={role}
                 passwords={passwords}
-                keystores={keystores}
+                ethereumKeystores={keystores}
               />
             </TabsContent>
             <TabsContent
@@ -139,7 +143,7 @@ export default async function BeaconNodePage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/ethereum2/validators/${node.name}?workspace_id=${workspaceId}`}
+                url={`/ethereum2/validators/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

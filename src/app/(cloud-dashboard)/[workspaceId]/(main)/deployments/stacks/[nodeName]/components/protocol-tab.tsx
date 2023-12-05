@@ -46,7 +46,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/stacks/nodes/${name}`}
+        url={`/stacks/nodes/${name}`}
       />
     </>
   );

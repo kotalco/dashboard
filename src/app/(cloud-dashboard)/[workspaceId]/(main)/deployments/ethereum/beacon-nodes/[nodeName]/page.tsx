@@ -36,9 +36,9 @@ export default async function BeaconNodePage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType["JWT Secret"]);
+  const { options } = await getSecrets(workspaceId, SecretType["JWT Secret"]);
   const { data } = await getNodes<ExecutionClientNode>(
-    params.workspaceId,
+    workspaceId,
     "/ethereum/nodes"
   );
 
@@ -66,7 +66,6 @@ export default async function BeaconNodePage({
                 nodeName={node.name}
                 protocol={Protocol.Ethereum2}
                 token={token.value}
-                workspaceId={workspaceId}
                 component="beaconnodes"
               />
             )}
@@ -90,7 +89,6 @@ export default async function BeaconNodePage({
                   nodeName={node.name}
                   protocol={Protocol.Ethereum2}
                   token={token.value}
-                  workspaceId={workspaceId}
                   component="beaconnodes"
                 />
               </>
@@ -125,7 +123,7 @@ export default async function BeaconNodePage({
               <ExecutionClientTab
                 node={node}
                 role={role}
-                secrets={secrets}
+                secrets={options}
                 executionClients={data}
               />
             </TabsContent>
@@ -154,7 +152,7 @@ export default async function BeaconNodePage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
+                url={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

@@ -46,7 +46,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/ethereum2/beaconnodes/${name}`}
+        url={`/ethereum2/beaconnodes/${name}`}
       />
     </>
   );

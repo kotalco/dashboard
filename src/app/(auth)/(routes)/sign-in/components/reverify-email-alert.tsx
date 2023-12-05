@@ -1,92 +1,47 @@
-import { useState } from "react";
-import { UseFormSetError } from "react-hook-form";
-import { isAxiosError } from "axios";
-import { Loader2 } from "lucide-react";
+import { useAction } from "@/hooks/use-action";
+import { reverifyEmail } from "@/actions/reveify-email";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { client } from "@/lib/client-instance";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
 
-export const ReverifyEmailALert = ({
-  email,
-  setError,
-}: {
-  email?: string;
-  setError: UseFormSetError<{}>;
-}) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+export const ReverifyEmailALert = ({ email }: { email: string }) => {
+  const { execute, error, success } = useAction(reverifyEmail);
 
-  async function reactivateEmail() {
-    try {
-      setIsLoading(true);
-      setSuccess(false);
-
-      await client.post("/users/resend_email_verification", {
-        email,
-      });
-
-      setSuccess(true);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        if (response?.status === 400) {
-          return setError("root", {
-            type: response?.status.toString(),
-            message: "Email already verified.",
-          });
-        }
-
-        if (response?.status === 404) {
-          return setError("root", {
-            type: response?.status.toString(),
-            message:
-              "Email not found. Sign up and a verification email will be sent automatically.",
-          });
-        }
-
-        return setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const onSubmit = () => {
+    execute({ email });
+  };
 
   if (!email) return null;
 
   if (success) {
     return (
-      <Alert variant="success">
-        <AlertDescription>
+      <div className="mt-5">
+        <SubmitSuccess success={success}>
           Verification email has been sent. Please check your email.
-        </AlertDescription>
-      </Alert>
+        </SubmitSuccess>
+      </div>
     );
   }
 
-  if (isLoading)
+  if (error) {
     return (
-      <div className="flex justify-center">
-        <Loader2 className="animate-spin" />
+      <div className="mt-5">
+        <SubmitError error={error} />
       </div>
     );
+  }
 
   return (
-    <Alert variant="destructive">
+    <Alert variant="destructive" className="mt-5">
       <AlertDescription>
         <span>Email not verified. Resend Activation Email? Click </span>
-        <Button
-          variant="link"
-          type="button"
-          onClick={reactivateEmail}
-          className="px-0"
-        >
-          here
-        </Button>
+        <form action={onSubmit} className="inline">
+          <SubmitButton variant="link" className="px-0">
+            here
+          </SubmitButton>
+        </form>
         .
       </AlertDescription>
     </Alert>

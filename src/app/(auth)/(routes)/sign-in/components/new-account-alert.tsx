@@ -1,26 +1,21 @@
-"use client";
+import { cookies } from "next/headers";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useIsMounted } from "@/hooks/useIsMounted";
 import { StorageItems } from "@/enums";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 export const NewAccountAlert = () => {
-  const mounted = useIsMounted();
+  const cookie = cookies().get(StorageItems.NEW_ACCOUNT);
 
-  if (!mounted) return null;
-
-  const email = localStorage.getItem(StorageItems.NEW_ACCOUNT);
-  localStorage.removeItem(StorageItems.NEW_ACCOUNT);
-
-  if (email) {
+  if (cookie?.value) {
     return (
-      <Alert variant="success" className="mb-4">
+      <Alert variant="success" className="mb-4 text-center">
         <AlertTitle className="text-center">Account Created</AlertTitle>
         <AlertDescription>
           <p>
             You have been registered with{" "}
-            <strong className="font-bold">{email}</strong>. Please check your
-            inbox and confirm your email
+            <strong className="font-bold">{cookie.value}</strong>. Please check
+            your inbox and confirm your email
           </p>
         </AlertDescription>
       </Alert>

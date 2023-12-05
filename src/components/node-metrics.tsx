@@ -10,12 +10,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Protocol } from "@/enums";
 import { getWsBaseURL } from "@/lib/utils";
 import { Chart } from "@/components/ui/chart";
+import { useParams } from "next/navigation";
 
 interface NodeMetricsProps {
   nodeName: string;
   protocol: Protocol;
   token: string;
-  workspaceId: string;
   component?: "nodes" | "beaconnodes" | "validators" | "peers" | "clusterpeers";
 }
 
@@ -31,9 +31,9 @@ export const NodeMetrics: React.FC<NodeMetricsProps> = ({
   nodeName,
   protocol,
   token,
-  workspaceId,
   component = "nodes",
 }) => {
+  const { workspaceId } = useParams();
   const subscription: SWRSubscription<string, Metrics, string> = (
     key,
     { next }

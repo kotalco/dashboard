@@ -1,159 +1,79 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
-import { AptosNode, FilecoinNode } from "@/types";
+import { FilecoinNode } from "@/types";
 import { Roles } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { editAPI } from "@/actions/edit-filecoin";
+
 import { TabsFooter } from "@/components/ui/tabs";
-import { InputWithUnit } from "@/components/ui/input-with-unit";
+import { InputWithUnit } from "@/components/form/input-with-unit";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface APITabProps {
   node: FilecoinNode;
   role: Roles;
 }
 
-const schema = z
-  .object({
-    api: z.boolean(),
-    apiRequestTimeout: z.coerce
-      .number({
-        invalid_type_error: "Please enter a valid number with seconds",
-      })
-      .min(1, "Please enter a valid number with seconds"),
-  })
-  .transform(({ api, apiRequestTimeout }) =>
-    api ? { api, apiRequestTimeout } : { api }
-  );
-
-type Schema = z.input<typeof schema>;
-
 export const APITab: React.FC<APITabProps> = ({ node, role }) => {
-  const { api, apiRequestTimeout } = node;
+  const { api, apiRequestTimeout, name } = node;
+  const { workspaceId } = useParams();
+  const [apiState, setApiState] = useState(api);
+  const { execute, fieldErrors, error, success } = useAction(editAPI);
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { api, apiRequestTimeout },
-  });
+  const onSubmit = (formData: FormData) => {
+    const apiRequestTimeout = formData.get(
+      "apiRequestTimeout-amount"
+    ) as string;
 
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-    watch,
-  } = form;
-
-  const [apiState] = watch(["api"]);
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<FilecoinNode>(
-        `/filecoin/nodes/${node.name}`,
-        values
-      );
-      const { api, apiRequestTimeout } = data;
-      reset({ api, apiRequestTimeout });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+    execute(
+      {
+        api: apiState,
+        apiRequestTimeout: +apiRequestTimeout,
+      },
+      { name, workspaceId: workspaceId as string }
+    );
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="api"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">REST</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+    <form action={onSubmit} className="relative space-y-4">
+      <Toggle
+        id="api"
+        label="REST"
+        defaultChecked={api}
+        checked={apiState}
+        onCheckedChange={setApiState}
+        disabled={role === Roles.Reader}
+        errors={fieldErrors}
+      />
+
+      <div className="max-w-xs">
+        <InputWithUnit
+          id="apiRequestTimeout"
+          label="API Request Timeout"
+          disabled={role === Roles.Reader || !apiState}
+          unit={`Second`}
+          errors={fieldErrors}
+          defaultValue={apiRequestTimeout.toString()}
         />
+      </div>
 
-        <FormField
-          control={form.control}
-          name="apiRequestTimeout"
-          render={({ field }) => (
-            <FormItem className="max-w-xs">
-              <FormLabel>API Request Timeout</FormLabel>
-              <FormControl>
-                <InputWithUnit
-                  disabled={isSubmitting || role === Roles.Reader || !apiState}
-                  unit={`Second${+field.value !== 1 ? "s" : ""}`}
-                  value={field.value.toString()}
-                  onChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <SubmitSuccess success={success}>
+        API settings have been updated successfully.
+      </SubmitSuccess>
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              API settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

@@ -1,24 +1,17 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
 import { StacksNode } from "@/types";
 import { Roles } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { editAPI } from "@/actions/edit-stacks";
+
 import { TabsFooter } from "@/components/ui/tabs";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface APITabProps {
   node: StacksNode;
@@ -26,101 +19,37 @@ interface APITabProps {
 }
 
 export const APITab: React.FC<APITabProps> = ({ node, role }) => {
-  const { rpc } = node;
+  const { rpc, name } = node;
+  const { workspaceId } = useParams();
+  const { execute, fieldErrors, error, success } = useAction(editAPI);
 
-  const schema = z.object({
-    rpc: z.boolean(),
-  });
+  const onSubmit = async (formData: FormData) => {
+    const rpc = formData.get("rpc") === "on";
 
-  type Schema = z.infer<typeof schema>;
-
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { rpc },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<StacksNode>(
-        `/stacks/nodes/${node.name}`,
-        values
-      );
-      const { rpc } = data;
-      reset({ rpc });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+    await execute({ rpc }, { name, workspaceId: workspaceId as string });
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="rpc"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2">JSON-RPC Server</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="relative space-y-4">
+      <Toggle
+        id="rpc"
+        label="JSON-RPC Server"
+        defaultChecked={rpc}
+        disabled={role === Roles.Reader}
+        errors={fieldErrors}
+      />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              API settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitSuccess success={success}>
+        API settings have been updated successfully.
+      </SubmitSuccess>
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

@@ -1,22 +1,25 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
-import { getWorkspace } from "@/services/get-workspace";
-import { getNode } from "@/services/get-node";
-import { getClientVersions } from "@/services/get-client-versions";
-import { Protocol, Roles, StorageItems } from "@/enums";
-import { AptosNode } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
+import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
 import { ResourcesForm } from "@/components/resources-form";
-import { AptosNodeStats } from "./components/aptos-node-stats";
-import { ProtocolTab } from "./components/protocol-tab";
-import { APITab } from "./components/api-tab";
-import { DangerZoneTab } from "./components/danger-zone-tab";
+
+import { getNode } from "@/services/get-node";
+import { getWorkspace } from "@/services/get-workspace";
+import { Protocol, Roles, StorageItems } from "@/enums";
+import { AptosNode } from "@/types";
+
+import { AptosNodeStats } from "./_components/aptos-node-stats";
+import { ProtocolTab } from "./_components/protocol-tab";
+import { APITab } from "./_components/api-tab";
+import { DangerZoneTab } from "./_components/danger-zone-tab";
 
 export default async function AptosPage({
   params,
@@ -32,15 +35,6 @@ export default async function AptosPage({
       workspaceId,
       `/aptos/nodes/${nodeName}`
     );
-    const { versions } = await getClientVersions(
-      {
-        protocol: "aptos",
-        component: "node",
-        client: "aptos-core",
-        network: node.network,
-      },
-      node.image
-    );
 
     return (
       <div className="flex-col">
@@ -51,7 +45,6 @@ export default async function AptosPage({
                 nodeName={node.name}
                 protocol={Protocol.Aptos}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
             <Heading
@@ -65,16 +58,11 @@ export default async function AptosPage({
           <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
             {token && (
               <>
-                <AptosNodeStats
-                  nodeName={node.name}
-                  token={token.value}
-                  workspaceId={workspaceId}
-                />
+                <AptosNodeStats nodeName={node.name} token={token.value} />
                 <NodeMetrics
                   nodeName={node.name}
                   protocol={Protocol.Aptos}
                   token={token.value}
-                  workspaceId={workspaceId}
                 />
               </>
             )}
@@ -95,7 +83,9 @@ export default async function AptosPage({
               )}
             </TabsList>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-              <ProtocolTab node={node} role={role} versions={versions} />
+              <Suspense fallback={<ProtocolSkeleton />}>
+                <ProtocolTab node={node} role={role} />
+              </Suspense>
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} />
@@ -114,7 +104,7 @@ export default async function AptosPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/aptos/nodes/${node.name}?workspace_id=${workspaceId}`}
+                url={`/aptos/nodes/${node.name}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

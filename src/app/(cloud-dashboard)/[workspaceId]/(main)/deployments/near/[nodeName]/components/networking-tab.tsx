@@ -1,258 +1,110 @@
 "use client";
 
-import * as z from "zod";
-import Link from "next/link";
+import { useState } from "react";
 import { useParams } from "next/navigation";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { client } from "@/lib/client-instance";
-import { NEARNode, Secret } from "@/types";
+import { NEARNode, OptionType } from "@/types";
 import { Roles, SecretType } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { editNetworkng } from "@/actions/edit-near";
+
 import { TabsFooter } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+import { Select } from "@/components/form/select";
+import { Textarea } from "@/components/form/textarea";
+import { Input } from "@/components/form/input";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
 
 interface NetWorkingTabProps {
   node: NEARNode;
   role: Roles;
-  secrets: Secret[];
+  secrets: OptionType[];
 }
-
-const schema = z.object({
-  nodePrivateKeySecretName: z.string().optional().default(""),
-  minPeers: z.coerce
-    .number({ invalid_type_error: "Minimum Peers is number" })
-    .min(1, "Minimum Peers is greater than 0")
-    .optional()
-    .default(5),
-  p2pPort: z.coerce
-    .number({ invalid_type_error: "P2P Port is number" })
-    .min(1, "P2P Port is between 1 and 65535")
-    .max(65535, "P2P Port is between 1 and 65535")
-    .optional()
-    .default(24567),
-  bootnodes: z
-    .string()
-    .transform((value) =>
-      value ? value.split("\n").filter((value) => !!value) : []
-    )
-    .optional(),
-});
-
-type Schema = z.input<typeof schema>;
 
 export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
   node,
   role,
   secrets,
 }) => {
-  const params = useParams();
-  const { nodePrivateKeySecretName, minPeers, p2pPort, bootnodes } = node;
+  const { nodePrivateKeySecretName, minPeers, p2pPort, bootnodes, name } = node;
+  const [privateKey, setPrivateKey] = useState(nodePrivateKeySecretName);
+  const { workspaceId } = useParams();
+  const { execute, fieldErrors, error, success } = useAction(editNetworkng);
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      nodePrivateKeySecretName,
-      minPeers,
-      p2pPort,
-      bootnodes: bootnodes?.join("\n"),
-    },
-  });
+  const onSubmit = (formData: FormData) => {
+    const nodePrivateKeySecretName = formData.get(
+      "nodePrivateKeySecretName"
+    ) as string;
+    const minPeers = Number(formData.get("minPeers"));
+    const p2pPort = Number(formData.get("p2pPort"));
+    const bootnodes = formData.get("bootnodes") as string;
 
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<NEARNode>(
-        `/near/nodes/${node.name}`,
-        values
-      );
-      const { nodePrivateKeySecretName, minPeers, p2pPort, bootnodes } = data;
-      reset({
-        nodePrivateKeySecretName,
-        minPeers,
-        p2pPort,
-        bootnodes: bootnodes?.join("\n"),
-      });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+    execute(
+      { nodePrivateKeySecretName, minPeers, p2pPort, bootnodes },
+      { name, workspaceId: workspaceId as string }
+    );
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="nodePrivateKeySecretName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Node Private Key</FormLabel>
-              <div className="flex items-center gap-x-2">
-                <Select
-                  disabled={isSubmitting || role === Roles.Reader}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger
-                      data-testid="secret-private-key"
-                      className="max-w-sm bg-white"
-                    >
-                      <SelectValue placeholder="Select a Secret" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {secrets.map(({ name }) => (
-                      <SelectItem key={name} value={name}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                    <Link
-                      href={`/${params.workspaceId}/secrets/new?type=${SecretType["NEAR Private Key"]}`}
-                      className="text-sm text-primary hover:underline underline-offset-4"
-                    >
-                      Create New Private Key
-                    </Link>
-                  </SelectContent>
-                </Select>
-                {field.value && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="text-destructive hover:bg-transparent hover:text-destructive/70"
-                    onClick={() => field.onChange("")}
-                  >
-                    Clear
-                  </Button>
-                )}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="relative space-y-4">
+      <Select
+        id="nodePrivateKeySecretName"
+        label="Node Private Key"
+        disabled={role === Roles.Reader}
+        placeholder="Select a Secret"
+        defaultValue={privateKey}
+        value={privateKey}
+        onValueChange={setPrivateKey}
+        options={secrets}
+        link={{
+          href: `/${workspaceId}/secrets/new?type=${SecretType["NEAR Private Key"]}`,
+          title: "Create New Private Key",
+        }}
+        clear={{ onClear: () => setPrivateKey("") }}
+        errors={fieldErrors}
+        className="max-w-xs"
+      />
 
-        <FormField
-          control={form.control}
-          name="minPeers"
-          render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Minimum Peers</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={isSubmitting || role === Roles.Reader}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Input
+        id="minPeers"
+        label="Minimum Peers"
+        disabled={role === Roles.Reader}
+        defaultValue={minPeers}
+        errors={fieldErrors}
+        className="max-w-xs"
+      />
 
-        <FormField
-          control={form.control}
-          name="p2pPort"
-          render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>P2P Port</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={isSubmitting || role === Roles.Reader}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Input
+        id="p2pPort"
+        label="P2P Port"
+        disabled={role === Roles.Reader}
+        defaultValue={p2pPort}
+        errors={fieldErrors}
+        className="max-w-xs"
+      />
 
-        <FormField
-          control={form.control}
-          name="bootnodes"
-          render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Boot Nodes</FormLabel>
-              <FormControl>
-                <Textarea
-                  disabled={isSubmitting || role === Roles.Reader}
-                  className="resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>One node URL per line</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Textarea
+        id="bootnodes"
+        label="Boot Nodes"
+        disabled={role === Roles.Reader}
+        defaultValue={bootnodes?.join("\n")}
+        errors={fieldErrors}
+        description="One node URL per line"
+        className="max-w-xs"
+      />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Networking settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitSuccess success={success}>
+        Networking settings have been updated successfully.
+      </SubmitSuccess>
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

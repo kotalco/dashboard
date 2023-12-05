@@ -1,160 +1,48 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isAxiosError } from "axios";
+import { usePathname } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
-import { User } from "@/types";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { changeEmail } from "@/actions/change-email";
+import { useAction } from "@/hooks/use-action";
+
+import { Input } from "@/components/form/input";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
 
 interface ChangeEmailFormProps {
   email: string;
 }
 
-const defaultValues = { email: "", password: "" };
-
 export const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ email }) => {
-  const router = useRouter();
-  const schema = z
-    .object({
-      email: z
-        .string({ required_error: "Email is required" })
-        .email("Invalid Email")
-        .trim()
-        .toLowerCase(),
-      password: z
-        .string({ required_error: "Password is required" })
-        .min(6, "Password must be not less than 6 characters"),
-    })
-    .refine(
-      (values) => values.email !== email,
-      ({ email }) => ({
-        message: `${email} is already your current email.`,
-        path: ["email"],
-      })
-    );
-  type SchemaType = z.infer<typeof schema>;
+  const pathname = usePathname();
+  const { execute, fieldErrors, error, success } = useAction(changeEmail);
 
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
+  const onSubmit = (formData: FormData) => {
+    const newEmail = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    setError,
-  } = form;
-
-  async function onSubmit(values: SchemaType) {
-    try {
-      await client.post<User>("/users/change_email", values);
-      router.refresh();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        if (
-          response?.status === 400 &&
-          response.data.message === "invalid password"
-        ) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Wrong Password.",
-          });
-          return;
-        }
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
+    execute({ email: newEmail, password, oldEmail: email }, { pathname });
+  };
 
   return (
-    <Form {...form}>
-      <form
-        data-testid="change-email-form"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Email Address</FormLabel>
-              <FormControl>
-                <Input data-testid="email" disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="space-y-4">
+      <Input id="email" label="New Email Address" errors={fieldErrors} />
+      <Input
+        id="password"
+        label="Current Password"
+        type="password"
+        errors={fieldErrors}
+      />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Current Password</FormLabel>
-              <FormControl>
-                <Input
-                  data-testid="password"
-                  disabled={isSubmitting}
-                  type="password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <SubmitSuccess success={success}>
+        Your email address has been changed, you can now use your new email to
+        login.
+      </SubmitSuccess>
 
-        <Button
-          data-testid="submit"
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          type="submit"
-        >
-          Update Email
-        </Button>
+      <SubmitError error={error} />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Your email address has been changed, you can now use your new
-              email to login.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitButton>Update Email</SubmitButton>
+    </form>
   );
 };

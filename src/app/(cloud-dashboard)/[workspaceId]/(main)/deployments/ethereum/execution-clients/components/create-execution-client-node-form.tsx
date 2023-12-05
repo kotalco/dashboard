@@ -1,224 +1,80 @@
 "use client";
 
-import { useEffect } from "react";
-import * as z from "zod";
 import { useParams, useRouter } from "next/navigation";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ExecutionClientClients, ExecutionClientNetworks } from "@/enums";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
-import { getLatestVersion, getSelectItems } from "@/lib/utils";
-import { client } from "@/lib/client-instance";
+  getLatestVersion,
+  getSelectItems,
+  readSelectWithInputValue,
+} from "@/lib/utils";
 import { Clients } from "@/types";
-import { SelectWithInput } from "@/components/ui/select-with-input";
+import { useAction } from "@/hooks/use-action";
 
-const schema = z.object({
-  name: z
-    .string()
-    .min(1, "Node name is required")
-    .max(64, "Too long name")
-    .trim()
-    .refine((value) => /^\S*$/.test(value), {
-      message: "Invalid character used",
-    }),
-  client: z.nativeEnum(ExecutionClientClients, {
-    required_error: "Client is required",
-  }),
-  network: z
-    .string({ required_error: "Network is required" })
-    .min(1, "Network is required")
-    .trim(),
-  workspace_id: z.string().min(1),
-  image: z.string().min(1),
-});
-
-type SchemaType = z.infer<typeof schema>;
-
-const defaultValues = {
-  name: "",
-  network: undefined,
-  client: undefined,
-};
+import { Input } from "@/components/form/input";
+import { Select } from "@/components/form/select";
+import { SelectWithInput } from "@/components/form/select-with-input";
+import { createExecutionClient } from "@/actions/create-execution-client";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 export const CreateExecutionClientNodeForm: React.FC<{ images: Clients }> = ({
   images,
 }) => {
-  const { toast } = useToast();
   const router = useRouter();
   const { workspaceId } = useParams();
-
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(schema),
-    defaultValues,
+  const { execute, fieldErrors, error } = useAction(createExecutionClient, {
+    onSuccess: ({ name }) => {
+      router.push(`/${workspaceId}/deployments/ethereum`);
+      toast.message("Execution client node has been created", {
+        description: `${name} node has been created successfully, and will be up and running in few seconds.`,
+      });
+    },
   });
 
-  const {
-    formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
-    watch,
-    setError,
-    setValue,
-  } = form;
+  const onSubmit = (formData: FormData) => {
+    const name = formData.get("name") as string;
+    const client = formData.get("client") as ExecutionClientClients;
+    const network = readSelectWithInputValue("network", formData);
 
-  const [watchedClient] = watch(["client"]);
-
-  useEffect(() => {
-    if (watchedClient)
-      setValue("image", getLatestVersion(images, watchedClient), {
-        shouldValidate: true,
-      });
-  }, [watchedClient, images, setValue]);
-
-  async function onSubmit(values: z.infer<typeof schema>) {
-    try {
-      await client.post("/ethereum/nodes", values);
-      router.push(`/${workspaceId}/deployments/ethereum`);
-      router.refresh();
-      toast({
-        title: "Execution client node has been created",
-        description: `${values.name} node has been created successfully, and will be up and running in few seconds.`,
-      });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        if (response?.status === 400) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Name already exists.",
-          });
-          return;
-        }
-
-        if (response?.status === 403) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Reached Nodes Limit.",
-          });
-          return;
-        }
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
+    execute({
+      name,
+      client,
+      network,
+      workspace_id: workspaceId as string,
+      image: getLatestVersion(images, client)!,
+    });
+  };
 
   return (
-    <Form {...form}>
-      <form
-        data-testid="create-node"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-sm space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="workspace_id"
-          defaultValue={workspaceId as string}
-          render={({ field }) => <Input className="sr-only" {...field} />}
-        />
+    <form
+      data-testid="create-node"
+      action={onSubmit}
+      className="max-w-xs space-y-4"
+    >
+      <Input errors={fieldErrors} id="name" label="Node Name" />
 
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Node Name</FormLabel>
-              <FormControl>
-                <Input data-testid="name" disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Select
+        id="client"
+        label="Client"
+        placeholder="Select Client"
+        options={getSelectItems(ExecutionClientClients)}
+        errors={fieldErrors}
+      />
 
-        <FormField
-          control={form.control}
-          name="client"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-              <FormLabel>Client</FormLabel>
-              <Select
-                disabled={isSubmitting}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger data-testid="client" className="bg-white">
-                    <SelectValue placeholder="Select a Client" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {getSelectItems(ExecutionClientClients).map(
-                    ({ value, label }) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <SelectWithInput
+        id="network"
+        label="Network"
+        placeholder="Select Network"
+        options={getSelectItems(ExecutionClientNetworks)}
+        errors={fieldErrors}
+        otherLabel="Other Network"
+      />
 
-        <FormField
-          control={form.control}
-          name="network"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-              <FormLabel>Network</FormLabel>
-              <SelectWithInput
-                placeholder="Select a Network"
-                disabled={isSubmitting}
-                onChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-                options={getSelectItems(ExecutionClientNetworks)}
-                otherLabel="Other Network"
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <SubmitError error={error} />
 
-        <Button
-          data-testid="submit"
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          type="submit"
-        >
-          Create
-        </Button>
-
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitButton>Create</SubmitButton>
+    </form>
   );
 };

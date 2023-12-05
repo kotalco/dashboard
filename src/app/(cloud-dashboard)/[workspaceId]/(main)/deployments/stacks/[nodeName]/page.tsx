@@ -30,7 +30,7 @@ export default async function StacksNodePage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(
+  const { options } = await getSecrets(
     workspaceId,
     SecretType["Stacks Private Key"]
   );
@@ -60,7 +60,6 @@ export default async function StacksNodePage({
                 nodeName={node.name}
                 protocol={Protocol.Stacks}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
             <Heading
@@ -77,7 +76,6 @@ export default async function StacksNodePage({
                 nodeName={node.name}
                 protocol={Protocol.Stacks}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
           </div>
@@ -106,7 +104,7 @@ export default async function StacksNodePage({
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="networking"
             >
-              <NetworkingTab node={node} role={role} secrets={secrets} />
+              <NetworkingTab node={node} role={role} secrets={options} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
               <APITab node={node} role={role} />
@@ -121,7 +119,7 @@ export default async function StacksNodePage({
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="telemetry"
             >
-              <MiningTab node={node} role={role} secrets={secrets} />
+              <MiningTab node={node} role={role} secrets={options} />
             </TabsContent>
 
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
@@ -139,7 +137,7 @@ export default async function StacksNodePage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/stacks/nodes/${node.name}?workspace_id=${workspaceId}`}
+                url={`/stacks/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

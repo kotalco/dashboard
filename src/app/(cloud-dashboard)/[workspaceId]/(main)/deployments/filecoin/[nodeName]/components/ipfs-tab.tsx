@@ -1,27 +1,19 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
-import { AptosNode, FilecoinNode, IPFSPeer } from "@/types";
+import { FilecoinNode, IPFSPeer } from "@/types";
 import { Roles } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { editIPFS } from "@/actions/edit-filecoin";
+import { readSelectWithInputValue } from "@/lib/utils";
+
 import { TabsFooter } from "@/components/ui/tabs";
-import { InputWithUnit } from "@/components/ui/input-with-unit";
-import { SelectWithInput } from "@/components/ui/select-with-input";
+import { SelectWithInput } from "@/components/form/select-with-input";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface IPFSTabProps {
   node: FilecoinNode;
@@ -29,149 +21,74 @@ interface IPFSTabProps {
   peers: IPFSPeer[];
 }
 
-const schema = z.object({
-  ipfsForRetrieval: z.boolean(),
-  ipfsOnlineMode: z.boolean(),
-  ipfsPeerEndpoint: z.string().trim().optional(),
-});
-
-type Schema = z.input<typeof schema>;
-
 export const IPFSTab: React.FC<IPFSTabProps> = ({ node, role, peers }) => {
-  const { ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint } = node;
+  const { ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint, name } = node;
+  const { workspaceId } = useParams();
+  const { execute, fieldErrors, error, success } = useAction(editIPFS);
+
   const peersOptions = peers.map(({ name }) => ({
     label: name,
     value: `/dns4/${name}/tcp/5001`,
   }));
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<FilecoinNode>(
-        `/filecoin/nodes/${node.name}`,
-        values
-      );
-      const { ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint } = data;
-      reset({ ipfsForRetrieval, ipfsOnlineMode, ipfsPeerEndpoint });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+  const onSubmit = (formData: FormData) => {
+    const ipfsForRetrieval = formData.get("ipfsForRetrieval") === "on";
+    const ipfsOnlineMode = formData.get("ipfsOnlineMode") === "on";
+    const ipfsPeerEndpoint = readSelectWithInputValue(
+      "ipfsPeerEndpoint",
+      formData
+    );
+    execute(
+      {
+        ipfsForRetrieval,
+        ipfsOnlineMode,
+        ipfsPeerEndpoint,
+      },
+      { name, workspaceId: workspaceId as string }
+    );
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="ipfsForRetrieval"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">
-                Use IPFS For Retrieval
-              </FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="relative space-y-4">
+      <Toggle
+        id="ipfsForRetrieval"
+        label="Use IPFS For Retrieval"
+        defaultChecked={ipfsForRetrieval}
+        disabled={role === Roles.Reader}
+        errors={fieldErrors}
+      />
 
-        <FormField
-          control={form.control}
-          name="ipfsOnlineMode"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center gap-x-3">
-              <FormLabel className="mt-2 text-base">IPFS Online Mode</FormLabel>
-              <FormControl>
-                <Switch
-                  disabled={isSubmitting || role === Roles.Reader}
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+      <Toggle
+        id="ipfsOnlineMode"
+        label="IPFS Online Mode"
+        defaultChecked={ipfsOnlineMode}
+        disabled={role === Roles.Reader}
+        errors={fieldErrors}
+      />
 
-        <FormField
-          control={form.control}
-          name="ipfsPeerEndpoint"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>IPFS Peer Endpoint</FormLabel>
-              <SelectWithInput
-                placeholder="Select a peer"
-                disabled={isSubmitting || role === Roles.Reader}
-                onChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-                options={peersOptions}
-                otherLabel="Use External Peer"
-                allowClear
-              />
+      <SelectWithInput
+        id="ipfsPeerEndpoint"
+        label="IPFS Peer Endpoint"
+        disabled={role === Roles.Reader}
+        defaultValue={ipfsPeerEndpoint}
+        options={peersOptions}
+        otherLabel="Use External Peer"
+        errors={fieldErrors}
+        placeholder="Select a peer"
+        allowClear
+      />
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <SubmitSuccess success={success}>
+        IPFS settings have been updated successfully.
+      </SubmitSuccess>
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              IPFS settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

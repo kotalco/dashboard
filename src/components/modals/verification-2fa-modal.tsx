@@ -1,6 +1,5 @@
 import * as z from "zod";
 import axios, { isAxiosError } from "axios";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +35,6 @@ export const Verification2FAModal: React.FC<Verification2FAModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -67,7 +65,7 @@ export const Verification2FAModal: React.FC<Verification2FAModalProps> = ({
         name: StorageItems.AUTH_TOKEN,
         value: token,
       });
-      router.replace("/");
+      window.location.reload();
       handleClose();
     } catch (error) {
       if (isAxiosError(error)) {

@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Trash2 } from "lucide-react";
-import qs from "query-string";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspace } from "@/hooks/useWorkspace";
+import { deleteSecret } from "@/actions/delete-secret";
+import { useAction } from "@/hooks/use-action";
 import { Roles } from "@/enums";
-import { client } from "@/lib/client-instance";
+
 import { Button } from "@/components/ui/button";
-import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { CloseDialogButton } from "@/components/ui/close-dialog-button";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import { SecretColumn } from "./colums";
 
 interface CellRoleProps {
@@ -17,62 +21,30 @@ interface CellRoleProps {
 }
 
 export const CellAction: React.FC<CellRoleProps> = ({ data }) => {
-  const params = useParams();
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { workspaceId } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
   const { workspace, isLoading: isInitialLoading } = useWorkspace(
-    params.workspaceId as string
+    workspaceId as string
   );
+  const { execute, error } = useAction(deleteSecret, {
+    onSuccess: () => setIsOpen(false),
+  });
   const { name } = data;
 
   if (isInitialLoading) return <Skeleton className="w-4 h-4 " />;
 
   if (workspace?.role !== Roles.Admin) return null;
 
-  async function onDeleteSecret() {
-    try {
-      const url = qs.stringifyUrl({
-        url: `/core/secrets/${name}`,
-        query: { workspace_id: params.workspaceId },
-      });
-      setLoading(true);
-      await client.delete(url);
-      router.refresh();
-      setOpen(false);
-    } catch (error) {
-      setError("Something went wrong.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function onClose() {
-    setError("");
-    setOpen(false);
-  }
+  const onSubmit = () => {
+    execute({ workspaceId: workspaceId as string, name });
+  };
 
   return (
     <>
-      <DeprecatedAlertModal
-        isOpen={open}
-        onClose={onClose}
-        onConfirm={onDeleteSecret}
-        title="Remove Secret"
-        description={`Are you sure you want to remove secret (${name})?`}
-        loading={loading}
-      >
-        {error && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-      </DeprecatedAlertModal>
       <div className="flex justify-end transition opacity-0 group-hover:opacity-100">
         <Button
-          onClick={() => setOpen(true)}
-          disabled={loading}
+          onClick={() => setIsOpen(true)}
+          type="button"
           variant="ghost"
           size="icon"
           className="border-destructive h-7 w-7"
@@ -80,6 +52,19 @@ export const CellAction: React.FC<CellRoleProps> = ({ data }) => {
           <Trash2 className="w-4 h-4 text-destructive" />
         </Button>
       </div>
+      <AlertModal title="Remove Secret" open={isOpen} onOpenChange={setIsOpen}>
+        <p className="text-foreground/50 text-sm">
+          Are you sure you want to remove secret <strong>({name})</strong>?
+        </p>
+
+        <SubmitError error={error} />
+
+        <form action={onSubmit}>
+          <CloseDialogButton>
+            <SubmitButton variant="destructive">Continue</SubmitButton>
+          </CloseDialogButton>
+        </form>
+      </AlertModal>
     </>
   );
 };

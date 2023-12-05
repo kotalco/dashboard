@@ -31,7 +31,10 @@ export default async function BitcoinPage({
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
   const { role } = await getWorkspace(workspaceId);
-  const secrets = await getSecrets(workspaceId, SecretType["NEAR Private Key"]);
+  const { options } = await getSecrets(
+    workspaceId,
+    SecretType["NEAR Private Key"]
+  );
 
   try {
     const node = await getNode<NEARNode>(
@@ -57,7 +60,6 @@ export default async function BitcoinPage({
                 nodeName={node.name}
                 protocol={Protocol.NEAR}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
             <Heading
@@ -80,7 +82,6 @@ export default async function BitcoinPage({
                   nodeName={node.name}
                   protocol={Protocol.NEAR}
                   token={token.value}
-                  workspaceId={workspaceId}
                 />
               </>
             )}
@@ -111,7 +112,7 @@ export default async function BitcoinPage({
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="networking"
             >
-              <NetworkingTab node={node} role={role} secrets={secrets} />
+              <NetworkingTab node={node} role={role} secrets={options} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="rpc">
               <RPCTab node={node} role={role} />
@@ -120,7 +121,7 @@ export default async function BitcoinPage({
               className="px-4 py-3 sm:px-6 sm:py-4"
               value="validator"
             >
-              <ValidatorTab node={node} role={role} secrets={secrets} />
+              <ValidatorTab node={node} role={role} secrets={options} />
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
@@ -148,7 +149,7 @@ export default async function BitcoinPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/near/nodes/${node.name}?workspace_id=${workspaceId}`}
+                url={`/near/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

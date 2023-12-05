@@ -67,7 +67,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/ipfs/clusterpeers/${name}`}
+        url={`/ipfs/clusterpeers/${name}`}
       />
     </>
   );

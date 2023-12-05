@@ -29,16 +29,7 @@ export default async function DashboardPage({
         <SecretsCount workspaceId={params.workspaceId} />
       </div>
 
-      <div className="col-span-12">
-        <Card className="col-span-6 row-span-2">
-          <CardHeader>
-            <CardTitle>Subscription Info</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SubscriptionInfo />
-          </CardContent>
-        </Card>
-      </div>
+      <SubscriptionInfo />
 
       <div className="col-span-4 row-span-1">
         <a href="https://docs.kotal.co" target="_blank" rel="noreferrer">

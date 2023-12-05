@@ -6,18 +6,19 @@ import { getWorkspace } from "@/services/get-workspace";
 import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, StorageItems } from "@/enums";
-import { AptosNode, FilecoinNode, IPFSPeer } from "@/types";
+import { FilecoinNode, IPFSPeer } from "@/types";
+import { getNodes } from "@/services/get-nodes";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
-import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
+
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { IPFSTab } from "./components/ipfs-tab";
-import { getNodes } from "@/services/get-nodes";
 import { LogsTab } from "./components/logs-tab";
 
 export default async function AptosPage({
@@ -54,7 +55,6 @@ export default async function AptosPage({
                 nodeName={node.name}
                 protocol={Protocol.Filecoin}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
             <Heading
@@ -71,7 +71,6 @@ export default async function AptosPage({
                 nodeName={node.name}
                 protocol={Protocol.Filecoin}
                 token={token.value}
-                workspaceId={workspaceId}
               />
             )}
           </div>
@@ -101,11 +100,7 @@ export default async function AptosPage({
               <IPFSTab node={node} role={role} peers={data} />
             </TabsContent>
             <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-                {token && (
-                  <LogsTab node={node} role={role} token={token.value} />
-                )}
-              </TabsContent>
+              {token && <LogsTab node={node} role={role} token={token.value} />}
             </TabsContent>
             <TabsContent
               className="px-4 py-3 sm:px-6 sm:py-4"
@@ -114,7 +109,7 @@ export default async function AptosPage({
               <ResourcesForm
                 node={node}
                 role={role}
-                updateUrl={`/filecoin/nodes/${node.name}?workspace_id=${workspaceId}`}
+                url={`/filecoin/nodes/${node.name}?workspace_id=${workspaceId}`}
               />
             </TabsContent>
             {role === Roles.Admin && (

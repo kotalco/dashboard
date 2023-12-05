@@ -1,27 +1,20 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
 import { IPFSClusterPeer, IPFSPeer } from "@/types";
 import { Roles } from "@/enums";
-import {
-  Form,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { editPeers } from "@/actions/edit-cluster-peer";
+
 import { TabsFooter } from "@/components/ui/tabs";
-import { SelectWithInput } from "@/components/ui/select-with-input";
-import { MultiSelect } from "@/components/ui/multi-select";
+import { SelectWithInput } from "@/components/form/select-with-input";
+import { MultiSelect } from "@/components/form/multi-select";
 import { Label } from "@/components/ui/label";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
+import { readSelectWithInputValue } from "@/lib/utils";
 
 interface PeersTabProps {
   node: IPFSClusterPeer;
@@ -30,23 +23,16 @@ interface PeersTabProps {
   clusterPeers: IPFSClusterPeer[];
 }
 
-const schema = z.object({
-  peerEndpoint: z
-    .string({ required_error: "Peer endpoint is required" })
-    .min(1, "Peer endpoint is required")
-    .trim(),
-  bootstrapPeers: z.string().array().optional(),
-});
-
-type Schema = z.infer<typeof schema>;
-
 export const PeersTab: React.FC<PeersTabProps> = ({
   node,
   role,
   peers,
   clusterPeers,
 }) => {
-  const { peerEndpoint, bootstrapPeers, trustedPeers } = node;
+  const { peerEndpoint, bootstrapPeers, trustedPeers, name } = node;
+  const { workspaceId } = useParams();
+  const { execute, fieldErrors, error, success } = useAction(editPeers);
+
   const peerEndpoints = peers.map(({ name }) => ({
     label: name,
     value: `/dns4/${name}/tcp/5001`,
@@ -57,139 +43,65 @@ export const PeersTab: React.FC<PeersTabProps> = ({
     value: `/dns4/${name}/tcp/9096/p2p/${id}`,
   }));
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { peerEndpoint, bootstrapPeers },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<IPFSClusterPeer>(
-        `/ipfs/clusterpeers/${node.name}`,
-        values
-      );
-      const { peerEndpoint, bootstrapPeers } = data;
-      reset({ peerEndpoint, bootstrapPeers });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+  const onSubmit = (formData: FormData) => {
+    const peerEndpoint = readSelectWithInputValue("peerEndpoint", formData);
+    const bootstrapPeers = formData.getAll("bootstrapPeers") as string[];
+    execute(
+      { peerEndpoint, bootstrapPeers },
+      { name, workspaceId: workspaceId as string }
+    );
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="peerEndpoint"
-          render={({ field }) => (
-            <FormItem className="max-w-xs">
-              <FormLabel>IPFS Peer</FormLabel>
-              <SelectWithInput
-                placeholder="Select a Peer"
-                disabled={isSubmitting || role === Roles.Reader}
-                onChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-                options={peerEndpoints}
-                otherLabel="Use External Peer"
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="relative space-y-4">
+      <SelectWithInput
+        id="peerEndpoint"
+        label="IPFS Peer"
+        placeholder="Select a Peer"
+        options={peerEndpoints}
+        otherLabel="Use External Peer"
+        className="max-w-xs"
+        errors={fieldErrors}
+        disabled={role === Roles.Reader}
+        defaultValue={peerEndpoint}
+      />
 
-        <FormField
-          shouldUnregister={true}
-          control={form.control}
-          name="bootstrapPeers"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bootstrap Cluster Peers</FormLabel>
-              <div>
-                <div className="max-w-xs">
-                  <MultiSelect
-                    defaultValue={field.value}
-                    disabled={isSubmitting || role === Roles.Reader}
-                    value={field.value}
-                    placeholder="Select bootstrap peers"
-                    options={ipfsClusterPeers}
-                    onChange={field.onChange}
-                    emptyText="Enter your own peers"
-                    allowCustomValues
-                  />
-                </div>
-                <FormDescription>
-                  Select cluster peers or enter your own peers
-                </FormDescription>
-              </div>
+      <MultiSelect
+        id="bootstrapPeers"
+        label="Bootstrap Cluster Peers"
+        placeholder="Select bootstrap peers"
+        options={ipfsClusterPeers}
+        allowCustomValues
+        className="max-w-xs"
+        errors={fieldErrors}
+        disabled={role === Roles.Reader}
+        defaultValue={bootstrapPeers}
+      />
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      {!!trustedPeers && (
+        <div className="max-w-xs mt-4">
+          <Label>Trusted Cluster Peers</Label>
+          <ul className="ml-5 text-sm">
+            {trustedPeers.map((peer) => (
+              <li key={peer} className="text-foreground/50 list-disc">
+                {peer}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-        {!!trustedPeers && (
-          <div className="max-w-xs mt-4">
-            <Label>Trusted Cluster Peers</Label>
-            <ul className="ml-5 text-sm">
-              {trustedPeers.map((peer) => (
-                <li key={peer} className="text-foreground/50 list-disc">
-                  {peer}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      <SubmitSuccess success={success}>
+        Peers settings have been updated successfully.
+      </SubmitSuccess>
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Peers settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

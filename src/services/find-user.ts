@@ -1,14 +1,15 @@
 import "server-only";
 
-import { cache } from "react";
+import { AxiosError, isAxiosError } from "axios";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { User } from "@/types";
 import { server } from "@/lib/server-instance";
-import { AxiosError, isAxiosError } from "axios";
 
 type APIError = { message: string; status: number; name: string };
 
-export const findUser = cache(async () => {
+export const findUser = async () => {
+  noStore();
   let user: User | undefined;
   let error: AxiosError<APIError> | undefined;
   try {
@@ -21,4 +22,4 @@ export const findUser = cache(async () => {
   }
 
   return { user, error };
-});
+};

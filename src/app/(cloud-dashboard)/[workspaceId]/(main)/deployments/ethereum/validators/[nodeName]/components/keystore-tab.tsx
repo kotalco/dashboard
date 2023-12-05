@@ -1,224 +1,94 @@
 "use client";
 
-import * as z from "zod";
 import { useParams } from "next/navigation";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { client } from "@/lib/client-instance";
-import { Secret, ValidatorNode } from "@/types";
+import { OptionType, ValidatorNode } from "@/types";
 import { Roles, SecretType, ValidatorClients } from "@/enums";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { editKeystore } from "@/actions/edit-validator";
+import { useAction } from "@/hooks/use-action";
+
 import { TabsFooter } from "@/components/ui/tabs";
-import { MultiSelect } from "@/components/ui/multi-select";
-import Link from "next/link";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { MultiSelect } from "@/components/form/multi-select";
+import { Select } from "@/components/form/select";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface KeystoreTabProps {
   node: ValidatorNode;
   role: Roles;
-  keystores: Secret[];
-  passwords: Secret[];
+  ethereumKeystores: OptionType[];
+  passwords: OptionType[];
 }
 
 export const KeystoreTab: React.FC<KeystoreTabProps> = ({
   node,
   role,
-  keystores,
+  ethereumKeystores,
   passwords,
 }) => {
-  const params = useParams();
+  const { client, keystores, walletPasswordSecretName, name } = node;
+  const { workspaceId } = useParams();
 
-  const schema = z.object({
-    keystores: z
-      .string({ required_error: "Keystores are required" })
-      .array()
-      .nonempty({ message: "Keystores are required" })
-      .transform((val) => val.map((secret) => ({ secretName: secret }))),
-    walletPasswordSecretName: z
-      .string()
-      .optional()
-      .default("")
-      .refine(
-        (value) =>
-          (node.client === ValidatorClients["Prysatic Labs Prysm"] &&
-            !!value) ||
-          node.client !== ValidatorClients["Prysatic Labs Prysm"],
-        {
-          message: "Wallet Password is required for Prysm Client",
-          path: ["walletPasswordSecretName"],
-        }
-      ),
-  });
+  const { execute, fieldErrors, error, success } = useAction(editKeystore);
 
-  type Schema = z.input<typeof schema>;
+  const onSubmit = (formData: FormData) => {
+    const keystores = formData.getAll("keystores") as [string, ...string[]];
+    const walletPasswordSecretName = formData.get(
+      "walletPasswordSecretName"
+    ) as string;
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      keystores: node.keystores.map(({ secretName }) => secretName),
-      walletPasswordSecretName: node.walletPasswordSecretName,
-    },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      const { data } = await client.put<ValidatorNode>(
-        `/ethereum2/validators/${node.name}`,
-        values
-      );
-      const { keystores, walletPasswordSecretName } = data;
-      reset({
-        keystores: keystores.map(({ secretName }) => secretName),
-        walletPasswordSecretName,
-      });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+    execute(
+      { keystores, walletPasswordSecretName, client },
+      { name: name, workspaceId: workspaceId as string }
+    );
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="keystores"
-          render={({ field }) => (
-            <FormItem className="max-w-sm">
-              <FormLabel>Ethereum Keystores</FormLabel>
-              <div>
-                <MultiSelect
-                  disabled={isSubmitting || role === Roles.Reader}
-                  defaultValue={field.value}
-                  value={field.value}
-                  placeholder="Select keystores"
-                  options={keystores.map(({ name }) => ({
-                    label: name,
-                    value: name,
-                  }))}
-                  onChange={field.onChange}
-                  emptyText="No Keystores Available"
-                />
-                {role !== Roles.Reader && (
-                  <FormDescription>
-                    <Link
-                      href={`/${params.workspaceId}/secrets/new?type=${SecretType["Ethereum Keystore"]}`}
-                      className="text-sm text-primary hover:underline underline-offset-4"
-                    >
-                      Create New Keystore
-                    </Link>
-                  </FormDescription>
-                )}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
+    <form action={onSubmit} className="relative space-y-4">
+      <MultiSelect
+        id="keystores"
+        label="Ethereum Keystores"
+        disabled={role === Roles.Reader}
+        defaultValue={keystores.map(({ secretName }) => secretName)}
+        placeholder="Select keystores"
+        options={ethereumKeystores}
+        link={{
+          href: `/${workspaceId}/secrets/new?type=${SecretType["Ethereum Keystore"]}`,
+          title: "Create New Keystore",
+        }}
+        errors={fieldErrors}
+        className="max-w-sm"
+      />
+
+      {client === ValidatorClients["Prysatic Labs Prysm"] && (
+        <Select
+          id="walletPasswordSecretName"
+          label="Prysm Client Wallet Password"
+          disabled={role === Roles.Reader}
+          className="max-w-sm"
+          defaultValue={walletPasswordSecretName}
+          placeholder="Select a Password"
+          options={passwords}
+          link={{
+            href: `/${workspaceId}/secrets/new?type=${SecretType.Password}`,
+            title: "Create New Password",
+          }}
+          errors={fieldErrors}
         />
+      )}
 
-        {node.client === ValidatorClients["Prysatic Labs Prysm"] && (
-          <FormField
-            control={form.control}
-            name="walletPasswordSecretName"
-            render={({ field }) => (
-              <FormItem className="max-w-sm">
-                <FormLabel>Prysm Client Wallet Password</FormLabel>
-                <Select
-                  disabled={isSubmitting || role === Roles.Reader}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger data-testid="client" className="bg-white">
-                      <SelectValue placeholder="Select a Password" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {passwords.map(({ name }) => (
-                      <SelectItem key={name} value={name}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                    <Link
-                      href={`/${params.workspaceId}/secrets/new?type=${SecretType.Password}`}
-                      className="text-sm text-primary hover:underline underline-offset-4"
-                    >
-                      Create New Password
-                    </Link>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+      <SubmitSuccess success={success}>
+        Keystore settings has been updated successfully.
+      </SubmitSuccess>
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Keystore settings has been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitError error={error} />
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <TabsFooter>
+          <SubmitButton>Save</SubmitButton>
+        </TabsFooter>
+      )}
+    </form>
   );
 };

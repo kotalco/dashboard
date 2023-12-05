@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 
 import { Roles } from "@/enums";
@@ -13,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 interface NoResultProps {
   imageUrl: string;
@@ -33,7 +33,6 @@ export const NoResult: React.FC<NoResultProps> = ({
   buttonText,
   className,
 }) => {
-  const router = useRouter();
   return (
     <Card className={cn("flex flex-col items-center text-center", className)}>
       <CardHeader className="flex flex-col items-center">
@@ -57,12 +56,11 @@ export const NoResult: React.FC<NoResultProps> = ({
       )}
       {role !== Roles.Reader && (
         <CardFooter>
-          <Button
-            onClick={() => router.push(createUrl)}
-            className="btn btn-primary"
-          >
-            <Plus className="w-5 h-5 mr-2 -ml-1" aria-hidden="true" />
-            {buttonText}
+          <Button asChild>
+            <Link href={createUrl}>
+              <Plus className="w-4 h-4 mr-2" />
+              {buttonText}
+            </Link>
           </Button>
         </CardFooter>
       )}

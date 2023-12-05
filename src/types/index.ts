@@ -24,6 +24,11 @@ export * from "@/types/nav";
 export * from "@/types/settings";
 export * from "@/types/secrets";
 
+export type OptionType = Record<"label" | "value", string> & {
+  disabled?: boolean;
+  image?: string;
+};
+
 export interface MainNodeInfo {
   name: string;
   network: string;
@@ -86,12 +91,17 @@ export interface AptosNode extends ClientImage, ResourcesInfo {
   validator: boolean;
 }
 
+export type RPCUser = {
+  username: string;
+  passwordSecretName: string;
+};
+
 export interface BitcoinNode extends ClientImage, ResourcesInfo {
   name: string;
   network: string;
   rpc: boolean;
   txIndex: boolean;
-  rpcUsers: { username: string; passwordSecretName: string }[];
+  rpcUsers: [RPCUser, ...RPCUser[]];
   wallet: boolean;
   createdAt: string;
   p2pPort: number;
@@ -383,6 +393,7 @@ export interface Plan {
 }
 
 export interface Subscription {
+  name?: string;
   id: string;
   status: SubscriptionStatus;
   start_date: number;
@@ -390,8 +401,8 @@ export interface Subscription {
   canceled_at?: number;
   plan: Omit<Plan, "prices">;
   price: PlanPrice;
-  request_limit: number;
-  endpoint_limit: number;
+  request_limit?: number;
+  endpoint_limit?: number;
 }
 
 export interface Plan {

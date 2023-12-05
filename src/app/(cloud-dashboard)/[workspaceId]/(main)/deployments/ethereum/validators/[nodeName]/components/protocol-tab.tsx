@@ -46,7 +46,7 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
         role={role}
         versions={versions}
         image={image}
-        updateUrl={`/ethereum2/validators/${name}`}
+        url={`/ethereum2/validators/${name}`}
       />
     </>
   );
