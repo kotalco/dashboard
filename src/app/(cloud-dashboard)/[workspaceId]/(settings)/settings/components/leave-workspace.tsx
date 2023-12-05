@@ -1,81 +1,48 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { isAxiosError } from "axios";
+import { useAction } from "@/hooks/use-action";
+import { leaveWorkspace } from "@/actions/laeve-workspace";
 
-import { Button } from "@/components/ui/button";
-import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
-import { client } from "@/lib/client-instance";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { SubmitError } from "@/components/form/submit-error";
+import { CloseDialogButton } from "@/components/ui/close-dialog-button";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface LeaveWorkspaceProps {
-  workspaceId: string;
+  id: string;
 }
 
-export const LeaveWorkspace: React.FC<LeaveWorkspaceProps> = ({
-  workspaceId,
-}) => {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const router = useRouter();
+export const LeaveWorkspace: React.FC<LeaveWorkspaceProps> = ({ id }) => {
+  const { execute, error } = useAction(leaveWorkspace);
 
-  async function onLeaveWorkspace() {
-    try {
-      setLoading(true);
-      setError("");
-      await client.post(`/workspaces/${workspaceId}/leave`);
-      router.push("/");
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        response?.status === 403 &&
-          setError("You can't leave your own workspace.");
-        response?.status !== 403 && setError("Something went wrong.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function onClose() {
-    setError("");
-    setOpen(false);
-  }
+  const onSubmit = () => {
+    execute({ id });
+  };
 
   return (
-    <>
-      <DeprecatedAlertModal
+    <div className="flex justify-between gap-x-4">
+      <p>
+        Leave the current workspace, this action is critical and cann&apos;t be
+        undone untill you have been invited again.
+      </p>
+      <AlertModal
+        triggerText="Leave Workspace"
+        buttonVariant="outline"
         title="Leave Workspace"
-        description="Are you sure you want to leave this workspace? You might not be able to join this workspace again if not invited"
-        isOpen={open}
-        onClose={onClose}
-        loading={loading}
-        onConfirm={onLeaveWorkspace}
       >
-        {error && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-      </DeprecatedAlertModal>
+        <form action={onSubmit} className="space-y-4">
+          <p className="text-foreground/70 text-sm">
+            Are you sure you want to leave this workspace? You might not be able
+            to join this workspace again if not invited
+          </p>
 
-      <div className="flex justify-between gap-x-4">
-        <p>
-          Leave the current workspace, this action is critical and cann&apos;t
-          be undone untill you have been invited again.
-        </p>
-        <Button
-          data-testid="leave-button"
-          variant="outline"
-          onClick={() => setOpen(true)}
-          className="shrink-0"
-        >
-          Leave Workspace
-        </Button>
-      </div>
-    </>
+          <SubmitError error={error} />
+
+          <CloseDialogButton>
+            <SubmitButton variant="destructive">Leave</SubmitButton>
+          </CloseDialogButton>
+        </form>
+      </AlertModal>
+    </div>
   );
 };

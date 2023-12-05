@@ -38,7 +38,7 @@ export default async function SettingsPage({
           <CardTitle>Danger Zone</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <LeaveWorkspace workspaceId={workspace.id} />
+          <LeaveWorkspace id={workspace.id} />
           {workspace.role === Roles.Admin && (
             <>
               <Separator />

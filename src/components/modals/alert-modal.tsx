@@ -18,6 +18,7 @@ interface AlertModalProps extends ComponentPropsWithoutRef<typeof Root> {
   description?: string;
   children?: React.ReactNode;
   withCancel?: boolean;
+  buttonVariant?: "destructive" | "outline";
 }
 
 export const AlertModal = ({
@@ -26,13 +27,14 @@ export const AlertModal = ({
   description,
   children,
   withCancel,
+  buttonVariant = "destructive",
   ...props
 }: AlertModalProps) => {
   return (
     <Dialog {...props}>
       {triggerText && (
         <DialogTrigger asChild>
-          <Button type="button" variant="destructive" className="shrink-0">
+          <Button type="button" variant={buttonVariant} className="shrink-0">
             {triggerText}
           </Button>
         </DialogTrigger>
