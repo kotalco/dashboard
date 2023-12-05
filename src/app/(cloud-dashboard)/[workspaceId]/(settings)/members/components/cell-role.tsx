@@ -39,7 +39,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
   const { workspace, isLoading: isInitialLoading } = useWorkspace(
     workspaceId as string
   );
-  const { isCurrentUser, role, id, email, withCustomerRole } = data;
+  const { isCurrentUser, role, id, withCustomerRole } = data;
 
   useEffect(() => {
     return () => clearMessage();

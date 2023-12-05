@@ -37,7 +37,7 @@ export default async function MembersPage({
       email,
       role,
       isCurrentUser: id === user.id,
-      withCustomerRole: !subscription,
+      withCustomerRole: !!subscription.endpoint_limit,
     })
   );
 

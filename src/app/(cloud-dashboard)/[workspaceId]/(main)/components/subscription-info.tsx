@@ -5,7 +5,7 @@ import { format } from "date-fns";
 export const SubscriptionInfo = async () => {
   const subscription = await getSubscriptionInfo();
 
-  if (!subscription) return null;
+  if (subscription.endpoint_limit) return null;
 
   return (
     <div className="col-span-12">
