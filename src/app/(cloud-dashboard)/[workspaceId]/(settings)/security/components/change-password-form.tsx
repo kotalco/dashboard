@@ -1,176 +1,61 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isAxiosError } from "axios";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
-import { User } from "@/types";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { changePassword } from "@/actions/change-password";
 
-const schema = z
-  .object({
-    old_password: z
-      .string({ required_error: "Old password is required" })
-      .min(6, "Your current password must be not less than 6 characters"),
-    password: z
-      .string({ required_error: "New password is required" })
-      .min(6, "Your new password must be not less than 6 characters"),
-    password_confirmation: z
-      .string()
-      .min(1, "Password confirmation is required"),
-  })
-  .refine(
-    ({ password, password_confirmation }) => password === password_confirmation,
-    { message: "Passwords didn't match", path: ["password_confirmation"] }
-  );
-
-type SchemaType = z.infer<typeof schema>;
-
-const defaultValues = {
-  old_password: "",
-  password: "",
-  password_confirmation: "",
-};
+import { Input } from "@/components/form/input";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitButton } from "@/components/form/submit-button";
 
 export const ChangePasswordForm = () => {
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
+  const { workspaceId } = useParams();
+  const { execute, error, fieldErrors, success } = useAction(changePassword);
 
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    setError,
-  } = form;
+  const onSubmit = (formData: FormData) => {
+    const old_password = formData.get("old_password") as string;
+    const password = formData.get("password") as string;
+    const password_confirmation = formData.get(
+      "password_confirmation"
+    ) as string;
 
-  async function onSubmit(values: SchemaType) {
-    try {
-      await client.post<User>("/users/change_password", values);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        response?.status === 401 &&
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Your current password isn't correct",
-          });
-
-        response?.status !== 401 &&
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Something went wrong.",
-          });
-      }
-    }
-  }
+    execute(
+      { old_password, password, password_confirmation },
+      { workspaceId: workspaceId as string }
+    );
+  };
 
   return (
-    <Form {...form}>
-      <form
-        data-testid="change-password-form"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="old_password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Current Password</FormLabel>
-              <FormControl>
-                <Input
-                  data-testid="current-password"
-                  type="password"
-                  disabled={isSubmitting}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="space-y-4">
+      <Input
+        id="old_password"
+        label="Current Password"
+        errors={fieldErrors}
+        type="password"
+      />
+      <Input
+        id="password"
+        label="New Password"
+        errors={fieldErrors}
+        type="password"
+      />
+      <Input
+        id="password_confirmation"
+        label="Confirm Password"
+        errors={fieldErrors}
+        type="password"
+      />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <FormControl>
-                <Input
-                  data-testid="new-password"
-                  disabled={isSubmitting}
-                  type="password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <SubmitButton>Update Password</SubmitButton>
 
-        <FormField
-          control={form.control}
-          name="password_confirmation"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <FormControl>
-                <Input
-                  data-testid="confirm-new-password"
-                  disabled={isSubmitting}
-                  type="password"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <SubmitSuccess success={success}>
+        Your password has been changed, you can now use your new password to
+        login.
+      </SubmitSuccess>
 
-        <Button
-          data-testid="submit"
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          type="submit"
-        >
-          Update Password
-        </Button>
-
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Your password has been changed, you can now use your new password
-              to login.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitError error={error} />
+    </form>
   );
 };
