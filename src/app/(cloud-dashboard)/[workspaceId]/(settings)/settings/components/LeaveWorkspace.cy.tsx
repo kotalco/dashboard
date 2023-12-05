@@ -3,7 +3,7 @@ import { LeaveWorkspace } from "./leave-workspace";
 
 describe("<LeaveWorkspace />", () => {
   beforeEach(() => {
-    cy.mount(<LeaveWorkspace workspaceId="1" />);
+    cy.mount(<LeaveWorkspace id="1" />);
     cy.findByTestId("leave-button").click();
     cy.findByRole("dialog").should("be.visible");
     cy.findByTestId("cancel-button").as("cancelButton");

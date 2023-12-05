@@ -34,7 +34,7 @@ export const DeleteWorkspace: React.FC<DeleteWorkspaceProps> = ({
           <p className="text-foreground/70 text-sm">
             Are you sure you want to delete your workspace? all of your
             deployments will be permenantly removed from our servers forever.
-            This action can't be undone
+            This action can&apos;t be undone
           </p>
 
           <SubmitError error={error} />
