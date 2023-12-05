@@ -32,7 +32,7 @@ export const AlertModal = ({
     <Dialog {...props}>
       {triggerText && (
         <DialogTrigger asChild>
-          <Button type="button" variant="destructive">
+          <Button type="button" variant="destructive" className="shrink-0">
             {triggerText}
           </Button>
         </DialogTrigger>

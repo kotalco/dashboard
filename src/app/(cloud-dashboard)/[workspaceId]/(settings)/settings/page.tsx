@@ -10,6 +10,7 @@ import { Roles } from "@/enums";
 import { EditWorkspaceForm } from "./components/edit-workspace-form";
 import { LeaveWorkspace } from "./components/leave-workspace";
 import { DeleteWorkspace } from "./components/delete-workspace";
+import { Separator } from "@/components/ui/separator";
 
 export default async function SettingsPage({
   params,
@@ -38,7 +39,12 @@ export default async function SettingsPage({
         </CardHeader>
         <CardContent className="space-y-5">
           <LeaveWorkspace workspaceId={workspace.id} />
-          <DeleteWorkspace workspace={workspace} />
+          {workspace.role === Roles.Admin && (
+            <>
+              <Separator />
+              <DeleteWorkspace workspace={workspace} />
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
