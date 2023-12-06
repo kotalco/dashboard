@@ -14,7 +14,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function responseInterceptor(response: AxiosResponse<{ data: any }>) {
-  if (response.config.responseType === "blob") {
+  if (response.config.responseType === "arraybuffer") {
     return response;
   }
   response.data = response.data.data;

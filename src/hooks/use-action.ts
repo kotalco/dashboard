@@ -24,7 +24,7 @@ export const useAction = <TInput, TOutput>(
   const [isLoading, setIsLoading] = useState(false);
 
   const execute = useCallback(
-    async (input: TInput, identifiers: Record<string, string> = {}) => {
+    async (input: TInput, identifiers: any) => {
       setError(undefined);
       setIsLoading(true);
       setSuccess(false);
