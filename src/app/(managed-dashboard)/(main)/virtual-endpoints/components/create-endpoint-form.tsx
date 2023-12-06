@@ -1,34 +1,18 @@
 "use client";
 
 import * as z from "zod";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Networks, ProtocolsWithoutEthereum2 } from "@/enums";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { client } from "@/lib/client-instance";
-import { Switch } from "@/components/ui/switch";
 import { getEnumKey } from "@/lib/utils";
+import { useAction } from "@/hooks/use-action";
+import { createVirtualEndpoint } from "@/actions/create-virtual-endpoint";
+
+import { Input } from "@/components/form/input";
+import { Select } from "@/components/form/select";
+import { Toggle } from "@/components/form/toggle";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
 
 const schema = z.object({
   name: z
@@ -55,185 +39,75 @@ export interface CreateEndpointFormProps {
 export const CreateEndpointForm: React.FC<CreateEndpointFormProps> = ({
   services,
 }) => {
-  const router = useRouter();
+  const [selectedProtocol, setSelectedProtocol] =
+    useState<ProtocolsWithoutEthereum2>();
+  const { execute, error, fieldErrors } = useAction(createVirtualEndpoint);
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { name: "" },
-    shouldUnregister: true,
-  });
+  const protocols = Object.keys(services).map((protocol) => ({
+    value: protocol,
+    label: getEnumKey(ProtocolsWithoutEthereum2, protocol),
+    image: `/images/${protocol}.svg`,
+  }));
+  const networks =
+    selectedProtocol &&
+    services[selectedProtocol]
+      .filter((el) => !!el)
+      .map((network) => ({
+        label: getEnumKey(Networks, network),
+        value: network,
+      }));
 
-  const {
-    formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
-    watch,
-    setError,
-  } = form;
+  const onSubmit = (formData: FormData) => {
+    const name = formData.get("name") as string;
+    const protocol = selectedProtocol as ProtocolsWithoutEthereum2;
+    const network = formData.get("network") as string;
+    const use_basic_auth = formData.get("use_basic_auth") === "on";
 
-  const [protocol] = watch(["protocol"]);
-
-  async function onSubmit(values: z.infer<typeof schema>) {
-    try {
-      await client.post("/virtual-endpoints", values);
-      router.push(`/virtual-endpoints`);
-      router.refresh();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        if (response?.status === 400) {
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Name already exists.",
-          });
-          return;
-        }
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
+    execute({ protocol, name, network, use_basic_auth });
+  };
 
   return (
-    <Form {...form}>
-      <form
-        data-testid="create-endpoint"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-sm space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Endpoint Name</FormLabel>
-              <FormControl>
-                <Input data-testid="name" disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form
+      data-testid="create-endpoint"
+      action={onSubmit}
+      className="max-w-sm space-y-4"
+    >
+      <Input id="name" label="Endpoint Name" errors={fieldErrors} />
 
-        <FormField
-          control={form.control}
-          name="protocol"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-              <FormLabel>Protocol</FormLabel>
-              <Select
-                disabled={isSubmitting}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger data-testid="protocols" className="bg-white">
-                    <SelectValue placeholder="Choose a protocol" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Object.keys(services).map((protocol) => (
-                    <SelectItem
-                      key={protocol}
-                      value={protocol}
-                      className="items-center"
-                    >
-                      <Image
-                        width={24}
-                        height={24}
-                        alt="decoration"
-                        src={`/images/${protocol}.svg`}
-                        className="w-6 h-6 inline-block mr-3"
-                      />
-                      <span>
-                        {getEnumKey(ProtocolsWithoutEthereum2, protocol)}
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Select
+        id="protocol"
+        label="Protocol"
+        onValueChange={setSelectedProtocol as (value: string) => void}
+        defaultValue={selectedProtocol}
+        value={selectedProtocol}
+        placeholder="Choose a protocol"
+        errors={fieldErrors}
+        options={protocols}
+      />
 
-        {!!services[protocol]?.filter((el) => !!el).length && (
-          <FormField
-            control={form.control}
-            name="network"
-            render={({ field }) => (
-              <FormItem className="col-span-12 md:col-span-6 lg:col-span-3">
-                <FormLabel>Network</FormLabel>
-                <Select
-                  disabled={isSubmitting}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger data-testid="protocols" className="bg-white">
-                      <SelectValue placeholder="Choose a network" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {services[protocol]
-                      .filter((el) => !!el)
-                      .map((network) => (
-                        <SelectItem
-                          key={network}
-                          value={network}
-                          className="items-center"
-                        >
-                          {getEnumKey(Networks, network)}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+      {selectedProtocol &&
+        networks &&
+        !!services[selectedProtocol]?.filter((el) => !!el).length && (
+          <Select
+            id="network"
+            label="Network"
+            placeholder="Choose a network"
+            errors={fieldErrors}
+            options={networks}
           />
         )}
 
-        {protocol !== ProtocolsWithoutEthereum2.BITCOIN && (
-          <FormField
-            control={form.control}
-            name="use_basic_auth"
-            defaultValue={false}
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex flex-row items-center gap-x-3">
-                  <FormLabel>Use Basic Authentication</FormLabel>
-                  <FormControl>
-                    <Switch
-                      disabled={isSubmitting}
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-        )}
+      {selectedProtocol !== ProtocolsWithoutEthereum2.BITCOIN && (
+        <Toggle
+          id="use_basic_auth"
+          label="Use Basic Authentication"
+          errors={fieldErrors}
+        />
+      )}
 
-        <Button
-          data-testid="submit"
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          type="submit"
-        >
-          Create
-        </Button>
+      <SubmitError error={error} />
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitButton>Create</SubmitButton>
+    </form>
   );
 };
