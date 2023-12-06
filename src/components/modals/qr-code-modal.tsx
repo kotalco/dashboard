@@ -1,23 +1,13 @@
-import * as z from "zod";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { isAxiosError } from "axios";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname } from "next/navigation";
+
+import { enable2fa } from "@/actions/enable-2fa";
+import { useAction } from "@/hooks/use-action";
 
 import { Modal } from "@/components/ui/modal";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { OTPInput } from "@/components/ui/otp-input";
-import { client } from "@/lib/client-instance";
+import { OTPInput } from "@/components/form/otp-input";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
 
 interface QRCodeModalProps {
   isOpen: boolean;
@@ -25,66 +15,22 @@ interface QRCodeModalProps {
   qrImageUrl: string;
 }
 
-const schema = z.object({
-  totp: z.string().length(6, "Your code must be 6 digits"),
-});
-
-type SchemaType = z.infer<typeof schema>;
-const defaultValues = { totp: "" };
-
 export const QRCodeModal: React.FC<QRCodeModalProps> = ({
   isOpen,
   onClose,
   qrImageUrl,
 }) => {
-  const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(schema),
-    defaultValues,
+  const pathname = usePathname();
+  const { execute, error, fieldErrors } = useAction(enable2fa, {
+    onSuccess: () => {
+      onClose();
+    },
   });
 
-  if (!isMounted) return null;
+  const onSubmit = (formData: FormData) => {
+    const totp = formData.getAll("totp") as string[];
 
-  const {
-    formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
-    reset,
-    clearErrors,
-    setError,
-  } = form;
-
-  async function onSubmit(values: SchemaType) {
-    try {
-      await client.post("/users/totp/enable", values);
-      router.refresh();
-      handleClose();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-        response?.status === 400 &&
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Invalid OTP Code.",
-          });
-
-        response?.status !== 400 &&
-          setError("root", {
-            type: response?.status.toString(),
-            message: "Something went wrong.",
-          });
-      }
-    }
-  }
-
-  const handleClose = () => {
-    reset();
-    clearErrors();
-    onClose();
+    execute({ totp: totp.join("") }, { pathname });
   };
 
   return (
@@ -92,63 +38,32 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
       title="Enable Two Factor Authentication"
       description="Scan the image below with the two-factor authentication application from your phone"
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
     >
-      <Form {...form}>
-        <form
-          data-testid="qr-code-form"
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4"
-        >
-          {qrImageUrl && (
-            <Image
-              src={qrImageUrl}
-              alt="QR Code"
-              width={170}
-              height={170}
-              className="mx-auto"
-              unoptimized
-            />
-          )}
-          <p className="text-center">
-            After scanning the QR image, the application will display a code
-            that you can enter below
-          </p>
-          <FormField
-            control={form.control}
-            name="totp"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <OTPInput
-                    disabled={isSubmitting}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage className="text-center" />
-              </FormItem>
-            )}
+      <form data-testid="qr-code-form" action={onSubmit} className="space-y-4">
+        {qrImageUrl && (
+          <Image
+            src={qrImageUrl}
+            alt="QR Code"
+            width={170}
+            height={170}
+            className="mx-auto"
+            unoptimized
           />
+        )}
+        <p className="text-center">
+          After scanning the QR image, the application will display a code that
+          you can enter below
+        </p>
 
-          <div className="flex justify-center w-full">
-            <Button
-              data-testid="submit"
-              size="lg"
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              type="submit"
-            >
-              Verify
-            </Button>
-          </div>
+        <OTPInput id="totp" errors={fieldErrors} />
 
-          {errors.root && (
-            <Alert variant="destructive" className="text-center">
-              <AlertDescription>{errors.root.message}</AlertDescription>
-            </Alert>
-          )}
-        </form>
-      </Form>
+        <SubmitError error={error} />
+
+        <div className="flex justify-center w-full">
+          <SubmitButton size="lg">Verify</SubmitButton>
+        </div>
+      </form>
     </Modal>
   );
 };

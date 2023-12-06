@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { usePathname } from "next/navigation";
 
 import { useAction } from "@/hooks/use-action";
 import { confirmChange2fa } from "@/actions/confirm-change-2fa";
@@ -22,6 +23,7 @@ export const TwoFAModal: React.FC<AlertModalProps> = ({
   setQrImageUrl,
   enabled,
 }) => {
+  const pathname = usePathname();
   const { execute, fieldErrors, error } = useAction(confirmChange2fa, {
     onSuccess: (response) => {
       if (response.imageUrl) {
@@ -33,7 +35,7 @@ export const TwoFAModal: React.FC<AlertModalProps> = ({
 
   const onSubmit = (formData: FormData) => {
     const password = formData.get("password") as string;
-    execute({ password }, { enabled });
+    execute({ password }, { enabled, pathname });
   };
 
   return (

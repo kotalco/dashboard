@@ -11,7 +11,7 @@ import { ConfirmChange2fa } from "./schema";
 
 const handler = async (
   data: InputType,
-  indetifiers: { enabled: boolean }
+  indetifiers: { enabled: boolean; pathname: string }
 ): Promise<ReturnType> => {
   try {
     if (!indetifiers.enabled) {
@@ -23,7 +23,7 @@ const handler = async (
     }
 
     await server.post<Blob>("/users/totp/disable", data);
-    revalidatePath("/account-security");
+    revalidatePath(indetifiers.pathname);
     return { data: { message: "2FA diosabled" } };
   } catch (error) {
     if (isAxiosError(error)) {

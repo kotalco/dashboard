@@ -3,12 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { isAxiosError } from "axios";
 
+import { redirect } from "next/navigation";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 
 import { InputType, ReturnType } from "./types";
 import { ActivateLiscense } from "./schema";
-import { redirect } from "next/navigation";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   try {
