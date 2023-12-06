@@ -1,68 +1,22 @@
 "use client";
 
-import * as z from "zod";
-import { isAxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useActivationModal } from "@/hooks/useActivationModal";
-import { Modal } from "@/components/ui/modal";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { client } from "@/lib/client-instance";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Textarea } from "@/components/ui/textarea";
+import { useAction } from "@/hooks/use-action";
+import { activateLiscense } from "@/actions/activate-liscense";
 
-const formSchema = z.object({
-  activation_key: z
-    .string({ required_error: "Activation key is required" })
-    .min(1, "Activation key is required"),
-});
+import { Modal } from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/form/textarea";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 export const ActivationModal = () => {
   const activationModal = useActivationModal();
+  const { execute, error, fieldErrors } = useAction(activateLiscense);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { activation_key: "" },
-  });
-
-  const {
-    formState: { isSubmitted, isSubmitting, isValid, isDirty, errors },
-    setError,
-  } = form;
-
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const response = await client.post(
-        "/subscriptions/acknowledgment",
-        values
-      );
-      window.location.assign(`/sign-in`);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        if (response?.status === 500) {
-          return setError("root", {
-            type: response?.status.toString(),
-            message: "Can't activate subscription.",
-          });
-        }
-
-        return setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+  const onSubmit = (formData: FormData) => {
+    const activation_key = formData.get("activation_key") as string;
+    execute({ activation_key });
   };
 
   return (
@@ -73,54 +27,27 @@ export const ActivationModal = () => {
       onClose={activationModal.onClose}
     >
       <div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="py-2 pb-4 space-y-4"
-          >
-            <FormField
-              control={form.control}
-              name="activation_key"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Activation Key</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className="resize-none"
-                      disabled={isSubmitting}
-                      placeholder="Activation Key"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form action={onSubmit} className="py-2 pb-4 space-y-4">
+          <Textarea
+            id="activation_key"
+            label="Activation Key"
+            errors={fieldErrors}
+            placeholder="Activation Key"
+          />
 
-            {errors.root && (
-              <Alert variant="destructive" className="text-center">
-                <AlertDescription>{errors.root.message}</AlertDescription>
-              </Alert>
-            )}
+          <SubmitError error={error} />
 
-            <div className="flex items-center justify-end w-full pt-6 space-x-2">
-              <Button
-                disabled={isSubmitting}
-                variant="outline"
-                onClick={activationModal.onClose}
-                type="button"
-              >
-                Cancel
-              </Button>
-              <Button
-                disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-                type="submit"
-              >
-                Continue
-              </Button>
-            </div>
-          </form>
-        </Form>
+          <div className="flex items-center justify-end w-full pt-6 space-x-2">
+            <Button
+              variant="outline"
+              onClick={activationModal.onClose}
+              type="button"
+            >
+              Cancel
+            </Button>
+            <SubmitButton>Continue</SubmitButton>
+          </div>
+        </form>
       </div>
     </Modal>
   );
