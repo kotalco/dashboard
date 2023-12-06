@@ -11,7 +11,7 @@ import { ChangePassword } from "./schema";
 
 const handler = async (
   data: InputType,
-  indetifiers: { workspaceId: string }
+  indetifiers: { pathname: string }
 ): Promise<ReturnType> => {
   try {
     await server.post<{ message: string }>(`/users/change_password`, data);
@@ -29,7 +29,7 @@ const handler = async (
     }
   }
 
-  revalidatePath(`/${indetifiers.workspaceId}/security`);
+  revalidatePath(indetifiers.pathname);
   return { data: { message: "Password Changed" } };
 };
 

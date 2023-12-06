@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { useAction } from "@/hooks/use-action";
 import { changePassword } from "@/actions/change-password";
@@ -11,7 +11,7 @@ import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitButton } from "@/components/form/submit-button";
 
 export const ChangePasswordForm = () => {
-  const { workspaceId } = useParams();
+  const pathname = usePathname();
   const { execute, error, fieldErrors, success } = useAction(changePassword);
 
   const onSubmit = (formData: FormData) => {
@@ -21,10 +21,7 @@ export const ChangePasswordForm = () => {
       "password_confirmation"
     ) as string;
 
-    execute(
-      { old_password, password, password_confirmation },
-      { workspaceId: workspaceId as string }
-    );
+    execute({ old_password, password, password_confirmation }, { pathname });
   };
 
   return (
