@@ -16,9 +16,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/form/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAction } from "@/hooks/use-action";
+import { editWorkspace } from "@/actions/edit-workspace";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitButton } from "@/components/form/submit-button";
 
 const schema = z.object({
   name: z.string().min(3, "Workspace name must be 3 characters at least"),
@@ -34,6 +39,7 @@ export const EditWorkspaceForm: React.FC<EditWorkspaceFormProps> = ({
   workspace,
 }) => {
   const { name, id } = workspace;
+  const { execute, error, success, fieldErrors } = useAction(editWorkspace);
   const router = useRouter();
   const form = useForm<SchemaType>({
     resolver: zodResolver(schema),
@@ -52,65 +58,27 @@ export const EditWorkspaceForm: React.FC<EditWorkspaceFormProps> = ({
     setError,
   } = form;
 
-  async function onSubmit(values: SchemaType) {
-    try {
-      await client.patch<User>(`/workspaces/${id}`, values);
-      router.refresh();
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
+  const onSubmit = (formData: FormData) => {
+    const name = formData.get("name") as string;
 
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
+    execute({ name }, { workspaceId: id });
+  };
 
   return (
-    <Form {...form}>
-      <form
-        data-testid="workspace-form"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Workspace Name</FormLabel>
-              <FormControl>
-                <Input data-testid="name" disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="space-y-4">
+      <Input
+        id="name"
+        errors={fieldErrors}
+        label="Workspace Name"
+        defaultValue={name}
+      />
 
-        <Button
-          data-testid="submit"
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          type="submit"
-        >
-          Save
-        </Button>
+      <SubmitSuccess success={success}>
+        Your workspace name has been has been changed.
+      </SubmitSuccess>
+      <SubmitError error={error} />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Your workspace has been renamed.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitButton>Save</SubmitButton>
+    </form>
   );
 };
