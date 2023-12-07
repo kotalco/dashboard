@@ -1,4 +1,5 @@
 import { useParams, usePathname } from "next/navigation";
+
 import {
   ArrowLeft,
   Box,
@@ -15,17 +16,10 @@ import {
 } from "lucide-react";
 
 import { SidebarNavItem } from "@/types";
-import { useDeploymentsCount } from "@/hooks/useDeploymentsCount";
-import { useSecretsCount } from "./useSecretsCount";
-import { useEndpointsCount } from "./useEndpointsCount";
 
-export function useMainNavigation() {
+export function useMainNavigation(counts?: Record<string, number>) {
   const pathname = usePathname();
   const { workspaceId } = useParams();
-
-  const { count } = useDeploymentsCount(workspaceId as string);
-  const { count: endpointsCount } = useEndpointsCount(workspaceId as string);
-  const { count: secretsCount } = useSecretsCount(workspaceId as string);
 
   const main: SidebarNavItem[] = [
     {
@@ -43,55 +37,55 @@ export function useMainNavigation() {
           label: "Aptos",
           href: `/${workspaceId}/deployments/aptos`,
           active: pathname.includes("aptos"),
-          count: count?.aptos,
+          count: counts?.aptos,
         },
         {
           label: "Bitcoin",
           href: `/${workspaceId}/deployments/bitcoin`,
           active: pathname.includes("bitcoin"),
-          count: count?.bitcoin,
+          count: counts?.bitcoin,
         },
         {
           label: "Chainlink",
           href: `/${workspaceId}/deployments/chainlink`,
           active: pathname.includes("chainlink"),
-          count: count?.chainlink,
+          count: counts?.chainlink,
         },
         {
           label: "Ethereum",
           href: `/${workspaceId}/deployments/ethereum`,
           active: pathname.includes("ethereum"),
-          count: count?.ethereum,
+          count: counts?.ethereum,
         },
         {
           label: "Filecoin",
           href: `/${workspaceId}/deployments/filecoin`,
           active: pathname.includes("filecoin"),
-          count: count?.filecoin,
+          count: counts?.filecoin,
         },
         {
           label: "IPFS",
           href: `/${workspaceId}/deployments/ipfs`,
           active: pathname.includes("ipfs"),
-          count: count?.ipfs,
+          count: counts?.ipfs,
         },
         {
           label: "NEAR",
           href: `/${workspaceId}/deployments/near`,
           active: pathname.includes("near"),
-          count: count?.near,
+          count: counts?.near,
         },
         {
           label: "Polkadot",
           href: `/${workspaceId}/deployments/polkadot`,
           active: pathname.includes("polkadot"),
-          count: count?.polkadot,
+          count: counts?.polkadot,
         },
         {
           label: "Stacks",
           href: `/${workspaceId}/deployments/stacks`,
           active: pathname.includes("stacks"),
-          count: count?.stacks,
+          count: counts?.stacks,
         },
       ],
     },
@@ -100,14 +94,14 @@ export function useMainNavigation() {
       href: `/${workspaceId}/endpoints`,
       active: pathname.includes("endpoints"),
       Icon: Link,
-      count: endpointsCount,
+      count: counts?.endpoints,
     },
     {
       label: "Secrets",
       href: `/${workspaceId}/secrets`,
       active: pathname.includes("secrets"),
       Icon: KeyRound,
-      count: secretsCount,
+      count: counts?.secrets,
     },
     {
       title: "Account",

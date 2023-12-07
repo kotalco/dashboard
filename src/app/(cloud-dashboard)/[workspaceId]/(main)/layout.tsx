@@ -1,15 +1,20 @@
 import { MainNavigationItems } from "@/components/main-navigation-items";
 import { Sidebar } from "@/components/sidebar";
+import { getCounts } from "@/services/get-counts";
 
 export default async function DashboardLayout({
   children,
+  params: { workspaceId },
 }: {
   children: React.ReactNode;
+  params: { workspaceId: string };
 }) {
+  const { count } = await getCounts(workspaceId);
+
   return (
     <div className="flex overflow-hidden">
       <Sidebar>
-        <MainNavigationItems />
+        <MainNavigationItems counts={count} />
       </Sidebar>
       <div className="flex flex-col flex-1 w-0 min-h-screen overflow-y-auto">
         <main className="flex-1 pt-10 focus:outline-none" tabIndex={0}>

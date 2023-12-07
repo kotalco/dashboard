@@ -7,16 +7,17 @@ import { SecretType } from "@/enums";
 import { getWorkspace } from "@/services/get-workspace";
 
 export default async function SecretsPage({
-  params,
+  params: { workspaceId },
 }: {
   params: { workspaceId: string };
 }) {
-  const { data } = await getSecrets(params.workspaceId);
-  const { role } = await getWorkspace(params.workspaceId);
+  const { data } = await getSecrets(workspaceId);
+  const { role } = await getWorkspace(workspaceId);
   const formattedSecrets = data.map(({ type, name, createdAt }) => ({
     type: getEnumKey(SecretType, type),
     name,
     createdAt: format(parseISO(createdAt), "MMMM do, yyyy"),
+    role,
   }));
 
   return (

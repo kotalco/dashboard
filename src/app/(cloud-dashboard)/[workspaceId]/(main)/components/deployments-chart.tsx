@@ -5,7 +5,6 @@ import { Doughnut } from "react-chartjs-2";
 import { useParams, useRouter } from "next/navigation";
 
 import { ProtocolsWithoutEthereum2 } from "@/enums";
-import { useDeploymentsCount } from "@/hooks/useDeploymentsCount";
 import { Button } from "@/components/ui/button";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -99,27 +98,28 @@ const NODES = [
 
 const randomProtocol = NODES[Math.floor(Math.random() * NODES.length)];
 
-export const DeploymentsChart = () => {
+interface DeploymentsChartProps {
+  counts: Record<string, number>;
+}
+
+export const DeploymentsChart = ({ counts }: DeploymentsChartProps) => {
   const params = useParams();
   const router = useRouter();
-  const { count: deploymentsCount, isLoading } = useDeploymentsCount(
-    params.workspaceId as string
-  );
 
-  const keys = Object.keys(deploymentsCount) as ProtocolsWithoutEthereum2[];
-  const filteredKeys = keys.filter((key) => deploymentsCount[key]);
+  const keys = Object.keys(counts) as ProtocolsWithoutEthereum2[];
+  const filteredKeys = keys.filter((key) => counts[key]);
   const colors = filteredKeys.map((key) => CHART_COLORS[key]);
-  const count = filteredKeys.map((key) => deploymentsCount[key]);
+  const count = filteredKeys.map((key) => counts[key]);
   const labels = filteredKeys.map((key) => LABELS[key]);
 
-  const totalCount = Object.values(deploymentsCount).reduce(
+  const totalCount = Object.values(counts).reduce(
     (current, prev) => current + prev,
     0
   );
 
   return (
     <div>
-      {!!totalCount && !isLoading && (
+      {!!totalCount && (
         <div className="col-span-4">
           <div className="flex">
             <Doughnut
@@ -159,7 +159,7 @@ export const DeploymentsChart = () => {
           </div>
         </div>
       )}
-      {!totalCount && !isLoading && (
+      {!totalCount && (
         <div>
           <p className="pb-6 mb-6 text-sm text-muted-foreground border-b">
             You haven’t created any deployments yet.

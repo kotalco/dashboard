@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { Trash2 } from "lucide-react";
 
-import { useWorkspace } from "@/hooks/useWorkspace";
 import { deleteSecret } from "@/actions/delete-secret";
 import { useAction } from "@/hooks/use-action";
 import { Roles } from "@/enums";
@@ -12,7 +11,6 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { CloseDialogButton } from "@/components/ui/close-dialog-button";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { SecretColumn } from "./colums";
 
@@ -23,17 +21,13 @@ interface CellRoleProps {
 export const CellAction: React.FC<CellRoleProps> = ({ data }) => {
   const { workspaceId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const { workspace, isLoading: isInitialLoading } = useWorkspace(
-    workspaceId as string
-  );
+
   const { execute, error } = useAction(deleteSecret, {
     onSuccess: () => setIsOpen(false),
   });
   const { name } = data;
 
-  if (isInitialLoading) return <Skeleton className="w-4 h-4 " />;
-
-  if (workspace?.role !== Roles.Admin) return null;
+  if (data.role !== Roles.Admin) return null;
 
   const onSubmit = () => {
     execute({ workspaceId: workspaceId as string, name });

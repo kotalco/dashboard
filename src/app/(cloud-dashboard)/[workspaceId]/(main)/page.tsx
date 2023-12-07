@@ -1,5 +1,7 @@
 import { BookOpen, MessageCircle, Phone } from "lucide-react";
 
+import { getCounts } from "@/services/get-counts";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeploymentsChart } from "./components/deployments-chart";
 import { EndpointsCount } from "./components/endpoints-count";
@@ -11,6 +13,8 @@ export default async function DashboardPage({
 }: {
   params: { workspaceId: string };
 }) {
+  const { deploymentsCount } = await getCounts(params.workspaceId);
+
   return (
     <div className="grid grid-cols-12 gap-4 auto-rows-auto">
       <Card className="col-span-6 row-span-2">
@@ -18,7 +22,7 @@ export default async function DashboardPage({
           <CardTitle>Deployments</CardTitle>
         </CardHeader>
         <CardContent>
-          <DeploymentsChart />
+          <DeploymentsChart counts={deploymentsCount} />
         </CardContent>
       </Card>
 

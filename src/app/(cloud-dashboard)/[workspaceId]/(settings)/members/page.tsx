@@ -38,6 +38,7 @@ export default async function MembersPage({
       role,
       isCurrentUser: id === user.id,
       withCustomerRole: !!subscription.endpoint_limit,
+      currentRole: workspace.role,
     })
   );
 

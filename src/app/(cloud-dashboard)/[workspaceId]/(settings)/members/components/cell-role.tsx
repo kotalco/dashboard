@@ -3,14 +3,12 @@ import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 import { getEnumKey, getSelectItems } from "@/lib/utils";
-import { useWorkspace } from "@/hooks/useWorkspace";
 import { useAPIMessage } from "@/hooks/useAPIMessage";
 import { Roles, RolesWithCustomer } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { changeRole } from "@/actions/change-role";
 
 import { Select } from "@/components/form/select";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { TeamMemberColumn } from "./columns";
 
@@ -25,7 +23,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
   const { execute } = useAction(changeRole, {
     onSuccess: () => {
       setMessage({
-        message: `Member (${data.email}) role has been changed for ${workspace?.name} workspace`,
+        message: `Member (${data.email}) role has been changed for this workspace`,
         type: { variant: "success" },
       });
     },
@@ -36,18 +34,14 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
       });
     },
   });
-  const { workspace, isLoading: isInitialLoading } = useWorkspace(
-    workspaceId as string
-  );
+
   const { isCurrentUser, role, id, withCustomerRole } = data;
 
   useEffect(() => {
     return () => clearMessage();
   }, [clearMessage]);
 
-  if (isInitialLoading) return <Skeleton className="w-[120px] h-10 " />;
-
-  if (isCurrentUser || workspace?.role !== Roles.Admin)
+  if (isCurrentUser || data.currentRole !== Roles.Admin)
     return <div className="pl-4">{getEnumKey(Roles, role)}</div>;
 
   const onChangeRole = (role: Roles) => {
