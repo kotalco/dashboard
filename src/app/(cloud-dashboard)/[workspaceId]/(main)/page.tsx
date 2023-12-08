@@ -7,24 +7,16 @@ import { DeploymentsChart } from "./components/deployments-chart";
 import { EndpointsCount } from "./components/endpoints-count";
 import { SecretsCount } from "./components/secrets-count";
 import { SubscriptionInfo } from "./components/subscription-info";
+import { DeploymentsCard } from "./components/deployments-card";
 
 export default async function DashboardPage({
   params,
 }: {
   params: { workspaceId: string };
 }) {
-  const { deploymentsCount } = await getCounts(params.workspaceId);
-
   return (
     <div className="grid grid-cols-12 gap-4 auto-rows-auto">
-      <Card className="col-span-6 row-span-2">
-        <CardHeader>
-          <CardTitle>Deployments</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DeploymentsChart counts={deploymentsCount} />
-        </CardContent>
-      </Card>
+      <DeploymentsCard workspaceId={params.workspaceId} />
 
       <div className="col-span-6 row-span-1">
         <EndpointsCount workspaceId={params.workspaceId} />

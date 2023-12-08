@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { SidebarNavItem } from "@/types";
+import { cn } from "@/lib/utils";
+
+import { Button } from "@/components/ui/button";
+import { LogoutForm } from "@/components/ui/logout-form";
 
 interface NavigationItemsProps {
   items: SidebarNavItem[];
@@ -13,6 +15,7 @@ interface NavigationItemsProps {
 
 export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
   const pathname = usePathname();
+  const { workspaceId } = useParams();
   const [open, setOpen] = useState(() => pathname.includes("deployments"));
 
   return (
@@ -95,6 +98,12 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
               </ul>
             </li>
           )
+      )}
+      {(pathname === "/virtual-endpoints" ||
+        pathname === `/${workspaceId}`) && (
+        <li>
+          <LogoutForm />
+        </li>
       )}
     </>
   );

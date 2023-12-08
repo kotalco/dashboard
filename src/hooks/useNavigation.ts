@@ -109,12 +109,6 @@ export function useMainNavigation(counts?: Record<string, number>) {
       href: `/${workspaceId}/account`,
       Icon: Cog,
     },
-    {
-      label: "Logout",
-      href: `/logout`,
-      Icon: LogOut,
-      prefetch: false,
-    },
   ];
 
   const settings: SidebarNavItem[] = [

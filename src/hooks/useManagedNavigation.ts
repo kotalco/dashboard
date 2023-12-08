@@ -34,12 +34,6 @@ export function useManagedNavigation(endpointsCount?: number) {
       href: `/account`,
       Icon: Cog,
     },
-    {
-      label: "Logout",
-      href: `/logout`,
-      Icon: LogOut,
-      prefetch: false,
-    },
   ];
 
   const settings: SidebarNavItem[] = [

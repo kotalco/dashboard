@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { ProtocolsWithoutEthereum2 } from "@/enums";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -105,6 +106,7 @@ interface DeploymentsChartProps {
 export const DeploymentsChart = ({ counts }: DeploymentsChartProps) => {
   const params = useParams();
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
 
   const keys = Object.keys(counts) as ProtocolsWithoutEthereum2[];
   const filteredKeys = keys.filter((key) => counts[key]);
@@ -116,6 +118,12 @@ export const DeploymentsChart = ({ counts }: DeploymentsChartProps) => {
     (current, prev) => current + prev,
     0
   );
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <div>
