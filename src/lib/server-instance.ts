@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import { cookies } from "next/headers";
 
@@ -10,7 +12,7 @@ export const server = axios.create({
 
 server.interceptors.request.use((config) => {
   const token = cookies().get(StorageItems.AUTH_TOKEN);
-  // console.log(config.url);
+  console.log(config.url);
   if (token?.value) config.headers.Authorization = `Bearer ${token.value}`;
 
   return config;

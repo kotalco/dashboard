@@ -1,12 +1,15 @@
 "use client";
 
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useEffect, useTransition } from "react";
+import { useParams, usePathname } from "next/navigation";
 import { Boxes, Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { WorksapcesList, Workspace } from "@/types";
+import { WorksapcesList } from "@/types";
+import { StorageItems } from "@/enums";
+import { setCurrentWorkspace } from "@/actions/set-current-workspace";
+
 import {
   Popover,
   PopoverContent,
@@ -21,7 +24,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { StorageItems } from "@/enums";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -37,10 +39,9 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
   workspaces,
   userId,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [pending, startTransition] = useTransition();
   const pathname = usePathname();
   const params = useParams();
-  const router = useRouter();
 
   const currentWorkspace = workspaces.find(
     ({ id }) => id === params.workspaceId
@@ -57,23 +58,19 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
     setWorkspace();
   }, [currentWorkspace?.id]);
 
-  const onWorkspaceSelect = (workspace: Omit<Workspace, "role">) => {
-    setOpen(false);
-    const segments = pathname.split("/");
-    segments[1] = workspace.id;
-    const route = segments.join("/");
-    router.refresh();
-    router.push(route);
+  const onWorkspaceSelect = (workspaceId: string) => {
+    startTransition(() => {
+      setCurrentWorkspace(workspaceId, pathname);
+    });
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           size="lg"
-          aria-expanded={open}
           aria-label="Select a wrokspace"
           className={cn("justify-between px-3 text-lg font-normal", className)}
         >
@@ -89,14 +86,15 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
       <PopoverContent className="w-full p-0">
         <Command>
           <CommandList>
-            <CommandInput placeholder="Search a Workspace" />
+            <CommandInput disabled={pending} placeholder="Search a Workspace" />
             <CommandEmpty>No Workspaces Found.</CommandEmpty>
             <CommandGroup>
               {workspaces.map((workspace) => (
                 <CommandItem
+                  disabled={pending}
                   key={workspace.id}
-                  onSelect={() => onWorkspaceSelect(workspace)}
-                  className="text-sm"
+                  onSelect={() => onWorkspaceSelect(workspace.id)}
+                  className="text-sm hover:cursor-pointer"
                 >
                   {workspace.name} (
                   <span className="text-sm font-light">
