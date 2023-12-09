@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { findUser } from "@/services/find-user";
-import { ChangeEmailForm } from "./components/change-email-form";
+import { ChangeEmailForm } from "@/components/change-email-form";
 
 export default async function AccountPage() {
   const { user } = await findUser();

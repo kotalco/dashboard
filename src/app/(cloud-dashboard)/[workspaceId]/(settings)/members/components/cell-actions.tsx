@@ -2,12 +2,10 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { Trash2 } from "lucide-react";
 
-import { useWorkspace } from "@/hooks/useWorkspace";
 import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { removeUser } from "@/actions/remove-member";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { SubmitError } from "@/components/form/submit-error";
@@ -23,22 +21,13 @@ interface CellRoleProps {
 export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
   const { workspaceId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const { workspace, isLoading: isInitialLoading } = useWorkspace(
-    workspaceId as string
-  );
+
   const { execute, error } = useAction(removeUser, {
     onSuccess: () => setIsOpen(false),
   });
   const { isCurrentUser, id, email } = data;
 
-  if (isInitialLoading)
-    return (
-      <div className="flex justify-end">
-        <Skeleton className="w-10 h-10 " />
-      </div>
-    );
-
-  if (isCurrentUser || workspace?.role !== Roles.Admin) return null;
+  if (isCurrentUser || data.currentRole !== Roles.Admin) return null;
 
   const onSubmit = () => {
     execute({ workspaceId: workspaceId as string, id });

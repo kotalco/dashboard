@@ -5,10 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChangePasswordForm } from "./components/change-password-form";
+import { ChangePasswordForm } from "@/components/change-password-form";
 import { Badge } from "@/components/ui/badge";
 import { findUser } from "@/services/find-user";
-import { TwoFactorAuthForm } from "./components/two-factor-auth-form";
+import { TwoFactorAuthForm } from "@/components/two-factor-auth-form";
 
 export default async function AccountPage() {
   const { user } = await findUser();

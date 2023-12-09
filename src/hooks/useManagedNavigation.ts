@@ -1,4 +1,5 @@
 import { usePathname } from "next/navigation";
+
 import {
   ArrowLeft,
   Cog,
@@ -11,12 +12,9 @@ import {
 } from "lucide-react";
 
 import { SidebarNavItem } from "@/types";
-import { useVirtualEndpointsCount } from "./useVirtualEndpointsCount";
 
-export function useManagedNavigation() {
+export function useManagedNavigation(endpointsCount?: number) {
   const pathname = usePathname();
-
-  const { count: endpointsCount } = useVirtualEndpointsCount();
 
   const managed: SidebarNavItem[] = [
     {
@@ -35,12 +33,6 @@ export function useManagedNavigation() {
       label: "Settings",
       href: `/account`,
       Icon: Cog,
-    },
-    {
-      label: "Logout",
-      href: `/logout`,
-      Icon: LogOut,
-      prefetch: false,
     },
   ];
 

@@ -3,8 +3,12 @@
 import { NavigationItems } from "@/components/navigation-items";
 import { useMainNavigation } from "@/hooks/useNavigation";
 
-export const MainNavigationItems = () => {
-  const { main } = useMainNavigation();
+interface MainNavigationItemsProps {
+  counts: Record<string, number>;
+}
+
+export const MainNavigationItems = ({ counts }: MainNavigationItemsProps) => {
+  const { main } = useMainNavigation(counts);
 
   return <NavigationItems items={main} />;
 };

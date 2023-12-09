@@ -1,25 +1,26 @@
 import { ChangeEvent, useRef, ClipboardEvent } from "react";
+import { useFormStatus } from "react-dom";
 
 import { cn } from "@/lib/utils";
+
 import { Input } from "@/components/ui/input";
+import { InputProps } from "@/components/form/input";
+import { FormErrors } from "@/components/form/form-errors";
 
 export interface OTPInputProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    "type" | "maxLength" | "onChange"
-  > {
+  extends Omit<InputProps, "label" | "description"> {
   digitsLength?: number;
-  value: string;
-  onChange: (value: string) => void;
 }
 
 const OTPInput: React.FC<OTPInputProps> = ({
   className,
-  onChange,
-  value,
   digitsLength = 6,
+  id,
+  errors,
+  disabled,
   ...props
 }) => {
+  const { pending } = useFormStatus();
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
   function handleInputChange(
@@ -40,9 +41,6 @@ const OTPInput: React.FC<OTPInputProps> = ({
     if (!value && index > 0) {
       inputRefs.current[index - 1].focus();
     }
-
-    const digits = inputRefs.current.map((el) => el.value).join("");
-    onChange(digits);
   }
 
   function handleInputPaste(event: ClipboardEvent<HTMLInputElement>) {
@@ -65,28 +63,32 @@ const OTPInput: React.FC<OTPInputProps> = ({
     } else if (value.length > digitsLength) {
       inputRefs.current[digitsLength - 1].focus();
     }
-
-    onChange(value);
   }
 
   return (
-    <div className="flex flex-row items-center justify-center flex-nowrap gap-x-4">
-      {Array.from({ length: digitsLength }, (_, index) => (
-        <Input
-          data-testid="otp-input"
-          key={index}
-          type="text"
-          inputMode="numeric"
-          maxLength={1}
-          ref={(el) => (inputRefs.current[index] = el!)}
-          onChange={(event) => handleInputChange(event, index)}
-          value={value[index] || ""}
-          onPaste={handleInputPaste}
-          className={cn("text-center w-12 h-12 text-lg", className)}
-          {...props}
-        />
-      ))}
-    </div>
+    <>
+      <div className="flex flex-row items-center justify-center flex-nowrap gap-x-4">
+        {Array.from({ length: digitsLength }, (_, index) => (
+          <Input
+            name={id}
+            data-testid="otp-input"
+            key={index}
+            type="text"
+            inputMode="numeric"
+            maxLength={1}
+            ref={(el) => (inputRefs.current[index] = el!)}
+            onChange={(event) => handleInputChange(event, index)}
+            onPaste={handleInputPaste}
+            className={cn("text-center w-12 h-12 text-lg", className)}
+            disabled={pending || disabled}
+            {...props}
+          />
+        ))}
+      </div>
+      <div className="flex justify-center">
+        <FormErrors errors={errors} id={id} />
+      </div>
+    </>
   );
 };
 OTPInput.displayName = "OTPInput";

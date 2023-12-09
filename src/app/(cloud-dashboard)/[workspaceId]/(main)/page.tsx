@@ -1,10 +1,13 @@
 import { BookOpen, MessageCircle, Phone } from "lucide-react";
 
+import { getCounts } from "@/services/get-counts";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeploymentsChart } from "./components/deployments-chart";
 import { EndpointsCount } from "./components/endpoints-count";
 import { SecretsCount } from "./components/secrets-count";
 import { SubscriptionInfo } from "./components/subscription-info";
+import { DeploymentsCard } from "./components/deployments-card";
 
 export default async function DashboardPage({
   params,
@@ -13,14 +16,7 @@ export default async function DashboardPage({
 }) {
   return (
     <div className="grid grid-cols-12 gap-4 auto-rows-auto">
-      <Card className="col-span-6 row-span-2">
-        <CardHeader>
-          <CardTitle>Deployments</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DeploymentsChart />
-        </CardContent>
-      </Card>
+      <DeploymentsCard workspaceId={params.workspaceId} />
 
       <div className="col-span-6 row-span-1">
         <EndpointsCount workspaceId={params.workspaceId} />

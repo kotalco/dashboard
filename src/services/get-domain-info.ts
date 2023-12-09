@@ -1,17 +1,15 @@
 import "server-only";
 
-import { cache } from "react";
-
 import { server } from "@/lib/server-instance";
 import { IPAddress, Settings } from "@/types";
 
-const getIPAddress = cache(async () => {
+const getIPAddress = async () => {
   const { data } = await server.get<IPAddress>("/settings/ip-address");
 
   return data.ip_address;
-});
+};
 
-export const getSettings = cache(async () => {
+export const getSettings = async () => {
   const { data } = await server.get<Settings[]>("/settings");
   const domainName = data.find(({ key }) => key === "domain")?.value;
   const registration = data.find(
@@ -20,7 +18,7 @@ export const getSettings = cache(async () => {
   const activationKey = data.find(({ key }) => key === "activation_key")?.value;
 
   return { domainName, registration, activationKey };
-});
+};
 
 export const getDomainInfo = async () => {
   const ipData = getIPAddress();

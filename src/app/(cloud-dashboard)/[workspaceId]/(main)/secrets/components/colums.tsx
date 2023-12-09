@@ -1,12 +1,16 @@
 import { ColumnDef } from "@tanstack/react-table";
 
+import { Roles } from "@/enums";
+
 import { SortingButton } from "@/components/ui/sorting-button";
+
 import { CellAction } from "./cell-action";
 
 export type SecretColumn = {
   type: string;
   name: string;
   createdAt: string;
+  role: Roles;
 };
 
 export const columns: ColumnDef<SecretColumn>[] = [

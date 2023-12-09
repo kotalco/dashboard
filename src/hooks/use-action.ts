@@ -10,7 +10,7 @@ export type Action<TInput, TOutput> = (
 interface UseActionOptions<TOutput> {
   onSuccess?: (data: TOutput) => void;
   onError?: (error: string) => void;
-  onComplete?: () => void;
+  onComplete?: ({ data, error }: { data?: TOutput; error?: string }) => void;
 }
 
 export const useAction = <TInput, TOutput>(
@@ -24,10 +24,14 @@ export const useAction = <TInput, TOutput>(
   const [isLoading, setIsLoading] = useState(false);
 
   const execute = useCallback(
-    async (input: TInput, identifiers: Record<string, string> = {}) => {
+    async (input: TInput, identifiers?: any) => {
       setError(undefined);
       setIsLoading(true);
       setSuccess(false);
+      const finalResult: { data?: TOutput; error?: string } = {
+        data: undefined,
+        error: undefined,
+      };
 
       try {
         const result = await action(input, identifiers);
@@ -48,9 +52,11 @@ export const useAction = <TInput, TOutput>(
           setSuccess(true);
           options.onSuccess?.(result.data);
         }
+        finalResult.data = result.data;
+        finalResult.error = result.error;
       } finally {
         setIsLoading(false);
-        options.onComplete?.();
+        options.onComplete?.(finalResult);
       }
     },
     [action, options]

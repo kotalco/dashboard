@@ -11,6 +11,7 @@ export type TeamMemberColumn = {
   role: Roles;
   isCurrentUser: boolean;
   withCustomerRole: boolean;
+  currentRole: Roles;
 };
 
 export const columns: ColumnDef<TeamMemberColumn>[] = [

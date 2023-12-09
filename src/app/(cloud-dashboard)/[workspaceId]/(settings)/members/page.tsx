@@ -10,8 +10,6 @@ import { findUser } from "@/services/find-user";
 import { APIMessage } from "@/components/api-message";
 import { getSubscriptionInfo } from "@/services/get-subscription-info";
 
-export const revalidate = 0;
-
 export default async function MembersPage({
   params,
 }: {
@@ -38,6 +36,7 @@ export default async function MembersPage({
       role,
       isCurrentUser: id === user.id,
       withCustomerRole: !!subscription.endpoint_limit,
+      currentRole: workspace.role,
     })
   );
 

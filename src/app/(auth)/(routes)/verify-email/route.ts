@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAxiosError } from "axios";
 
-import { client } from "@/lib/client-instance";
+import { server } from "@/lib/server-instance";
 import { StorageItems } from "@/enums";
 
 export async function GET(req: NextRequest) {
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const response = NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
 
   try {
-    await client.post("/users/verify_email", { email, token });
+    await server.post("/users/verify_email", { email, token });
     response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},200`, {
       maxAge: 5,
     });
