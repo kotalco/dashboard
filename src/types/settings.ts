@@ -1,5 +1,6 @@
 export interface IPAddress {
   ip_address: string;
+  host_name: string;
 }
 
 export interface Settings {

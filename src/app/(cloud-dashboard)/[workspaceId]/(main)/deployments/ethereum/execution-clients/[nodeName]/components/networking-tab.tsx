@@ -64,6 +64,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
           title: "Create New Private Key",
         }}
         clear={{ onClear: () => setPrivateKey("") }}
+        className="max-w-xs"
       />
 
       <Select
@@ -73,6 +74,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
         defaultValue={syncMode}
         disabled={role === Roles.Reader}
         errors={fieldErrors}
+        className="max-w-xs"
       />
 
       <Textarea
