@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 
 import { useAction } from "@/hooks/use-action";
 import { editDomain } from "@/actions/edit-domain";
+import { IPAddress } from "@/types";
 
 import { Input } from "@/components/form/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -14,7 +15,7 @@ import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitButton } from "@/components/form/submit-button";
 
 interface DomainFormProps {
-  ip: string;
+  ip: IPAddress;
   domainName?: string;
 }
 
@@ -49,16 +50,31 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
 
       {value && (
         <Alert>
-          <AlertDescription>
-            <p>
-              Add DNS record of type A that maps <strong>{value}</strong> to{" "}
-              <strong>{ip}</strong>
-            </p>
-            <p>
-              Add DNS record of type A that maps <strong>*.{value}</strong> to{" "}
-              <strong>{ip}</strong>
-            </p>
-          </AlertDescription>
+          {ip.ip_address && (
+            <AlertDescription>
+              <p>
+                Add DNS record of type A that maps <strong>{value}</strong> to{" "}
+                <strong>{ip.ip_address}</strong>
+              </p>
+              <p>
+                Add DNS record of type A that maps <strong>*.{value}</strong> to{" "}
+                <strong>{ip.ip_address}</strong>
+              </p>
+            </AlertDescription>
+          )}
+
+          {!ip.ip_address && (
+            <AlertDescription>
+              <p>
+                Add DNS record of type CNAME that maps <strong>{value}</strong>{" "}
+                to <strong>{ip.host_name}</strong>
+              </p>
+              <p>
+                Add DNS record of type CNAME that maps{" "}
+                <strong>*.{value}</strong> to <strong>{ip.host_name}</strong>
+              </p>
+            </AlertDescription>
+          )}
         </Alert>
       )}
 

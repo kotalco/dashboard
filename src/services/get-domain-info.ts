@@ -6,7 +6,7 @@ import { IPAddress, Settings } from "@/types";
 const getIPAddress = async () => {
   const { data } = await server.get<IPAddress>("/settings/ip-address");
 
-  return data.ip_address;
+  return data;
 };
 
 export const getSettings = async () => {
