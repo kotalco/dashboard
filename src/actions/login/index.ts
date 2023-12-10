@@ -15,6 +15,7 @@ import { LoginUser } from "./schema";
 
 const handler = async (values: InputType): Promise<ReturnType> => {
   try {
+    console.log("Values: ", values);
     const { data } = await server.post<LoginResponse>(`/sessions`, values);
     cookies().set(StorageItems.AUTH_TOKEN, data.token);
 
@@ -22,6 +23,7 @@ const handler = async (values: InputType): Promise<ReturnType> => {
       return { data };
     }
   } catch (error) {
+    console.log("Error: ", error);
     if (isAxiosError(error) && error.response?.status === 401) {
       return { error: "Wrong email or password." };
     }

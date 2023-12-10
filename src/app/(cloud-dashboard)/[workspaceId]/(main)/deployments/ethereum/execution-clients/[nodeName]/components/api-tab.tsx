@@ -88,6 +88,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
               href: `/${workspaceId}/secrets/new?type=${SecretType["JWT Secret"]}`,
               title: "Create New JWT Secret",
             }}
+            className="max-w-xs"
           />
         )}
       </div>
