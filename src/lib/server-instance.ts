@@ -35,6 +35,7 @@ export const server = axios.create({
 });
 
 server.interceptors.request.use((config) => {
+  console.log("Base URL: ", config.baseURL);
   console.log("URL: ", config.url);
   const key = getCacheKey(config);
   const now = Date.now();
