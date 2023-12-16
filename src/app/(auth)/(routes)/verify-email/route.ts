@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unstable_noStore as noStore } from "next/cache";
 import { isAxiosError } from "axios";
 
 import { server } from "@/lib/server-instance";
 import { StorageItems } from "@/enums";
 
 export async function GET(req: NextRequest) {
+  noStore();
   const { searchParams } = new URL(req.url);
 
   const email = searchParams.get("email");
