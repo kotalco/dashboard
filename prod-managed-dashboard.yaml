@@ -28,10 +28,8 @@ spec:
     spec:
       containers:
       - env:
-        - name: NEXT_PUBLIC_BASE_URL
-          value: /api/v1
-        - name: NEXT_PUBLIC_WS_BASE_URL
-          value: /api/v1
+       - name: API_URL
+          value: "${API_URL}"
         image: kotalco/cloud-dashboard-production:${SHORT_SHA}
         imagePullPolicy: IfNotPresent
         name: kotal-dashboard
