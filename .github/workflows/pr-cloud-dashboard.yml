@@ -17,13 +17,7 @@ jobs:
 
     - name: update managed-dashboard with secrets values - staging
       env:
-        NEXT_PUBLIC_BASE_URL: "${{ secrets.STAGING_NEXT_PUBLIC_BASE_URL }}"
-        BASE_URL: "${{ secrets.STAGING_BASE_URL }}"
-        NEXT_PUBLIC_API_URL: "${{ secrets.STAGING_NEXT_PUBLIC_API_URL }}"
-        NEXT_PUBLIC_WS_API_URL: "${{ secrets.STAGING_NEXT_PUBLIC_WS_API_URL }}"
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.STAGING_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
-        NEXT_PUBLIC_RETURN_URL_ROOT: "${{ secrets.STAGING_NEXT_PUBLIC_RETURN_URL_ROOT }}"
-        API_URL: "${{ secrets.STAGING_API_URL }}"
       run: |
         envsubst < ./.env.production | tee .env.production
 
