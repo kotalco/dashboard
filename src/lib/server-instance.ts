@@ -6,6 +6,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import { cookies } from "next/headers";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { StorageItems } from "@/enums";
 
@@ -30,18 +31,19 @@ const getCacheKey = (config: AxiosRequestConfig): string => {
   return `${config.method}:${config.url}`;
 };
 
-export const server = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-});
+export const server = axios.create();
 
 server.interceptors.request.use((config) => {
-  console.log("Base URL: ", config.baseURL);
-  console.log("URL: ", config.url);
+  noStore();
+  // console.log("Base URL: ", config.baseURL);
+  // console.log("URL: ", config.url);
   const key = getCacheKey(config);
   const now = Date.now();
 
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   if (token?.value) config.headers.Authorization = `Bearer ${token.value}`;
+
+  config.baseURL = process.env.API_URL;
 
   if (responseCache[key] && now - responseCache[key].timestamp < 2000) {
     return Promise.resolve({
@@ -50,6 +52,9 @@ server.interceptors.request.use((config) => {
       fromCache: true,
     });
   }
+
+  console.log("Base URL: ", config.baseURL);
+  console.log("URL: ", config.url);
 
   return config;
 });

@@ -2,7 +2,6 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { format, parseISO } from "date-fns";
 
-import { Roles } from "@/enums";
 import { Heading } from "@/components/ui/heading";
 
 import { Card, CardContent } from "@/components/ui/card";
