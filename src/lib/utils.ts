@@ -56,7 +56,6 @@ export const getWsBaseURL = function () {
 };
 
 export const getBaseURL = () => {
-  console.log("run");
   return `${location.protocol}//${location.host}`;
 };
 
