@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, getBaseURL } from "@/lib/utils";
 import { Alert } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 
@@ -54,7 +54,7 @@ export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
     setIsLoading(true);
     const { error } = await stripe.confirmCardPayment(clientSecret, {
       payment_method: cardId,
-      return_url: `${process.env["NEXT_PUBLIC_RETURN_URL_ROOT"]}/billing/plan`,
+      return_url: `${getBaseURL()}}/billing/plan`,
     });
 
     if (error) {

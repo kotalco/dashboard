@@ -11,7 +11,7 @@ import { StorageItems } from "@/enums";
 
 // if base url is absolute path, convert it to full url
 // exmaple: /api/v1 will be converted to http://domain/api/v1
-export const getBaseURL = () => {
+const getBaseURL = () => {
   let url = process.env.API_URL;
 
   if (url?.startsWith("/")) {

@@ -5,11 +5,12 @@ import { server } from "@/lib/server-instance";
 import { StorageItems } from "@/enums";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
+  const { searchParams, host, protocol } = new URL(req.url);
 
   const email = searchParams.get("email");
   const token = searchParams.get("token");
-  const response = NextResponse.redirect(`${process.env.BASE_URL}/sign-in`);
+
+  const response = NextResponse.redirect(`${protocol}//${host}/sign-in`);
 
   try {
     await server.post("/users/verify_email", { email, token });

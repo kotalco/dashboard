@@ -55,6 +55,11 @@ export const getWsBaseURL = function () {
   return url;
 };
 
+export const getBaseURL = () => {
+  console.log("run");
+  return `${location.protocol}//${location.host}`;
+};
+
 export const getStatusColor = (value: NodeStatuses) => {
   switch (value) {
     case NodeStatuses["Container Creating"]:
