@@ -20,12 +20,8 @@ jobs:
     - name: update managed-dashboard with secrets values - staging
       if: github.ref == 'refs/heads/staging'
       env:
-        NEXT_PUBLIC_BASE_URL: "${{ secrets.STAGING_NEXT_PUBLIC_BASE_URL }}"
-        BASE_URL: "${{ secrets.STAGING_BASE_URL }}"
-        NEXT_PUBLIC_API_URL: "${{ secrets.STAGING_NEXT_PUBLIC_API_URL }}"
         NEXT_PUBLIC_WS_API_URL: "${{ secrets.STAGING_NEXT_PUBLIC_WS_API_URL }}"
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.STAGING_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
-        NEXT_PUBLIC_RETURN_URL_ROOT: "${{ secrets.STAGING_NEXT_PUBLIC_RETURN_URL_ROOT }}"
         API_URL: "${{ secrets.STAGING_API_URL }}"
       run: |
         envsubst < ./.env.production | tee .env.production
@@ -33,12 +29,8 @@ jobs:
     - name: update managed-dashboard with secrets values - production
       if: github.ref == 'refs/heads/main'
       env:
-        NEXT_PUBLIC_BASE_URL: "${{ secrets.PROD_NEXT_PUBLIC_BASE_URL }}"
-        BASE_URL: "${{ secrets.PROD_BASE_URL }}"
-        NEXT_PUBLIC_API_URL: "${{ secrets.PROD_NEXT_PUBLIC_API_URL }}"
         NEXT_PUBLIC_WS_API_URL: "${{ secrets.PROD_NEXT_PUBLIC_WS_API_URL }}"
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.PROD_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
-        NEXT_PUBLIC_RETURN_URL_ROOT: "${{ secrets.PROD_NEXT_PUBLIC_RETURN_URL_ROOT }}"
         API_URL: "${{ secrets.PROD_API_URL }}"
       run: |
         envsubst < ./.env.production | tee .env.production
@@ -152,7 +144,9 @@ jobs:
       # environment values are passed in build time, not override in runtime -- replace image tag only in deployment.yaml file
       - name: update managed-dashboard with secrets values - staging
         env:
-          NEXT_PUBLIC_BASE_URL: '${{ secrets.STAGING_NEXT_PUBLIC_BASE_URL }}'
+          NEXT_PUBLIC_WS_API_URL: "${{ secrets.PROD_NEXT_PUBLIC_WS_API_URL }}"
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.PROD_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
+          API_URL: "${{ secrets.PROD_API_URL }}"
         run: |
           envsubst < ./staging-managed-dashboard.yaml | tee staging-managed-dashboard.yaml
 
@@ -181,7 +175,9 @@ jobs:
 
   #     - name: update managed-dashboard with secrets values - production
   #       env:
-  #         NEXT_PUBLIC_BASE_URL: '${{ secrets.PROD_NEXT_PUBLIC_BASE_URL }}'
+  #         NEXT_PUBLIC_WS_API_URL: "${{ secrets.PROD_NEXT_PUBLIC_WS_API_URL }}"
+  #         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.PROD_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
+  #         API_URL: "${{ secrets.PROD_API_URL }}"
   #       run: |
   #         envsubst < ./prod-managed-dashboard.yaml | tee prod-managed-dashboard.yaml
 
