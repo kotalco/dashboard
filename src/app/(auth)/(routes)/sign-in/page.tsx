@@ -11,7 +11,6 @@ import {
 import { LoginForm } from "./components/login-form";
 import { NewAccountAlert } from "./components/new-account-alert";
 import { EmailVerifiedAlert } from "./components/email-verified-alert";
-import { FailedVerificationAlert } from "./components/failed-verification-alert";
 
 export default async function Page() {
   return (

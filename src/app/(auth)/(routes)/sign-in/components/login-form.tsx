@@ -8,7 +8,6 @@ import { useAction } from "@/hooks/use-action";
 
 import { Input } from "@/components/form/input";
 import { Checkbox } from "@/components/form/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Verification2FAModal } from "@/components/modals/verification-2fa-modal";
 import { SubmitError } from "@/components/form/submit-error";
 import { SubmitButton } from "@/components/form/submit-button";

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 
 import { Button } from "@/components/ui/button";
-import { delay } from "@/lib/utils";
+import { delay, getBaseURL } from "@/lib/utils";
 import { Alert } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 
@@ -22,7 +22,7 @@ export const AddNewCardButton = () => {
       elements,
       redirect: "if_required",
       confirmParams: {
-        return_url: `${process.env["NEXT_PUBLIC_RETURN_URL_ROOT"]}/payments`,
+        return_url: `${getBaseURL()}/payments`,
       },
     });
 
