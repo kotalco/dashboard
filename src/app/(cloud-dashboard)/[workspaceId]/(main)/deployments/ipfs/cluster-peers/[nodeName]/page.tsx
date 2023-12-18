@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
@@ -13,6 +13,7 @@ import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
+
 import { ProtocolTab } from "./components/protocol-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { PeersTab } from "./components/peers-tab";
@@ -36,110 +37,107 @@ export default async function BeaconNodePage({
     "/ipfs/clusterpeers"
   );
 
-  try {
-    const node = await getNode<IPFSClusterPeer>(
-      workspaceId,
-      `/ipfs/clusterpeers/${nodeName}`
-    );
+  const { data: peer } = await getNode<IPFSClusterPeer>(
+    workspaceId,
+    `/ipfs/clusterpeers/${nodeName}`
+  );
 
-    const { versions } = await getClientVersions(
-      {
-        protocol: "ipfs",
-        component: "clusterPeer",
-        client: "ipfs-cluster",
-      },
-      node.image
-    );
-
-    return (
-      <div className="flex-col">
-        <div className="flex-1 p-8 pt-6 space-y-4">
-          <div className="flex items-start gap-x-2">
-            {token && (
-              <NodeStatus
-                nodeName={node.name}
-                protocol={Protocol.IPFS}
-                token={token.value}
-                component="clusterpeers"
-              />
-            )}
-            <Heading
-              title={node.name}
-              description={`Created at ${format(
-                parseISO(node.createdAt),
-                "MMMM do, yyyy"
-              )}`}
-            />
-          </div>
-          <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
-            {token && (
-              <NodeMetrics
-                nodeName={node.name}
-                protocol={Protocol.IPFS}
-                token={token.value}
-                component="clusterpeers"
-              />
-            )}
-          </div>
-          <Tabs defaultValue="protocol">
-            <TabsList>
-              <TabsTrigger value="protocol">Protocol</TabsTrigger>
-              <TabsTrigger value="peers">Peers</TabsTrigger>
-              <TabsTrigger value="security">Security</TabsTrigger>
-              <TabsTrigger value="logs">Logs</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-              {role === Roles.Admin && (
-                <TabsTrigger
-                  value="danger"
-                  className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-                >
-                  Danger Zone
-                </TabsTrigger>
-              )}
-            </TabsList>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-              <ProtocolTab node={node} role={role} versions={versions} />
-            </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="peers">
-              <PeersTab
-                node={node}
-                role={role}
-                peers={peers}
-                clusterPeers={clusterPeers}
-              />
-            </TabsContent>
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="security">
-              <SecurityTab node={node} />
-            </TabsContent>
-
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-              {token && (
-                <Logs
-                  url={`ipfs/clusterpeers/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
-                />
-              )}
-            </TabsContent>
-
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="resources"
-            >
-              <ResourcesForm
-                node={node}
-                role={role}
-                url={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
-              />
-            </TabsContent>
-            {role === Roles.Admin && (
-              <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-                <DangerZoneTab node={node} />
-              </TabsContent>
-            )}
-          </Tabs>
-        </div>
-      </div>
-    );
-  } catch (e) {
-    notFound();
+  if (!peer) {
+    redirect(`/${workspaceId}/deployments/ipfs?deployment=cluster-peers`);
   }
+
+  const { versions } = await getClientVersions(
+    {
+      protocol: "ipfs",
+      component: "clusterPeer",
+      client: "ipfs-cluster",
+    },
+    peer.image
+  );
+
+  return (
+    <div className="flex-col">
+      <div className="flex-1 p-8 pt-6 space-y-4">
+        <div className="flex items-start gap-x-2">
+          {token && (
+            <NodeStatus
+              nodeName={peer.name}
+              protocol={Protocol.IPFS}
+              token={token.value}
+              component="clusterpeers"
+            />
+          )}
+          <Heading
+            title={peer.name}
+            description={`Created at ${format(
+              parseISO(peer.createdAt),
+              "MMMM do, yyyy"
+            )}`}
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
+          {token && (
+            <NodeMetrics
+              nodeName={peer.name}
+              protocol={Protocol.IPFS}
+              token={token.value}
+              component="clusterpeers"
+            />
+          )}
+        </div>
+        <Tabs defaultValue="protocol">
+          <TabsList>
+            <TabsTrigger value="protocol">Protocol</TabsTrigger>
+            <TabsTrigger value="peers">Peers</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
+            <TabsTrigger value="logs">Logs</TabsTrigger>
+            <TabsTrigger value="resources">Resources</TabsTrigger>
+            {role === Roles.Admin && (
+              <TabsTrigger
+                value="danger"
+                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
+              >
+                Danger Zone
+              </TabsTrigger>
+            )}
+          </TabsList>
+          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
+            <ProtocolTab node={peer} role={role} versions={versions} />
+          </TabsContent>
+          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="peers">
+            <PeersTab
+              node={peer}
+              role={role}
+              peers={peers}
+              clusterPeers={clusterPeers}
+            />
+          </TabsContent>
+          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="security">
+            <SecurityTab node={peer} />
+          </TabsContent>
+
+          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
+            {token && (
+              <Logs
+                url={`ipfs/clusterpeers/${peer.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
+              />
+            )}
+          </TabsContent>
+
+          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
+            <ResourcesForm
+              node={peer}
+              role={role}
+              url={`/ipfs/clusterpeers/${peer.name}?workspace_id=${workspaceId}`}
+            />
+          </TabsContent>
+          {role === Roles.Admin && (
+            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
+              <DangerZoneTab node={peer} />
+            </TabsContent>
+          )}
+        </Tabs>
+      </div>
+    </div>
+  );
 }
