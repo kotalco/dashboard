@@ -53,9 +53,6 @@ server.interceptors.request.use((config) => {
   const now = Date.now();
   config.baseURL = getBaseURL();
 
-  console.log("Base URL: ", config.baseURL);
-  console.log("URL: ", config.url);
-
   const token = cookies().get(StorageItems.AUTH_TOKEN);
   if (token?.value) config.headers.Authorization = `Bearer ${token.value}`;
 
