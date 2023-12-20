@@ -30,8 +30,8 @@ spec:
       - env:
         - name: API_URL
           value: ${API_URL}
-        - name: NEXT_PUBLIC_WS_BASE_URL
-          value: ${NEXT_PUBLIC_WS_BASE_URL}
+        - name: NEXT_PUBLIC_WS_API_URL
+          value: ${NEXT_PUBLIC_WS_API_URL}
         - name: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
           value: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
         image: kotalco/cloud-dashboard-production:${SHORT_SHA}
