@@ -1,10 +1,11 @@
 import "server-only";
 
 import { unstable_noStore as noStore } from "next/cache";
+import { isAxiosError } from "axios";
 import qs from "query-string";
 
 import { server } from "@/lib/server-instance";
-import { isAxiosError } from "axios";
+import { logger } from "@/lib/utils";
 
 export const getNode = async <T>(workspace_id: string, url: string) => {
   noStore();
@@ -21,6 +22,7 @@ export const getNode = async <T>(workspace_id: string, url: string) => {
     if (isAxiosError(error) && error.response?.status === 404) {
       return { data, error };
     }
+    logger("GetNodeByNodeName", error);
     throw error;
   }
 

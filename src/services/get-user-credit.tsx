@@ -5,6 +5,7 @@ import { unstable_noStore as noStore } from "next/cache";
 
 import { server } from "@/lib/server-instance";
 import { CreditBalance } from "@/types";
+import { logger } from "@/lib/utils";
 
 export const getUserCredit = async () => {
   noStore();
@@ -18,6 +19,7 @@ export const getUserCredit = async () => {
 
     return { creditBalance: data };
   } catch (e) {
+    logger("GetUserCredit", e);
     return {
       message: "Something went wrong while getting your credit balance.",
     };

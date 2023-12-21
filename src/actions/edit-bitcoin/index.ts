@@ -4,10 +4,11 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
+import { BitcoinNode } from "@/types";
 
 import { InputType, ReturnType } from "./types";
 import { EditBitcoinAPI, EditBitcoinWallet } from "./schema";
-import { BitcoinNode } from "@/types";
 
 const handler = async (
   data: InputType,
@@ -21,6 +22,7 @@ const handler = async (
     );
     node = response.data;
   } catch (error) {
+    logger("EditBitcoin", error);
     return { error: "Something went wrong." };
   }
 

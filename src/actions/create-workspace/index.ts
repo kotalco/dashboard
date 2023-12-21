@@ -6,6 +6,7 @@ import { isAxiosError } from "axios";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { Workspace } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { CreateWorkspace } from "./schema";
@@ -26,6 +27,7 @@ const handler = async (values: InputType): Promise<ReturnType> => {
         return { error: "Name already exists." };
       }
 
+      logger("CreateWorkspace", error);
       return { error: "Something went wrong." };
     }
   }

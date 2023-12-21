@@ -5,7 +5,7 @@ import { isAxiosError } from "axios";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
-
+import { logger } from "@/lib/utils";
 import { IPFSPeer } from "@/types";
 
 import { InputType, ReturnType } from "./types";
@@ -29,6 +29,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         return { error: "Reached Nodes Limit." };
       }
 
+      logger("CreatePeer", error);
       return { error: "Something went wrong." };
     }
   }

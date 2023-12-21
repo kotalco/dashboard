@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { ChangeRole } from "./schema";
@@ -18,6 +19,7 @@ const handler = async (
       data
     );
   } catch (error) {
+    logger("ChangeRole", error);
     return { error: "Something went wrong." };
   }
 

@@ -6,6 +6,7 @@ import { isAxiosError } from "axios";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { BeaconNode } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { CreateBeaconnode } from "./schema";
@@ -31,6 +32,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         return { error: "Reached Nodes Limit." };
       }
 
+      logger("CreateBeaconNode", error);
       return { error: "Something went wrong." };
     }
   }

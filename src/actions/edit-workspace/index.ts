@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { Workspace } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { EditWorkspace } from "./schema";
@@ -26,6 +27,7 @@ const handler = async (
       return { error: "Workspace name already exists." };
     }
 
+    logger("EditWorkspace", error);
     return { error: "Something went wrong." };
   }
 

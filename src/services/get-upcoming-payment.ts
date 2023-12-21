@@ -1,11 +1,12 @@
 import "server-only";
 
 import qs from "query-string";
+import { isAxiosError } from "axios";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { server } from "@/lib/server-instance";
 import { Invoice } from "@/types";
-import { unstable_noStore as noStore } from "next/cache";
-import { isAxiosError } from "axios";
+import { logger } from "@/lib/utils";
 
 export const getUpcomingInvoice = async (subscription_id: string) => {
   noStore();
@@ -22,7 +23,7 @@ export const getUpcomingInvoice = async (subscription_id: string) => {
     if (isAxiosError(e) && e.response?.status === 404) {
       return { invoice: null, message: null };
     }
-
+    logger("GetUpcomingInvoice", e);
     return {
       invoice: null,
       message: "Something went wrong while getting your next payment date.",

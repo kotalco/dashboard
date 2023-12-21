@@ -5,6 +5,7 @@ import { unstable_noStore as noStore } from "next/cache";
 
 import { User } from "@/types";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 type APIError = { message: string; status: number; name: string };
 
@@ -19,6 +20,7 @@ export const findUser = async () => {
     if (isAxiosError(e)) {
       error = e;
     }
+    logger("FindUserWhoAmI", e);
   }
 
   return { user, error };

@@ -2,10 +2,11 @@ import "server-only";
 
 import qs from "query-string";
 import { unstable_noStore as noStore } from "next/cache";
+import { isAxiosError } from "axios";
 
 import { server } from "@/lib/server-instance";
 import { Endpoint } from "@/types";
-import { isAxiosError } from "axios";
+import { logger } from "@/lib/utils";
 
 export const getEndpoint = async (
   workspace_id: string,
@@ -26,6 +27,7 @@ export const getEndpoint = async (
     if (isAxiosError(error) && error.response?.status === 404) {
       return { data, error };
     }
+    logger("GetEndpointByName", error);
     throw error;
   }
 

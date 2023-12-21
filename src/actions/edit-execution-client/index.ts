@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { EditAPI, EditAccessControl, EditLogs, EditNetworking } from "./schema";
@@ -21,6 +22,7 @@ const handler = async (
     );
     node = response.data;
   } catch (error) {
+    logger("EditExecutionClient", error);
     return { error: "Something went wrong." };
   }
 

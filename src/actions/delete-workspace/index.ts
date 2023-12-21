@@ -1,14 +1,15 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { isAxiosError } from "axios";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { DeleteWorkspace } from "./schema";
-import { redirect } from "next/navigation";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   try {
@@ -23,6 +24,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         };
       }
     }
+    logger("DeleteWorkspace", error);
     return { error: "Something went wrong." };
   }
 

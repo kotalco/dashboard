@@ -7,6 +7,7 @@ import { isAxiosError } from "axios";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { Secret } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { CreateSecret } from "./schema";
@@ -25,6 +26,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         return { error: "Name already exists." };
       }
 
+      logger("CreateSecret", error);
       return { error: "Something went wrong." };
     }
   }

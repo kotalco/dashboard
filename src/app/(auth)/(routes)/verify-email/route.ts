@@ -3,6 +3,7 @@ import { isAxiosError } from "axios";
 
 import { server } from "@/lib/server-instance";
 import { StorageItems } from "@/enums";
+import { logger } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   const { searchParams, host, protocol } = new URL(req.url);
@@ -30,6 +31,7 @@ export async function GET(req: NextRequest) {
     response.cookies.set(StorageItems.EMAIL_VERIFIED, `${email},500`, {
       maxAge: 5,
     });
+    logger("VerifyEmail", error);
     return response;
   }
 }

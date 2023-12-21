@@ -6,6 +6,7 @@ import { isAxiosError } from "axios";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { StacksNode } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { CreateStacks } from "./schema";
@@ -28,6 +29,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         return { error: "Reached Nodes Limit." };
       }
 
+      logger("CreateStacksNode", error);
       return { error: "Something went wrong." };
     }
   }
