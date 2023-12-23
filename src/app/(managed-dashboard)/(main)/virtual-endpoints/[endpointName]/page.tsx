@@ -1,3 +1,7 @@
+import { Suspense } from "react";
+
+import { EndpointDetailsSkeleton } from "@/components/skeletons/endpoint-details-skeleton";
+
 import { VirtualEndpointDetails } from "./_components/virtual-endpoint-details";
 
 export default async function EndpointPage({
@@ -9,7 +13,9 @@ export default async function EndpointPage({
 
   return (
     <div className="flex-col">
-      <VirtualEndpointDetails name={endpointName} />
+      <Suspense fallback={<EndpointDetailsSkeleton />}>
+        <VirtualEndpointDetails name={endpointName} />
+      </Suspense>
     </div>
   );
 }
