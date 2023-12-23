@@ -28,7 +28,11 @@ export const VirtualEndpointDetails = async ({
         </Suspense>
       </EndpointDetails>
 
-      <DeleteEndpoint name={endpoint.name} />
+      <DeleteEndpoint
+        name={endpoint.name}
+        url={`/virtual-endpoints/${name}`}
+        redirectUrl={`/virtual-endpoints`}
+      />
     </>
   );
 };
