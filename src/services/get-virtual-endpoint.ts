@@ -9,20 +9,20 @@ import { logger } from "@/lib/utils";
 
 export const getVirtualEndpoint = async (endpointName: string) => {
   noStore();
-  let data: undefined | Endpoint;
+  let endpoint: undefined | Endpoint;
 
   try {
     const response = await server.get<Endpoint>(
       `/virtual-endpoints/${endpointName}`
     );
-    data = response.data;
+    endpoint = response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 404) {
-      return { data, error };
+      return { endpoint, error };
     }
     logger("GetVirtualEndpointByName", error);
     throw error;
   }
 
-  return { endpoint: data, error: undefined };
+  return { endpoint, error: undefined };
 };
