@@ -9,9 +9,13 @@ import { RouteURL } from "@/components/shared/endpoint/route-url";
 
 interface EndpointDetailsProps {
   endpoint: Endpoint;
+  children?: React.ReactNode;
 }
 
-export const EndpointDetails = ({ endpoint }: EndpointDetailsProps) => {
+export const EndpointDetails = ({
+  endpoint,
+  children,
+}: EndpointDetailsProps) => {
   return (
     <>
       <div className="flex-1 p-8 pl-0 pt-6 space-y-4">
@@ -32,6 +36,8 @@ export const EndpointDetails = ({ endpoint }: EndpointDetailsProps) => {
           />
         </div>
       </div>
+
+      {children}
 
       <Card>
         <CardContent>

@@ -292,6 +292,10 @@ export interface Endpoint {
   created_at: string;
 }
 
+export interface EndpointStats {
+  api: { daily_aggregation: number[] };
+}
+
 export interface Service {
   name: string;
   protocol: Protocol;

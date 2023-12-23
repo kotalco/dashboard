@@ -1,11 +1,13 @@
-import Image from "next/image";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { format, parseISO } from "date-fns";
 
 import { getVirtualEndpoint } from "@/services/get-virtual-endpoint";
 
 import { DeleteEndpoint } from "@/components/shared/endpoint/delete-endpoint";
 import { EndpointDetails } from "@/components/shared/endpoint/endpoint-details";
+import { EndpointStatsSkeleton } from "@/components/skeletons/endpoint-stats-skeleton";
+
+import { VirtualEndpointStats } from "./virtual-endpoint-stats";
 
 interface VirtualEndpointDetailsProps {
   name: string;
@@ -20,7 +22,11 @@ export const VirtualEndpointDetails = async ({
 
   return (
     <>
-      <EndpointDetails endpoint={endpoint} />
+      <EndpointDetails endpoint={endpoint}>
+        <Suspense fallback={<EndpointStatsSkeleton />}>
+          <VirtualEndpointStats name={name} />
+        </Suspense>
+      </EndpointDetails>
 
       <DeleteEndpoint name={endpoint.name} />
     </>
