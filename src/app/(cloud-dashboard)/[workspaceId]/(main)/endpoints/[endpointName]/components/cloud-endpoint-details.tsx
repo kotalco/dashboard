@@ -8,6 +8,7 @@ import { EndpointStatsSkeleton } from "@/components/skeletons/endpoint-stats-ske
 import { DeleEndpointButtonSkeleton } from "@/components/skeletons/delete-endpoint-button-skeleton";
 
 import { DeleteEndpointButton } from "./delete-endpoint-button";
+import { CloudEndpointStats } from "./cloud-endpoint-stats";
 
 interface CloudEndpointDetailsProps {
   workspaceId: string;
@@ -28,7 +29,7 @@ export const CloudEndpointDetails = async ({
     <>
       <EndpointDetails endpoint={endpoint}>
         <Suspense fallback={<EndpointStatsSkeleton />}>
-          {/* <CloudEndpointStats name={name} workspaceId={workspaceId} /> */}
+          <CloudEndpointStats name={name} workspaceId={workspaceId} />
         </Suspense>
       </EndpointDetails>
 

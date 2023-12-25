@@ -14,7 +14,7 @@ export const CloudEndpointStats = async ({
   name,
   workspaceId,
 }: CloudEndpointStatsProps) => {
-  const { stats } = await getEndpointStats(name);
+  const { stats } = await getEndpointStats(workspaceId, name);
 
   if (!stats) redirect(`/${workspaceId}/endpoints`);
 
