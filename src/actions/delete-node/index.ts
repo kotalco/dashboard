@@ -4,9 +4,9 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { APIInputType, APIReturnType } from "./types";
-
 import { DeleteNode } from "./schema";
 
 const handler = async (
@@ -18,6 +18,7 @@ const handler = async (
     await server.delete(identifiers.url);
     data = { message: "Node deleted." };
   } catch (error) {
+    logger("DeleteNode", error);
     return { error: "Something went wrong." };
   }
 

@@ -8,6 +8,7 @@ import { server } from "@/lib/server-instance";
 
 import { InputType, ReturnType } from "./types";
 import { ConfirmChange2fa } from "./schema";
+import { logger } from "@/lib/utils";
 
 const handler = async (
   data: InputType,
@@ -35,6 +36,8 @@ const handler = async (
         };
       }
     }
+
+    logger("ConfirmChange2FA", error);
     return { error: "Something went wrong." };
   }
 };

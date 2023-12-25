@@ -6,6 +6,7 @@ import qs from "query-string";
 import { server } from "@/lib/server-instance";
 import { Proration, ProrationFormState, UpdatePlanStatus } from "@/types";
 import { SubscriptionStatus } from "@/enums";
+import { logger } from "@/lib/utils";
 
 export const prepareInvoicePayment = async (payment_intent_id: string) => {
   try {
@@ -19,6 +20,7 @@ export const prepareInvoicePayment = async (payment_intent_id: string) => {
 
     return { pi_secret: data.pi_secret, message: null };
   } catch (e) {
+    logger("PrepareInvoicePayment", e);
     return {
       pi_secret: null,
       message: "Something went wrong. Please try again.",
@@ -33,6 +35,7 @@ export const cancelSubscription = async (subscription_id: string) => {
     revalidatePath("/billing/plan");
     return { message: null };
   } catch (e) {
+    logger("CancelSubscription", e);
     return { message: "Something went wrong. Please try again." };
   }
 };
@@ -47,6 +50,7 @@ export const reactivatePlan = async (subscription_id: string) => {
     revalidatePath("/billing/plan");
     return { message: null };
   } catch (e) {
+    logger("ReactivatePlan", e);
     return { message: "Something went wrong. Please try again." };
   }
 };
@@ -75,6 +79,7 @@ export const getProration = async (
       },
     };
   } catch (e) {
+    logger("GetProration", e);
     return {
       message: "Something went wrong. Please try again.",
       data: null,
@@ -126,6 +131,7 @@ export const updatePlan = async (
 
     return { message: "Something went wrong. Please try again.", data: null };
   } catch (e) {
+    logger("UpdatePlan", e);
     return { message: "Something went wrong. Please try again.", data: null };
   }
 };
@@ -144,6 +150,7 @@ export const createSetupIntent = async (_: {
 
     return { si_secret: data.si_secret, message: null };
   } catch (e) {
+    logger("CreateSetupIntent", e);
     return {
       si_secret: null,
       message: "Something went wrong. Please try again.",
@@ -160,6 +167,7 @@ export const setDefaultCard = async (payment_method_id: string) => {
     revalidatePath("/billing/payment-methods");
     return { message: null };
   } catch (e) {
+    logger("SetDefaultCard", e);
     return { message: "Something went wrong. Please try again." };
   }
 };
@@ -175,6 +183,7 @@ export const deletePaymentCard = async (id: string) => {
     revalidatePath("/billing/payment-methods");
     return { message: null };
   } catch (e) {
+    logger("DeletePaymentCard", e);
     return { message: "Something went wrong. Please try again." };
   }
 };

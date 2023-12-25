@@ -6,6 +6,7 @@ import { isAxiosError } from "axios";
 import { redirect } from "next/navigation";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { ActivateLiscense } from "./schema";
@@ -26,6 +27,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         };
       }
     }
+
+    logger("ActivateLiscense", error);
     return { error: "Something went wrong." };
   }
 

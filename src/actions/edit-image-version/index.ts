@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { EditImageVersion } from "./schema";
@@ -17,6 +18,7 @@ export const handler = async (
     const response = await server.put(identifiers.url, data);
     node = response.data;
   } catch (error) {
+    logger("EditImageVersion", error);
     return { error: "Something went wrong." };
   }
 

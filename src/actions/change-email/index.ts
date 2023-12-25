@@ -5,6 +5,7 @@ import { isAxiosError } from "axios";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { ChangeEmail } from "./schema";
@@ -31,6 +32,7 @@ const handler = async (
         return { error: "Wrong Password" };
       }
 
+      logger("ChangeEmail", error);
       return { error: "Something went wrong." };
     }
   }

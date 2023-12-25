@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { ChainlinkNode } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import {
@@ -29,6 +30,7 @@ const handler = async (
     );
     node = response.data;
   } catch (error) {
+    logger("EditChainLink", error);
     return { error: "Something went wrong." };
   }
 

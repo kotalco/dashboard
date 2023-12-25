@@ -9,6 +9,7 @@ import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { LoginResponse } from "@/types";
 import { StorageItems } from "@/enums";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { AuthorizeUser } from "./schema";
@@ -25,6 +26,7 @@ const handler = async (values: InputType): Promise<ReturnType> => {
       return { error: "Wrong OTP Code." };
     }
 
+    logger("AuthorizeUser", error);
     return { error: "Something went wrong." };
   }
 

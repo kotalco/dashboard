@@ -1,11 +1,11 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isAxiosError } from "axios";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { Enable2fa } from "./schema";
@@ -26,6 +26,8 @@ const handler = async (
         };
       }
     }
+
+    logger("Enable2FA", error);
     return { error: "Something went wrong." };
   }
 

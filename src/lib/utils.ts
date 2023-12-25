@@ -5,7 +5,7 @@ import {
   NodeStatuses,
 } from "@/enums";
 import { Clients, Plan } from "@/types";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, isAxiosError } from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -238,7 +238,7 @@ export const readSecretsForm = async (
           const fileData = await readFileData(key, formData);
           assignValue(result, nestedKey, fileData);
         } catch (error) {
-          console.error("Error reading file data:", error);
+          logger("ReadingFile", error);
         }
       } else {
         assignValue(result, nestedKey, value);
@@ -268,5 +268,31 @@ const assignValue = (
     }
   } else {
     obj[key] = value;
+  }
+};
+
+export const logger = (tag: string, e: unknown) => {
+  if (isAxiosError(e)) {
+    const error = {
+      tag,
+      name: e.name,
+      message: e.message,
+      code: e.code,
+      mehtod: e.config?.method,
+      url: e.config?.url,
+      payload: e.config?.data,
+      response: e.response?.data,
+      status: e.status,
+    };
+    console.error(error);
+    return;
+  }
+
+  if (e instanceof Error) {
+    console.error({
+      tag,
+      name: e.name,
+      messege: e.message,
+    });
   }
 };

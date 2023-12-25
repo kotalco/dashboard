@@ -1,11 +1,13 @@
 "use server";
 
 import axios, {
+  AxiosError,
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
 import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { StorageItems } from "@/enums";
 
@@ -53,10 +55,11 @@ server.interceptors.request.use((config) => {
   const now = Date.now();
   config.baseURL = getBaseURL();
 
-  console.log("Base URL: ", config.baseURL);
-  console.log("URL: ", config.url);
-
   const token = cookies().get(StorageItems.AUTH_TOKEN);
+  if (!token?.value && config.url === "/whoami") {
+    redirect("/sign-in");
+  }
+
   if (token?.value) config.headers.Authorization = `Bearer ${token.value}`;
 
   if (responseCache[key] && now - responseCache[key].timestamp < 2000) {
@@ -70,20 +73,29 @@ server.interceptors.request.use((config) => {
   return config;
 });
 
-server.interceptors.response.use((response: CustomAxiosResponse) => {
-  if (!response.config.fromCache) {
-    const key = getCacheKey(response.config);
-    responseCache[key] = {
-      timestamp: Date.now(),
-      response: response,
-    };
-  }
+server.interceptors.response.use(
+  (response: CustomAxiosResponse) => {
+    if (!response.config.fromCache) {
+      const key = getCacheKey(response.config);
+      responseCache[key] = {
+        timestamp: Date.now(),
+        response: response,
+      };
+    }
 
-  if (response.config.responseType === "arraybuffer") {
+    if (response.config.responseType === "arraybuffer") {
+      return response;
+    }
+
+    response.data = response.data.data;
+
     return response;
+  },
+  (error: AxiosError) => {
+    if (error.response?.status === 401) {
+      cookies().delete(StorageItems.AUTH_TOKEN);
+    }
+
+    return Promise.reject(error);
   }
-
-  response.data = response.data.data;
-
-  return response;
-});
+);

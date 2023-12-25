@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { IPFSPeer } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { EditAPI, EditConfigProfiles, EditRouting } from "./schema";
@@ -22,6 +23,7 @@ const handler = async (
 
     peer = response.data;
   } catch (error) {
+    logger("EditPeer", error);
     return { error: "Something went wrong." };
   }
 

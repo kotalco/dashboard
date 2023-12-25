@@ -4,10 +4,11 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
+import { AptosNode } from "@/types";
 
 import { InputType, ReturnType } from "./types";
 import { EditAptosAPI } from "./schema";
-import { AptosNode } from "@/types";
 
 const handler = async (
   data: InputType,
@@ -21,6 +22,7 @@ const handler = async (
     );
     node = response.data;
   } catch (error) {
+    logger("EditAptos", error);
     return { error: "Something went wrong." };
   }
 

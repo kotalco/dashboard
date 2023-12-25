@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { ValidatorNode } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { EditBeaconNode, EditGraffiti, EditKeystore } from "./schema";
@@ -21,6 +22,7 @@ const handler = async (
     );
     node = response.data;
   } catch (error) {
+    logger("EditValidator", error);
     return { error: "Something went wrong." };
   }
 

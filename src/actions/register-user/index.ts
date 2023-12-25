@@ -8,6 +8,7 @@ import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { User } from "@/types";
 import { StorageItems } from "@/enums";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { RegisterUser } from "./schema";
@@ -30,6 +31,7 @@ const handler = async (values: InputType): Promise<ReturnType> => {
       };
     }
 
+    logger("UserRegister", error);
     return { error: "Something went wrong." };
   }
 

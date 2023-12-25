@@ -4,9 +4,9 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { APIInputType, APIReturnType } from "./types";
-
 import { RemoveMemeber } from "./schema";
 
 const handler = async ({
@@ -16,6 +16,7 @@ const handler = async ({
   try {
     await server.delete(`/workspaces/${workspaceId}/members/${id}`);
   } catch (error) {
+    logger("RemoveTeamMember", error);
     return { error: "Something went wrong." };
   }
 

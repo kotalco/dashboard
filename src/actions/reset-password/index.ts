@@ -4,6 +4,7 @@ import { isAxiosError } from "axios";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { ResetPassword } from "./schema";
@@ -21,6 +22,7 @@ const handler = async (values: InputType): Promise<ReturnType> => {
       return { error: "User not found." };
     }
 
+    logger("ResetPasswword", error);
     return { error: "Something went wrong." };
   }
 

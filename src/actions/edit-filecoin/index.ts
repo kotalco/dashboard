@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
 import { FilecoinNode } from "@/types";
+import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
 import { EditAPI, EditIPFS, EditLogging } from "./schema";
@@ -21,6 +22,7 @@ const handler = async (
     );
     node = response.data;
   } catch (error) {
+    logger("EditFileCoin", error);
     return { error: "Something went wrong." };
   }
 

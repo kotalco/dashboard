@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 
@@ -7,15 +7,17 @@ import { SidebarNavItem } from "@/types";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
-import { LogoutForm } from "@/components/ui/logout-form";
 
 interface NavigationItemsProps {
   items: SidebarNavItem[];
+  children?: React.ReactNode;
 }
 
-export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
+export const NavigationItems: React.FC<NavigationItemsProps> = ({
+  items,
+  children,
+}) => {
   const pathname = usePathname();
-  const { workspaceId } = useParams();
   const [open, setOpen] = useState(() => pathname.includes("deployments"));
 
   return (
@@ -99,12 +101,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
             </li>
           )
       )}
-      {(pathname === "/virtual-endpoints" ||
-        pathname === `/${workspaceId}`) && (
-        <li>
-          <LogoutForm />
-        </li>
-      )}
+      {children}
     </>
   );
 };
