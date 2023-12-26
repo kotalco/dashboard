@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 
 import { getDaysOfCurrentMonth } from "@/lib/utils";
+import { EndpointStatsChart } from "@/components/shared/endpoint/endpoint-stats-chart";
 
 import { getVirtualEndpointStats } from "@/services/get-virtual-endpoint-stats";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { EndpointStatsChart } from "@/components/shared/endpoint/endpoint-stats-chart";
 
 interface VirtualEndpointStatsProps {
   name: string;
