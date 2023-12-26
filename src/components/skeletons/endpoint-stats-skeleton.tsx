@@ -1,5 +1,10 @@
 import { Skeleton } from "../ui/skeleton";
 
 export const EndpointStatsSkeleton = () => {
-  return <Skeleton className="mb-8 w-full h-[353px]" />;
+  return (
+    <div className="h-[325px] mb-8 grid grid-cols-12 gap-4">
+      <Skeleton className="col-span-8" />
+      <Skeleton className="col-span-4" />
+    </div>
+  );
 };

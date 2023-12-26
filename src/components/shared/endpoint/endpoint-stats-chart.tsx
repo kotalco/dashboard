@@ -12,8 +12,6 @@ import {
   Legend,
 } from "chart.js";
 
-import { getDaysOfCurrentMonth } from "@/lib/utils";
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,13 +23,18 @@ ChartJS.register(
 
 interface EndpointStatsChartProps {
   data: number[];
+  labels: string[] | number[];
 }
 
-export const EndpointStatsChart = ({ data }: EndpointStatsChartProps) => {
-  const dataConfig: ChartData<"bar", number[], number> = {
-    labels: getDaysOfCurrentMonth(),
+export const EndpointStatsChart = ({
+  data,
+  labels,
+}: EndpointStatsChartProps) => {
+  const dataConfig: ChartData<"bar", number[], string | number> = {
+    labels,
     datasets: [
       {
+        barThickness: 20,
         borderRadius: 5,
         label: "No. of hits",
         data,
@@ -42,15 +45,20 @@ export const EndpointStatsChart = ({ data }: EndpointStatsChartProps) => {
 
   return (
     <Bar
-      height={90}
+      height="100%"
       options={{
+        maintainAspectRatio: false,
+        responsive: true,
         plugins: {
           legend: { align: "end" },
           tooltip: {
             boxPadding: 5,
             callbacks: {
               label: (item) => `${item.formattedValue} hits`,
-              title: (items) => items.map((item) => `Day ${item.label}`),
+              title: (items) =>
+                items.map((item) =>
+                  isNaN(Number(item.label)) ? item.label : `Day ${item.label}`
+                ),
             },
           },
         },
