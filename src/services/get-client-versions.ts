@@ -1,7 +1,6 @@
 import "server-only";
 
 import { ClientVersions, Version } from "@/types";
-import { delay } from "@/lib/utils";
 
 interface Config {
   protocol: string;
@@ -14,7 +13,6 @@ export const getClientVersions = async (
   { protocol, component, client, network }: Config,
   image?: string
 ) => {
-  await delay(3000);
   let versions: (Version & { disabled?: boolean })[] = [];
 
   const response = await fetch(

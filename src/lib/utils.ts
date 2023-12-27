@@ -1,3 +1,5 @@
+import { eachDayOfInterval, endOfMonth, startOfMonth } from "date-fns";
+
 import { FormDataResult } from "@/actions/create-secret/types";
 import {
   BeaconNodeClients,
@@ -295,4 +297,11 @@ export const logger = (tag: string, e: unknown) => {
       messege: e.message,
     });
   }
+};
+
+export const getDaysOfCurrentMonth = () => {
+  const start = startOfMonth(new Date());
+  const end = endOfMonth(new Date());
+
+  return eachDayOfInterval({ start, end }).map((date) => date.getDate());
 };
