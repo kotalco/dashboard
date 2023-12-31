@@ -17,7 +17,7 @@ const handler = async (
   let node;
   try {
     const response = await server.put<BeaconNode>(
-      `/ethereum2/beaconnodes/${identifiers.name}`,
+      `/ethereum2/beaconnodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
       data
     );
     node = response.data;

@@ -2,13 +2,12 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { getEndpoint } from "@/services/get-endpoint";
+import { getEndpointStats } from "@/services/get-endpoint-stats";
 
 import { EndpointDetails } from "@/components/shared/endpoint/endpoint-details";
-import { EndpointStatsSkeleton } from "@/components/skeletons/endpoint-stats-skeleton";
 import { DeleEndpointButtonSkeleton } from "@/components/skeletons/delete-endpoint-button-skeleton";
 
 import { DeleteEndpointButton } from "./delete-endpoint-button";
-import { CloudEndpointStats } from "./cloud-endpoint-stats";
 
 interface CloudEndpointDetailsProps {
   workspaceId: string;
@@ -25,13 +24,11 @@ export const CloudEndpointDetails = async ({
     redirect(`/${workspaceId}/endpoints`);
   }
 
+  const { stats } = await getEndpointStats(workspaceId, name);
+
   return (
     <>
-      <EndpointDetails endpoint={endpoint}>
-        <Suspense fallback={<EndpointStatsSkeleton />}>
-          <CloudEndpointStats name={name} workspaceId={workspaceId} />
-        </Suspense>
-      </EndpointDetails>
+      <EndpointDetails endpoint={endpoint} stats={stats} />
 
       <Suspense fallback={<DeleEndpointButtonSkeleton />}>
         <DeleteEndpointButton workspaceId={workspaceId} name={name} />

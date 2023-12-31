@@ -17,7 +17,7 @@ const handler = async (
   let peer;
   try {
     const response = await server.put<IPFSPeer>(
-      `/ipfs/peers/${identifiers.name}`,
+      `/ipfs/peers/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
       data
     );
 

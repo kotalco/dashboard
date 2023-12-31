@@ -1,20 +1,21 @@
 import Image from "next/image";
 import { format, parseISO } from "date-fns";
 
-import { Endpoint } from "@/types";
+import { Endpoint, EndpointStats as TEndpointStats } from "@/types";
 
 import { Heading } from "@/components/ui/heading";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RouteURL } from "@/components/shared/endpoint/route-url";
+import { EndpointStats } from "./endpoint-stats";
 
 interface EndpointDetailsProps {
   endpoint: Endpoint;
-  children?: React.ReactNode;
+  stats: TEndpointStats;
 }
 
-export const EndpointDetails = ({
+export const EndpointDetails = async ({
   endpoint,
-  children,
+  stats,
 }: EndpointDetailsProps) => {
   return (
     <>
@@ -37,53 +38,55 @@ export const EndpointDetails = ({
         </div>
       </div>
 
-      {children}
-
-      <Card>
-        <CardContent>
-          {endpoint.routes.map(({ name, route, example, references }, i) => (
-            <div
-              key={name}
-              className="space-y-3 text-sm text-gray-500 pt-7 first:pt-2"
-            >
+      <div className="space-y-4">
+        {endpoint.routes.map(({ name, route, example, references }, i) => (
+          <Card key={name}>
+            <CardHeader>
               {/* Route Name */}
-              <div className="uppercase text-2xl font-nunito text-foreground">
-                {name}
-              </div>
+              <CardTitle className="uppercase font-nunito">{name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3 text-sm text-gray-500 pt-7 first:pt-2">
+                {/* Chart Stats */}
+                <EndpointStats
+                  dailyAggregation={stats[name].daily_aggregation}
+                  weeklyAggregation={stats[name].weekly_aggregation}
+                />
 
-              {/* Route URL */}
-              <RouteURL route={route} />
+                {/* Route URL */}
+                <RouteURL route={route} />
 
-              {/* Example */}
-              <div>
-                <h3 className="text-gray-900 text-base">Example</h3>
-                <pre className="px-5 mt-2 overflow-x-scroll bg-gray-100 text-gray-700 text-xs font-mono rounded-md py-7">
-                  {example}
-                </pre>
-              </div>
+                {/* Example */}
+                <div>
+                  <h3 className="text-gray-900 text-base">Example</h3>
+                  <pre className="px-5 mt-2 overflow-x-scroll bg-gray-100 text-gray-700 text-xs font-mono rounded-md py-7">
+                    {example}
+                  </pre>
+                </div>
 
-              {/* References */}
-              <div>
-                <h3 className="text-gray-700 text-base">References</h3>
-                <ul className="space-y-1 list-disc">
-                  {references.map((reference) => (
-                    <li className="list-none" key={reference}>
-                      <a
-                        className="text-primary mt-1 hover:underline hover:underline-offset-4"
-                        href={reference}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {reference}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                {/* References */}
+                <div>
+                  <h3 className="text-gray-700 text-base">References</h3>
+                  <ul className="space-y-1 list-disc">
+                    {references.map((reference) => (
+                      <li className="list-none" key={reference}>
+                        <a
+                          className="text-primary mt-1 hover:underline hover:underline-offset-4"
+                          href={reference}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {reference}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </>
   );
 };

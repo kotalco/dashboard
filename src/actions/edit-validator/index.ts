@@ -17,7 +17,7 @@ const handler = async (
   let node;
   try {
     const response = await server.put<ValidatorNode>(
-      `/ethereum2/validators/${identifiers.name}`,
+      `/ethereum2/validators/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
       data
     );
     node = response.data;

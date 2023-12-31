@@ -1,13 +1,10 @@
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
 import { getVirtualEndpoint } from "@/services/get-virtual-endpoint";
+import { getVirtualEndpointStats } from "@/services/get-virtual-endpoint-stats";
 
 import { DeleteEndpoint } from "@/components/shared/endpoint/delete-endpoint";
 import { EndpointDetails } from "@/components/shared/endpoint/endpoint-details";
-import { EndpointStatsSkeleton } from "@/components/skeletons/endpoint-stats-skeleton";
-
-import { VirtualEndpointStats } from "./virtual-endpoint-stats";
 
 interface VirtualEndpointDetailsProps {
   name: string;
@@ -20,13 +17,11 @@ export const VirtualEndpointDetails = async ({
 
   if (!endpoint) notFound();
 
+  const { stats } = await getVirtualEndpointStats(name);
+
   return (
     <>
-      <EndpointDetails endpoint={endpoint}>
-        <Suspense fallback={<EndpointStatsSkeleton />}>
-          <VirtualEndpointStats name={name} />
-        </Suspense>
-      </EndpointDetails>
+      <EndpointDetails endpoint={endpoint} stats={stats} />
 
       <DeleteEndpoint
         name={endpoint.name}

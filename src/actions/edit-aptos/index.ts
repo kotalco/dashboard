@@ -17,7 +17,7 @@ const handler = async (
   let node;
   try {
     const response = await server.put<AptosNode>(
-      `/aptos/nodes/${identifiers.name}`,
+      `/aptos/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
       data
     );
     node = response.data;

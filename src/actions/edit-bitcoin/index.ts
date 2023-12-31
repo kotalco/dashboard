@@ -17,7 +17,7 @@ const handler = async (
   let node;
   try {
     const response = await server.put<BitcoinNode>(
-      `/bitcoin/nodes/${identifiers.name}`,
+      `/bitcoin/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
       data
     );
     node = response.data;

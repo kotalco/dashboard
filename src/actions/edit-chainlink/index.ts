@@ -25,7 +25,7 @@ const handler = async (
   let node;
   try {
     const response = await server.put<ChainlinkNode>(
-      `/chainlink/nodes/${identifiers.name}`,
+      `/chainlink/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
       data
     );
     node = response.data;

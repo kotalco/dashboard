@@ -24,11 +24,13 @@ ChartJS.register(
 interface EndpointStatsChartProps {
   data: number[];
   labels: string[] | number[];
+  title: string;
 }
 
 export const EndpointStatsChart = ({
   data,
   labels,
+  title,
 }: EndpointStatsChartProps) => {
   const dataConfig: ChartData<"bar", number[], string | number> = {
     labels,
@@ -51,6 +53,14 @@ export const EndpointStatsChart = ({
         responsive: true,
         plugins: {
           legend: { align: "end" },
+          title: {
+            display: true,
+            text: title,
+            font: {
+              size: 16,
+              weight: "normal",
+            },
+          },
           tooltip: {
             boxPadding: 5,
             callbacks: {
