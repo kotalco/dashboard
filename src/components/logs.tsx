@@ -66,7 +66,10 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
       });
     };
 
-    return () => socket.close();
+    return () => {
+      next(null, () => []);
+      socket.close();
+    };
   };
 
   const { data, error } = useSWRSubscription(

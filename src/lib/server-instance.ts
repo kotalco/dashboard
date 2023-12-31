@@ -88,14 +88,9 @@ server.interceptors.response.use(
     }
 
     response.data = response.data.data;
-
     return response;
   },
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      cookies().delete(StorageItems.AUTH_TOKEN);
-    }
-
     return Promise.reject(error);
   }
 );
