@@ -293,7 +293,7 @@ export interface Endpoint {
 }
 
 export interface EndpointStats {
-  api: { daily_aggregation: number[]; weekly_aggregation: number[] };
+  [key: string]: { daily_aggregation: number[]; weekly_aggregation: number[] };
 }
 
 export interface Service {

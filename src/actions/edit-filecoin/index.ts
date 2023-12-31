@@ -17,7 +17,7 @@ const handler = async (
   let node;
   try {
     const response = await server.put<FilecoinNode>(
-      `/filecoin/nodes/${identifiers.name}`,
+      `/filecoin/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
       data
     );
     node = response.data;

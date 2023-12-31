@@ -1,28 +1,21 @@
 import "server-only";
 
 import { unstable_noStore as noStore } from "next/cache";
-import { isAxiosError } from "axios";
 
 import { server } from "@/lib/server-instance";
 import { EndpointStats } from "@/types";
-import { logger } from "@/lib/utils";
+import { delay, logger } from "@/lib/utils";
 
 export const getVirtualEndpointStats = async (name: string) => {
   noStore();
-  let stats: undefined | EndpointStats;
-
+  await delay(5000);
   try {
     const response = await server.get<EndpointStats>(
       `/virtual-endpoints/${name}/stats`
     );
-    stats = response.data;
+    return { stats: response.data };
   } catch (error) {
-    if (isAxiosError(error) && error.response?.status === 404) {
-      return { stats, error };
-    }
     logger("GetVirtualEndpointStats", error);
     throw error;
   }
-
-  return { stats, error: undefined };
 };

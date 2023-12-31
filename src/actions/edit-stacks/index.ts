@@ -17,7 +17,7 @@ const handler = async (
   let node;
   try {
     const response = await server.put<StacksNode>(
-      `/stacks/nodes/${identifiers.name}`,
+      `/stacks/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
       data
     );
     node = response.data;
