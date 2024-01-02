@@ -7,7 +7,6 @@ import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editGraffiti } from "@/actions/edit-validator";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/form/input";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
@@ -45,11 +44,7 @@ export const GraffitiTab: React.FC<GraffitiTabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

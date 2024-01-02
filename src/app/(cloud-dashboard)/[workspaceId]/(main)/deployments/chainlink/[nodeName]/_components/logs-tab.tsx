@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
 import { Logs } from "@/components/logs";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -52,11 +51,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

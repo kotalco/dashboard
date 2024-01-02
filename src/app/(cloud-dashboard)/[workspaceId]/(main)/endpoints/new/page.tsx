@@ -28,7 +28,7 @@ export default async function CreateNewAptosNodePage({
       </CardHeader>
       <CardContent>
         {!name && (
-          <Alert variant="info">
+          <Alert className="alert-info">
             <AlertDescription>
               Your domain is not configured yet. Click{" "}
               <Link

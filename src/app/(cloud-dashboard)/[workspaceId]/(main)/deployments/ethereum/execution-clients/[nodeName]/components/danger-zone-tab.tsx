@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 
 import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { AlertModal } from "@/components/modals/alert-modal";
 
 import { ExecutionClientNode } from "@/types";
@@ -28,18 +28,16 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <p className="text-muted-foreground">
         Are you sure you want to delete this node?
       </p>
-      <TabsFooter>
-        <AlertModal
-          triggerText="Delete Node"
-          title="Delete Execution Client Node"
-        >
-          <DeleteWithInputForm
-            name={node.name}
-            url={`/ethereum/nodes/${node.name}?workspace_id=${workspaceId}`}
-            redirectUrl={`/${workspaceId}/deployments/ethereum?deployment=execution-clients`}
-          />
-        </AlertModal>
-      </TabsFooter>
+      <AlertModal
+        triggerText="Delete Node"
+        title="Delete Execution Client Node"
+      >
+        <DeleteWithInputForm
+          name={node.name}
+          url={`/ethereum/nodes/${node.name}?workspace_id=${workspaceId}`}
+          redirectUrl={`/${workspaceId}/deployments/ethereum?deployment=execution-clients`}
+        />
+      </AlertModal>
     </div>
   );
 };

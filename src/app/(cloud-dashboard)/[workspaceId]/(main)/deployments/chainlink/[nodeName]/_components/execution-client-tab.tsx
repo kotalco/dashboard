@@ -2,7 +2,6 @@
 
 import { ChainlinkNode, ExecutionClientNode } from "@/types";
 import { Roles } from "@/enums";
-import { TabsFooter } from "@/components/ui/tabs";
 import { SelectWithInput } from "@/components/form/select-with-input";
 import { MultiSelect } from "@/components/form/multi-select";
 import { useAction } from "@/hooks/use-action";
@@ -89,11 +88,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

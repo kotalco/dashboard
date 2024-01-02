@@ -3,7 +3,6 @@
 import { useParams } from "next/navigation";
 
 import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
-import { TabsFooter } from "@/components/ui/tabs";
 import { AlertModal } from "@/components/modals/alert-modal";
 
 import { BeaconNode } from "@/types";
@@ -28,15 +27,13 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <p className="text-muted-foreground">
         Are you sure you want to delete this node?
       </p>
-      <TabsFooter>
-        <AlertModal triggerText="Delete Node" title="Delete Beacon Node">
-          <DeleteWithInputForm
-            name={node.name}
-            url={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
-            redirectUrl={`/${workspaceId}/deployments/ethereum?deployment=beacon-nodes`}
-          />
-        </AlertModal>
-      </TabsFooter>
+      <AlertModal triggerText="Delete Node" title="Delete Beacon Node">
+        <DeleteWithInputForm
+          name={node.name}
+          url={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
+          redirectUrl={`/${workspaceId}/deployments/ethereum?deployment=beacon-nodes`}
+        />
+      </AlertModal>
     </div>
   );
 };

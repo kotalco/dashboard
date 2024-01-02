@@ -70,7 +70,7 @@ export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
 
       <Toggle id="pruning" label="Pruning" errors={fieldErrors} />
 
-      <Alert variant="warn">
+      <Alert className="alert-warning">
         <AlertTitle>Attension</AlertTitle>
         <AlertDescription>
           <ul className="list-disc list-inside">

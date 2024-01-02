@@ -7,7 +7,6 @@ import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editCheckpointSync } from "@/actions/edit-beacon-node";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/form/input";
 import { ExternalLink } from "@/components/ui/external-link";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -61,11 +60,7 @@ export const CheckpointSyncTab: React.FC<CheckpointSyncTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

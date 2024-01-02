@@ -7,7 +7,6 @@ import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editPeers } from "@/actions/edit-cluster-peer";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { SelectWithInput } from "@/components/form/select-with-input";
 import { MultiSelect } from "@/components/form/multi-select";
 import { Label } from "@/components/ui/label";
@@ -97,11 +96,7 @@ export const PeersTab: React.FC<PeersTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

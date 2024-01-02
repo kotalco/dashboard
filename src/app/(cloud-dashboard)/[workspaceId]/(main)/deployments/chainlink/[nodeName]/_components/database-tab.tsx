@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/form/input";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
@@ -48,11 +47,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton type="submit">Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton type="submit">Save</SubmitButton>}
     </form>
   );
 };

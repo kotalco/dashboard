@@ -8,7 +8,6 @@ import { getSelectItems } from "@/lib/utils";
 import { useAction } from "@/hooks/use-action";
 import { editRouting } from "@/actions/edit-peer";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
@@ -47,11 +46,7 @@ export const RoutingTab: React.FC<RoutingTabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

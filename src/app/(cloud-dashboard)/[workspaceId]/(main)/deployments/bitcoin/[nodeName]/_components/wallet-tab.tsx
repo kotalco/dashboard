@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
@@ -46,11 +45,9 @@ export const WalletTab: React.FC<WalletTabProps> = ({ node, role }) => {
       <SubmitError error={error} />
 
       {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton data-testid="submit" type="submit">
-            Save
-          </SubmitButton>
-        </TabsFooter>
+        <SubmitButton data-testid="submit" type="submit">
+          Save
+        </SubmitButton>
       )}
     </form>
   );

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ExternalLink } from "@/components/ui/external-link";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { Select } from "@/components/form/select";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
@@ -71,7 +71,7 @@ export const EditImageVersionForm = ({
       </div>
 
       {versions?.find((version) => version.image === image)?.canBeUpgraded && (
-        <Alert variant="info">
+        <Alert className="alert-info">
           New image version is avaliable. It is recommended to update to latest
           version.
         </Alert>
@@ -84,11 +84,9 @@ export const EditImageVersionForm = ({
       <SubmitError error={error} />
 
       {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton disabled={currentImage === image} data-testid="submit">
-            Save
-          </SubmitButton>
-        </TabsFooter>
+        <SubmitButton disabled={currentImage === image} data-testid="submit">
+          Save
+        </SubmitButton>
       )}
     </form>
   );

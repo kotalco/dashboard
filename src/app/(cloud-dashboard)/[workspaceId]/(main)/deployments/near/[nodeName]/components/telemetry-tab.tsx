@@ -7,7 +7,6 @@ import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editTelemetry } from "@/actions/edit-near";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/form/input";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
@@ -45,11 +44,7 @@ export const TelemetryTab: React.FC<TelemetryTabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

@@ -9,7 +9,6 @@ import { getSelectItems } from "@/lib/utils";
 import { useAction } from "@/hooks/use-action";
 import { editNetworking } from "@/actions/edit-polkadot";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
 import { Input } from "@/components/form/input";
 import { SubmitButton } from "@/components/form/submit-button";
@@ -112,11 +111,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

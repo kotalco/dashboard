@@ -13,7 +13,7 @@ export const EmailVerifiedAlert = () => {
 
   if (status === "200") {
     return (
-      <Alert variant="success" className="mb-4">
+      <Alert className="mb-4 alert-sccuess">
         <AlertDescription>
           Your email has been verified. You can now login and enjoy our
           services.

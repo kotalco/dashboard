@@ -24,13 +24,13 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
     onSuccess: () => {
       setMessage({
         message: `Member (${data.email}) role has been changed for this workspace`,
-        type: { variant: "success" },
+        variant: "success",
       });
     },
     onError: () => {
       setMessage({
         message: "Something went wrong.",
-        type: { variant: "destructive" },
+        variant: "destructive",
       });
     },
   });

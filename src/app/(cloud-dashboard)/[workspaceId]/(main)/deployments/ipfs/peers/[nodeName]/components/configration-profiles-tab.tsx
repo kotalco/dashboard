@@ -8,7 +8,6 @@ import { IPFSConfigProfile, Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editConfigProfiles } from "@/actions/edit-peer";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { CheckboxGroup } from "@/components/form/checkbox-group";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -64,11 +63,7 @@ export const ConfigrationProfilesTab: React.FC<
 
         <SubmitError error={error} />
 
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <SubmitButton>Save</SubmitButton>
-          </TabsFooter>
-        )}
+        {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
       </form>
     </>
   );

@@ -8,7 +8,6 @@ import { Roles, SecretType } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editNetworking } from "@/actions/edit-stacks";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
@@ -67,11 +66,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

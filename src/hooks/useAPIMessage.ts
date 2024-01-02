@@ -1,23 +1,17 @@
-import { VariantProps } from "class-variance-authority";
 import { create } from "zustand";
 
-import { alertVariants } from "@/components/ui/alert";
-
-type Variant = VariantProps<typeof alertVariants>;
+type Variant = "success" | "destructive" | undefined;
 
 export interface useAPIMessageStore {
   message?: string;
-  type: Variant;
-  setMessage: (data: {
-    message: string;
-    type: VariantProps<typeof alertVariants>;
-  }) => void;
+  variant: Variant;
+  setMessage: (data: { message: string; variant: Variant }) => void;
   clearMessage: () => void;
 }
 
 export const useAPIMessage = create<useAPIMessageStore>((set) => ({
   message: undefined,
-  type: { variant: undefined },
-  setMessage: ({ message, type }) => set({ message, type }),
-  clearMessage: () => set({ message: undefined, type: { variant: undefined } }),
+  variant: undefined,
+  setMessage: ({ message, variant }) => set({ message, variant }),
+  clearMessage: () => set({ message: undefined, variant: undefined }),
 }));

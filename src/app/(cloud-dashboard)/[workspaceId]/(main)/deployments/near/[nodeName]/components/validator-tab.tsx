@@ -8,7 +8,6 @@ import { Roles, SecretType } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editValidator } from "@/actions/edit-near";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
@@ -65,11 +64,7 @@ export const ValidatorTab: React.FC<ValidatorTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

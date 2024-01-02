@@ -8,7 +8,7 @@ import { readSelectWithInputValue } from "@/lib/utils";
 
 import { BeaconNode, ExecutionClientNode, OptionType } from "@/types";
 import { Roles, SecretType } from "@/enums";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { Select } from "@/components/form/select";
 import { SelectWithInput } from "@/components/form/select-with-input";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -86,11 +86,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

@@ -7,7 +7,6 @@ import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editAccessControl } from "@/actions/edit-execution-client";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Textarea } from "@/components/form/textarea";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
@@ -65,11 +64,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

@@ -8,7 +8,6 @@ import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editAPI } from "@/actions/edit-filecoin";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { InputWithUnit } from "@/components/form/input-with-unit";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -69,11 +68,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

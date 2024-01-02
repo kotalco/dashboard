@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 
 import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { AlertModal } from "@/components/modals/alert-modal";
 
 import { IPFSClusterPeer } from "@/types";
@@ -28,15 +28,13 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <p className="text-muted-foreground">
         Are you sure you want to delete this peer?
       </p>
-      <TabsFooter>
-        <AlertModal triggerText="Delete Peer" title="Delete Cluster Peer">
-          <DeleteWithInputForm
-            name={node.name}
-            url={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
-            redirectUrl={`/${workspaceId}/deployments/ipfs?deployment=cluster-peers`}
-          />
-        </AlertModal>
-      </TabsFooter>
+      <AlertModal triggerText="Delete Peer" title="Delete Cluster Peer">
+        <DeleteWithInputForm
+          name={node.name}
+          url={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
+          redirectUrl={`/${workspaceId}/deployments/ipfs?deployment=cluster-peers`}
+        />
+      </AlertModal>
     </div>
   );
 };

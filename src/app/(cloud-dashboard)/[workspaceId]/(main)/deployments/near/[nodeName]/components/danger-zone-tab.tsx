@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { NEARNode } from "@/types";
 
 import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { AlertModal } from "@/components/modals/alert-modal";
 
 interface DangerZoneTabProps {
@@ -28,15 +28,13 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <p className="text-muted-foreground">
         Are you sure you want to delete this node?
       </p>
-      <TabsFooter>
-        <AlertModal triggerText="Delete Node" title="Delete NEAR Node">
-          <DeleteWithInputForm
-            name={node.name}
-            url={`/near/nodes/${node.name}?workspace_id=${workspaceId}`}
-            redirectUrl={`/${workspaceId}/deployments/near`}
-          />
-        </AlertModal>
-      </TabsFooter>
+      <AlertModal triggerText="Delete Node" title="Delete NEAR Node">
+        <DeleteWithInputForm
+          name={node.name}
+          url={`/near/nodes/${node.name}?workspace_id=${workspaceId}`}
+          redirectUrl={`/${workspaceId}/deployments/near`}
+        />
+      </AlertModal>
     </div>
   );
 };

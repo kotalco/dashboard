@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { MinusCircle, PlusCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { TabsFooter } from "@/components/ui/tabs";
 import { Input } from "@/components/form/input";
 import { Select } from "@/components/form/select";
 import { Toggle } from "@/components/form/toggle";
@@ -133,11 +132,9 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
       <SubmitError error={error} />
 
       {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton data-testid="submit" type="submit">
-            Save
-          </SubmitButton>
-        </TabsFooter>
+        <SubmitButton data-testid="submit" type="submit">
+          Save
+        </SubmitButton>
       )}
     </form>
   );

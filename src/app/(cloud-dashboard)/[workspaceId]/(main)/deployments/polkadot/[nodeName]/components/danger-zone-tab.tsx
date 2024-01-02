@@ -6,7 +6,6 @@ import { PolkadotNode } from "@/types";
 
 import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { TabsFooter } from "@/components/ui/tabs";
 
 interface DangerZoneTabProps {
   node: PolkadotNode;
@@ -28,15 +27,13 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <p className="text-muted-foreground">
         Are you sure you want to delete this node?
       </p>
-      <TabsFooter>
-        <AlertModal triggerText="Delete Node" title="Delete Polkadot Node">
-          <DeleteWithInputForm
-            name={node.name}
-            url={`/polkadot/nodes/${node.name}?workspace_id=${workspaceId}`}
-            redirectUrl={`/${workspaceId}/deployments/polkadot`}
-          />
-        </AlertModal>
-      </TabsFooter>
+      <AlertModal triggerText="Delete Node" title="Delete Polkadot Node">
+        <DeleteWithInputForm
+          name={node.name}
+          url={`/polkadot/nodes/${node.name}?workspace_id=${workspaceId}`}
+          redirectUrl={`/${workspaceId}/deployments/polkadot`}
+        />
+      </AlertModal>
     </div>
   );
 };

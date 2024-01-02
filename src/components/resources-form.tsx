@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InputWithUnit } from "@/components/form/input-with-unit";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { SubmitButton } from "@/components/form/submit-button";
 
 import { Roles, StorageUnits } from "@/enums";
@@ -93,7 +93,7 @@ export function ResourcesForm<T extends ResourcesInfo>({
       </div>
 
       {!!data && (
-        <Alert variant="success" className="text-center">
+        <Alert className="text-center alert-success">
           <AlertDescription>
             Resources settings have been updated successfully.
           </AlertDescription>
@@ -107,11 +107,9 @@ export function ResourcesForm<T extends ResourcesInfo>({
       )}
 
       {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton data-testid="submit" type="submit">
-            Save
-          </SubmitButton>
-        </TabsFooter>
+        <SubmitButton data-testid="submit" type="submit">
+          Save
+        </SubmitButton>
       )}
     </form>
   );

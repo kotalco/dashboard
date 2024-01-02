@@ -6,7 +6,6 @@ import { FilecoinNode } from "@/types";
 
 import { AlertModal } from "@/components/modals/alert-modal";
 import { DeleteWithInputForm } from "@/components/delete-form-with-Input";
-import { TabsFooter } from "@/components/ui/tabs";
 
 interface DangerZoneTabProps {
   node: FilecoinNode;
@@ -28,15 +27,13 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
       <p className="text-muted-foreground">
         Are you sure you want to delete this node?
       </p>
-      <TabsFooter>
-        <AlertModal triggerText="Delete Node" title="Delete Filecoin Node">
-          <DeleteWithInputForm
-            name={node.name}
-            url={`/filecoin/nodes/${node.name}?workspace_id=${workspaceId}`}
-            redirectUrl={`/${workspaceId}/deployments/filecoin`}
-          />
-        </AlertModal>
-      </TabsFooter>
+      <AlertModal triggerText="Delete Node" title="Delete Filecoin Node">
+        <DeleteWithInputForm
+          name={node.name}
+          url={`/filecoin/nodes/${node.name}?workspace_id=${workspaceId}`}
+          redirectUrl={`/${workspaceId}/deployments/filecoin`}
+        />
+      </AlertModal>
     </div>
   );
 };

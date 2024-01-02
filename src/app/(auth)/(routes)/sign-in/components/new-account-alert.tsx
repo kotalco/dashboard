@@ -9,7 +9,7 @@ export const NewAccountAlert = () => {
 
   if (cookie?.value) {
     return (
-      <Alert variant="success" className="mb-4 text-center">
+      <Alert className="mb-4 text-center alert-sccuess">
         <AlertTitle className="text-center">Account Created</AlertTitle>
         <AlertDescription>
           <p>

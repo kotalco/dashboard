@@ -8,7 +8,6 @@ import { useAction } from "@/hooks/use-action";
 import { editIPFS } from "@/actions/edit-filecoin";
 import { readSelectWithInputValue } from "@/lib/utils";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { SelectWithInput } from "@/components/form/select-with-input";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -84,11 +83,7 @@ export const IPFSTab: React.FC<IPFSTabProps> = ({ node, role, peers }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

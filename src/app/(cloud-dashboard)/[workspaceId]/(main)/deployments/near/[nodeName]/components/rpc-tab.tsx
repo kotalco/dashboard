@@ -9,7 +9,7 @@ import { useAction } from "@/hooks/use-action";
 import { editRPC } from "@/actions/edit-near";
 
 import { Input } from "@/components/form/input";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -62,11 +62,7 @@ export const RPCTab: React.FC<RPCTabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

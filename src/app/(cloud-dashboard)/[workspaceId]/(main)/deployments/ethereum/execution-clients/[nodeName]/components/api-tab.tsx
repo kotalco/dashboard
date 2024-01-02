@@ -14,7 +14,6 @@ import { useAction } from "@/hooks/use-action";
 import { editAPI } from "@/actions/edit-execution-client";
 import { getSelectItems } from "@/lib/utils";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -162,11 +161,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

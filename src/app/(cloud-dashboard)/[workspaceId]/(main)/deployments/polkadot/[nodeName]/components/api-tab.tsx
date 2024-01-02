@@ -9,7 +9,7 @@ import { useAction } from "@/hooks/use-action";
 import { editAPI } from "@/actions/edit-polkadot";
 
 import { Button } from "@/components/ui/button";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { Input } from "@/components/form/input";
 import { CloseDialogButton } from "@/components/ui/close-dialog-button";
 import { AlertModal } from "@/components/modals/alert-modal";
@@ -105,11 +105,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
 
       <AlertModal open={isOpen} onOpenChange={setIsOpen} title="Warning">
         <p className="text-foreground/70 text-sm">

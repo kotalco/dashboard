@@ -7,7 +7,6 @@ import { Roles, SecretType, ValidatorClients } from "@/enums";
 import { editKeystore } from "@/actions/edit-validator";
 import { useAction } from "@/hooks/use-action";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { MultiSelect } from "@/components/form/multi-select";
 import { Select } from "@/components/form/select";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -84,11 +83,7 @@ export const KeystoreTab: React.FC<KeystoreTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

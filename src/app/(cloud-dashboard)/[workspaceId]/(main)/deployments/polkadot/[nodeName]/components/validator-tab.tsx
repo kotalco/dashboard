@@ -7,7 +7,6 @@ import { PolkadotNode } from "@/types";
 import { Roles } from "@/enums";
 import { editValidator } from "@/actions/edit-polkadot";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { useAction } from "@/hooks/use-action";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -67,11 +66,7 @@ export const ValidatorTab: React.FC<ValidatorTabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
 
       <AlertModal open={isOpen} onOpenChange={setIsOpen} title="Warning">
         <p className="text-foreground/70 text-sm">

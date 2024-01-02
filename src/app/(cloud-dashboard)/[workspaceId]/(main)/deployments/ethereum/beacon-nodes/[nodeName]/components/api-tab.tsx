@@ -7,7 +7,6 @@ import { BeaconNode } from "@/types";
 import { BeaconNodeClients, Roles } from "@/enums";
 import { editAPI } from "@/actions/edit-beacon-node";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
@@ -72,11 +71,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

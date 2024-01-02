@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
@@ -45,11 +44,9 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
       <SubmitError error={error} />
 
       {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton data-testid="submit" type="submit">
-            Save
-          </SubmitButton>
-        </TabsFooter>
+        <SubmitButton data-testid="submit" type="submit">
+          Save
+        </SubmitButton>
       )}
     </form>
   );

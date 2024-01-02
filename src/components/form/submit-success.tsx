@@ -9,7 +9,7 @@ export const SubmitSuccess = ({ success, children }: SubmitSuccessProps) => {
   if (!success) return null;
 
   return (
-    <Alert variant="success" className="text-center">
+    <Alert className="text-center alert-success">
       <AlertDescription>{children}</AlertDescription>
     </Alert>
   );

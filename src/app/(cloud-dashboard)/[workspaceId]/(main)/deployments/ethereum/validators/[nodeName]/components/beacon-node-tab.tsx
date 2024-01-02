@@ -7,7 +7,6 @@ import { BeaconNodeClients, Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { editBeaconNode } from "@/actions/edit-validator";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { MultiSelect } from "@/components/form/multi-select";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
@@ -77,11 +76,7 @@ export const BeaconNodeTab: React.FC<BeaconNodeTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };

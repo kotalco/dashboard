@@ -9,7 +9,6 @@ import { ExecutionClientSyncMode, Roles, SecretType } from "@/enums";
 import { editNetworking } from "@/actions/edit-execution-client";
 import { useAction } from "@/hooks/use-action";
 
-import { TabsFooter } from "@/components/ui/tabs";
 import { Select } from "@/components/form/select";
 import { Textarea } from "@/components/form/textarea";
 import { SubmitSuccess } from "@/components/form/submit-success";
@@ -103,11 +102,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton>Save</SubmitButton>
-        </TabsFooter>
-      )}
+      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
     </form>
   );
 };
