@@ -31,7 +31,6 @@ export const BeaconNodesClient: React.FC<BeaconNodesClientProps> = ({
       <DeploymentsList data={mainNodesInfo} />
       {!data.length && (
         <NoResult
-          className="border-0"
           imageUrl="/images/ethereum2.svg"
           title="No Beacon Nodes"
           description="Beacon Node implements the proof-of-stake consensus algorithm, and enables the network to achieve agreement based on validated data from the execution client."

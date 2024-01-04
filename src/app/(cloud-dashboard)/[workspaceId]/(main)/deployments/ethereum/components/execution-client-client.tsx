@@ -35,7 +35,6 @@ export const ExecutionClientClient: React.FC<ExecutionClientClientProps> = ({
       <DeploymentsList data={mainNodesInfo} />
       {!data.length && (
         <NoResult
-          className="border-0"
           imageUrl="/images/ethereum.svg"
           title="No Execution Client Nodes"
           description="Execution client node listens to new transactions broadcasted in the network, executes them in EVM, and holds the latest state."

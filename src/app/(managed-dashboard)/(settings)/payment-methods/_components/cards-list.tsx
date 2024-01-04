@@ -27,7 +27,7 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
         ({ id, exp_month, exp_year, last4, brand, default: defaultCard }) => (
           <div
             key={id}
-            className="col-span-12 p-5 transition-all bg-white border shadow border-secondary space-y-7 lg:col-span-6 hover:border-primary 2xl:col-span-3 xl:col-span-4 rounded-xl"
+            className="col-span-12 p-5 transition-all border shadow border-secondary space-y-7 lg:col-span-6 hover:border-primary 2xl:col-span-3 xl:col-span-4 rounded-xl"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">

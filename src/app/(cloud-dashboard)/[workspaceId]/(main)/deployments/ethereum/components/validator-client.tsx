@@ -31,7 +31,6 @@ export const ValidatorClient: React.FC<ValidatorClientProps> = ({
       <DeploymentsList data={mainNodesInfo} />
       {!data.length && (
         <NoResult
-          className="border-0"
           imageUrl="/images/ethereum2.svg"
           title="No Validator Nodes"
           description="Validator produces blocks, which contain consensus information about shards across the network, and votes on the validity of blocks that have already been produced."

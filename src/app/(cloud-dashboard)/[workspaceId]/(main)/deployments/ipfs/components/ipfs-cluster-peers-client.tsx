@@ -31,7 +31,6 @@ export const IPFSClusterPeersClient: React.FC<IPFSClusterPeersClientProps> = ({
       <DeploymentsList data={mainNodesInfo} />
       {!data.length && (
         <NoResult
-          className="border-0"
           imageUrl="/images/ipfs.svg"
           title="No IPFS Cluster Peers"
           description="IPFS Cluster peer provides data orchestration across a swarm of IPFS daemons by allocating, replicating and tracking a global pinset distributed among multiple peers."

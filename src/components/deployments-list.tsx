@@ -8,8 +8,10 @@ interface DeployemntsListProps {
 }
 
 export const DeploymentsList: React.FC<DeployemntsListProps> = ({ data }) => {
+  if (!data.length) return null;
+
   return (
-    <div className="overflow-hidden bg-white rounded-md shadow-sm">
+    <div className="overflow-hidden border rounded-md shadow-sm">
       <ul className="divide-y divide-muted">
         {data.map(({ name, network, client, url }) => (
           <li key={name}>

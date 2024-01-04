@@ -60,7 +60,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
     <div className="space-y-2">
       <div className="space-y-1">
         {label && (
-          <Label htmlFor={id} className="font-semibold text-neutral-700">
+          <Label htmlFor={id} className="font-semibold ">
             {label}
           </Label>
         )}
@@ -77,8 +77,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
               id={id}
               className={cn(
                 className,
-                selected === "other" ? "rounded-b-none" : "",
-                "bg-white"
+                selected === "other" ? "rounded-b-none" : ""
               )}
             >
               <SelectValue placeholder={placeholder} />

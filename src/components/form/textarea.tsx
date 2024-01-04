@@ -50,7 +50,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <div className="space-y-1">
           <div>
             {label && (
-              <Label htmlFor={id} className="font-semibold text-neutral-700">
+              <Label htmlFor={id} className="font-semibold ">
                 {label}
               </Label>
             )}

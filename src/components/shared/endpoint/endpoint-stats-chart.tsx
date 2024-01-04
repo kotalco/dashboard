@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import { Bar } from "react-chartjs-2";
 import { ChartData } from "chart.js";
 import {
@@ -32,6 +33,16 @@ export const EndpointStatsChart = ({
   labels,
   title,
 }: EndpointStatsChartProps) => {
+  const { theme } = useTheme();
+  const barColor =
+    theme === "dark" ? "hsl(142.1, 70.6%, 45.3%)" : "hsl(142.1, 76.2%, 36.3%)";
+  const labelsColor =
+    theme === "dark" ? "hsl(210, 20%, 98%)" : "hsl(224, 71.4%, 4.1%)";
+  const tooltipBgColor =
+    theme === "dark" ? "hsl(0, 0%, 100%)" : "hsl(224, 71.4%, 4.1%)";
+  const tooltipTextColor =
+    theme === "dark" ? "hsl(224, 71.4%, 4.1%)" : "hsl(210, 20%, 98%)";
+
   const dataConfig: ChartData<"bar", number[], string | number> = {
     labels,
     datasets: [
@@ -40,7 +51,7 @@ export const EndpointStatsChart = ({
         borderRadius: 5,
         label: "No. of hits",
         data,
-        backgroundColor: "hsl(142, 72%, 29%)",
+        backgroundColor: barColor,
       },
     ],
   };
@@ -52,10 +63,16 @@ export const EndpointStatsChart = ({
         maintainAspectRatio: false,
         responsive: true,
         plugins: {
-          legend: { align: "end" },
+          legend: {
+            align: "end",
+            labels: {
+              color: labelsColor,
+            },
+          },
           title: {
             display: true,
             text: title,
+            color: labelsColor,
             font: {
               size: 16,
               weight: "normal",
@@ -63,6 +80,9 @@ export const EndpointStatsChart = ({
           },
           tooltip: {
             boxPadding: 5,
+            backgroundColor: tooltipBgColor,
+            titleColor: tooltipTextColor,
+            bodyColor: tooltipTextColor,
             callbacks: {
               label: (item) => `${item.formattedValue} hits`,
               title: (items) =>
@@ -73,8 +93,19 @@ export const EndpointStatsChart = ({
           },
         },
         scales: {
-          x: { grid: { display: false } },
-          y: { grid: { display: false }, ticks: { stepSize: 1 } },
+          x: {
+            grid: { display: false },
+            ticks: {
+              color: labelsColor,
+            },
+          },
+          y: {
+            grid: { display: false },
+            ticks: {
+              stepSize: 1,
+              color: labelsColor,
+            },
+          },
         },
       }}
       data={dataConfig}

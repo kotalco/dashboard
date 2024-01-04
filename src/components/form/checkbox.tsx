@@ -32,7 +32,7 @@ export const Checkbox = ({
           {...props}
         />
         {label && (
-          <Label htmlFor={labelId} className="font-semibold text-neutral-700">
+          <Label htmlFor={labelId} className="font-semibold ">
             {label}
           </Label>
         )}

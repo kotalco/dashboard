@@ -46,7 +46,7 @@ export const EndpointDetails = async ({
               <CardTitle className="uppercase font-nunito">{name}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3 text-sm text-gray-500 pt-7 first:pt-2">
+              <div className="space-y-3 text-sm pt-7 first:pt-2">
                 {/* Chart Stats */}
                 <EndpointStats
                   dailyAggregation={stats[name].daily_aggregation}
@@ -58,15 +58,15 @@ export const EndpointDetails = async ({
 
                 {/* Example */}
                 <div>
-                  <h3 className="text-gray-900 text-base">Example</h3>
-                  <pre className="px-5 mt-2 overflow-x-scroll bg-gray-100 text-gray-700 text-xs font-mono rounded-md py-7">
+                  <h3 className="text-base">Example</h3>
+                  <pre className="px-5 mt-2 overflow-x-scroll bg-muted text-muted-foreground text-xs font-mono rounded-md py-7">
                     {example}
                   </pre>
                 </div>
 
                 {/* References */}
                 <div>
-                  <h3 className="text-gray-700 text-base">References</h3>
+                  <h3 className="text-base">References</h3>
                   <ul className="space-y-1 list-disc">
                     {references.map((reference) => (
                       <li className="list-none" key={reference}>

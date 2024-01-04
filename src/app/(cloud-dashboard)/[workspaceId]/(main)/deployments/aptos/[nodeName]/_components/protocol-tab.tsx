@@ -28,25 +28,19 @@ export const ProtocolTab = async ({ node, role }: ProtocolTabProps) => {
     <>
       <ul className="space-y-4">
         <li className="flex flex-col">
-          <span className="font-semibold text-neutral-700 leading-none">
-            Protocol
-          </span>
+          <span className="font-semibold  leading-none">Protocol</span>
           <span className="text-foreground/50">Aptos</span>
         </li>
 
         <li className="flex flex-col">
-          <span className="font-semibold text-neutral-700 leading-none">
-            Network
-          </span>
+          <span className="font-semibold  leading-none">Network</span>
           <span className="text-foreground/50">
             {getEnumKey(AptosNetworks, network)}
           </span>
         </li>
 
         <li className="flex flex-col">
-          <span className="font-semibold text-neutral-700 leading-none">
-            Client
-          </span>
+          <span className="font-semibold  leading-none">Client</span>
           <ExternalLink href="https://github.com/aptos-labs/aptos-core">
             aptos-core
           </ExternalLink>

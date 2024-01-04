@@ -30,7 +30,6 @@ export const IPFSPeersClient: React.FC<IPFSPeersClientProps> = ({
       <DeploymentsList data={mainNodesInfo} />
       {!data.length && (
         <NoResult
-          className="border-0"
           imageUrl="/images/ipfs.svg"
           title="No IPFS Peers"
           description="IPFS Peer stores, retrieves and pins content from the IPFS p2p network."

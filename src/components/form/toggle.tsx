@@ -33,7 +33,7 @@ export const Toggle = ({
     <div className="space-y-2">
       <div className={cn("flex items-center space-x-2", className)}>
         {label && labelPosition === "left" && (
-          <Label htmlFor={id} className="font-semibold text-neutral-700">
+          <Label htmlFor={id} className="font-semibold ">
             {label}
           </Label>
         )}
@@ -41,7 +41,7 @@ export const Toggle = ({
         <Switch disabled={pending || disabled} name={id} id={id} {...props} />
 
         {label && labelPosition === "right" && (
-          <Label htmlFor={id} className="font-semibold text-neutral-700">
+          <Label htmlFor={id} className="font-semibold ">
             {label}
           </Label>
         )}
