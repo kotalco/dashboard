@@ -29,22 +29,28 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="api"
-        label="API"
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-        defaultChecked={api}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-6 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="api"
+          label="API"
+          className="justify-between"
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          defaultChecked={api}
+        />
+      </div>
 
-      <Toggle
-        id="gateway"
-        label="Gateway"
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-        defaultChecked={gateway}
-      />
+      <div className="px-6 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="gateway"
+          label="Gateway"
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          defaultChecked={gateway}
+          className="justify-between"
+        />
+      </div>
 
       <SubmitSuccess success={success}>
         API settings have been updated successfully.

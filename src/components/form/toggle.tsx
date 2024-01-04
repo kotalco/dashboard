@@ -30,7 +30,7 @@ export const Toggle = ({
   const { pending } = useFormStatus();
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <div className={cn("flex items-center space-x-2", className)}>
         {label && labelPosition === "left" && (
           <Label htmlFor={id} className="font-semibold ">

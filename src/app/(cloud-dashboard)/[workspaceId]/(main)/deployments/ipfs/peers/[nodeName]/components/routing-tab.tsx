@@ -29,7 +29,7 @@ export const RoutingTab: React.FC<RoutingTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Select
         id="routing"
         label="Content Routing Mechanism"

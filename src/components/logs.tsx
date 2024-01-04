@@ -138,16 +138,16 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
       <div className="relative">
         <div
           ref={logsElement}
-          className="relative px-3 overflow-y-auto text-sm text-white bg-black border border-black peer h-96 overscroll-container"
+          className="relative overflow-y-auto text-sm text-white bg-black border p-6 rounded-lg peer h-96 overscroll-container"
         >
           <ul>
             {data?.map((log, i) => (
               <li
                 className={`${
                   log === OPEN_CONNECTION_MSG
-                    ? "text-green-500"
+                    ? "text-success"
                     : log === CLOSE_CONNECTION_MSG
-                    ? "text-red-500"
+                    ? "text-destructive"
                     : ""
                 }`}
                 key={i}

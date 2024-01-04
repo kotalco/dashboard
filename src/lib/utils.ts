@@ -5,6 +5,7 @@ import {
   BeaconNodeClients,
   ExecutionClientClients,
   NodeStatuses,
+  Roles,
 } from "@/enums";
 import { Clients, Plan } from "@/types";
 import { AxiosResponse, isAxiosError } from "axios";
@@ -304,4 +305,18 @@ export const getDaysOfCurrentMonth = () => {
   const end = endOfMonth(new Date());
 
   return eachDayOfInterval({ start, end }).map((date) => date.getDate());
+};
+
+export const getAuthorizedTabs = (
+  allTabs: {
+    label: string;
+    value: string;
+    description?: string;
+    role?: Roles;
+  }[],
+  currentRole: Roles
+) => {
+  return allTabs
+    .filter(({ role }) => (role ? role === currentRole : true))
+    .map(({ label, value, description }) => ({ label, value, description }));
 };

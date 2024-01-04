@@ -2,7 +2,6 @@
 
 import useSWRSubscription from "swr/subscription";
 import { cx } from "class-variance-authority";
-import { AlertCircle, RefreshCw } from "lucide-react";
 import type { SWRSubscription } from "swr/subscription";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,13 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
-import { ExecutionClientStats, IpfsPeerStats, StatsError } from "@/types";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { IpfsPeerStats, StatsError } from "@/types";
 
 interface IPFSPeerStatsProps {
   nodeName: string;
@@ -83,7 +76,7 @@ export const IPFSPeerStats: React.FC<IPFSPeerStatsProps> = ({
           <CardHeader>
             <CardTitle className="items-start">Peers</CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center text-3xl font-light text-gray-500 truncate gap-x-2">
+          <CardContent className="flex items-center text-3xl text-muted-foreground font-light truncate gap-x-2">
             {!("error" in data) && data.PeerCount}
           </CardContent>
         </Card>
@@ -91,7 +84,7 @@ export const IPFSPeerStats: React.FC<IPFSPeerStatsProps> = ({
           <CardHeader>
             <CardTitle>Pins</CardTitle>
           </CardHeader>
-          <CardContent className="text-3xl font-light text-gray-500 truncate">
+          <CardContent className="text-3xl font-light text-muted-foreground truncate">
             {!("error" in data) && data.PinCount}
           </CardContent>
         </Card>
@@ -99,10 +92,10 @@ export const IPFSPeerStats: React.FC<IPFSPeerStatsProps> = ({
       {"error" in data && typeof data.error === "string" && (
         <div className="absolute inset-0 flex items-center justify-center space-x-4">
           <AlertTriangle
-            className="w-10 h-10 leading-9 text-yellow-500"
+            className="w-10 h-10 leading-9 text-warning"
             aria-hidden="true"
           />
-          <p className="text-3xl text-gray-600">{data.error}</p>
+          <p className="text-3xl">{data.error}</p>
         </div>
       )}
     </div>

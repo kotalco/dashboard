@@ -17,18 +17,21 @@ export const ProtocolTab: React.FC<ProtocolTabProps> = ({
   return (
     <>
       <ul className="space-y-3">
-        <li className="flex flex-col">
+        <li>
           <span className="text-sm font-medium text-foreground">Protocol</span>
+          <br />
           <span className="text-sm text-foreground/50">IPFS</span>
         </li>
 
-        <li className="flex flex-col">
+        <li>
           <span className="text-sm font-medium text-foreground">Chain</span>
+          <br />
           <span className="text-sm text-foreground/50">public-swarm</span>
         </li>
 
-        <li className="flex flex-col">
+        <li>
           <span className="text-sm font-medium text-foreground">Client</span>
+          <br />
           <a
             href="https://github.com/ipfs/kubo"
             target="_blank"

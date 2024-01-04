@@ -7,18 +7,31 @@ import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, StorageItems } from "@/enums";
 import { IPFSPeer } from "@/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
+import { Logs } from "@/components/logs";
+
 import { IPFSPeerStats } from "./components/ipfs-peer-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { RoutingTab } from "./components/routing-tab";
 import { ConfigrationProfilesTab } from "./components/configration-profiles-tab";
-import { Logs } from "@/components/logs";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "Configration Profiles", value: "configrationProfiles" },
+  { label: "API", value: "api" },
+  { label: "Routing", value: "routing" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function ExecutionClientPage({
   params,
@@ -84,59 +97,20 @@ export default async function ExecutionClientPage({
             </>
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="configrationProfiles">
-              Configration Profiles
-            </TabsTrigger>
-            <TabsTrigger value="api">API</TabsTrigger>
-            <TabsTrigger value="routing">Routing</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <ProtocolTab node={peer} role={role} versions={versions} />
-          </TabsContent>
-          <TabsContent
-            className="px-4 py-3 sm:px-6 sm:py-4"
-            value="configrationProfiles"
-          >
-            <ConfigrationProfilesTab node={peer} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-            <APITab node={peer} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="routing">
-            <RoutingTab node={peer} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && (
-              <Logs
-                url={`ipfs/peers/${peer.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
-              />
-            )}
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={peer}
-              role={role}
-              url={`/ipfs/peers/${peer.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={peer} />
-            </TabsContent>
-          )}
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <ProtocolTab node={peer} role={role} versions={versions} />
+          <ConfigrationProfilesTab node={peer} role={role} />
+          <APITab node={peer} role={role} />
+          <RoutingTab node={peer} role={role} />
+          <Logs
+            url={`ipfs/peers/${peer.name}/logs?authorization=Bearer ${token?.value}&workspace_id=${params.workspaceId}`}
+          />
+          <ResourcesForm
+            node={peer}
+            role={role}
+            url={`/ipfs/peers/${peer.name}?workspace_id=${workspaceId}`}
+          />
+          <DangerZoneTab node={peer} />
         </Tabs>
       </div>
     </div>

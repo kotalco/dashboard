@@ -99,7 +99,11 @@ export const NodeMetrics: React.FC<NodeMetricsProps> = ({
           <CardTitle>CPU</CardTitle>
         </CardHeader>
         <CardContent>
-          <Chart unit="Cores" data={data.cpu} />
+          <Chart
+            unit="Cores"
+            data={data.cpu}
+            borderColor="hsl(142.1, 76.2%, 36.3%)"
+          />
         </CardContent>
       </Card>
       <Card>
@@ -107,7 +111,11 @@ export const NodeMetrics: React.FC<NodeMetricsProps> = ({
           <CardTitle>Memory</CardTitle>
         </CardHeader>
         <CardContent>
-          <Chart unit="GB" data={data.memory} borderColor="rgb(53, 162, 235)" />
+          <Chart
+            unit="GB"
+            data={data.memory}
+            borderColor="hsl(142.1, 76.2%, 36.3%)"
+          />
         </CardContent>
       </Card>
     </>

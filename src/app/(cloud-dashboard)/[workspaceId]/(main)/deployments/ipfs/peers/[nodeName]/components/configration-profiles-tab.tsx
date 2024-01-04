@@ -40,13 +40,13 @@ export const ConfigrationProfilesTab: React.FC<
       <Label>Initial Configration Profiles</Label>
       <ul className="mb-5 ml-5 text-sm">
         {initProfiles.map((profile) => (
-          <li key={profile} className="text-gray-500 list-disc">
+          <li key={profile} className="list-disc text-muted-foreground">
             {profile}
           </li>
         ))}
       </ul>
 
-      <form action={onSubmit} className="relative space-y-4">
+      <form action={onSubmit} className="relative space-y-8">
         <CheckboxGroup
           label="Configuration Profiles"
           className="grid grid-cols-2 ml-5 gap-3 max-w-sm"

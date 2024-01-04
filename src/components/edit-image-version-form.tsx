@@ -48,17 +48,27 @@ export const EditImageVersionForm = ({
   return (
     <form action={onSubmit} className="mt-3 space-y-4">
       <div className="text-sm">
-        <Select
-          id="image"
-          label="Client Version"
-          disabled={role === Roles.Reader}
-          defaultValue={image}
-          onValueChange={setCurrentImage}
-          description="Latest version is recommended"
-          options={options}
-          errors={fieldErrors}
-          className="max-w-xs"
-        />
+        <div className="flex items-center space-x-10">
+          <Select
+            id="image"
+            label="Client Version"
+            disabled={role === Roles.Reader}
+            defaultValue={image}
+            onValueChange={setCurrentImage}
+            description="Latest version is recommended"
+            options={options}
+            errors={fieldErrors}
+          />
+
+          {role !== Roles.Reader && currentImage !== image && (
+            <SubmitButton
+              disabled={currentImage === image}
+              data-testid="submit"
+            >
+              Save
+            </SubmitButton>
+          )}
+        </div>
 
         <ExternalLink
           href={
@@ -82,12 +92,6 @@ export const EditImageVersionForm = ({
       </SubmitSuccess>
 
       <SubmitError error={error} />
-
-      {role !== Roles.Reader && (
-        <SubmitButton disabled={currentImage === image} data-testid="submit">
-          Save
-        </SubmitButton>
-      )}
     </form>
   );
 };
