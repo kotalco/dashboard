@@ -9,18 +9,31 @@ import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { BeaconNode, ExecutionClientNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
+import { Logs } from "@/components/logs";
+
 import { BeaconNodeStats } from "./components/beacon-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { ExecutionClientTab } from "./components/execution-client-tab";
 import { CheckpointSyncTab } from "./components/checkpoint-sync-tab";
-import { Logs } from "@/components/logs";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "Execution Client", value: "execution-client" },
+  { label: "Checkpoint Sync", value: "checkpoint-sync" },
+  { label: "API", value: "api" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function BeaconNodePage({
   params,
@@ -91,67 +104,25 @@ export default async function BeaconNodePage({
             </>
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="executionClient">Execution Client</TabsTrigger>
-            <TabsTrigger value="checkpointSync">Checkpoint Sync</TabsTrigger>
-            <TabsTrigger value="api">API</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <ProtocolTab node={node} role={role} versions={versions} />
-          </TabsContent>
-          <TabsContent
-            className="px-4 py-3 sm:px-6 sm:py-4"
-            value="executionClient"
-          >
-            <ExecutionClientTab
-              node={node}
-              role={role}
-              secrets={options}
-              executionClients={data}
-            />
-          </TabsContent>
-          <TabsContent
-            className="px-4 py-3 sm:px-6 sm:py-4"
-            value="checkpointSync"
-          >
-            <CheckpointSyncTab node={node} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-            <APITab node={node} role={role} />
-          </TabsContent>
-
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && (
-              <Logs
-                url={`ethereum2/beaconnodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={node}
-              role={role}
-              url={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={node} />
-            </TabsContent>
-          )}
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <ProtocolTab node={node} role={role} versions={versions} />
+          <ExecutionClientTab
+            node={node}
+            role={role}
+            secrets={options}
+            executionClients={data}
+          />
+          <CheckpointSyncTab node={node} role={role} />
+          <APITab node={node} role={role} />
+          <Logs
+            url={`ethereum2/beaconnodes/${node.name}/logs?authorization=Bearer ${token?.value}&workspace_id=${params.workspaceId}`}
+          />
+          <ResourcesForm
+            node={node}
+            role={role}
+            url={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
+          />
+          <DangerZoneTab node={node} />
         </Tabs>
       </div>
     </div>

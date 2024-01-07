@@ -14,6 +14,7 @@ import {
   StorageItems,
 } from "@/enums";
 import { ExecutionClientNode } from "@/types";
+import { getAuthorizedTabs } from "@/lib/utils";
 
 import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -28,7 +29,6 @@ import { DangerZoneTab } from "./components/danger-zone-tab";
 import { AccessControlTab } from "./components/access-control-tab";
 import { NetworkingTab } from "./components/networking-tab";
 import { LogsTab } from "./components/logs-tab";
-import { getAuthorizedTabs } from "@/lib/utils";
 
 const TABS = [
   { label: "Protocol", value: "protocol" },

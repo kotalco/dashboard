@@ -36,9 +36,9 @@ export const CheckpointSyncTab: React.FC<CheckpointSyncTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Input
-        className="max-w-sm"
+        className="max-w-xs"
         id="checkpointSyncUrl"
         label="Checkpoint Sync URL"
         defaultValue={checkpointSyncUrl}

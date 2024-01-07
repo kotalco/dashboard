@@ -31,38 +31,47 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       {(client === BeaconNodeClients["ConsenSys Teku"] ||
         client === BeaconNodeClients["Sigma Prime Lighthouse"] ||
         client === BeaconNodeClients["Status.im Nimbus"]) && (
-        <Toggle
-          id="rest"
-          label="REST API Server"
-          disabled={role === Roles.Reader}
-          defaultChecked={rest}
-          errors={fieldErrors}
-        />
+        <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+          <Toggle
+            id="rest"
+            label="REST API Server"
+            disabled={role === Roles.Reader}
+            defaultChecked={rest}
+            errors={fieldErrors}
+            className="justify-between"
+          />
+        </div>
       )}
 
       {node.client === BeaconNodeClients["Prysatic Labs Prysm"] && (
-        <Toggle
-          id="rpc"
-          label="JSON-RPC Server"
-          disabled
-          defaultChecked={rpc}
-          description="JSON-RPC Server cann't be disabled for Prysm."
-          errors={fieldErrors}
-        />
+        <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+          <Toggle
+            id="rpc"
+            label="JSON-RPC Server"
+            disabled
+            defaultChecked={rpc}
+            description="JSON-RPC Server cann't be disabled for Prysm."
+            errors={fieldErrors}
+            className="justify-between"
+          />
+        </div>
       )}
 
       {node.client === BeaconNodeClients["Prysatic Labs Prysm"] && (
-        <Toggle
-          id="grpc"
-          label="GRPC Gateway Server"
-          disabled={role === Roles.Reader}
-          defaultChecked={grpc}
-          errors={fieldErrors}
-        />
+        <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+          <Toggle
+            id="grpc"
+            label="GRPC Gateway Server"
+            disabled={role === Roles.Reader}
+            defaultChecked={grpc}
+            errors={fieldErrors}
+            className="justify-between"
+          />
+        </div>
       )}
 
       <SubmitSuccess success={success}>

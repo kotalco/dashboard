@@ -8,6 +8,7 @@ import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { ChainlinkNode, ExecutionClientNode } from "@/types";
+import { getAuthorizedTabs } from "@/lib/utils";
 
 import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -26,7 +27,6 @@ import { getNodes } from "@/services/get-nodes";
 import { TLSTab } from "./_components/tls-tab";
 import { AccessControlTab } from "./_components/access-control-tab";
 import { LogsTab } from "./_components/logs-tab";
-import { getAuthorizedTabs } from "@/lib/utils";
 
 const TABS = [
   { label: "Protocol", value: "protocol" },

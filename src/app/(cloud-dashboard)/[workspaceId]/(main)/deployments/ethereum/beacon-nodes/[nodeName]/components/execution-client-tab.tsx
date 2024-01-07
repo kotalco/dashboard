@@ -53,7 +53,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <SelectWithInput
         id="executionEngineEndpoint"
         label="Execution Engine Endpoint"
@@ -64,6 +64,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
         otherLabel="Use External Node"
         description="Nodes must have activated engine port"
         errors={fieldErrors}
+        className="max-w-xs"
       />
 
       <Select
@@ -78,6 +79,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
           href: `/${workspaceId}/secrets/new?type=${SecretType["JWT Secret"]}`,
           title: "Create New JWT Secret",
         }}
+        className="max-w-xs"
       />
 
       <SubmitSuccess success={success}>
