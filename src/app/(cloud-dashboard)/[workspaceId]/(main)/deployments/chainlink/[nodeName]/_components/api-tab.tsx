@@ -41,14 +41,17 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="api"
-        label="API"
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-        defaultChecked={api}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="api"
+          label="API"
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          defaultChecked={api}
+          className="justify-between"
+        />
+      </div>
 
       <Input
         id="apiCredentials.email"
@@ -71,6 +74,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
           href: `/${workspaceId}/secrets/new?type=${SecretType.Password}`,
           title: "Create New Password",
         }}
+        className="max-w-xs"
       />
 
       <SubmitSuccess success={success}>

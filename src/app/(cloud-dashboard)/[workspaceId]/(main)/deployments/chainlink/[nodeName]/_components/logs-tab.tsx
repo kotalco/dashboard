@@ -39,6 +39,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
         errors={fieldErrors}
         defaultValue={logging}
         options={getSelectItems(ChainlinkLogging)}
+        className="max-w-xs"
       />
 
       <Logs

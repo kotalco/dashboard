@@ -40,7 +40,7 @@ export const TLSTab: React.FC<TLSTabProps> = ({ node, role, secrets }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Select
         id="certSecretName"
         label="Certificate"
@@ -49,6 +49,7 @@ export const TLSTab: React.FC<TLSTabProps> = ({ node, role, secrets }) => {
         defaultValue={certSecretName}
         options={secrets}
         placeholder="Select a certificate"
+        className="max-w-xs"
         link={{
           href: `/${workspaceId}/secrets/new?type=${SecretType["TLS Certificate"]}`,
           title: "Create New Certificate",
@@ -63,15 +64,18 @@ export const TLSTab: React.FC<TLSTabProps> = ({ node, role, secrets }) => {
         }}
       />
 
-      <Toggle
-        id="secureCookies"
-        label="Secure Cookies"
-        disabled={role === Roles.Reader || !certificate}
-        defaultChecked={secureCookies}
-        onCheckedChange={setSecured}
-        checked={secured}
-        errors={fieldErrors}
-      />
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="secureCookies"
+          label="Secure Cookies"
+          disabled={role === Roles.Reader || !certificate}
+          defaultChecked={secureCookies}
+          onCheckedChange={setSecured}
+          checked={secured}
+          errors={fieldErrors}
+          className="justify-between"
+        />
+      </div>
 
       <Input
         id="tlsPort"

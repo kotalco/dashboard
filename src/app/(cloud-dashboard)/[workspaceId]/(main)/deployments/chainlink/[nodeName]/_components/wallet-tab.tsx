@@ -39,7 +39,7 @@ export const WalletTab: React.FC<WalletTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Select
         id="keystorePasswordSecretName"
         label="Keystore password"
@@ -52,6 +52,7 @@ export const WalletTab: React.FC<WalletTabProps> = ({
           title: "Create New Password",
         }}
         description="For securing access to chainlink wallet"
+        className="max-w-xs"
       />
 
       <SubmitSuccess success={success}>

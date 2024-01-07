@@ -57,7 +57,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <SelectWithInput
         id="ethereumWsEndpoint"
         label="Execution Client Websocket Endpoint"
@@ -68,6 +68,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
         errors={fieldErrors}
         disabled={role === Roles.Reader}
         defaultValue={ethereumWsEndpoint}
+        className="max-w-xs"
       />
 
       <MultiSelect
@@ -78,7 +79,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
         errors={fieldErrors}
         disabled={role === Roles.Reader}
         defaultValue={ethereumHttpEndpoints}
-        className="max-w-sm"
+        className="max-w-xs"
         allowCustomValues
       />
 

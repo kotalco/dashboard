@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
@@ -8,7 +9,7 @@ import { getNode } from "@/services/get-node";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { ChainlinkNode, ExecutionClientNode } from "@/types";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
@@ -25,7 +26,20 @@ import { getNodes } from "@/services/get-nodes";
 import { TLSTab } from "./_components/tls-tab";
 import { AccessControlTab } from "./_components/access-control-tab";
 import { LogsTab } from "./_components/logs-tab";
-import { Suspense } from "react";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "Database", value: "database" },
+  { label: "Execution Client", value: "execution-client" },
+  { label: "Wallet", value: "wallet" },
+  { label: "TLS", value: "tls" },
+  { label: "API", value: "api" },
+  { label: "Access Control", value: "access-control" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function ChainlinkPage({
   params,
@@ -86,74 +100,23 @@ export default async function ChainlinkPage({
             />
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="database">Database</TabsTrigger>
-            <TabsTrigger value="executionClient">Execution Client</TabsTrigger>
-            <TabsTrigger value="wallet">Wallet</TabsTrigger>
-            <TabsTrigger value="tls">TLS</TabsTrigger>
-            <TabsTrigger value="api">API</TabsTrigger>
-            <TabsTrigger value="accessControl">Access Control</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <Suspense fallback={<ProtocolSkeleton />}>
-              <ProtocolTab node={node} role={role} />
-            </Suspense>
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="database">
-            <DatabaseTab node={node} role={role} />
-          </TabsContent>
-          <TabsContent
-            className="px-4 py-3 sm:px-6 sm:py-4"
-            value="executionClient"
-          >
-            <ExecutionClientTab
-              node={node}
-              role={role}
-              executionClients={data}
-            />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
-            <WalletTab node={node} role={role} passwords={passwordOptions} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="tls">
-            <TLSTab node={node} role={role} secrets={tlsOptions} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-            <APITab node={node} role={role} secrets={passwordOptions} />
-          </TabsContent>
-          <TabsContent
-            className="px-4 py-3 sm:px-6 sm:py-4"
-            value="accessControl"
-          >
-            <AccessControlTab node={node} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && <LogsTab node={node} role={role} token={token.value} />}
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={node}
-              role={role}
-              url={`/chainlink/nodes/${node.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={node} />
-            </TabsContent>
-          )}
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <Suspense fallback={<ProtocolSkeleton />}>
+            <ProtocolTab node={node} role={role} />
+          </Suspense>
+          <DatabaseTab node={node} role={role} />
+          <ExecutionClientTab node={node} role={role} executionClients={data} />
+          <WalletTab node={node} role={role} passwords={passwordOptions} />
+          <TLSTab node={node} role={role} secrets={tlsOptions} />
+          <APITab node={node} role={role} secrets={passwordOptions} />
+          <AccessControlTab node={node} role={role} />
+          {token && <LogsTab node={node} role={role} token={token.value} />}
+          <ResourcesForm
+            node={node}
+            role={role}
+            url={`/chainlink/nodes/${node.name}?workspace_id=${workspaceId}`}
+          />
+          <DangerZoneTab node={node} />
         </Tabs>
       </div>
     </div>

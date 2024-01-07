@@ -31,7 +31,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Input
         id="databaseURL"
         label="Database Connection URL"

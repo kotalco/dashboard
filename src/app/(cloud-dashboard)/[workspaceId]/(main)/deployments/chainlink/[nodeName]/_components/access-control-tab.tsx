@@ -31,7 +31,7 @@ export const AccessControlTab: React.FC<AccessControlTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Textarea
         id="corsDomains"
         label="CORS Domains"
