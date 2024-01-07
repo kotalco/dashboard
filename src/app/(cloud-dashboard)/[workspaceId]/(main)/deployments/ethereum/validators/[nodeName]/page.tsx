@@ -10,7 +10,7 @@ import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { BeaconNode, ValidatorNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
@@ -22,6 +22,17 @@ import { BeaconNodeTab } from "./components/beacon-node-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { GraffitiTab } from "./components/graffiti-tab";
 import { KeystoreTab } from "./components/keystore-tab";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "Graffiti", value: "graffiti" },
+  { label: "Keystore", value: "keystore" },
+  { label: "Beacon Node", value: "beacon-node" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function BeaconNodePage({
   params,
@@ -93,61 +104,26 @@ export default async function BeaconNodePage({
             />
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="Graffiti">Graffiti</TabsTrigger>
-            <TabsTrigger value="Keystore">Keystore</TabsTrigger>
-            <TabsTrigger value="beaconNode">Beacon Node</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <ProtocolTab node={node} role={role} versions={versions} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="Graffiti">
-            <GraffitiTab node={node} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="Keystore">
-            <KeystoreTab
-              node={node}
-              role={role}
-              passwords={passwords}
-              ethereumKeystores={keystores}
-            />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="beaconNode">
-            <BeaconNodeTab node={node} role={role} beaconNodes={data} />
-          </TabsContent>
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <ProtocolTab node={node} role={role} versions={versions} />
+          <GraffitiTab node={node} role={role} />
+          <KeystoreTab
+            node={node}
+            role={role}
+            passwords={passwords}
+            ethereumKeystores={keystores}
+          />
+          <BeaconNodeTab node={node} role={role} beaconNodes={data} />
+          <Logs
+            url={`ethereum2/validators/${node.name}/logs?authorization=Bearer ${token?.value}&workspace_id=${params.workspaceId}`}
+          />
 
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && (
-              <Logs
-                url={`ethereum2/validators/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={node}
-              role={role}
-              url={`/ethereum2/validators/${node.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={node} />
-            </TabsContent>
-          )}
+          <ResourcesForm
+            node={node}
+            role={role}
+            url={`/ethereum2/validators/${node.name}?workspace_id=${workspaceId}`}
+          />
+          <DangerZoneTab node={node} />
         </Tabs>
       </div>
     </div>

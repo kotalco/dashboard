@@ -28,7 +28,7 @@ export const GraffitiTab: React.FC<GraffitiTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Input
         id="graffiti"
         label="Graffiti"

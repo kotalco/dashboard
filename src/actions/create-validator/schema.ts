@@ -24,7 +24,7 @@ export const CreateValidator = z
       .array()
       .nonempty({ message: "Keystores are required" })
       .transform((val) => val.map((secret) => ({ secretName: secret }))),
-    walletPasswordSecretName: z.string().optional(),
+    walletPasswordSecretName: z.string().optional().nullable(),
     beaconEndpoints: z
       .string({ required_error: "Beacon node endpoints are required" })
       .array()

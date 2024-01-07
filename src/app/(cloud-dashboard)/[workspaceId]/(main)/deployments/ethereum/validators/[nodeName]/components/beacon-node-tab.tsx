@@ -57,7 +57,7 @@ export const BeaconNodeTab: React.FC<BeaconNodeTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <MultiSelect
         id="beaconEndpoints"
         label="Beacon Node Endpoints"
