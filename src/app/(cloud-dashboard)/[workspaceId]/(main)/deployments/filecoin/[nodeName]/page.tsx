@@ -9,7 +9,7 @@ import { Protocol, Roles, StorageItems } from "@/enums";
 import { FilecoinNode, IPFSPeer } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
@@ -20,6 +20,16 @@ import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { IPFSTab } from "./components/ipfs-tab";
 import { LogsTab } from "./components/logs-tab";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "API", value: "api" },
+  { label: "IPFS", value: "ipfs" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function AptosPage({
   params,
@@ -78,46 +88,17 @@ export default async function AptosPage({
             />
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="api">API</TabsTrigger>
-            <TabsTrigger value="ipfs">IPFS</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <ProtocolTab node={node} role={role} versions={versions} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-            <APITab node={node} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="ipfs">
-            <IPFSTab node={node} role={role} peers={data} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && <LogsTab node={node} role={role} token={token.value} />}
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={node}
-              role={role}
-              url={`/filecoin/nodes/${node.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={node} />
-            </TabsContent>
-          )}
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <ProtocolTab node={node} role={role} versions={versions} />
+          <APITab node={node} role={role} />
+          <IPFSTab node={node} role={role} peers={data} />
+          {token && <LogsTab node={node} role={role} token={token.value} />}
+          <ResourcesForm
+            node={node}
+            role={role}
+            url={`/filecoin/nodes/${node.name}?workspace_id=${workspaceId}`}
+          />
+          <DangerZoneTab node={node} />
         </Tabs>
       </div>
     </div>

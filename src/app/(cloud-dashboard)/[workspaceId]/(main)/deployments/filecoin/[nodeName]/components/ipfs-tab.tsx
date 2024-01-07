@@ -48,22 +48,28 @@ export const IPFSTab: React.FC<IPFSTabProps> = ({ node, role, peers }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="ipfsForRetrieval"
-        label="Use IPFS For Retrieval"
-        defaultChecked={ipfsForRetrieval}
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="ipfsForRetrieval"
+          label="Use IPFS For Retrieval"
+          defaultChecked={ipfsForRetrieval}
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          className="justify-between"
+        />
+      </div>
 
-      <Toggle
-        id="ipfsOnlineMode"
-        label="IPFS Online Mode"
-        defaultChecked={ipfsOnlineMode}
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-      />
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="ipfsOnlineMode"
+          label="IPFS Online Mode"
+          defaultChecked={ipfsOnlineMode}
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          className="justify-between"
+        />
+      </div>
 
       <SelectWithInput
         id="ipfsPeerEndpoint"
@@ -75,6 +81,7 @@ export const IPFSTab: React.FC<IPFSTabProps> = ({ node, role, peers }) => {
         errors={fieldErrors}
         placeholder="Select a peer"
         allowClear
+        className="max-w-xs"
       />
 
       <SubmitSuccess success={success}>

@@ -35,14 +35,17 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="disableMetadataLog"
-        label="Disable Metadata Logs"
-        disabled={role === Roles.Reader}
-        defaultChecked={disableMetadataLog}
-        errors={fieldErrors}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="disableMetadataLog"
+          label="Disable Metadata Logs"
+          disabled={role === Roles.Reader}
+          defaultChecked={disableMetadataLog}
+          errors={fieldErrors}
+          className="justify-between"
+        />
+      </div>
 
       <Logs
         url={`filecoin/nodes/${name}/logs?authorization=Bearer ${token}&workspace_id=${workspaceId}`}

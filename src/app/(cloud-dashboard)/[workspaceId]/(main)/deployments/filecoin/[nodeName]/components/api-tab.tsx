@@ -40,16 +40,19 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="api"
-        label="REST"
-        defaultChecked={api}
-        checked={apiState}
-        onCheckedChange={setApiState}
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="api"
+          label="REST"
+          defaultChecked={api}
+          checked={apiState}
+          onCheckedChange={setApiState}
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          className="justify-between"
+        />
+      </div>
 
       <div className="max-w-xs">
         <InputWithUnit
