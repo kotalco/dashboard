@@ -36,16 +36,19 @@ export const RPCTab: React.FC<RPCTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="rpc"
-        label="JSON-RPC Server"
-        disabled={role === Roles.Reader}
-        checked={rpcState}
-        onCheckedChange={setRpcState}
-        errors={fieldErrors}
-        defaultChecked={rpc}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="rpc"
+          label="JSON-RPC Server"
+          disabled={role === Roles.Reader}
+          checked={rpcState}
+          onCheckedChange={setRpcState}
+          errors={fieldErrors}
+          defaultChecked={rpc}
+          className="justify-between"
+        />
+      </div>
 
       <Input
         id="rpcPort"

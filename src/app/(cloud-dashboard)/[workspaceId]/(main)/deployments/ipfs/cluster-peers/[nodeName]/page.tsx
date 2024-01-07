@@ -8,6 +8,7 @@ import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, StorageItems } from "@/enums";
 import { IPFSClusterPeer, IPFSPeer } from "@/types";
 import { getNodes } from "@/services/get-nodes";
+import { getAuthorizedTabs } from "@/lib/utils";
 
 import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -20,7 +21,6 @@ import { DangerZoneTab } from "./components/danger-zone-tab";
 import { PeersTab } from "./components/peers-tab";
 import { SecurityTab } from "./components/security-tab";
 import { Logs } from "@/components/logs";
-import { getAuthorizedTabs } from "@/lib/utils";
 
 const TABS = [
   { label: "Protocol", value: "protocol" },

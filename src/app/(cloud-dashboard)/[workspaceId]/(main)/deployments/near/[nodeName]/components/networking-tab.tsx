@@ -46,7 +46,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Select
         id="nodePrivateKeySecretName"
         label="Node Private Key"

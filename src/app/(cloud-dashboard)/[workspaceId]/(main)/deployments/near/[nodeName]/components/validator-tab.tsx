@@ -39,7 +39,7 @@ export const ValidatorTab: React.FC<ValidatorTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Select
         id="validatorSecretName"
         label="Validator Key"

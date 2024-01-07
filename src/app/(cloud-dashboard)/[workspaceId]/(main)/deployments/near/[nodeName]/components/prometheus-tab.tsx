@@ -28,7 +28,7 @@ export const PrometheusTab: React.FC<PrometheusTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Input
         id="prometheusPort"
         label="Prometheus Port"
