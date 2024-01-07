@@ -3,7 +3,13 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { format, parseISO } from "date-fns";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getNode } from "@/services/get-node";
+import { getWorkspace } from "@/services/get-workspace";
+import { Protocol, Roles, StorageItems } from "@/enums";
+import { AptosNode } from "@/types";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
@@ -11,15 +17,18 @@ import { Logs } from "@/components/logs";
 import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
 import { ResourcesForm } from "@/components/resources-form";
 
-import { getNode } from "@/services/get-node";
-import { getWorkspace } from "@/services/get-workspace";
-import { Protocol, Roles, StorageItems } from "@/enums";
-import { AptosNode } from "@/types";
-
 import { AptosNodeStats } from "./_components/aptos-node-stats";
 import { ProtocolTab } from "./_components/protocol-tab";
 import { APITab } from "./_components/api-tab";
 import { DangerZoneTab } from "./_components/danger-zone-tab";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "API", value: "api" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function AptosPage({
   params,
@@ -70,48 +79,22 @@ export default async function AptosPage({
             </>
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="api">API</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <Suspense fallback={<ProtocolSkeleton />}>
-              <ProtocolTab node={node} role={role} />
-            </Suspense>
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-            <APITab node={node} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && (
-              <Logs
-                url={`aptos/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-              />
-            )}
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={node}
-              role={role}
-              url={`/aptos/nodes/${node.name}`}
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <Suspense fallback={<ProtocolSkeleton />}>
+            <ProtocolTab node={node} role={role} />
+          </Suspense>
+          <APITab node={node} role={role} />
+          {token && (
+            <Logs
+              url={`aptos/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
             />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={node} />
-            </TabsContent>
           )}
+          <ResourcesForm
+            node={node}
+            role={role}
+            url={`/aptos/nodes/${node.name}`}
+          />
+          <DangerZoneTab node={node} />
         </Tabs>
       </div>
     </div>
