@@ -52,7 +52,7 @@ export const PeersTab: React.FC<PeersTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <SelectWithInput
         id="peerEndpoint"
         label="IPFS Peer"

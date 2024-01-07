@@ -8,7 +8,8 @@ import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, StorageItems } from "@/enums";
 import { IPFSClusterPeer, IPFSPeer } from "@/types";
 import { getNodes } from "@/services/get-nodes";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
@@ -19,6 +20,16 @@ import { DangerZoneTab } from "./components/danger-zone-tab";
 import { PeersTab } from "./components/peers-tab";
 import { SecurityTab } from "./components/security-tab";
 import { Logs } from "@/components/logs";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "Peers", value: "peers" },
+  { label: "Security", value: "security" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function BeaconNodePage({
   params,
@@ -85,57 +96,24 @@ export default async function BeaconNodePage({
             />
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="peers">Peers</TabsTrigger>
-            <TabsTrigger value="security">Security</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <ProtocolTab node={peer} role={role} versions={versions} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="peers">
-            <PeersTab
-              node={peer}
-              role={role}
-              peers={peers}
-              clusterPeers={clusterPeers}
-            />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="security">
-            <SecurityTab node={peer} />
-          </TabsContent>
-
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && (
-              <Logs
-                url={`ipfs/clusterpeers/${peer.name}/logs?authorization=Bearer ${token.value}&workspace_id=${params.workspaceId}`}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={peer}
-              role={role}
-              url={`/ipfs/clusterpeers/${peer.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={peer} />
-            </TabsContent>
-          )}
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <ProtocolTab node={peer} role={role} versions={versions} />
+          <PeersTab
+            node={peer}
+            role={role}
+            peers={peers}
+            clusterPeers={clusterPeers}
+          />
+          <SecurityTab node={peer} />
+          <Logs
+            url={`ipfs/clusterpeers/${peer.name}/logs?authorization=Bearer ${token?.value}&workspace_id=${params.workspaceId}`}
+          />
+          <ResourcesForm
+            node={peer}
+            role={role}
+            url={`/ipfs/clusterpeers/${peer.name}?workspace_id=${workspaceId}`}
+          />
+          <DangerZoneTab node={peer} />
         </Tabs>
       </div>
     </div>
