@@ -8,19 +8,33 @@ import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { BitcoinNode, StacksNode } from "@/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getAuthorizedTabs } from "@/lib/utils";
+import { getNodes } from "@/services/get-nodes";
+
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
+import { Logs } from "@/components/logs";
+
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
 import { DangerZoneTab } from "./components/danger-zone-tab";
 import { BitconTab } from "./components/bitcoin-tab";
 import { NetworkingTab } from "./components/networking-tab";
 import { MiningTab } from "./components/mining-tab";
-import { getNodes } from "@/services/get-nodes";
-import { Logs } from "@/components/logs";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "Networking", value: "networking" },
+  { label: "API", value: "api" },
+  { label: "Bitcoin", value: "bitcoin" },
+  { label: "Mining", value: "mining" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function StacksNodePage({
   params,
@@ -82,60 +96,21 @@ export default async function StacksNodePage({
             />
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="networking">Networking</TabsTrigger>
-            <TabsTrigger value="api">API</TabsTrigger>
-            <TabsTrigger value="validator">Bitcoin</TabsTrigger>
-            <TabsTrigger value="telemetry">Mining</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <ProtocolTab node={node} role={role} versions={versions} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="networking">
-            <NetworkingTab node={node} role={role} secrets={options} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-            <APITab node={node} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="validator">
-            <BitconTab node={node} role={role} bitcoinNodes={data} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="telemetry">
-            <MiningTab node={node} role={role} secrets={options} />
-          </TabsContent>
-
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && (
-              <Logs
-                url={`stacks/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={node}
-              role={role}
-              url={`/stacks/nodes/${node.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={node} />
-            </TabsContent>
-          )}
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <ProtocolTab node={node} role={role} versions={versions} />
+          <NetworkingTab node={node} role={role} secrets={options} />
+          <APITab node={node} role={role} />
+          <BitconTab node={node} role={role} bitcoinNodes={data} />
+          <MiningTab node={node} role={role} secrets={options} />
+          <Logs
+            url={`stacks/nodes/${node.name}/logs?authorization=Bearer ${token?.value}&workspace_id=${workspaceId}`}
+          />
+          <ResourcesForm
+            node={node}
+            role={role}
+            url={`/stacks/nodes/${node.name}?workspace_id=${workspaceId}`}
+          />
+          <DangerZoneTab node={node} />
         </Tabs>
       </div>
     </div>

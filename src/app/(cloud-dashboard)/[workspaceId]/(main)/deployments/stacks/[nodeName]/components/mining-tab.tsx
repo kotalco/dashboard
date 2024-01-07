@@ -42,21 +42,27 @@ export const MiningTab: React.FC<MiningTabProps> = ({
 
   return (
     <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="miner"
-        label="Miner"
-        disabled={role === Roles.Reader}
-        defaultChecked={miner}
-        errors={fieldErrors}
-      />
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="miner"
+          label="Miner"
+          disabled={role === Roles.Reader}
+          defaultChecked={miner}
+          errors={fieldErrors}
+          className="justify-between"
+        />
+      </div>
 
-      <Toggle
-        id="mineMicroBlocks"
-        label="Mine Micro Blocks"
-        disabled={role === Roles.Reader}
-        defaultChecked={mineMicroBlocks}
-        errors={fieldErrors}
-      />
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="mineMicroBlocks"
+          label="Mine Micro Blocks"
+          disabled={role === Roles.Reader}
+          defaultChecked={mineMicroBlocks}
+          errors={fieldErrors}
+          className="justify-between"
+        />
+      </div>
 
       <Select
         id="seedPrivateKeySecretName"

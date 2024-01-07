@@ -29,14 +29,17 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="rpc"
-        label="JSON-RPC Server"
-        defaultChecked={rpc}
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="rpc"
+          label="JSON-RPC Server"
+          defaultChecked={rpc}
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          className="justify-between"
+        />
+      </div>
 
       <SubmitSuccess success={success}>
         API settings have been updated successfully.
