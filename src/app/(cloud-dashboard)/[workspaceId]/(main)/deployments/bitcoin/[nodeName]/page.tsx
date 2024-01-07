@@ -9,19 +9,29 @@ import { NodeMetrics } from "@/components/node-metrics";
 import { Logs } from "@/components/logs";
 import { ResourcesForm } from "@/components/resources-form";
 import { ProtocolSkeleton } from "@/components/skeletons/protocol-skeleton";
+import { Tabs } from "@/components/shared/tabs/tabs";
 
 import { getWorkspace } from "@/services/get-workspace";
 import { getSecrets } from "@/services/get-secrets";
 import { getNode } from "@/services/get-node";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { BitcoinNode } from "@/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { BitcoinNodeStats } from "./_components/bitcoin-node-stats";
 import { ProtocolTab } from "./_components/protocol-tab";
 import { APITab } from "./_components/api-tab";
 import { DangerZoneTab } from "./_components/danger-zone-tab";
 import { WalletTab } from "./_components/wallet-tab";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "API", value: "api" },
+  { label: "Wallet", value: "wallet" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function BitcoinPage({
   params,
@@ -73,52 +83,22 @@ export default async function BitcoinPage({
             </>
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="api">API</TabsTrigger>
-            <TabsTrigger value="wallet">Wallet</TabsTrigger>
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <Suspense fallback={<ProtocolSkeleton />}>
-              <ProtocolTab node={node} role={role} />
-            </Suspense>
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-            <APITab node={node} role={role} secrets={options} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="wallet">
-            <WalletTab node={node} role={role} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && (
-              <Logs
-                url={`bitcoin/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-              />
-            )}
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={node}
-              role={role}
-              url={`/bitcoin/nodes/${node.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={node} />
-            </TabsContent>
-          )}
+        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
+          <Suspense fallback={<ProtocolSkeleton />}>
+            <ProtocolTab node={node} role={role} />
+          </Suspense>
+          <APITab node={node} role={role} secrets={options} />
+          <WalletTab node={node} role={role} />
+          <Logs
+            url={`bitcoin/nodes/${node.name}/logs?authorization=Bearer ${token?.value}&workspace_id=${workspaceId}`}
+          />
+          <ResourcesForm
+            node={node}
+            role={role}
+            url={`/bitcoin/nodes/${node.name}?workspace_id=${workspaceId}`}
+          />
+
+          <DangerZoneTab node={node} />
         </Tabs>
       </div>
     </div>

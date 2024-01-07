@@ -28,15 +28,18 @@ export const WalletTab: React.FC<WalletTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="wallet"
-        label="Wallet"
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-        defaultChecked={wallet}
-        description="Load wallet and enable wallet RPC calls"
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-6 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="wallet"
+          label="Wallet"
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          defaultChecked={wallet}
+          description="Load wallet and enable wallet RPC calls"
+          className="justify-between"
+        />
+      </div>
 
       <SubmitSuccess success={success}>
         Wallet settings have been updated successfully.

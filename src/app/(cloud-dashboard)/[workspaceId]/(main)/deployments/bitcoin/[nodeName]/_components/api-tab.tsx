@@ -46,22 +46,28 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="rpc"
-        label="JSON-RPC Server"
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-        defaultChecked={rpc}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-6 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="rpc"
+          label="JSON-RPC Server"
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          defaultChecked={rpc}
+          className="justify-between"
+        />
+      </div>
 
-      <Toggle
-        id="txIndex"
-        label="Transaction Index"
-        disabled={role === Roles.Reader}
-        errors={fieldErrors}
-        defaultChecked={txIndex}
-      />
+      <div className="px-6 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="txIndex"
+          label="Transaction Index"
+          disabled={role === Roles.Reader}
+          errors={fieldErrors}
+          defaultChecked={txIndex}
+          className="justify-between"
+        />
+      </div>
 
       <div className="space-y-2">
         <Label className="text-base">RPC Users</Label>
