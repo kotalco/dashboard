@@ -48,17 +48,20 @@ export const ValidatorTab: React.FC<ValidatorTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="validator"
-        label="Validator"
-        disabled={role === Roles.Reader || pruning}
-        checked={isValidator}
-        defaultChecked={isValidator}
-        onCheckedChange={handleCheckChange}
-        errors={fieldErrors}
-        description={pruning ? "Node started with pruning enabled." : ""}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="validator"
+          label="Validator"
+          disabled={role === Roles.Reader || pruning}
+          checked={isValidator}
+          defaultChecked={isValidator}
+          onCheckedChange={handleCheckChange}
+          errors={fieldErrors}
+          className="justify-between"
+          description={pruning ? "Node started with pruning enabled." : ""}
+        />
+      </div>
 
       <SubmitSuccess success={success}>
         Validator settings have been updated successfully.

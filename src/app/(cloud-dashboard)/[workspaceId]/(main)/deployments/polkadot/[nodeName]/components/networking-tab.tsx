@@ -56,7 +56,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Select
         id="nodePrivateKeySecretName"
         label="Node Private Key"
@@ -94,7 +94,15 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
         className="max-w-xs"
       />
 
-      <Toggle id="pruning" label="Pruning" disabled defaultChecked={pruning} />
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="pruning"
+          label="Pruning"
+          disabled
+          defaultChecked={pruning}
+          className="justify-between"
+        />
+      </div>
 
       <Input
         id="retainBlocks"

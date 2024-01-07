@@ -8,6 +8,7 @@ import { getNode } from "@/services/get-node";
 import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { NEARNode } from "@/types";
+import { getAuthorizedTabs } from "@/lib/utils";
 
 import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -24,7 +25,6 @@ import { ValidatorTab } from "./components/validator-tab";
 import { NetworkingTab } from "./components/networking-tab";
 import { PrometheusTab } from "./components/prometheus-tab";
 import { TelemetryTab } from "./components/telemetry-tab";
-import { getAuthorizedTabs } from "@/lib/utils";
 
 const TABS = [
   { label: "Protocol", value: "protocol" },

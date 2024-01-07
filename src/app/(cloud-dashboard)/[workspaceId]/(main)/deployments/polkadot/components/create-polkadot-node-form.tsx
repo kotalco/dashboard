@@ -49,9 +49,14 @@ export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
     <form
       data-testid="create-node"
       action={onSubmit}
-      className="max-w-xs space-y-4"
+      className="max-w-xl space-y-4"
     >
-      <Input errors={fieldErrors} id="name" label="Node Name" />
+      <Input
+        errors={fieldErrors}
+        id="name"
+        label="Node Name"
+        className="max-w-xs"
+      />
 
       <Select
         id="network"
@@ -59,6 +64,7 @@ export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
         placeholder="Select Network"
         options={getSelectItems(PolkadotNetworks)}
         errors={fieldErrors}
+        className="max-w-xs"
       />
 
       <p className="text-sm font-medium leading-none space-y-1">

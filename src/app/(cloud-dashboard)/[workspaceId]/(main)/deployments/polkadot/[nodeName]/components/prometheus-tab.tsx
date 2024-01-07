@@ -38,15 +38,18 @@ export const PrometheusTab: React.FC<PrometheusTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="prometheus"
-        label="Prometheus"
-        disabled={role === Roles.Reader}
-        defaultChecked={isPrometheus}
-        checked={isPrometheus}
-        onCheckedChange={setIsPrometheus}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="prometheus"
+          label="Prometheus"
+          disabled={role === Roles.Reader}
+          defaultChecked={isPrometheus}
+          checked={isPrometheus}
+          onCheckedChange={setIsPrometheus}
+          className="justify-between"
+        />
+      </div>
 
       <Input
         id="prometheusPort"

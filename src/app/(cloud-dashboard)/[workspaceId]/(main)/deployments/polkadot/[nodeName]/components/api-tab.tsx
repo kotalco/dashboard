@@ -60,16 +60,19 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="rpc"
-        label="JSON-RPC Server"
-        defaultChecked={isRpc}
-        checked={isRpc}
-        onCheckedChange={handleCheckChange}
-        errors={fieldErrors}
-        disabled={role === Roles.Reader}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="rpc"
+          label="JSON-RPC Server"
+          defaultChecked={isRpc}
+          checked={isRpc}
+          onCheckedChange={handleCheckChange}
+          errors={fieldErrors}
+          disabled={role === Roles.Reader}
+          className="justify-between"
+        />
+      </div>
 
       <Input
         className="max-w-xs"
@@ -80,15 +83,18 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
         defaultValue={rpcPort}
       />
 
-      <Toggle
-        id="ws"
-        label="WebSocket Server"
-        defaultChecked={isWs}
-        checked={isWs}
-        onCheckedChange={setIsWs}
-        errors={fieldErrors}
-        disabled={role === Roles.Reader}
-      />
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="ws"
+          label="WebSocket Server"
+          defaultChecked={isWs}
+          checked={isWs}
+          onCheckedChange={setIsWs}
+          errors={fieldErrors}
+          disabled={role === Roles.Reader}
+          className="justify-between"
+        />
+      </div>
 
       <Input
         className="max-w-xs"

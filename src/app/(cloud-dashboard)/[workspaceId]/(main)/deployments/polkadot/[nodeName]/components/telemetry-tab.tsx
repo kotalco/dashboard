@@ -38,16 +38,19 @@ export const TelemetryTab: React.FC<TelemetryTabProps> = ({ node, role }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
-      <Toggle
-        id="telemetry"
-        label="Telemetry"
-        defaultChecked={isTelemetry}
-        checked={isTelemetry}
-        onCheckedChange={setIsTelemetry}
-        errors={fieldErrors}
-        disabled={role === Roles.Reader}
-      />
+    <form action={onSubmit} className="relative space-y-8">
+      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
+        <Toggle
+          id="telemetry"
+          label="Telemetry"
+          defaultChecked={isTelemetry}
+          checked={isTelemetry}
+          onCheckedChange={setIsTelemetry}
+          errors={fieldErrors}
+          disabled={role === Roles.Reader}
+          className="justify-between"
+        />
+      </div>
 
       <Input
         className="max-w-xs"
