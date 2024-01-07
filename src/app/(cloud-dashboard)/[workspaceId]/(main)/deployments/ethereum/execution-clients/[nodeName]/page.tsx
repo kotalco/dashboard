@@ -14,11 +14,13 @@ import {
   StorageItems,
 } from "@/enums";
 import { ExecutionClientNode } from "@/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
 import { NodeStatus } from "@/components/node-status";
 import { NodeMetrics } from "@/components/node-metrics";
 import { ResourcesForm } from "@/components/resources-form";
+
 import { ExecutionClientNodeStats } from "./components/execution-client-node-stats";
 import { ProtocolTab } from "./components/protocol-tab";
 import { APITab } from "./components/api-tab";
@@ -26,6 +28,17 @@ import { DangerZoneTab } from "./components/danger-zone-tab";
 import { AccessControlTab } from "./components/access-control-tab";
 import { NetworkingTab } from "./components/networking-tab";
 import { LogsTab } from "./components/logs-tab";
+import { getAuthorizedTabs } from "@/lib/utils";
+
+const TABS = [
+  { label: "Protocol", value: "protocol" },
+  { label: "Networking", value: "networking" },
+  { label: "API", value: "api" },
+  { label: "Access Control", value: "access-control" },
+  { label: "Logs", value: "logs" },
+  { label: "Resources", value: "resources" },
+  { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
+];
 
 export default async function ExecutionClientPage({
   params,
@@ -64,6 +77,11 @@ export default async function ExecutionClientPage({
     node.image
   );
 
+  const tabs =
+    node.client === ExecutionClientClients.Nethermind
+      ? TABS.filter((tab) => tab.value !== "access-control")
+      : TABS;
+
   return (
     <div className="flex-col">
       <div className="flex-1 p-8 pt-6 space-y-4">
@@ -99,57 +117,23 @@ export default async function ExecutionClientPage({
             </>
           )}
         </div>
-        <Tabs defaultValue="protocol">
-          <TabsList>
-            <TabsTrigger value="protocol">Protocol</TabsTrigger>
-            <TabsTrigger value="networking">Networking</TabsTrigger>
-            <TabsTrigger value="api">API</TabsTrigger>
-            {node.client !== ExecutionClientClients.Nethermind && (
-              <TabsTrigger value="accessControl">Access Control</TabsTrigger>
-            )}
-            <TabsTrigger value="logs">Logs</TabsTrigger>
-            <TabsTrigger value="resources">Resources</TabsTrigger>
-            {role === Roles.Admin && (
-              <TabsTrigger
-                value="danger"
-                className="text-destructive data-[state=active]:text-destructive data-[state=active]:bg-destructive/10"
-              >
-                Danger Zone
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="protocol">
-            <ProtocolTab node={node} role={role} versions={versions} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="networking">
-            <NetworkingTab node={node} role={role} secrets={privateKeys} />
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="api">
-            <APITab node={node} role={role} secrets={jwts} />
-          </TabsContent>
+        <Tabs tabs={getAuthorizedTabs(tabs, role)}>
+          <ProtocolTab node={node} role={role} versions={versions} />
+          <NetworkingTab node={node} role={role} secrets={privateKeys} />
+          <APITab node={node} role={role} secrets={jwts} />
+
           {node.client !== ExecutionClientClients.Nethermind && (
-            <TabsContent
-              className="px-4 py-3 sm:px-6 sm:py-4"
-              value="accessControl"
-            >
-              <AccessControlTab node={node} role={role} />
-            </TabsContent>
+            <AccessControlTab node={node} role={role} />
           )}
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="logs">
-            {token && <LogsTab node={node} role={role} token={token.value} />}
-          </TabsContent>
-          <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="resources">
-            <ResourcesForm
-              node={node}
-              role={role}
-              url={`/ethereum/nodes/${node.name}?workspace_id=${workspaceId}`}
-            />
-          </TabsContent>
-          {role === Roles.Admin && (
-            <TabsContent className="px-4 py-3 sm:px-6 sm:py-4" value="danger">
-              <DangerZoneTab node={node} />
-            </TabsContent>
-          )}
+
+          {token && <LogsTab node={node} role={role} token={token.value} />}
+          <ResourcesForm
+            node={node}
+            role={role}
+            url={`/ethereum/nodes/${node.name}?workspace_id=${workspaceId}`}
+          />
+
+          <DangerZoneTab node={node} />
         </Tabs>
       </div>
     </div>

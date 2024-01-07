@@ -61,7 +61,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <div className="p-4 border rounded-lg">
         <Toggle
           id="engine"

@@ -31,7 +31,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
   };
 
   return (
-    <form action={onSubmit} className="relative space-y-4">
+    <form action={onSubmit} className="relative space-y-8">
       <Select
         id="logging"
         label="Verbosity Levels"
@@ -39,6 +39,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
         defaultValue={logging}
         disabled={role === Roles.Reader}
         errors={fieldErrors}
+        className="max-w-xs"
       />
 
       <Logs

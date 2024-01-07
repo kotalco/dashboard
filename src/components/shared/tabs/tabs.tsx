@@ -19,6 +19,8 @@ interface TabsProps {
 }
 
 export const Tabs = ({ tabs, children }: TabsProps) => {
+  const filteredChildren = children.filter((child) => child);
+
   return (
     <CNTabs defaultValue="protocol">
       <TabsList>
@@ -42,7 +44,7 @@ export const Tabs = ({ tabs, children }: TabsProps) => {
               <CardTitle>{label}</CardTitle>
               {description && <CardDescription>{description}</CardDescription>}
             </CardHeader>
-            <CardContent>{children[index]}</CardContent>
+            <CardContent>{filteredChildren[index]}</CardContent>
           </Card>
         </TabsContent>
       ))}
