@@ -72,7 +72,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
               </Button>
               <ul
                 className={cn(
-                  "overflow-y-auto transition-all",
+                  "overflow-y-auto transition-all py-1",
                   open ? "max-h-full" : "max-h-0"
                 )}
               >
