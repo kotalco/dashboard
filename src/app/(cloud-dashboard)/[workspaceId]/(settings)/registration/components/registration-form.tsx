@@ -32,7 +32,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
       action={onSubmit}
       className="space-y-4"
     >
-      <div className="p-4 border rounded-lg">
+      <div className="p-4 border rounded-lg max-w-xl">
         <Toggle
           id="enable_registration"
           label="Enable Registration"

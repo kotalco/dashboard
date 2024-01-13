@@ -41,6 +41,7 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
   return (
     <form action={onSubmit} className="space-y-4">
       <Input
+        className="max-w-xs"
         id="domain"
         label="Domain Name"
         value={value}
@@ -49,17 +50,14 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
       />
 
       {value && (
-        <Alert>
+        <Alert className="max-w-lg">
           {ip.ip_address && (
             <AlertDescription>
-              <p>
-                Add DNS record of type A that maps <strong>{value}</strong> to{" "}
-                <strong>{ip.ip_address}</strong>
-              </p>
-              <p>
-                Add DNS record of type A that maps <strong>*.{value}</strong> to{" "}
-                <strong>{ip.ip_address}</strong>
-              </p>
+              Add DNS record of type A that maps <strong>{value}</strong> to{" "}
+              <strong>{ip.ip_address}</strong>, <br />
+              Add DNS record of type A that maps <strong>
+                *.{value}
+              </strong> to <strong>{ip.ip_address}</strong>
             </AlertDescription>
           )}
 
