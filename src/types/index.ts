@@ -283,6 +283,7 @@ export interface StacksNode extends ClientImage, ResourcesInfo {
 export interface Endpoint {
   name: string;
   protocol: Protocol;
+  network: string;
   routes: {
     name: string;
     route: string;

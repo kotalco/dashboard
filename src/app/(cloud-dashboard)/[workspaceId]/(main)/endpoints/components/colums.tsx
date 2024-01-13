@@ -41,6 +41,7 @@ export const columns: ColumnDef<EndpointColumn>[] = [
       </Link>
     ),
   },
+  { accessorKey: "network", header: "Network" },
   {
     accessorKey: "created_at",
     header: ({ column }) => <SortingButton column={column}>Date</SortingButton>,

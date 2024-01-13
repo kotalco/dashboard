@@ -47,7 +47,10 @@ export function DataTable<TData, TValue>({
           {table.getHeaderGroups().map(({ id, headers }) => (
             <TableRow key={id}>
               {headers.map(({ id, isPlaceholder, column, getContext }) => (
-                <TableHead key={id}>
+                <TableHead
+                  key={id}
+                  className={column.id === "name" ? "w-1/2" : ""}
+                >
                   {isPlaceholder
                     ? null
                     : flexRender(column.columnDef.header, getContext())}
