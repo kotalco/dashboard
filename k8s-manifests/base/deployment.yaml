@@ -5,7 +5,7 @@ metadata:
     deployment.kubernetes.io/revision: "1"
   generation: 1
   labels:
-    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kotal-dashboard
   name: kotal-dashboard
   namespace: kotal
 spec:
@@ -27,23 +27,11 @@ spec:
         app: kotal-dashboard
     spec:
       containers:
-      - env:
-        - name: API_URL
-          value: ${API_URL}
-        - name: NEXT_PUBLIC_WS_API_URL
-          value: ${NEXT_PUBLIC_WS_API_URL}
-        - name: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-          value: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-        image: kotalco/cloud-dashboard-staging:${SHORT_SHA}
+      - name: kotal-dashboard
         imagePullPolicy: IfNotPresent
-        name: kotal-dashboard
         ports:
         - containerPort: 3000
           protocol: TCP
-        resources:
-          requests:
-            cpu: 10m
-            memory: 50Mi
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
@@ -51,14 +39,3 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: kotal-dashboard
-spec:
-  selector:
-    app: kotal-dashboard
-  ports:
-    - port: 3000
-      targetPort: 3000
