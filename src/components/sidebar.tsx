@@ -8,7 +8,7 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
   if (!user) return null;
 
   return (
-    <div className="flex flex-col w-64 px-3 py-4 space-y-4 border-r">
+    <div className="flex flex-col w-64 fixed inset-y-0 left-0 overflow-y-auto px-3 py-4 space-y-4 border-r">
       <div className="flex-1">
         <div>
           <Logo />

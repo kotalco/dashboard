@@ -12,7 +12,7 @@ export const DeploymentsCard = async ({
   const { deploymentsCount } = await getCounts(workspaceId);
 
   return (
-    <Card className="col-span-6 row-span-2">
+    <Card className="col-span-12 lg:col-span-6 row-span-2">
       <CardHeader>
         <CardTitle>Deployments</CardTitle>
       </CardHeader>
