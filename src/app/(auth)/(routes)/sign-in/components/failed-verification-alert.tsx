@@ -24,8 +24,8 @@ export const FailedVerificationAlert: React.FC<
 
   if (success)
     return (
-      <div className="mb-4">
-        <SubmitSuccess success={success}>
+      <div className="absolute top-10 inset-x-0 flex justify-center">
+        <SubmitSuccess success={true}>
           Verification email has been sent. Please check your email.
         </SubmitSuccess>
       </div>
@@ -33,7 +33,7 @@ export const FailedVerificationAlert: React.FC<
 
   if (error) {
     return (
-      <div className="mb-4">
+      <div className="absolute top-10 inset-x-0 flex justify-center">
         <SubmitError error={error} />
       </div>
     );
@@ -41,33 +41,39 @@ export const FailedVerificationAlert: React.FC<
 
   if (status === "401") {
     return (
-      <Alert variant="destructive" className="mb-4">
-        <AlertDescription>
-          <span>This verification email is already expired. Please click </span>
-          <form className="inline" action={onSubmit}>
-            <SubmitButton variant="link" className="p-0">
-              here
-            </SubmitButton>
-          </form>
+      <div className="absolute top-10 inset-x-0 flex justify-center">
+        <Alert variant="destructive" className="max-w-3xl text-center">
+          <AlertDescription>
+            <span>
+              This verification email is already expired. Please click{" "}
+            </span>
+            <form className="inline" action={onSubmit}>
+              <SubmitButton variant="link" className="p-0">
+                here
+              </SubmitButton>
+            </form>
 
-          <span> to resend another one.</span>
-        </AlertDescription>
-      </Alert>
+            <span> to resend another one.</span>
+          </AlertDescription>
+        </Alert>
+      </div>
     );
   }
 
   return (
-    <Alert variant="destructive" className="mb-4">
-      <AlertDescription>
-        <span>Verification failed. Please click </span>
-        <form className="inline" action={onSubmit}>
-          <SubmitButton variant="link" className="px-0">
-            here
-          </SubmitButton>
-        </form>
+    <div className="absolute top-10 inset-x-0 flex justify-center">
+      <Alert variant="destructive" className="max-w-3xl text-center">
+        <AlertDescription>
+          <span>Verification failed. Please click </span>
+          <form className="inline" action={onSubmit}>
+            <SubmitButton variant="link" className="px-0">
+              here
+            </SubmitButton>
+          </form>
 
-        <span> to resend another verification email.</span>
-      </AlertDescription>
-    </Alert>
+          <span> to resend another verification email.</span>
+        </AlertDescription>
+      </Alert>
+    </div>
   );
 };

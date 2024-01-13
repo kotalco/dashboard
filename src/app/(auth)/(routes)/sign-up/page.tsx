@@ -1,32 +1,23 @@
 import Link from "next/link";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { RegisterForm } from "./components/register-form";
+import { Heading } from "@/components/ui/heading";
 
 export default function Page() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-center">Sign In</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <RegisterForm />
-      </CardContent>
-      <CardFooter className="gap-x-1">
+    <div className="space-y-8">
+      <Heading title="Sign Up" />
+
+      <RegisterForm />
+      <p className="gap-x-1">
         Already have an account?
         <Link
           href="/sign-in"
-          className="text-primary hover:underline underline-offset-4"
+          className="underline ml-2 hover:text-muted-foreground"
         >
           Login
         </Link>
-      </CardFooter>
-    </Card>
+      </p>
+    </div>
   );
 }

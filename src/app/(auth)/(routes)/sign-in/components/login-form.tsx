@@ -40,6 +40,8 @@ export const LoginForm = () => {
   return (
     <>
       <Verification2FAModal isOpen={open} onClose={() => setOpen(false)} />
+      <SubmitError error={error} />
+
       <form action={onSubmit} className="space-y-4">
         <Input id="email" label="Email Address" errors={fieldErrors} />
 
@@ -61,8 +63,6 @@ export const LoginForm = () => {
             </Link>
           </div>
         </div>
-
-        <SubmitError error={error} />
 
         <SubmitButton className="w-full">Login</SubmitButton>
       </form>

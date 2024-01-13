@@ -28,6 +28,19 @@ export const ResetPasswordForm = () => {
 
   return (
     <form action={onSubmit} className="space-y-4">
+      <SubmitError error={error} />
+
+      <SubmitSuccess success={success}>
+        Congratulations, your email has been reset. You can now{" "}
+        <Link
+          href="/sign-ih"
+          className="text-primary hover:underline underline-offset-4"
+        >
+          Login
+        </Link>{" "}
+        using your new password and enjoy our services.
+      </SubmitSuccess>
+
       <Input
         id="password"
         label="Password"
@@ -41,21 +54,7 @@ export const ResetPasswordForm = () => {
         type="password"
         errors={fieldErrors}
       />
-
       <SubmitButton className="w-full">Reset Password</SubmitButton>
-
-      <SubmitSuccess success={success}>
-        Congratulations, your email has been reset. You can now{" "}
-        <Link
-          href="/sign-ih"
-          className="text-primary hover:underline underline-offset-4"
-        >
-          Login
-        </Link>{" "}
-        using your new password and enjoy our services.
-      </SubmitSuccess>
-
-      <SubmitError error={error} />
     </form>
   );
 };

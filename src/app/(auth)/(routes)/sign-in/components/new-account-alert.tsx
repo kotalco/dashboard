@@ -9,16 +9,18 @@ export const NewAccountAlert = () => {
 
   if (cookie?.value) {
     return (
-      <Alert className="mb-4 text-center alert-sccuess">
-        <AlertTitle className="text-center">Account Created</AlertTitle>
-        <AlertDescription>
-          <p>
-            You have been registered with{" "}
-            <strong className="font-bold">{cookie.value}</strong>. Please check
-            your inbox and confirm your email
-          </p>
-        </AlertDescription>
-      </Alert>
+      <div className="absolute top-10 inset-x-0 flex justify-center">
+        <Alert className="mb-4 text-center max-w-3xl alert-success">
+          <AlertTitle className="text-center">Account Created</AlertTitle>
+          <AlertDescription>
+            <p>
+              You have been registered with{" "}
+              <strong className="font-bold">{cookie.value}</strong>. Please
+              check your inbox and confirm your email
+            </p>
+          </AlertDescription>
+        </Alert>
+      </div>
     );
   }
 

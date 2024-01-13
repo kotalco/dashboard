@@ -1,13 +1,5 @@
 import Link from "next/link";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 import { LoginForm } from "./components/login-form";
 import { NewAccountAlert } from "./components/new-account-alert";
 import { EmailVerifiedAlert } from "./components/email-verified-alert";
