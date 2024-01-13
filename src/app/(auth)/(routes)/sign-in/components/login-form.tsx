@@ -50,12 +50,12 @@ export const LoginForm = () => {
           type="password"
         />
 
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <Checkbox id="remember-me" label="Remember Me" errors={fieldErrors} />
           <div className="text-sm whitespace-nowrap">
             <Link
               href="/forget-password"
-              className="text-primary hover:underline underline-offset-4"
+              className="underline hover:text-muted-foreground"
             >
               Forgot your password?
             </Link>

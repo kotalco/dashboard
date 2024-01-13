@@ -11,29 +11,27 @@ import {
 import { LoginForm } from "./components/login-form";
 import { NewAccountAlert } from "./components/new-account-alert";
 import { EmailVerifiedAlert } from "./components/email-verified-alert";
+import { Heading } from "@/components/ui/heading";
 
 export default async function Page() {
   return (
-    <>
+    <div className="space-y-8">
       <NewAccountAlert />
       <EmailVerifiedAlert />
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-center">Sign In</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <LoginForm />
-        </CardContent>
-        <CardFooter className="gap-x-1">
-          Don&apos;t have an account?
-          <Link
-            href="/sign-up"
-            className="text-primary hover:underline underline-offset-4"
-          >
-            Sign Up
-          </Link>
-        </CardFooter>
-      </Card>
-    </>
+
+      <Heading title="Sign In" />
+
+      <LoginForm />
+
+      <p className="gap-x-1">
+        Don&apos;t have an account?
+        <Link
+          href="/sign-up"
+          className="underline ml-2 hover:text-muted-foreground"
+        >
+          Sign Up
+        </Link>
+      </p>
+    </div>
   );
 }
