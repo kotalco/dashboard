@@ -12,7 +12,7 @@ export default async function AuthLayout({
         <CardHeader className="flex items-center justify-center">
           <Logo />
         </CardHeader>
-        <CardContent>{children}</CardContent>
+        <CardContent className="space-y-8">{children}</CardContent>
       </Card>
     </div>
   );

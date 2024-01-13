@@ -7,7 +7,7 @@ import { Heading } from "@/components/ui/heading";
 
 export default async function Page() {
   return (
-    <div className="space-y-8">
+    <>
       <NewAccountAlert />
       <EmailVerifiedAlert />
 
@@ -24,6 +24,6 @@ export default async function Page() {
           Sign Up
         </Link>
       </p>
-    </div>
+    </>
   );
 }

@@ -5,7 +5,7 @@ import { Heading } from "@/components/ui/heading";
 
 export default function Page() {
   return (
-    <div className="space-y-8">
+    <>
       <Heading title="Sign Up" />
 
       <RegisterForm />
@@ -18,6 +18,6 @@ export default function Page() {
           Login
         </Link>
       </p>
-    </div>
+    </>
   );
 }

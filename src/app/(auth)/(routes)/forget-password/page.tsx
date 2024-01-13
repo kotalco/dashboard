@@ -6,7 +6,7 @@ import { Heading } from "@/components/ui/heading";
 
 export default async function Page() {
   return (
-    <div className="space-y-8">
+    <>
       <Heading title="Forget Password" />
 
       <ForgetPasswordForm />
@@ -16,6 +16,6 @@ export default async function Page() {
           Back to Login
         </Link>
       </div>
-    </div>
+    </>
   );
 }
