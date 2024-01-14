@@ -36,7 +36,7 @@ const SetDefaultCardButton = () => {
   const { pending } = useFormStatus();
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button

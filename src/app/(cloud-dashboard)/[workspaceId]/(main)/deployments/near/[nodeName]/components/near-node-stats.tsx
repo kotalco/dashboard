@@ -83,7 +83,7 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
           <CardHeader>
             <CardTitle className="items-start">
               Blocks
-              <TooltipProvider>
+              <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger>
                     <AlertCircle className="w-4 h-4 ml-2" />
@@ -117,7 +117,7 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
           <CardHeader>
             <CardTitle className="items-start">
               Peers
-              <TooltipProvider>
+              <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger>
                     <AlertCircle className="w-4 h-4 ml-2" />

@@ -50,7 +50,7 @@ export const NodeStatus: React.FC<NodeStatusProps> = ({
   if (!data) return <Skeleton className="w-3 h-3 mt-3 rounded-full" />;
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger>
           <span className="relative flex w-3 h-3 mt-3">

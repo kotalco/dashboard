@@ -38,7 +38,7 @@ export const DeleteCard: React.FC<DeleteCardProps> = ({ id }) => {
 
   return (
     <>
-      <TooltipProvider>
+      <TooltipProvider delayDuration={0}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
