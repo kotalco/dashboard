@@ -47,7 +47,7 @@ export const EndpointsClient: React.FC<EndpointsClientProps> = ({
       {!data.length && (
         <NoResult
           imageUrl="/images/endpoint.svg"
-          title="No Endpoints Available"
+          title="No Endpoints"
           description="Endpoints are secure routes that allow developers to call your deployed nodes' APIs."
           createUrl={`/${params.workspaceId}/endpoints/new`}
           buttonText="Create New Endpoint"
