@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "@/components/ui/external-link";
 
 import { EndpointStats } from "./endpoint-stats";
+import Example from "./example";
 
 interface EndpointDetailsProps {
   endpoint: Endpoint;
@@ -63,12 +64,7 @@ export const EndpointDetails = async ({
                 <RouteURL route={route} />
 
                 {/* Example */}
-                <div>
-                  <h3 className="text-base">Example</h3>
-                  <pre className="px-5 mt-2 overflow-x-scroll bg-muted text-muted-foreground text-xs font-mono rounded-md py-7">
-                    {example}
-                  </pre>
-                </div>
+                <Example example={example} />
 
                 {/* Chart Stats */}
                 <EndpointStats
