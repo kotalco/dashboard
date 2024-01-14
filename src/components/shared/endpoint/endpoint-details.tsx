@@ -1,14 +1,16 @@
 import Image from "next/image";
 import { format, parseISO } from "date-fns";
+import { Globe } from "lucide-react";
 
 import { Endpoint, EndpointStats as TEndpointStats } from "@/types";
 
 import { Heading } from "@/components/ui/heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RouteURL } from "@/components/shared/endpoint/route-url";
-import { EndpointStats } from "./endpoint-stats";
 import { Badge } from "@/components/ui/badge";
-import { Globe } from "lucide-react";
+import { ExternalLink } from "@/components/ui/external-link";
+
+import { EndpointStats } from "./endpoint-stats";
 
 interface EndpointDetailsProps {
   endpoint: Endpoint;
@@ -57,12 +59,6 @@ export const EndpointDetails = async ({
             </CardHeader>
             <CardContent>
               <div className="space-y-3 text-sm pt-7 first:pt-2">
-                {/* Chart Stats */}
-                <EndpointStats
-                  dailyAggregation={stats[name].daily_aggregation}
-                  weeklyAggregation={stats[name].weekly_aggregation}
-                />
-
                 {/* Route URL */}
                 <RouteURL route={route} />
 
@@ -74,20 +70,21 @@ export const EndpointDetails = async ({
                   </pre>
                 </div>
 
+                {/* Chart Stats */}
+                <EndpointStats
+                  dailyAggregation={stats[name].daily_aggregation}
+                  weeklyAggregation={stats[name].weekly_aggregation}
+                />
+
                 {/* References */}
                 <div>
                   <h3 className="text-base">References</h3>
                   <ul className="space-y-1 list-disc">
                     {references.map((reference) => (
                       <li className="list-none" key={reference}>
-                        <a
-                          className="text-primary mt-1 hover:underline hover:underline-offset-4"
-                          href={reference}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
+                        <ExternalLink href={reference}>
                           {reference}
-                        </a>
+                        </ExternalLink>
                       </li>
                     ))}
                   </ul>
