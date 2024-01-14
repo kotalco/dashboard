@@ -30,6 +30,7 @@ export function useManagedNavigation(endpointsCount?: number) {
       Icon: Zap,
     },
     {
+      position: "bottom",
       label: "Settings",
       href: `/account`,
       Icon: Cog,

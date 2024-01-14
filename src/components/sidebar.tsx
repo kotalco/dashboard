@@ -9,13 +9,13 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="flex flex-col w-64 fixed inset-y-0 left-0 overflow-y-auto px-3 py-4 space-y-4 border-r">
-      <div className="flex-1">
+      <div className="flex-1 flex flex-col">
         <div>
           <Logo />
         </div>
-        <div className="pt-4">
-          <nav>
-            <ul className="space-y-1">{children}</ul>
+        <div className="pt-4 flex flex-col flex-1">
+          <nav className="flex flex-col flex-1">
+            <ul className="flex-1 flex flex-col">{children}</ul>
           </nav>
         </div>
       </div>
