@@ -16,13 +16,14 @@ import { cn } from "@/lib/utils";
 interface TabsProps {
   tabs: { label: string; value: string; description?: string }[];
   children: React.ReactNode[];
+  cardDisplay?: boolean;
 }
 
-export const Tabs = ({ tabs, children }: TabsProps) => {
+export const Tabs = ({ tabs, children, cardDisplay = true }: TabsProps) => {
   const filteredChildren = children.filter((child) => child);
 
   return (
-    <CNTabs defaultValue="protocol">
+    <CNTabs defaultValue={tabs[0].value}>
       <TabsList>
         {tabs.map(({ label, value }) => (
           <TabsTrigger
@@ -39,12 +40,14 @@ export const Tabs = ({ tabs, children }: TabsProps) => {
       </TabsList>
       {tabs.map(({ label, value, description }, index) => (
         <TabsContent key={value} value={value}>
-          <Card>
-            <CardHeader>
+          <Card className={cardDisplay ? "" : "border-0"}>
+            <CardHeader className={cardDisplay ? "" : "px-0"}>
               <CardTitle>{label}</CardTitle>
               {description && <CardDescription>{description}</CardDescription>}
             </CardHeader>
-            <CardContent>{filteredChildren[index]}</CardContent>
+            <CardContent className={cardDisplay ? "" : "px-0"}>
+              {filteredChildren[index]}
+            </CardContent>
           </Card>
         </TabsContent>
       ))}

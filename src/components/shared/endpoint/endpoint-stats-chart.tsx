@@ -10,28 +10,18 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 
 interface EndpointStatsChartProps {
   data: number[];
   labels: string[] | number[];
-  title: string;
 }
 
 export const EndpointStatsChart = ({
   data,
   labels,
-  title,
 }: EndpointStatsChartProps) => {
   const { theme } = useTheme();
   const barColor =
@@ -49,7 +39,6 @@ export const EndpointStatsChart = ({
       {
         barThickness: 20,
         borderRadius: 5,
-        label: "No. of hits",
         data,
         backgroundColor: barColor,
       },
@@ -63,21 +52,7 @@ export const EndpointStatsChart = ({
         maintainAspectRatio: false,
         responsive: true,
         plugins: {
-          legend: {
-            align: "end",
-            labels: {
-              color: labelsColor,
-            },
-          },
-          title: {
-            display: true,
-            text: title,
-            color: labelsColor,
-            font: {
-              size: 16,
-              weight: "normal",
-            },
-          },
+          legend: { display: false },
           tooltip: {
             boxPadding: 5,
             backgroundColor: tooltipBgColor,
