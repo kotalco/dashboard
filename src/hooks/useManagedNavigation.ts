@@ -25,7 +25,7 @@ export function useManagedNavigation(endpointsCount?: number) {
       count: endpointsCount,
     },
     {
-      label: "Manage Plan",
+      label: "My Plan",
       href: `/billing/plan`,
       Icon: Zap,
     },
