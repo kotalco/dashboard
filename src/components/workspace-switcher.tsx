@@ -86,7 +86,7 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
       <PopoverContent className="w-full p-0">
         <Command>
           <CommandList>
-            <CommandInput disabled={pending} placeholder="Search a Workspace" />
+            <CommandInput disabled={pending} placeholder="Search..." />
             <CommandEmpty>No Workspaces Found.</CommandEmpty>
             <CommandGroup>
               {workspaces.map((workspace) => (
