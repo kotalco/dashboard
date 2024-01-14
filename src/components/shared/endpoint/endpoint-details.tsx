@@ -7,6 +7,8 @@ import { Heading } from "@/components/ui/heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RouteURL } from "@/components/shared/endpoint/route-url";
 import { EndpointStats } from "./endpoint-stats";
+import { Badge } from "@/components/ui/badge";
+import { Globe } from "lucide-react";
 
 interface EndpointDetailsProps {
   endpoint: Endpoint;
@@ -19,7 +21,7 @@ export const EndpointDetails = async ({
 }: EndpointDetailsProps) => {
   return (
     <>
-      <div className="flex-1 p-8 pl-0 pt-6 space-y-4">
+      <div className="flex-1 pb-8 space-y-4">
         <div className="flex items-center gap-x-3">
           <Image
             src={`/images/${endpoint.protocol}.svg`}
@@ -28,13 +30,21 @@ export const EndpointDetails = async ({
             alt="Endpoint"
             className="w-10 h-10"
           />
-          <Heading
-            title={endpoint.name}
-            description={`Created at ${format(
-              parseISO(endpoint.created_at),
-              "MMMM do, yyyy"
-            )}`}
-          />
+          <div className="flex items-start gap-x-6">
+            <Heading
+              title={endpoint.name}
+              description={`Created at ${format(
+                parseISO(endpoint.created_at),
+                "MMMM do, yyyy"
+              )}`}
+            />
+            {endpoint.network && (
+              <Badge>
+                <Globe className="w-4 h-4 mr-2" />
+                {endpoint.network}
+              </Badge>
+            )}
+          </div>
         </div>
       </div>
 
