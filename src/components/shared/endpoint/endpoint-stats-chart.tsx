@@ -70,15 +70,11 @@ export const EndpointStatsChart = ({
         scales: {
           x: {
             grid: { display: false },
-            ticks: {
-              color: labelsColor,
-            },
           },
           y: {
             grid: { display: false },
             ticks: {
               stepSize: 1,
-              color: labelsColor,
             },
           },
         },
