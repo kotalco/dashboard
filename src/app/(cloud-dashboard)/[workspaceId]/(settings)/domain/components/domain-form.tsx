@@ -102,7 +102,7 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
             {count}s
           </span>
         ) : (
-          "Save"
+          "Update"
         )}
       </SubmitButton>
     </form>

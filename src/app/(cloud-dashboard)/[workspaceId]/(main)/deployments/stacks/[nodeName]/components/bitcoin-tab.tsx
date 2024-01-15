@@ -60,7 +60,7 @@ export const BitconTab: React.FC<BitconTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
+      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
     </form>
   );
 };

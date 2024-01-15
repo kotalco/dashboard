@@ -64,7 +64,7 @@ export const ValidatorTab: React.FC<ValidatorTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
+      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
     </form>
   );
 };

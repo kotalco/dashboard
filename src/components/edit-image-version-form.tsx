@@ -65,7 +65,7 @@ export const EditImageVersionForm = ({
               disabled={currentImage === image}
               data-testid="submit"
             >
-              Save
+              Update
             </SubmitButton>
           )}
         </div>

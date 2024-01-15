@@ -102,7 +102,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
+      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
     </form>
   );
 };

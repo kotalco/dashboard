@@ -49,7 +49,7 @@ export const WalletTab: React.FC<WalletTabProps> = ({ node, role }) => {
 
       {role !== Roles.Reader && (
         <SubmitButton data-testid="submit" type="submit">
-          Save
+          Update
         </SubmitButton>
       )}
     </form>

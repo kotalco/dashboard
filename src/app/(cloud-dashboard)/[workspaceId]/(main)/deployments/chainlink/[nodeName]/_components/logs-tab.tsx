@@ -52,7 +52,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({ node, role, token }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
+      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
     </form>
   );
 };

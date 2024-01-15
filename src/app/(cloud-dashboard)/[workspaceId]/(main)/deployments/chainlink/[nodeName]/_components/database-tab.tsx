@@ -47,7 +47,9 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && <SubmitButton type="submit">Save</SubmitButton>}
+      {role !== Roles.Reader && (
+        <SubmitButton type="submit">Update</SubmitButton>
+      )}
     </form>
   );
 };

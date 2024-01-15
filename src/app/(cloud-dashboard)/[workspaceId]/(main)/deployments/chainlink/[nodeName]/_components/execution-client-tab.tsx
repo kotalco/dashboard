@@ -89,7 +89,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
+      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
     </form>
   );
 };

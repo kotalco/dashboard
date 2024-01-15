@@ -41,10 +41,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
         className="space-x-10"
       />
 
-      <SubmitButton>Save</SubmitButton>
+      <SubmitButton>Update</SubmitButton>
 
       <SubmitSuccess success={success}>
-        Your registration settings have been saved successfuly
+        Your registration settings have been updated successfuly
       </SubmitSuccess>
 
       <SubmitError error={error} />

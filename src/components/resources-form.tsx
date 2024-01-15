@@ -108,7 +108,7 @@ export function ResourcesForm<T extends ResourcesInfo>({
 
       {role !== Roles.Reader && (
         <SubmitButton data-testid="submit" type="submit">
-          Save
+          Update
         </SubmitButton>
       )}
     </form>

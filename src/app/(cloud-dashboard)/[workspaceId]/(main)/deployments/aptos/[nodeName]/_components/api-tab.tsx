@@ -48,7 +48,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
 
       {role !== Roles.Reader && (
         <SubmitButton data-testid="submit" type="submit">
-          Save
+          Update
         </SubmitButton>
       )}
     </form>

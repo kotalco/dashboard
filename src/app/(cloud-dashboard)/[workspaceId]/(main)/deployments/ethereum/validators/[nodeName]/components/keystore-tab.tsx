@@ -83,7 +83,7 @@ export const KeystoreTab: React.FC<KeystoreTabProps> = ({
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
+      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
     </form>
   );
 };

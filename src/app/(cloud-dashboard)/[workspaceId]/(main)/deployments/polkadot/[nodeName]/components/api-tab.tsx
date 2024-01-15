@@ -111,7 +111,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role }) => {
 
       <SubmitError error={error} />
 
-      {role !== Roles.Reader && <SubmitButton>Save</SubmitButton>}
+      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
 
       <AlertModal open={isOpen} onOpenChange={setIsOpen} title="Warning">
         <p className="text-foreground/70 text-sm">
