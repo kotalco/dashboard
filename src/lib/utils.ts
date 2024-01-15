@@ -276,9 +276,12 @@ const assignValue = (
 
 export const logger = (tag: string, e: unknown) => {
   if (isAxiosError(e)) {
-    const hasSensitiveData =
-      JSON.parse(e.config?.data).hasOwnProperty("password") ||
-      JSON.parse(e.config?.data).hasOwnProperty("password_confirmation");
+    let hasSensitiveData = false;
+    if (e.config?.data) {
+      hasSensitiveData =
+        JSON.parse(e.config.data).hasOwnProperty("password") ||
+        JSON.parse(e.config.data).hasOwnProperty("password_confirmation");
+    }
 
     const error = {
       tag,
