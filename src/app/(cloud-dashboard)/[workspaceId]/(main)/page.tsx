@@ -3,7 +3,6 @@ import { BookOpen, MessageCircle, Phone } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
 import { EndpointsCount } from "./components/endpoints-count";
 import { SecretsCount } from "./components/secrets-count";
-import { SubscriptionInfo } from "./components/subscription-info";
 import { DeploymentsCard } from "./components/deployments-card";
 
 export default async function DashboardPage({
@@ -21,8 +20,6 @@ export default async function DashboardPage({
       <div className="col-span-12 lg:col-span-6 row-span-1">
         <SecretsCount workspaceId={params.workspaceId} />
       </div>
-
-      <SubscriptionInfo />
 
       <div className="col-span-12 lg:col-span-6 xl:col-span-4 row-span-1">
         <a href="https://docs.kotal.co" target="_blank" rel="noreferrer">

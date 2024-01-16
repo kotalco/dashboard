@@ -1,5 +1,8 @@
+import { redirect } from "next/navigation";
+
 import { MainNavigationItems } from "@/components/main-navigation-items";
 import { Sidebar } from "@/components/sidebar";
+import { findUser } from "@/services/find-user";
 import { getCounts } from "@/services/get-counts";
 
 export default async function DashboardLayout({
@@ -9,6 +12,9 @@ export default async function DashboardLayout({
   children: React.ReactNode;
   params: { workspaceId: string };
 }) {
+  const { user } = await findUser();
+  if (!user) redirect("/sign-in");
+
   const { count } = await getCounts(workspaceId);
 
   return (

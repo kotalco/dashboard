@@ -1,16 +1,32 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { useEffect } from "react";
+import { StorageItems } from "@/enums";
+import { findUser } from "@/services/find-user";
+import { getWorkspaces } from "@/services/get-workspaces";
+import { getWorkspace } from "@/services/get-workspace";
+import { logger } from "@/lib/utils";
 
-import { useActivationModal } from "@/hooks/useActivationModal";
+export default async function Page() {
+  const { user } = await findUser();
 
-export default function Page() {
-  const onOpen = useActivationModal((state) => state.onOpen);
-  const isOpen = useActivationModal((state) => state.isOpen);
+  // No user and no auth token or invalid token
+  if (!user) redirect("/sign-in");
 
-  useEffect(() => {
-    if (!isOpen) onOpen();
-  }, [isOpen, onOpen]);
+  if (user.is_customer) redirect("/virtual-endpoints");
 
-  return null;
+  const workspaceId = cookies().get(StorageItems.LAST_WORKSPACE_ID);
+  if (workspaceId?.value) {
+    try {
+      const workspace = await getWorkspace(workspaceId.value);
+      redirect(`/${workspace.id}`);
+    } catch (error) {
+      logger("GetWorkspaceByID", error);
+      const workspaces = await getWorkspaces();
+      if (workspaces.length) redirect(`/${workspaces[0].id}`);
+    }
+  }
+
+  const workspaces = await getWorkspaces();
+  if (workspaces.length) redirect(`/${workspaces[0].id}`);
 }

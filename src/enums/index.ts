@@ -11,12 +11,6 @@ export enum Roles {
   Admin = "admin",
   Writer = "writer",
   Reader = "reader",
-}
-
-export enum RolesWithCustomer {
-  Admin = "admin",
-  Writer = "writer",
-  Reader = "reader",
   Customer = "customer",
 }
 

@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 
 import { getEnumKey, getSelectItems } from "@/lib/utils";
 import { useAPIMessage } from "@/hooks/useAPIMessage";
-import { Roles, RolesWithCustomer } from "@/enums";
+import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { changeRole } from "@/actions/change-role";
 
@@ -35,7 +35,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
     },
   });
 
-  const { isCurrentUser, role, id, withCustomerRole } = data;
+  const { isCurrentUser, role, id } = data;
 
   useEffect(() => {
     return () => clearMessage();
@@ -50,6 +50,9 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
     });
   };
 
+  const roles = getSelectItems(Roles);
+  const roleOptions = roles.filter(({ value }) => value !== Roles.Customer);
+
   if (pending) {
     return (
       <div className="flex items-center justify-center max-w-[120px]">
@@ -60,12 +63,12 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
 
   return (
     <Select
-      disabled={pending}
+      disabled={pending || role === Roles.Customer}
       id="role"
       value={role}
       defaultValue={role}
       onValueChange={onChangeRole}
-      options={getSelectItems(withCustomerRole ? RolesWithCustomer : Roles)}
+      options={roleOptions}
       className="max-w-[120px]"
     />
   );

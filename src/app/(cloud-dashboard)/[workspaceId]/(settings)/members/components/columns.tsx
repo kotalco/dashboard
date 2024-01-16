@@ -10,7 +10,6 @@ export type TeamMemberColumn = {
   email: string;
   role: Roles;
   isCurrentUser: boolean;
-  withCustomerRole: boolean;
   currentRole: Roles;
 };
 
