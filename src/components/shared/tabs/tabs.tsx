@@ -42,7 +42,6 @@ export const Tabs = ({ tabs, children, cardDisplay = true }: TabsProps) => {
         <TabsContent key={value} value={value}>
           <Card className={cardDisplay ? "" : "border-0"}>
             <CardHeader className={cardDisplay ? "" : "px-0"}>
-              <CardTitle>{label}</CardTitle>
               {description && <CardDescription>{description}</CardDescription>}
             </CardHeader>
             <CardContent className={cardDisplay ? "" : "px-0"}>

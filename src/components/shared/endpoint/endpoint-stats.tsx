@@ -9,8 +9,8 @@ interface EndpointStatsProps {
 }
 
 const TABS = [
-  { label: "Daily Hits", value: "daily" },
-  { label: "Weekly Hits", value: "weekly" },
+  { label: "Daily", value: "daily" },
+  { label: "Weekly", value: "weekly" },
 ];
 
 export const EndpointStats = ({
@@ -18,20 +18,23 @@ export const EndpointStats = ({
   weeklyAggregation,
 }: EndpointStatsProps) => {
   return (
-    <Tabs tabs={TABS} cardDisplay={false}>
-      <div className="min-h-[250px]">
-        <EndpointStatsChart
-          data={dailyAggregation}
-          labels={getDaysOfCurrentMonth()}
-        />
-      </div>
+    <>
+      <h3 className="text-base">Usage</h3>
+      <Tabs tabs={TABS} cardDisplay={false}>
+        <div className="min-h-[250px]">
+          <EndpointStatsChart
+            data={dailyAggregation}
+            labels={getDaysOfCurrentMonth()}
+          />
+        </div>
 
-      <div className="min-h-[250px] max-w-sm">
-        <EndpointStatsChart
-          data={weeklyAggregation}
-          labels={["Week 1", "Week 2", "Week 3", "Week 4"]}
-        />
-      </div>
-    </Tabs>
+        <div className="min-h-[250px] max-w-sm">
+          <EndpointStatsChart
+            data={weeklyAggregation}
+            labels={["Week 1", "Week 2", "Week 3", "Week 4"]}
+          />
+        </div>
+      </Tabs>
+    </>
   );
 };
