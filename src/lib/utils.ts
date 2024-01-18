@@ -1,4 +1,10 @@
-import { eachDayOfInterval, endOfMonth, startOfMonth } from "date-fns";
+import {
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  parseISO,
+  startOfMonth,
+} from "date-fns";
 
 import { FormDataResult } from "@/actions/create-secret/types";
 import {
@@ -326,4 +332,8 @@ export const getAuthorizedTabs = (
   return allTabs
     .filter(({ role }) => (role ? role === currentRole : true))
     .map(({ label, value, description }) => ({ label, value, description }));
+};
+
+export const formatDate = (date: string) => {
+  return format(parseISO(date), "MMMM do, yyyy");
 };

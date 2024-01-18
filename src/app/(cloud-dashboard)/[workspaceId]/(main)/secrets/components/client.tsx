@@ -8,7 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import { DataTable } from "@/components/ui/data-table";
 import { Roles } from "@/enums";
 import { SecretColumn, columns } from "./colums";
-import { NoResult } from "@/components/no-result";
+import { NoResult } from "@/components/shared/no-result/no-result";
 
 interface SecretsClientProps {
   data: SecretColumn[];

@@ -8,7 +8,7 @@ import { ChainlinkNetworks, Roles } from "@/enums";
 import { ChainlinkNode } from "@/types";
 
 import { DeploymentsList } from "@/components/deployments-list";
-import { NoResult } from "@/components/no-result";
+import { NoResult } from "@/components/shared/no-result/no-result";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 

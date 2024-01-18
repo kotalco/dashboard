@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import { NoResult } from "@/components/no-result";
+import { NoResult } from "@/components/shared/no-result/no-result";
 import { DataTable } from "@/components/ui/data-table";
 import { EndpointColumn, columns } from "./colums";
 

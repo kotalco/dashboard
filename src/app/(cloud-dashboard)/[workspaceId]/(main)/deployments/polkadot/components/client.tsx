@@ -8,7 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import { DeploymentsList } from "@/components/deployments-list";
 import { PolkadotNetworks, Roles } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
-import { NoResult } from "@/components/no-result";
+import { NoResult } from "@/components/shared/no-result/no-result";
 import { PolkadotNode } from "@/types";
 
 interface PolkadotClientProps {

@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { NoResult } from "@/components/no-result";
+import { NoResult } from "@/components/shared/no-result/no-result";
 import { DeploymentsList } from "@/components/deployments-list";
 import { IPFSClusterPeer } from "@/types";
 import { BeaconNodeClients, BeaconNodeNetworks, Roles } from "@/enums";

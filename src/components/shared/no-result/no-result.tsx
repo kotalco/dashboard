@@ -1,18 +1,17 @@
 import Image from "next/image";
-import { Plus } from "lucide-react";
 
 import { Roles } from "@/enums";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
+import { ActionButton } from "./action-button";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface NoResultProps {
   imageUrl: string;
@@ -22,16 +21,17 @@ interface NoResultProps {
   createUrl: string;
   buttonText: string;
   className?: string;
+  workspaceId: string;
 }
 
-export const NoResult: React.FC<NoResultProps> = ({
+export const NoResult: React.FC<NoResultProps> = async ({
   imageUrl,
   title,
-  role,
   description,
   createUrl,
   buttonText,
   className,
+  workspaceId,
 }) => {
   return (
     <Card className={cn("flex flex-col items-center text-center", className)}>
@@ -41,32 +41,18 @@ export const NoResult: React.FC<NoResultProps> = ({
           height={64}
           alt="decoration"
           src={imageUrl}
-          className={cn(
-            `w-16 h-16 mb-3`,
-            imageUrl.includes("aptos") ? "bg-foreground rounded-full" : ""
-          )}
+          className="w-16 h-16 mb-3"
         />
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      {role === Roles.Reader && (
-        <CardContent>
-          <p>
-            You do not have authorization to perform actions. Please contact
-            your admin for more information.
-          </p>
-        </CardContent>
-      )}
-      {role !== Roles.Reader && (
-        <CardFooter>
-          <Button asChild>
-            <Link href={createUrl}>
-              <Plus className="w-4 h-4 mr-2" />
-              {buttonText}
-            </Link>
-          </Button>
-        </CardFooter>
-      )}
+      <Suspense fallback={<Skeleton className="h-11 w-[250px] mb-6" />}>
+        <ActionButton
+          workspaceId={workspaceId}
+          text={buttonText}
+          createUrl={createUrl}
+        />
+      </Suspense>
     </Card>
   );
 };

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { getEnumKey } from "@/lib/utils";
 import { AptosNetworks, FilecoinNetworks, Roles } from "@/enums";
-import { NoResult } from "@/components/no-result";
+import { NoResult } from "@/components/shared/no-result/no-result";
 import { FilecoinNode } from "@/types";
 import { DeploymentsList } from "@/components/deployments-list";
 

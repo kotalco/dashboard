@@ -4,7 +4,7 @@ interface HeadingProps {
   title: string;
   description?: string;
   className?: string;
-  variant?: "h1" | "h2";
+  variant?: "h1" | "h2" | "h3";
 }
 
 export const Heading: React.FC<HeadingProps> = ({
@@ -30,6 +30,17 @@ export const Heading: React.FC<HeadingProps> = ({
         <h2
           className={cn(
             "text-2xl font-bold tracking-tight font-nunito",
+            className
+          )}
+        >
+          {title}
+        </h2>
+      )}
+
+      {variant === "h3" && (
+        <h2
+          className={cn(
+            "text-xl font-semibold tracking-tight font-nunito",
             className
           )}
         >
