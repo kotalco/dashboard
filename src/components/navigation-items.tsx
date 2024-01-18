@@ -80,7 +80,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
                   active ? "bg-accent text-accent-foreground" : ""
                 )}
               >
-                <Icon className="w-6 h-6 mr-3" />
+                <Icon strokeWidth={1} className="w-6 h-6 mr-3" />
                 {label}
                 <ChevronRight
                   className={cn(
@@ -91,8 +91,8 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
               </Button>
               <ul
                 className={cn(
-                  "overflow-y-auto transition-all py-1",
-                  open ? "max-h-full" : "max-h-0"
+                  "overflow-y-auto transition-all",
+                  open ? "max-h-full py-1" : "max-h-0"
                 )}
               >
                 {items?.map(({ label, href, active, count }) => (

@@ -1,7 +1,9 @@
-import { Logo } from "@/components/logo";
-import { findUser } from "@/services/find-user";
-import Workspaces from "@/components/workspaces";
 import Link from "next/link";
+
+import { findUser } from "@/services/find-user";
+
+import { Logo } from "@/components/logo";
+import Workspaces from "@/components/workspaces";
 
 export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
   const { user } = await findUser();
@@ -18,7 +20,7 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
         </div>
         <div className="pt-4 flex flex-col flex-1">
           <nav className="flex flex-col flex-1">
-            <ul className="flex-1 flex flex-col">{children}</ul>
+            <ul className="flex-1 flex flex-col space-y-1">{children}</ul>
           </nav>
         </div>
       </div>
