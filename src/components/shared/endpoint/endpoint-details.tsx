@@ -1,19 +1,17 @@
 import Image from "next/image";
+import { Fragment } from "react";
 import { format, parseISO } from "date-fns";
-import { Globe } from "lucide-react";
 
 import { Endpoint, EndpointStats as TEndpointStats } from "@/types";
 
 import { Heading } from "@/components/ui/heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RouteURL } from "@/components/shared/endpoint/route-url";
-import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "@/components/ui/external-link";
+import { Separator } from "@/components/ui/separator";
 
 import { EndpointStats } from "./endpoint-stats";
 import Example from "./example";
-import { Fragment } from "react";
-import { Separator } from "@/components/ui/separator";
 
 interface EndpointDetailsProps {
   endpoint: Endpoint;
@@ -43,12 +41,6 @@ export const EndpointDetails = async ({
                 "MMMM do, yyyy"
               )}`}
             />
-            {endpoint.network && (
-              <Badge>
-                <Globe className="w-4 h-4 mr-2" />
-                {endpoint.network}
-              </Badge>
-            )}
           </div>
         </div>
         <Separator className="max-w-md" />

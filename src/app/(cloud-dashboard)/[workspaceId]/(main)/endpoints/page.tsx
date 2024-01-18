@@ -11,12 +11,15 @@ export default async function EndpointsPage({
 }) {
   const { data } = await getEndpoints(params.workspaceId);
   const { role } = await getWorkspace(params.workspaceId);
-  const formattedEndpoints = data.map(({ protocol, name, created_at }) => ({
-    protocol,
-    name,
-    created_at: format(parseISO(created_at), "MMMM do, yyyy"),
-    href: `/${params.workspaceId}/endpoints/${name}`,
-  }));
+  const formattedEndpoints = data.map(
+    ({ protocol, name, created_at, network }) => ({
+      protocol,
+      name,
+      network,
+      created_at: format(parseISO(created_at), "MMMM do, yyyy"),
+      href: `/${params.workspaceId}/endpoints/${name}`,
+    })
+  );
 
   return (
     <div className="flex-col">
