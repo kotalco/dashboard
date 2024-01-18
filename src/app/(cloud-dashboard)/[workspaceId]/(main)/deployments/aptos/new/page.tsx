@@ -4,7 +4,7 @@ import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Heading } from "@/components/ui/heading";
 
 import { CreateAptosNodeForm } from "./_components/create-aptos-node-form";
 
@@ -28,13 +28,9 @@ export default async function CreateNewAptosNodePage({
   if (role === Roles.Reader) notFound();
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Aptos Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateAptosNodeForm images={component} />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="Create New Aptos Node" />
+      <CreateAptosNodeForm images={component} />
+    </div>
   );
 }

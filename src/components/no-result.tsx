@@ -41,7 +41,10 @@ export const NoResult: React.FC<NoResultProps> = ({
           height={64}
           alt="decoration"
           src={imageUrl}
-          className="w-16 h-16 mb-3"
+          className={cn(
+            `w-16 h-16 mb-3`,
+            imageUrl.includes("aptos") ? "bg-foreground rounded-full" : ""
+          )}
         />
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
