@@ -6,7 +6,9 @@ import { Heading } from "@/components/ui/heading";
 export default function Page() {
   return (
     <>
-      <Heading title="Sign Up" />
+      <div className="text-center">
+        <Heading variant="h2" title="Sign Up" />
+      </div>
 
       <RegisterForm />
       <p className="gap-x-1">

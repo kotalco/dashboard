@@ -7,7 +7,9 @@ import { Heading } from "@/components/ui/heading";
 export default async function Page() {
   return (
     <>
-      <Heading title="Forget Password" />
+      <div className="text-center">
+        <Heading variant="h2" title="Forget Password" />
+      </div>
 
       <ForgetPasswordForm />
       <div>

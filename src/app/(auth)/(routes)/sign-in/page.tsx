@@ -11,7 +11,9 @@ export default async function Page() {
       <NewAccountAlert />
       <EmailVerifiedAlert />
 
-      <Heading title="Sign In" />
+      <div className="text-center">
+        <Heading variant="h2" title="Sign In" />
+      </div>
 
       <LoginForm />
 
