@@ -11,7 +11,7 @@ export const Logo = () => {
         priority
         className="w-[70px] h-[70px]"
       />
-      <p className="text-4xl font-bold leading-4">Kotal</p>
+      <p className="text-5xl font-bold leading-4">Kotal</p>
     </div>
   );
 };

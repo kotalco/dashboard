@@ -13,7 +13,9 @@ export default async function Page({
 
   return (
     <>
-      <Heading title="Reset Password" />
+      <div className="text-center">
+        <Heading variant="h2" title="Reset Password" />
+      </div>
       <ResetPasswordForm />
     </>
   );
