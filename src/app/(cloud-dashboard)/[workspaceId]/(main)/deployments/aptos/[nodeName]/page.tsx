@@ -21,12 +21,16 @@ import { AptosNodeStats } from "./_components/aptos-node-stats";
 import { ProtocolTab } from "./_components/protocol-tab";
 import { APITab } from "./_components/api-tab";
 import { DangerZoneTab } from "./_components/danger-zone-tab";
+import { NodeConfig } from "./_components/node-config";
+import { getClientVersions } from "@/services/get-client-versions";
 
 const TABS = [
-  { label: "Protocol", value: "protocol" },
-  { label: "API", value: "api" },
+  { label: "Config", value: "config" },
   { label: "Logs", value: "logs" },
-  { label: "Resources", value: "resources" },
+  // { label: "Protocol", value: "protocol" },
+  // { label: "API", value: "api" },
+  // { label: "Logs", value: "logs" },
+  // { label: "Resources", value: "resources" },
   { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
 ];
 
@@ -50,9 +54,19 @@ export default async function AptosPage({
 
   if (!token) return null;
 
+  const { versions } = await getClientVersions(
+    {
+      protocol: "aptos",
+      component: "node",
+      client: "aptos-core",
+      network: node.network,
+    },
+    node.image
+  );
+
   return (
     <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
+      <div className="flex-1 space-y-4">
         <div className="flex items-start gap-x-2">
           <NodeStatus
             nodeName={node.name}
@@ -75,21 +89,20 @@ export default async function AptosPage({
             token={token.value}
           />
         </div>
-        <Tabs tabs={getAuthorizedTabs(TABS, role)}>
-          <Suspense fallback={<ProtocolSkeleton />}>
+        <Tabs tabs={getAuthorizedTabs(TABS, role)} cardDisplay={false}>
+          <NodeConfig node={node} role={role} versions={versions} />
+          {/* <Suspense fallback={<ProtocolSkeleton />}>
             <ProtocolTab node={node} role={role} />
-          </Suspense>
-          <APITab node={node} role={role} />
-          {token && (
-            <Logs
-              url={`aptos/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
-            />
-          )}
-          <ResourcesForm
+          </Suspense> */}
+          {/* <APITab node={node} role={role} /> */}
+          <Logs
+            url={`aptos/nodes/${node.name}/logs?authorization=Bearer ${token.value}&workspace_id=${workspaceId}`}
+          />
+          {/* <ResourcesForm
             node={node}
             role={role}
             url={`/aptos/nodes/${node.name}`}
-          />
+          /> */}
           <DangerZoneTab node={node} />
         </Tabs>
       </div>
