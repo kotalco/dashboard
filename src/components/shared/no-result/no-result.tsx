@@ -35,7 +35,12 @@ export const NoResult: React.FC<NoResultProps> = async ({
   workspaceId,
 }) => {
   return (
-    <Card className={cn("flex flex-col items-center text-center", className)}>
+    <Card
+      className={cn(
+        "flex flex-col items-center text-center border-0",
+        className
+      )}
+    >
       <CardHeader className="flex flex-col items-center">
         <Image
           width={64}
