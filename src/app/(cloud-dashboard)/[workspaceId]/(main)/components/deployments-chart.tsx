@@ -141,6 +141,7 @@ export const DeploymentsChart = ({ counts }: DeploymentsChartProps) => {
                 ],
               }}
               options={{
+                borderColor: "transparent",
                 animation: false,
                 cutout: "50%",
                 maintainAspectRatio: false,
