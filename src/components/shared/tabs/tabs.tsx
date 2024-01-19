@@ -38,7 +38,7 @@ export const Tabs = ({ tabs, children, cardDisplay = true }: TabsProps) => {
           </TabsTrigger>
         ))}
       </TabsList>
-      {tabs.map(({ label, value, description }, index) => (
+      {tabs.map(({ value, description }, index) => (
         <TabsContent key={value} value={value}>
           <Card className={cardDisplay ? "" : "border-0"}>
             <CardHeader className={cardDisplay ? "" : "px-0"}>

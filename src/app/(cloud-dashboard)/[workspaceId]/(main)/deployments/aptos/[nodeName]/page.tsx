@@ -35,8 +35,8 @@ export default async function AptosPage({
 }: {
   params: { workspaceId: string; nodeName: string };
 }) {
-  const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { workspaceId, nodeName } = params;
+  const token = cookies().get(StorageItems.AUTH_TOKEN);
   const { role } = await getWorkspace(workspaceId);
 
   const { data: node } = await getNode<AptosNode>(
@@ -48,17 +48,17 @@ export default async function AptosPage({
     redirect(`/${workspaceId}/deployments/aptos`);
   }
 
+  if (!token) return null;
+
   return (
     <div className="flex-col">
       <div className="flex-1 p-8 pt-6 space-y-4">
         <div className="flex items-start gap-x-2">
-          {token && (
-            <NodeStatus
-              nodeName={node.name}
-              protocol={Protocol.Aptos}
-              token={token.value}
-            />
-          )}
+          <NodeStatus
+            nodeName={node.name}
+            protocol={Protocol.Aptos}
+            token={token.value}
+          />
           <Heading
             title={node.name}
             description={`Created at ${format(
@@ -68,16 +68,12 @@ export default async function AptosPage({
           />
         </div>
         <div className="grid grid-cols-1 gap-5 mb-5 lg:grid-cols-4">
-          {token && (
-            <>
-              <AptosNodeStats nodeName={node.name} token={token.value} />
-              <NodeMetrics
-                nodeName={node.name}
-                protocol={Protocol.Aptos}
-                token={token.value}
-              />
-            </>
-          )}
+          <AptosNodeStats nodeName={node.name} token={token.value} />
+          <NodeMetrics
+            nodeName={node.name}
+            protocol={Protocol.Aptos}
+            token={token.value}
+          />
         </div>
         <Tabs tabs={getAuthorizedTabs(TABS, role)}>
           <Suspense fallback={<ProtocolSkeleton />}>
