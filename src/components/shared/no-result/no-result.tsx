@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Image from "next/image";
 
 import { Roles } from "@/enums";
@@ -9,9 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ActionButton } from "./action-button";
-import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+
+import { ActionButton } from "./action-button";
 
 interface NoResultProps {
   imageUrl: string;
