@@ -1,16 +1,13 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
+import { CardWrapper } from "@/components/shared/auth/card-wrapper";
+
 import { ForgetPasswordForm } from "./components/forget-password-form";
-import { Heading } from "@/components/ui/heading";
 
 export default async function Page() {
   return (
-    <>
-      <div className="text-center">
-        <Heading variant="h2" title="Forget Password" />
-      </div>
-
+    <CardWrapper title="Forget Password">
       <ForgetPasswordForm />
       <div>
         <Link href="/sign-in" className="underline hover:text-muted-foreground">
@@ -18,6 +15,6 @@ export default async function Page() {
           Back to Login
         </Link>
       </div>
-    </>
+    </CardWrapper>
   );
 }

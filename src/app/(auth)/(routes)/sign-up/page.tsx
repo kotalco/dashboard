@@ -1,15 +1,12 @@
 import Link from "next/link";
 
+import { CardWrapper } from "@/components/shared/auth/card-wrapper";
+
 import { RegisterForm } from "./components/register-form";
-import { Heading } from "@/components/ui/heading";
 
 export default function Page() {
   return (
-    <>
-      <div className="text-center">
-        <Heading variant="h2" title="Sign Up" />
-      </div>
-
+    <CardWrapper title="Sign Up">
       <RegisterForm />
       <p className="gap-x-1">
         Already have an account?
@@ -20,6 +17,6 @@ export default function Page() {
           Login
         </Link>
       </p>
-    </>
+    </CardWrapper>
   );
 }
