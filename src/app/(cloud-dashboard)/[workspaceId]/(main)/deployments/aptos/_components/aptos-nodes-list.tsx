@@ -10,6 +10,7 @@ import { NoResult } from "@/components/shared/no-result/no-result";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { CreateAptosNodeButton } from "./create-aptos-node-button";
+import { getClientVersions } from "@/services/get-client-versions";
 
 interface AptosNodesListProps {
   workspaceId: string;
@@ -17,6 +18,25 @@ interface AptosNodesListProps {
 
 export const AptosNodesList = async ({ workspaceId }: AptosNodesListProps) => {
   const { data } = await getNodes<AptosNode>(workspaceId, "/aptos/nodes");
+
+  const promises = data.map(async (node) => {
+    const { versions } = await getClientVersions(
+      {
+        protocol: "aptos",
+        component: "node",
+        client: "aptos-core",
+        network: node.network,
+      },
+      node.image
+    );
+
+    const currentVersionName = versions.find(
+      (version) => version.image === node.image
+    )?.name;
+    return { ...node, version: currentVersionName };
+  });
+
+  const nodes = await Promise.all(promises);
 
   if (!data.length) {
     return (
@@ -32,16 +52,18 @@ export const AptosNodesList = async ({ workspaceId }: AptosNodesListProps) => {
     );
   }
 
-  const mainNodesInfo = data.map(({ name, network }) => ({
+  const mainNodesInfo = nodes.map(({ name, network, createdAt, version }) => ({
     name,
     network: getEnumKey(AptosNetworks, network),
     client: "Aptos Core",
+    createdAt,
+    version,
     url: `/${workspaceId}/deployments/aptos/${name}`,
   }));
 
   return (
     <>
-      <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3">
+      <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 justify-self-end">
         <Suspense fallback={<Skeleton className="w-full h-11" />}>
           <CreateAptosNodeButton workspaceId={workspaceId} />
         </Suspense>

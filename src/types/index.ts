@@ -34,6 +34,8 @@ export interface MainNodeInfo {
   network: string;
   client: string;
   url: string;
+  createdAt: string;
+  version?: string;
 }
 
 export interface ResourcesInfo {

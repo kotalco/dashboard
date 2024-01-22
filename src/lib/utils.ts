@@ -2,6 +2,7 @@ import {
   eachDayOfInterval,
   endOfMonth,
   format,
+  formatDistance,
   parseISO,
   startOfMonth,
 } from "date-fns";
@@ -336,4 +337,10 @@ export const getAuthorizedTabs = (
 
 export const formatDate = (date: string) => {
   return format(parseISO(date), "MMMM do, yyyy");
+};
+
+export const formatTimeDistance = (createdAt: string) => {
+  const date = new Date(createdAt);
+
+  return formatDistance(date, new Date(), { addSuffix: true });
 };
