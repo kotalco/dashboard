@@ -1,17 +1,14 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Suspense } from "react";
 
 import { AptosNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { getEnumKey } from "@/lib/utils";
-import { AptosNetworks, Roles } from "@/enums";
+import { AptosNetworks } from "@/enums";
 
 import { DeploymentsList } from "@/components/deployments-list";
 import { NoResult } from "@/components/shared/no-result/no-result";
-import { getWorkspace } from "@/services/get-workspace";
-import { Button } from "@/components/ui/button";
-import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+
 import { CreateAptosNodeButton } from "./create-aptos-node-button";
 
 interface AptosNodesListProps {
@@ -29,7 +26,7 @@ export const AptosNodesList = async ({ workspaceId }: AptosNodesListProps) => {
         title="No Aptos Nodes"
         description="Aptos node listens to new transactions broadcasted in the network, executes them in EVM, and holds the latest state."
         createUrl={`/${workspaceId}/deployments/aptos/new`}
-        buttonText="Create New Aptos Node"
+        buttonText="New Aptos Node"
         workspaceId={workspaceId}
       />
     );

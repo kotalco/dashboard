@@ -21,7 +21,7 @@ export const CreateAptosNodeButton = async ({
     <Button asChild size="lg">
       <Link href={`/${workspaceId}/deployments/aptos/new`}>
         <Plus className="w-4 h-4 mr-2" />
-        Create New Aptos Node
+        New Aptos Node
       </Link>
     </Button>
   );

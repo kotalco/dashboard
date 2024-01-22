@@ -13,6 +13,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { ActionButton } from "./action-button";
+import { BrandLogo } from "./brand-logo";
 
 interface NoResultProps {
   imageUrl: string;
@@ -42,17 +43,11 @@ export const NoResult: React.FC<NoResultProps> = async ({
       )}
     >
       <CardHeader className="flex flex-col items-center">
-        <Image
-          width={64}
-          height={64}
-          alt="decoration"
-          src={imageUrl}
-          className="w-16 h-16 mb-3"
-        />
+        <BrandLogo src={imageUrl} />
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <Suspense fallback={<Skeleton className="h-11 w-[250px] mb-6" />}>
+      <Suspense fallback={<Skeleton className="h-11 w-[200px] mb-6" />}>
         <ActionButton
           workspaceId={workspaceId}
           text={buttonText}
