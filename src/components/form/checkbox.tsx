@@ -31,11 +31,7 @@ export const Checkbox = ({
           id={labelId}
           {...props}
         />
-        {label && (
-          <Label htmlFor={labelId} className="font-semibold ">
-            {label}
-          </Label>
-        )}
+        {label && <Label htmlFor={labelId}>{label}</Label>}
       </div>
 
       <FormErrors id={id} errors={errors} />

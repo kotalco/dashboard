@@ -50,11 +50,7 @@ export const Select = ({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        {label && (
-          <Label htmlFor={id} className="font-semibold ">
-            {label}
-          </Label>
-        )}
+        {label && <Label htmlFor={id}>{label}</Label>}
         <div className="flex">
           <ShadSelect
             disabled={pending || disabled}

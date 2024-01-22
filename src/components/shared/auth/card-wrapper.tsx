@@ -12,7 +12,7 @@ export const CardWrapper = ({ children, title }: CardWrapperProps) => {
       <Logo />
       <Card className="w-full px-3 sm:max-w-md">
         <CardHeader className="flex items-center justify-center">
-          <CardTitle className="text-center pt-1 text-2xl font-bold tracking-tight font-nunito">
+          <CardTitle className="text-center pt-1 text-2xl font-normal tracking-tight font-nunito text-foreground/70">
             {title}
           </CardTitle>
         </CardHeader>

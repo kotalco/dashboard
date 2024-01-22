@@ -24,11 +24,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="space-y-2">
         <div className="space-y-1">
-          {label && (
-            <Label htmlFor={id} className="font-semibold">
-              {label}
-            </Label>
-          )}
+          {label && <Label htmlFor={id}>{label}</Label>}
           <ShadInput
             ref={ref}
             id={id}

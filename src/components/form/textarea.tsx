@@ -49,11 +49,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className="space-y-2">
         <div className="space-y-1">
           <div>
-            {label && (
-              <Label htmlFor={id} className="font-semibold ">
-                {label}
-              </Label>
-            )}
+            {label && <Label htmlFor={id}>{label}</Label>}
             {tooltip && (
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
