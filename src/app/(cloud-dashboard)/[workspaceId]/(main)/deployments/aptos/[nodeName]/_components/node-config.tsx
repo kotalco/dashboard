@@ -44,17 +44,15 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
   }));
 
   return (
-    <form action={onSubmit} className="space-y-8">
+    <form action={onSubmit} className="space-y-16">
       {/* Protocol */}
       <div className="space-y-4">
         <Heading variant="h2" title="Protocol" />
-        {/* <Separator className="max-w-xs" /> */}
-        <ul className="flex justify-between items-center mt-4 max-w-md">
+        <ul className="space-y-4">
           <li className="flex flex-col">
             <span className="font-semibold  leading-none">Protocol</span>
             <span className="text-foreground/50">Aptos</span>
           </li>
-          <Separator orientation="vertical" className="h-10" />
 
           <li className="flex flex-col">
             <span className="font-semibold  leading-none">Network</span>
@@ -62,7 +60,6 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
               {getEnumKey(AptosNetworks, node.network)}
             </span>
           </li>
-          <Separator orientation="vertical" className="h-10" />
 
           <li className="flex flex-col">
             <span className="font-semibold  leading-none">Client</span>
@@ -102,8 +99,6 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
         )}
       </div>
 
-      <Separator className="max-w-sm" />
-
       {/* API */}
       <div className="space-y-4">
         <Heading variant="h2" title="API" />
@@ -115,7 +110,6 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
           defaultChecked={node.api}
         />
       </div>
-      <Separator className="max-w-sm" />
 
       {/* Resources */}
       <div className="space-y-4 max-w-xs">

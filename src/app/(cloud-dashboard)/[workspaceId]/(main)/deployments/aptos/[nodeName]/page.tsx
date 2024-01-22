@@ -66,7 +66,7 @@ export default async function AptosPage({
 
   return (
     <div className="flex-col">
-      <div className="flex-1 space-y-4">
+      <div className="flex-1 space-y-8">
         <div className="flex items-start gap-x-2">
           <NodeStatus
             nodeName={node.name}
