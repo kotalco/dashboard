@@ -29,7 +29,7 @@ export default async function CreateNewAptosNodePage({
 
   return (
     <div className="space-y-8">
-      <Heading title="Create New Aptos Node" />
+      <Heading title="New Aptos Node" />
       <CreateAptosNodeForm images={component} />
     </div>
   );
