@@ -3,7 +3,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Tabs as CNTabs,
@@ -26,14 +25,7 @@ export const Tabs = ({ tabs, children, cardDisplay = true }: TabsProps) => {
     <CNTabs defaultValue={tabs[0].value}>
       <TabsList>
         {tabs.map(({ label, value }) => (
-          <TabsTrigger
-            key={value}
-            value={value}
-            className={cn(
-              value.includes("danger") &&
-                "data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground text-destructive"
-            )}
-          >
+          <TabsTrigger key={value} value={value}>
             {label}
           </TabsTrigger>
         ))}

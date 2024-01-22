@@ -1,6 +1,14 @@
 "use client";
 
+import { useParams } from "next/navigation";
+import { useState } from "react";
+
+import { AptosNetworks, Roles, StorageUnits } from "@/enums";
+import { useAction } from "@/hooks/use-action";
+import { getEnumKey, getSelectItems } from "@/lib/utils";
+import { AptosNode, Version } from "@/types";
 import { editAptosNode } from "@/actions/edit-aptos";
+
 import { InputWithUnit } from "@/components/form/input-with-unit";
 import { Select } from "@/components/form/select";
 import { SubmitButton } from "@/components/form/submit-button";
@@ -10,13 +18,6 @@ import { Toggle } from "@/components/form/toggle";
 import { Alert } from "@/components/ui/alert";
 import { ExternalLink } from "@/components/ui/external-link";
 import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import { AptosNetworks, Roles, StorageUnits } from "@/enums";
-import { useAction } from "@/hooks/use-action";
-import { getEnumKey, getSelectItems } from "@/lib/utils";
-import { AptosNode, Version } from "@/types";
-import { useParams } from "next/navigation";
-import { useState } from "react";
 
 interface NodeConfigProps {
   node: AptosNode;

@@ -13,9 +13,7 @@ export const CardStats = ({ title, children }: CardStatsProps) => {
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="text-2xl font-bold truncate">
-        {children}
-      </CardContent>
+      <CardContent className="text-4xl truncate">{children}</CardContent>
     </Card>
   );
 };
