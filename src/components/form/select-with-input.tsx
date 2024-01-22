@@ -59,11 +59,7 @@ export const SelectWithInput: React.FC<SelectWithInputProps> = ({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        {label && (
-          <Label htmlFor={id} className="font-semibold ">
-            {label}
-          </Label>
-        )}
+        {label && <Label htmlFor={id}>{label}</Label>}
         <div className="flex">
           <Select
             name={`${id}-select`}

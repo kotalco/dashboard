@@ -126,7 +126,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       <div className="space-y-2">
         <div className="space-y-2">
           {label && (
-            <Label htmlFor={id} className="font-semibold block ">
+            <Label htmlFor={id} className="block">
               {label}
             </Label>
           )}
