@@ -3,11 +3,12 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import useSWRSubscription from "swr/subscription";
 import type { SWRSubscription } from "swr/subscription";
-import { AlertTriangle, Expand } from "lucide-react";
+import { AlertTriangle, ArrowDown, Expand, Scroll } from "lucide-react";
 
 import { getWsBaseURL } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "./ui/button";
 
 interface LogsProps {
   url: string;
@@ -26,6 +27,13 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
   const logsElement = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
   const counterRef = useRef<NodeJS.Timeout>();
+
+  const scrollToBottom = () => {
+    if (logsElement.current) {
+      const { scrollHeight, clientHeight } = logsElement.current;
+      logsElement.current.scrollTop = scrollHeight - clientHeight;
+    }
+  };
 
   const subscription: SWRSubscription<[string, number], string[], string> = (
     [url, count],
@@ -46,6 +54,20 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
 
     socket.onmessage = (event: MessageEvent<string>) => {
       next(null, (prev) => {
+        if (logsElement.current) {
+          const { scrollTop, scrollHeight, clientHeight } = logsElement.current;
+          const isUserScrolledToBottom =
+            scrollTop + clientHeight === scrollHeight;
+
+          // Then, if the user was at the bottom, scroll to the new bottom
+          if (isUserScrolledToBottom) {
+            setTimeout(() => {
+              // Using setTimeout to allow the DOM to update
+              scrollToBottom();
+            }, 0);
+          }
+        }
+
         const prevData = prev || [];
         if (prevData.length > MAX_LENGTH) {
           return [...prevData.slice(1), event.data];
@@ -118,11 +140,11 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
   if (!data)
     return (
       <div className="space-y-2 h-96">
-        {Array.from({ length: 5 }, (_, i) => i).map((i) => {
+        {Array.from({ length: 7 }, (_, i) => i).map((i) => {
           return (
             <Fragment key={i}>
-              <Skeleton className="w-20 h-4" />
-              <Skeleton className="w-40 h-4" />
+              <Skeleton className="w-1/3 h-4" />
+              <Skeleton className="w-1/2 h-4" />
               <Skeleton className="w-full h-4" />{" "}
             </Fragment>
           );
@@ -138,7 +160,7 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
       <div className="relative">
         <div
           ref={logsElement}
-          className="relative overflow-y-auto text-sm text-white bg-black border p-6 rounded-lg peer h-96 overscroll-container"
+          className="relative overflow-y-auto text-sm text-white bg-black border px-3 py-1 h-[500px] rounded-lg peer"
         >
           <ul>
             {data?.map((log, i) => (
@@ -172,13 +194,25 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
             )}
           </ul>
         </div>
-        <button
-          onClick={toggleFullscreen}
-          type="button"
-          className="absolute z-10 hidden text-white hover:block peer-hover:block right-3 top-3"
-        >
-          <Expand className="w-7 h-7" />
-        </button>
+        <div className="absolute z-10 hidden text-white hover:block peer-hover:block right-3 top-3">
+          <Button
+            onClick={scrollToBottom}
+            type="button"
+            variant="ghost"
+            className="hover:bg-transparent"
+          >
+            <ArrowDown className="w-7 h-7" />
+          </Button>
+
+          <Button
+            onClick={toggleFullscreen}
+            type="button"
+            variant="ghost"
+            className="hover:bg-transparent"
+          >
+            <Expand className="w-7 h-7" />
+          </Button>
+        </div>
       </div>
     </div>
   );

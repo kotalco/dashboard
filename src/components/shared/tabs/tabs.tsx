@@ -36,7 +36,7 @@ export const Tabs = ({ tabs, children, cardDisplay = true }: TabsProps) => {
             <CardHeader className={cn("p-1", cardDisplay ? "" : "px-0")}>
               {description && <CardDescription>{description}</CardDescription>}
             </CardHeader>
-            <CardContent className={cardDisplay ? "" : "px-0"}>
+            <CardContent className={cardDisplay ? "" : "p-0"}>
               {filteredChildren[index]}
             </CardContent>
           </Card>
