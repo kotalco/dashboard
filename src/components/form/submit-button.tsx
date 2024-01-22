@@ -20,8 +20,9 @@ export const SubmitButton: React.FC<PropsWithChildren<ButtonProps>> = ({
     <Button
       disabled={pending || disabled}
       type="submit"
-      className={cn(className, "min-w-[100px]")}
+      className={cn(className, variant === "link" ? "" : "min-w-[100px]")}
       variant={variant}
+      size="lg"
       {...props}
     >
       {pending && variant !== "link" && (
