@@ -134,6 +134,7 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
           step={1}
           unit="Gigabytes"
           disabled={role === Roles.Reader}
+          minStepsBetweenThumbs={1}
         />
 
         <Slider
