@@ -55,13 +55,8 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
           defaultValue={defaultValue && values}
           {...props}
         />
-        <div className="flex justify-between mt-3 text-muted-foreground text-xs">
-          <span>
-            Min {min} {min > 1 ? `${unit}s` : unit}
-          </span>
-          <span>
-            Max {max} {max > 1 ? `${unit}s` : unit}
-          </span>
+        <div className="flex justify-end mt-3 text-muted-foreground text-xs">
+          {unit}
         </div>
       </div>
     );

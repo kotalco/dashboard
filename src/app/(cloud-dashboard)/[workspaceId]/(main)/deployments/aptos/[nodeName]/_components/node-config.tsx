@@ -117,12 +117,12 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
       <div className="space-y-4 max-w-xs">
         <Heading variant="h2" title="Resources" />
         <Slider
-          label="CPU Cores"
+          label="CPU"
           defaultValue={[node.cpu, node.cpuLimit]}
           min={1}
           max={16}
           step={1}
-          unit="Core"
+          unit="Cores"
           disabled={role === Roles.Reader}
         />
 
@@ -132,7 +132,7 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
           min={1}
           max={16}
           step={1}
-          unit="Gigabyte"
+          unit="Gigabytes"
           disabled={role === Roles.Reader}
         />
 
@@ -142,7 +142,7 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
           min={100}
           max={2000}
           step={50}
-          unit="Gigabyte"
+          unit="Gigabytes"
           disabled={role === Roles.Reader}
         />
         {/* <InputWithUnit
