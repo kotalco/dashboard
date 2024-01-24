@@ -32,10 +32,12 @@ export const Tabs = ({ tabs, children, cardDisplay = true }: TabsProps) => {
       </TabsList>
       {tabs.map(({ value, description }, index) => (
         <TabsContent key={value} value={value}>
-          <Card className={cardDisplay ? "" : "border-0"}>
-            <CardHeader className={cn("p-1", cardDisplay ? "" : "px-0")}>
-              {description && <CardDescription>{description}</CardDescription>}
-            </CardHeader>
+          <Card className={cardDisplay ? "" : "border-0 shadow-none"}>
+            {description && (
+              <CardHeader className={cn("p-1", cardDisplay ? "" : "px-0")}>
+                <CardDescription>{description}</CardDescription>
+              </CardHeader>
+            )}
             <CardContent className={cardDisplay ? "" : "p-0"}>
               {filteredChildren[index]}
             </CardContent>
