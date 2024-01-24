@@ -106,7 +106,7 @@ export const NodeMetrics: React.FC<NodeMetricsProps> = ({
       </CardStats>
 
       {/* Memory */}
-      <CardStats title="CPU">
+      <CardStats title="Memory">
         <Chart
           unit="GB"
           data={data.memory}

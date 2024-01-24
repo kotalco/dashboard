@@ -24,7 +24,7 @@ import { NodeConfig } from "./_components/node-config";
 import { getClientVersions } from "@/services/get-client-versions";
 
 const TABS = [
-  { label: "Config", value: "config" },
+  { label: "Configurations", value: "config" },
   { label: "Logs", value: "logs" },
   // { label: "Protocol", value: "protocol" },
   // { label: "API", value: "api" },

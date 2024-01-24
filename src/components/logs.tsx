@@ -167,7 +167,7 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
       <div className="relative">
         <div
           ref={logsElement}
-          className="relative overflow-y-auto text-white bg-black border px-3 py-1 h-[500px] rounded-lg peer"
+          className="relative overflow-y-auto text-white bg-black border px-3 py-1 h-[500px] rounded-lg"
         >
           <ul>
             {data?.map((log, i) => (
