@@ -3,12 +3,19 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import useSWRSubscription from "swr/subscription";
 import type { SWRSubscription } from "swr/subscription";
-import { AlertTriangle, ArrowDown, Expand, Scroll } from "lucide-react";
+import { AlertTriangle, ArrowDown, Expand } from "lucide-react";
 
 import { getWsBaseURL } from "@/lib/utils";
+
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface LogsProps {
   url: string;
@@ -160,7 +167,7 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
       <div className="relative">
         <div
           ref={logsElement}
-          className="relative overflow-y-auto text-sm text-white bg-black border px-3 py-1 h-[500px] rounded-lg peer"
+          className="relative overflow-y-auto text-white bg-black border px-3 py-1 h-[500px] rounded-lg peer"
         >
           <ul>
             {data?.map((log, i) => (
@@ -194,24 +201,42 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
             )}
           </ul>
         </div>
-        <div className="absolute z-10 hidden text-white hover:block peer-hover:block right-3 top-3">
-          <Button
-            onClick={scrollToBottom}
-            type="button"
-            variant="ghost"
-            className="hover:bg-transparent"
-          >
-            <ArrowDown className="w-7 h-7" />
-          </Button>
+        <div className="absolute z-10 text-white space-y-4 flex flex-col -right-14 top-0">
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={toggleFullscreen}
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                >
+                  <Expand className="w-7 h-7" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" align="start">
+                FullScreen
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <Button
-            onClick={toggleFullscreen}
-            type="button"
-            variant="ghost"
-            className="hover:bg-transparent"
-          >
-            <Expand className="w-7 h-7" />
-          </Button>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={scrollToBottom}
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                >
+                  <ArrowDown className="w-7 h-7" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" align="start">
+                Scroll to Bottom
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </div>

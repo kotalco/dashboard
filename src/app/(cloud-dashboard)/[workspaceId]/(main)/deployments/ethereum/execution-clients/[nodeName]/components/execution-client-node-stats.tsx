@@ -87,7 +87,7 @@ export const ExecutionClientNodeStats: React.FC<
           <CardHeader>
             <CardTitle className="items-start">
               Blocks
-              <TooltipProvider>
+              <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger>
                     <AlertCircle className="w-4 h-4 ml-2" />
