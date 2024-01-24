@@ -4,7 +4,7 @@ import { Cpu, Globe } from "lucide-react";
 import { MainNodeInfo } from "@/types";
 
 import { Heading } from "@/components/ui/heading";
-import { formatDate, formatTimeDistance } from "@/lib/utils";
+import { formatTimeDistance } from "@/lib/utils";
 
 interface DeployemntsListProps {
   data: MainNodeInfo[];
@@ -35,11 +35,9 @@ export const DeploymentsList: React.FC<DeployemntsListProps> = async ({
                 </div>
 
                 <div className="ml-5 shrink-0 text-muted-foreground">
-                  {/* <ChevronRight className="w-5 h-5" /> */}
                   <div className="flex space-x-1 text-sm">
-                    <span>Created at</span>
-                    <span className="font-medium">{formatDate(createdAt)}</span>
-                    <span>({formatTimeDistance(createdAt)})</span>
+                    <span>Created </span>
+                    <span>{formatTimeDistance(createdAt)}</span>
                   </div>
                 </div>
               </div>
