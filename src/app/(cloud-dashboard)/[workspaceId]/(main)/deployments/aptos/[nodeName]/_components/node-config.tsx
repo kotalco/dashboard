@@ -18,6 +18,7 @@ import { Toggle } from "@/components/form/toggle";
 import { Alert } from "@/components/ui/alert";
 import { ExternalLink } from "@/components/ui/external-link";
 import { Heading } from "@/components/ui/heading";
+import { Slider } from "@/components/form/slider";
 
 interface NodeConfigProps {
   node: AptosNode;
@@ -115,7 +116,36 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
       {/* Resources */}
       <div className="space-y-4 max-w-xs">
         <Heading variant="h2" title="Resources" />
-        <InputWithUnit
+        <Slider
+          label="CPU Cores"
+          defaultValue={[node.cpu, node.cpuLimit]}
+          min={1}
+          max={16}
+          step={1}
+          unit="Core"
+          disabled={role === Roles.Reader}
+        />
+
+        <Slider
+          label="Memory"
+          defaultValue={[node.memory, node.memoryLimit]}
+          min={1}
+          max={16}
+          step={1}
+          unit="Gigabyte"
+          disabled={role === Roles.Reader}
+        />
+
+        <Slider
+          label="Disk Space"
+          defaultValue={[node.storage]}
+          min={100}
+          max={2000}
+          step={50}
+          unit="Gigabyte"
+          disabled={role === Roles.Reader}
+        />
+        {/* <InputWithUnit
           label="CPU Cores Required"
           disabled={role === Roles.Reader}
           unit="Core"
@@ -158,7 +188,7 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
           defaultValue={node.storage}
           errors={fieldErrors}
           id="storage"
-        />
+        /> */}
       </div>
 
       <SubmitSuccess success={success}>
