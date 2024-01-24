@@ -52,19 +52,19 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
         <Heading variant="h2" title="Protocol" />
         <ul className="space-y-4">
           <li className="flex flex-col">
-            <span className="font-semibold  leading-none">Protocol</span>
+            <span className="leading-none text-sm">Protocol</span>
             <span className="text-foreground/50">Aptos</span>
           </li>
 
           <li className="flex flex-col">
-            <span className="font-semibold  leading-none">Network</span>
+            <span className="leading-none text-sm">Network</span>
             <span className="text-foreground/50">
               {getEnumKey(AptosNetworks, node.network)}
             </span>
           </li>
 
           <li className="flex flex-col">
-            <span className="font-semibold  leading-none">Client</span>
+            <span className="leading-none text-sm">Client</span>
             <ExternalLink href="https://github.com/aptos-labs/aptos-core">
               Aptos Core
             </ExternalLink>
