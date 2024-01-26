@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 
-import { MainNavigationItems } from "@/components/main-navigation-items";
-import { Sidebar } from "@/components/sidebar";
 import { findUser } from "@/services/find-user";
 import { getCounts } from "@/services/get-counts";
+
+import { MainNavigationItems } from "@/components/main-navigation-items";
+import { Sidebar } from "@/components/sidebar";
+import { CloudActions } from "@/components/shared/command-actions/cloud-actions";
 
 export default async function DashboardLayout({
   children,
@@ -20,6 +22,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex overflow-hidden">
       <Sidebar>
+        <CloudActions />
         <MainNavigationItems counts={count} />
       </Sidebar>
       <div className="flex flex-col flex-1 w-0 min-h-screen ml-64 overflow-y-auto">
