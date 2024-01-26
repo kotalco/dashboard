@@ -1,32 +1,35 @@
 import { Suspense } from "react";
 
-import { BitcoinNode } from "@/types";
+import { ChainlinkNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { getEnumKey } from "@/lib/utils";
-import { BitcoinNetworks } from "@/enums";
+import { ChainlinkNetworks } from "@/enums";
 import { getClientVersions } from "@/services/get-client-versions";
 
 import { DeploymentsList } from "@/components/deployments-list";
 import { NoResult } from "@/components/shared/no-result/no-result";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { CreateBitcoinNodeButton } from "./create-bitcoin-node-button";
+import { CreateChainlinkNodeButton } from "./create-chainlink-node-button";
 
-interface BitcoinNodesListProps {
+interface ChainlinkNodesListProps {
   workspaceId: string;
 }
 
-export const BitcoinNodesList = async ({
+export const ChainlinkNodesList = async ({
   workspaceId,
-}: BitcoinNodesListProps) => {
-  const { data } = await getNodes<BitcoinNode>(workspaceId, "/bitcoin/nodes");
+}: ChainlinkNodesListProps) => {
+  const { data } = await getNodes<ChainlinkNode>(
+    workspaceId,
+    "/chainlink/nodes"
+  );
 
   const promises = data.map(async (node) => {
     const { versions } = await getClientVersions(
       {
-        protocol: "bitcoin",
+        protocol: "chainlink",
         component: "node",
-        client: "bitcoin-core",
+        client: "chainlink",
       },
       node.image
     );
@@ -42,30 +45,35 @@ export const BitcoinNodesList = async ({
   if (!data.length) {
     return (
       <NoResult
-        imageUrl="/images/bitcoin.svg"
-        title="No Bitcoin Nodes"
-        description="Bitcoin nodes retrieve and store data on the Bitcoin network."
-        createUrl={`/${workspaceId}/deployments/bitcoin/new`}
-        buttonText="New Bitcoin Node"
+        imageUrl="/images/chainlink.svg"
+        title="No Chainlink Nodes"
+        description="Chainlink node connects smart contracts with external data using a decentralized oracle network."
+        createUrl={`/${workspaceId}/deployments/chainlink/new`}
+        buttonText="New Chainlink Node"
         workspaceId={workspaceId}
       />
     );
   }
 
-  const mainNodesInfo = nodes.map(({ name, network, createdAt, version }) => ({
-    name,
-    network: getEnumKey(BitcoinNetworks, network),
-    client: "Bitcoin Core",
-    createdAt,
-    version,
-    url: `/${workspaceId}/deployments/bitcoin/${name}`,
-  }));
+  const mainNodesInfo = nodes.map(
+    ({ name, ethereumChainId, linkContractAddress, createdAt, version }) => ({
+      name,
+      network: getEnumKey(
+        ChainlinkNetworks,
+        `${ethereumChainId}:${linkContractAddress}`
+      ),
+      client: "Chainlink",
+      createdAt,
+      version,
+      url: `/${workspaceId}/deployments/chainlink/${name}`,
+    })
+  );
 
   return (
     <>
       <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 justify-self-end">
         <Suspense fallback={<Skeleton className="w-full h-11" />}>
-          <CreateBitcoinNodeButton workspaceId={workspaceId} />
+          <CreateChainlinkNodeButton workspaceId={workspaceId} />
         </Suspense>
       </div>
 

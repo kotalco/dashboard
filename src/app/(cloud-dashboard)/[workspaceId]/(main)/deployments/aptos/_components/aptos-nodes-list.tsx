@@ -41,7 +41,6 @@ export const AptosNodesList = async ({ workspaceId }: AptosNodesListProps) => {
   if (!data.length) {
     return (
       <NoResult
-        className="col-span-12"
         imageUrl="/images/aptos.svg"
         title="No Aptos Nodes"
         description="Aptos node listens to new transactions broadcasted in the network, executes them in EVM, and holds the latest state."

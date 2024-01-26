@@ -38,7 +38,7 @@ export const NoResult: React.FC<NoResultProps> = async ({
   return (
     <Card
       className={cn(
-        "flex flex-col items-center text-center border-0",
+        "flex flex-col items-center text-center border-0 col-span-12",
         className
       )}
     >
