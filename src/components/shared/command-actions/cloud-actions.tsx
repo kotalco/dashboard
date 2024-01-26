@@ -22,63 +22,63 @@ export const getCloudActions: (workspaceId: string) => TCommandActions = (
     groupTitle: "Deployments",
     actions: [
       {
-        title: "Create Aptos Node",
-        url: `/${workspaceId}/deployments/aptos/new`,
+        title: "Aptos Nodes",
+        url: `/${workspaceId}/deployments/aptos`,
         Icon: Box,
       },
       {
-        title: "Create Bitcoin Node",
-        url: `/${workspaceId}/deployments/bitcoin/new`,
+        title: "Bitcoin Nodes",
+        url: `/${workspaceId}/deployments/bitcoin`,
         Icon: Box,
       },
       {
-        title: "Create Chainlink Node",
-        url: `/${workspaceId}/deployments/chainlink/new`,
+        title: "Chainlink Nodes",
+        url: `/${workspaceId}/deployments/chainlink`,
         Icon: Box,
       },
       {
-        title: "Create Execution Client Node",
-        url: `/${workspaceId}/deployments/ethereum/execution-clients/new`,
+        title: "Execution Client Nodes",
+        url: `/${workspaceId}/deployments/ethereum/execution-clients`,
         Icon: Box,
       },
       {
-        title: "Create Beacon Node",
-        url: `/${workspaceId}/deployments/ethereum/beacon-nodes/new`,
+        title: "Beacon Nodes",
+        url: `/${workspaceId}/deployments/ethereum/beacon-nodes`,
         Icon: Box,
       },
       {
-        title: "Create Validator",
-        url: `/${workspaceId}/deployments/ethereum/validators/new`,
+        title: "Validators",
+        url: `/${workspaceId}/deployments/ethereum/validators`,
         Icon: Box,
       },
       {
-        title: "Create Filecoin Node",
-        url: `/${workspaceId}/deployments/filecoin/new`,
+        title: "Filecoin Nodes",
+        url: `/${workspaceId}/deployments/filecoin`,
         Icon: Box,
       },
       {
-        title: "Create IPFS Peer",
-        url: `/${workspaceId}/deployments/ipfs/peers/new`,
+        title: "IPFS Peers",
+        url: `/${workspaceId}/deployments/ipfs/peers`,
         Icon: Box,
       },
       {
-        title: "Create IPFS Cluster Peer",
-        url: `/${workspaceId}/deployments/ipfs/cluster-peers/new`,
+        title: "IPFS Cluster Peers",
+        url: `/${workspaceId}/deployments/ipfs/cluster-peers`,
         Icon: Box,
       },
       {
-        title: "Create NEAR Node",
-        url: `/${workspaceId}/deployments/near/new`,
+        title: "NEAR Nodes",
+        url: `/${workspaceId}/deployments/near`,
         Icon: Box,
       },
       {
-        title: "Create Polkadot Node",
-        url: `/${workspaceId}/deployments/polkadot/new`,
+        title: "Polkadot Nodes",
+        url: `/${workspaceId}/deployments/polkadot`,
         Icon: Box,
       },
       {
-        title: "Create Stacks Node",
-        url: `/${workspaceId}/deployments/stacks/new`,
+        title: "Stacks Nodes",
+        url: `/${workspaceId}/deployments/stacks`,
         Icon: Box,
       },
     ],
@@ -87,13 +87,13 @@ export const getCloudActions: (workspaceId: string) => TCommandActions = (
     groupTitle: "Endpoints & Secrets",
     actions: [
       {
-        title: "Create Endpoint",
-        url: `/${workspaceId}/endpoints/new`,
+        title: "Endpoints",
+        url: `/${workspaceId}/endpoints`,
         Icon: Link,
       },
       {
-        title: "Create Secret",
-        url: `/${workspaceId}/secrets/new`,
+        title: "Secrets",
+        url: `/${workspaceId}/secrets`,
         Icon: KeyRound,
       },
     ],
@@ -102,7 +102,7 @@ export const getCloudActions: (workspaceId: string) => TCommandActions = (
     groupTitle: "Settings",
     actions: [
       {
-        title: "Account Settings",
+        title: "Account",
         url: `/${workspaceId}/account`,
         Icon: User2,
       },
@@ -111,33 +111,23 @@ export const getCloudActions: (workspaceId: string) => TCommandActions = (
         url: `/${workspaceId}/security`,
         Icon: Lock,
       },
-    ],
-  },
-  {
-    groupTitle: "Platform",
-    actions: [
       {
-        title: "Domain Configurations",
+        title: "Domain",
         url: `/${workspaceId}/domain`,
         Icon: Globe,
       },
       {
-        title: "Registration Options",
+        title: "Registration",
         url: `/${workspaceId}/registration`,
         Icon: UserPlus2,
       },
-    ],
-  },
-  {
-    groupTitle: "Workspaces",
-    actions: [
       {
-        title: "Manage Wokspace Settings",
+        title: "Wokspace",
         url: `/${workspaceId}/settings`,
         Icon: Cog,
       },
       {
-        title: "Manage Team Members",
+        title: "Team Members",
         url: `/${workspaceId}/members`,
         Icon: Users2,
       },

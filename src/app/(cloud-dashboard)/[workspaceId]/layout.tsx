@@ -2,6 +2,8 @@ import { notFound, redirect } from "next/navigation";
 
 import { findUser } from "@/services/find-user";
 
+import { CloudActions } from "@/components/shared/command-actions/cloud-actions";
+
 export default async function PrivatePageLayout({
   children,
 }: {
@@ -15,5 +17,10 @@ export default async function PrivatePageLayout({
   // Make sure user is a customer
   if (user.is_customer) notFound();
 
-  return <>{children}</>;
+  return (
+    <>
+      <CloudActions />
+      {children}
+    </>
+  );
 }
