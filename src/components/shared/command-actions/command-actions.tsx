@@ -54,8 +54,8 @@ export const CommandActions = ({ commands }: CommandActionsProps) => {
               {actions.map(({ title, url, Icon }) => (
                 <CommandItem
                   key={title}
-                  value={url}
-                  onSelect={handleItemSelect}
+                  value={title}
+                  onSelect={() => handleItemSelect(url)}
                 >
                   {Icon && <Icon strokeWidth={1} className="mr-2 h-4 w-4" />}
                   <span>{title}</span>
