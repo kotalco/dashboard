@@ -22,62 +22,47 @@ export const getCloudActions: (workspaceId: string) => TCommandActions = (
     groupTitle: "Deployments",
     actions: [
       {
-        title: "Aptos Nodes",
+        title: "Aptos",
         url: `/${workspaceId}/deployments/aptos`,
         Icon: Box,
       },
       {
-        title: "Bitcoin Nodes",
+        title: "Bitcoin",
         url: `/${workspaceId}/deployments/bitcoin`,
         Icon: Box,
       },
       {
-        title: "Chainlink Nodes",
+        title: "Chainlink",
         url: `/${workspaceId}/deployments/chainlink`,
         Icon: Box,
       },
       {
-        title: "Execution Client Nodes",
-        url: `/${workspaceId}/deployments/ethereum?tab=execution-clients`,
+        title: "Ethereum",
+        url: `/${workspaceId}/deployments/ethereum`,
         Icon: Box,
       },
       {
-        title: "Beacon Nodes",
-        url: `/${workspaceId}/deployments/ethereum?tab=beacon-nodes`,
-        Icon: Box,
-      },
-      {
-        title: "Validators",
-        url: `/${workspaceId}/deployments/ethereum?tab=validators`,
-        Icon: Box,
-      },
-      {
-        title: "Filecoin Nodes",
+        title: "Filecoin",
         url: `/${workspaceId}/deployments/filecoin`,
         Icon: Box,
       },
       {
-        title: "IPFS Peers",
-        url: `/${workspaceId}/deployments/ipfs?tab=peers`,
+        title: "IPFS",
+        url: `/${workspaceId}/deployments/ipfs`,
         Icon: Box,
       },
       {
-        title: "IPFS Cluster Peers",
-        url: `/${workspaceId}/deployments/ipfs?tab=cluster-peers`,
-        Icon: Box,
-      },
-      {
-        title: "NEAR Nodes",
+        title: "NEAR",
         url: `/${workspaceId}/deployments/near`,
         Icon: Box,
       },
       {
-        title: "Polkadot Nodes",
+        title: "Polkadot",
         url: `/${workspaceId}/deployments/polkadot`,
         Icon: Box,
       },
       {
-        title: "Stacks Nodes",
+        title: "Stacks",
         url: `/${workspaceId}/deployments/stacks`,
         Icon: Box,
       },
