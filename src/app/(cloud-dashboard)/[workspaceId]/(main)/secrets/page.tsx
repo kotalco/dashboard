@@ -1,30 +1,26 @@
-import { format, parseISO } from "date-fns";
+import { Suspense } from "react";
 
-import { getSecrets } from "@/services/get-secrets";
-import { getEnumKey } from "@/lib/utils";
-import { SecretsClient } from "./components/client";
-import { SecretType } from "@/enums";
-import { getWorkspace } from "@/services/get-workspace";
+import { Heading } from "@/components/ui/heading";
+import { NodesListSkeleton } from "@/components/nodes-list-skeleton";
+
+import { SecretsList } from "./_components/secrets-list";
 
 export default async function SecretsPage({
-  params: { workspaceId },
+  params,
 }: {
   params: { workspaceId: string };
 }) {
-  const { data } = await getSecrets(workspaceId);
-  const { role } = await getWorkspace(workspaceId);
-  const formattedSecrets = data.map(({ type, name, createdAt }) => ({
-    type: getEnumKey(SecretType, type),
-    name,
-    createdAt: format(parseISO(createdAt), "MMMM do, yyyy"),
-    role,
-  }));
+  const { workspaceId } = params;
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
-        <SecretsClient data={formattedSecrets} role={role} />
+    <div className="grid grid-cols-12 items-center gap-8 pr-10">
+      <div className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
+        <Heading title="Secrets" />
       </div>
+
+      <Suspense fallback={<NodesListSkeleton />}>
+        <SecretsList workspaceId={workspaceId} />
+      </Suspense>
     </div>
   );
 }

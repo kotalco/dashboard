@@ -29,12 +29,13 @@ export type OptionType = Record<"label" | "value", string> & {
   image?: string;
 };
 
-export interface MainNodeInfo {
+export interface ListInfo {
   name: string;
-  network: string;
+  type?: string;
+  network?: string;
   client?: string;
   protocol?: string;
-  url: string;
+  url?: string;
   createdAt: string;
   version?: string;
 }

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateSecretForm } from "../components/create-secret-form";
+import { CreateSecretForm } from "../_components/create-secret-form";
 
 export default async function CreateNewSecretPage() {
   return (
