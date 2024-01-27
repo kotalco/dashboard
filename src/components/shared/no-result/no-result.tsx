@@ -22,7 +22,7 @@ interface NoResultProps {
   createUrl: string;
   buttonText: string;
   className?: string;
-  workspaceId: string;
+  workspaceId?: string;
 }
 
 export const NoResult: React.FC<NoResultProps> = async ({
@@ -46,13 +46,15 @@ export const NoResult: React.FC<NoResultProps> = async ({
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <Suspense fallback={<Skeleton className="h-11 w-[200px] mb-6" />}>
-        <ActionButton
-          workspaceId={workspaceId}
-          text={buttonText}
-          createUrl={createUrl}
-        />
-      </Suspense>
+      {workspaceId && (
+        <Suspense fallback={<Skeleton className="h-11 w-[200px] mb-6" />}>
+          <ActionButton
+            workspaceId={workspaceId}
+            text={buttonText}
+            createUrl={createUrl}
+          />
+        </Suspense>
+      )}
     </Card>
   );
 };
