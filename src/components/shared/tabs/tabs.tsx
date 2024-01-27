@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -11,6 +13,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface TabsProps {
   tabs: {
@@ -29,10 +32,11 @@ export const Tabs = ({
   cardDisplay = true,
   defaultTab,
 }: TabsProps) => {
+  const [value, setValue] = useState(defaultTab || tabs[0].value);
   const filteredChildren = children.filter((child) => child);
 
   return (
-    <CNTabs value={defaultTab || tabs[0].value}>
+    <CNTabs onValueChange={(value) => setValue(value)} value={value}>
       <TabsList>
         {tabs.map(({ label, value }) => (
           <TabsTrigger key={value} value={value}>

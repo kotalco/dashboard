@@ -1,34 +1,34 @@
 import { Suspense } from "react";
 
-import { BitcoinNode } from "@/types";
-import { getNodes } from "@/services/get-nodes";
 import { getEnumKey } from "@/lib/utils";
-import { BitcoinNetworks } from "@/enums";
+import { FilecoinNetworks } from "@/enums";
+import { FilecoinNode } from "@/types";
+import { getNodes } from "@/services/get-nodes";
 import { getClientVersions } from "@/services/get-client-versions";
 
-import { DeploymentsList } from "@/components/deployments-list";
 import { NoResult } from "@/components/shared/no-result/no-result";
+import { DeploymentsList } from "@/components/deployments-list";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { CreateBitcoinNodeButton } from "./create-bitcoin-node-button";
+import { CreateFileCoinNodeButton } from "./create-filecoin-node-button";
 
-interface BitcoinNodesListProps {
+interface FilecoinNodesListProps {
   workspaceId: string;
 }
 
-export const BitcoinNodesList = async ({
+export const FilecoinNodesList = async ({
   workspaceId,
-}: BitcoinNodesListProps) => {
-  const { data } = await getNodes<BitcoinNode>(workspaceId, "/bitcoin/nodes");
+}: FilecoinNodesListProps) => {
+  const { data } = await getNodes<FilecoinNode>(workspaceId, "/filecoin/nodes");
 
   if (!data.length) {
     return (
       <NoResult
-        imageUrl="/images/bitcoin.svg"
-        title="No Bitcoin Nodes"
-        description="Bitcoin nodes retrieve and store data on the Bitcoin network."
-        createUrl={`/${workspaceId}/deployments/bitcoin/new`}
-        buttonText="New Bitcoin Node"
+        imageUrl="/images/filecoin.svg"
+        title="No Filecoin Nodes"
+        description="Filecoin nodes retrieve and store data on the Filecoin network."
+        createUrl={`/${workspaceId}/deployments/filecoin/new`}
+        buttonText="New Filecoin Node"
         workspaceId={workspaceId}
       />
     );
@@ -37,9 +37,10 @@ export const BitcoinNodesList = async ({
   const promises = data.map(async (node) => {
     const { versions } = await getClientVersions(
       {
-        protocol: "bitcoin",
+        protocol: "filecoin",
         component: "node",
-        client: "bitcoin-core",
+        client: "lotus",
+        network: node.network,
       },
       node.image
     );
@@ -54,22 +55,21 @@ export const BitcoinNodesList = async ({
 
   const mainNodesInfo = nodes.map(({ name, network, createdAt, version }) => ({
     name,
-    network: getEnumKey(BitcoinNetworks, network),
-    client: "Bitcoin Core",
+    network: getEnumKey(FilecoinNetworks, network),
+    client: "Lotus",
+    url: `/${workspaceId}/deployments/filecoin/${name}`,
     createdAt,
     version,
-    url: `/${workspaceId}/deployments/bitcoin/${name}`,
   }));
 
   return (
     <>
       <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 justify-self-end">
         <Suspense fallback={<Skeleton className="w-full h-11" />}>
-          <CreateBitcoinNodeButton workspaceId={workspaceId} />
+          <CreateFileCoinNodeButton workspaceId={workspaceId} />
         </Suspense>
       </div>
-
-      <DeploymentsList data={mainNodesInfo} />
+      <DeploymentsList data={mainNodesInfo} />;
     </>
   );
 };

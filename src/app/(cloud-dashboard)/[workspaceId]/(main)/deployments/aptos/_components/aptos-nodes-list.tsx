@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { AptosNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { getEnumKey } from "@/lib/utils";
@@ -5,7 +7,9 @@ import { AptosNetworks } from "@/enums";
 
 import { DeploymentsList } from "@/components/deployments-list";
 import { NoResult } from "@/components/shared/no-result/no-result";
+import { Skeleton } from "@/components/ui/skeleton";
 
+import { CreateAptosNodeButton } from "./create-aptos-node-button";
 import { getClientVersions } from "@/services/get-client-versions";
 
 interface AptosNodesListProps {
@@ -56,5 +60,15 @@ export const AptosNodesList = async ({ workspaceId }: AptosNodesListProps) => {
     url: `/${workspaceId}/deployments/aptos/${name}`,
   }));
 
-  return <DeploymentsList data={mainNodesInfo} />;
+  return (
+    <>
+      <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 justify-self-end">
+        <Suspense fallback={<Skeleton className="w-full h-11" />}>
+          <CreateAptosNodeButton workspaceId={workspaceId} />
+        </Suspense>
+      </div>
+
+      <DeploymentsList data={mainNodesInfo} />
+    </>
+  );
 };
