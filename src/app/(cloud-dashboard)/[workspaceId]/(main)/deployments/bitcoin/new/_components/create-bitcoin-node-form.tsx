@@ -56,7 +56,7 @@ export const CreateBitcoinNodeForm: React.FC<{ images: Version[] }> = ({
         errors={fieldErrors}
       />
 
-      <p className="text-sm font-medium leading-none space-y-1">
+      <p className="text-sm flex flex-col leading-none space-y-2">
         <span>Client: </span>
         <ExternalLink href="https://github.com/bitcoin/bitcoin">
           Bitcoin Core

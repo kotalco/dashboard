@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateBitcoinNodeForm } from "./_components/create-bitcoin-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
+
+import { Heading } from "@/components/ui/heading";
+
+import { CreateBitcoinNodeForm } from "./_components/create-bitcoin-node-form";
 
 export default async function CreateNewBitcoinNodePage({
   params,
@@ -27,13 +29,9 @@ export default async function CreateNewBitcoinNodePage({
   if (role === Roles.Reader) notFound();
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Bitcoin Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateBitcoinNodeForm images={versions} />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New Bitcoin Node" />
+      <CreateBitcoinNodeForm images={versions} />
+    </div>
   );
 }
