@@ -32,7 +32,7 @@ export const Tabs = ({
   const filteredChildren = children.filter((child) => child);
 
   return (
-    <CNTabs defaultValue={defaultTab || tabs[0].value}>
+    <CNTabs value={defaultTab || tabs[0].value}>
       <TabsList>
         {tabs.map(({ label, value }) => (
           <TabsTrigger key={value} value={value}>

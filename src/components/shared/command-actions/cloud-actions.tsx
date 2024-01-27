@@ -38,17 +38,17 @@ export const getCloudActions: (workspaceId: string) => TCommandActions = (
       },
       {
         title: "Execution Client Nodes",
-        url: `/${workspaceId}/deployments/ethereum/execution-clients`,
+        url: `/${workspaceId}/deployments/ethereum?tab=execution-clients`,
         Icon: Box,
       },
       {
         title: "Beacon Nodes",
-        url: `/${workspaceId}/deployments/ethereum/beacon-nodes`,
+        url: `/${workspaceId}/deployments/ethereum?tab=beacon-nodes`,
         Icon: Box,
       },
       {
         title: "Validators",
-        url: `/${workspaceId}/deployments/ethereum/validators`,
+        url: `/${workspaceId}/deployments/ethereum?tab=validators`,
         Icon: Box,
       },
       {
