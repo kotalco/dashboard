@@ -58,12 +58,12 @@ export const getCloudActions: (workspaceId: string) => TCommandActions = (
       },
       {
         title: "IPFS Peers",
-        url: `/${workspaceId}/deployments/ipfs/peers`,
+        url: `/${workspaceId}/deployments/ipfs?tab=peers`,
         Icon: Box,
       },
       {
         title: "IPFS Cluster Peers",
-        url: `/${workspaceId}/deployments/ipfs/cluster-peers`,
+        url: `/${workspaceId}/deployments/ipfs?tab=cluster-peers`,
         Icon: Box,
       },
       {
