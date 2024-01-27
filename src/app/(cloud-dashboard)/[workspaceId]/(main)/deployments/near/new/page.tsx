@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateNEARNodeForm } from "../components/create-near-node-form";
+import { CreateNEARNodeForm } from "../_components/create-near-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";

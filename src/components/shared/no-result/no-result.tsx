@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Image from "next/image";
 
 import { Roles } from "@/enums";
 import { cn } from "@/lib/utils";
@@ -38,7 +37,7 @@ export const NoResult: React.FC<NoResultProps> = async ({
   return (
     <Card
       className={cn(
-        "flex flex-col items-center text-center border-0 col-span-12",
+        "flex flex-col items-center text-center shadow-none border-0 col-span-12",
         className
       )}
     >
