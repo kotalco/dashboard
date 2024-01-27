@@ -89,7 +89,7 @@ export const CreateChainlinkNodeForm: React.FC<
         options={getSelectItems(ChainlinkNetworks)}
       />
 
-      <p className="text-sm flex flex-col leading-none space-y-2">
+      <p className="text-sm font-medium flex flex-col leading-none space-y-2">
         <span>Client: </span>
         <ExternalLink href="https://github.com/smartcontractkit/chainlink">
           Chainlink

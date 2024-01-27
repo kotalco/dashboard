@@ -58,7 +58,7 @@ export const CreateStacksNodeForm: React.FC<CreateStacksNodeFormProps> = ({
     <form
       data-testid="create-node"
       action={onSubmit}
-      className="max-w-sm space-y-4"
+      className="max-w-xs space-y-4"
     >
       <Input errors={fieldErrors} id="name" label="Node Name" />
 
@@ -70,8 +70,8 @@ export const CreateStacksNodeForm: React.FC<CreateStacksNodeFormProps> = ({
         errors={fieldErrors}
       />
 
-      <p className="text-sm font-medium leading-none space-y-1">
-        Client:{" "}
+      <p className="text-sm flex font-medium flex-col leading-none space-y-2">
+        <span>Client:</span>
         <ExternalLink href="https://github.com/stacks-network/stacks-blockchain">
           Stacks
         </ExternalLink>

@@ -44,7 +44,7 @@ export const CreateNewFilecoinNode: React.FC<{ images: Clients }> = ({
     <form
       data-testid="create-node"
       action={onSubmit}
-      className="max-w-sm space-y-4"
+      className="max-w-xs space-y-4"
     >
       <Input errors={fieldErrors} id="name" label="Node Name" />
 
@@ -56,8 +56,8 @@ export const CreateNewFilecoinNode: React.FC<{ images: Clients }> = ({
         errors={fieldErrors}
       />
 
-      <p className="text-sm font-medium leading-none space-y-1">
-        Client:{" "}
+      <p className="text-sm font-medium flex flex-col leading-none space-y-2">
+        <span>Client:</span>
         <ExternalLink href="https://github.com/filecoin-project/lotus">
           Lotus
         </ExternalLink>

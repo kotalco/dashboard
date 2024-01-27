@@ -50,10 +50,15 @@ export const CreateIPFSPeerForm: React.FC<{ images: Version[] }> = ({
       action={onSubmit}
       className="max-w-sm space-y-4"
     >
-      <Input errors={fieldErrors} id="name" label="Peer Name" />
+      <Input
+        errors={fieldErrors}
+        id="name"
+        label="Peer Name"
+        className="max-w-xs"
+      />
 
-      <p className="text-sm font-medium leading-none space-y-1">
-        Client:{" "}
+      <p className="text-sm font-medium flex flex-col leading-none space-y-2">
+        <span>Client:</span>
         <ExternalLink href="https://github.com/ipfs/kubo">Kubo</ExternalLink>
       </p>
 

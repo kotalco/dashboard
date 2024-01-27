@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateNEARNodeForm } from "../_components/create-near-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
+
+import { Heading } from "@/components/ui/heading";
+
+import { CreateNEARNodeForm } from "./_components/create-near-node-form";
 
 export default async function CreateNewBitcoinNodePage({
   params,
@@ -23,13 +25,9 @@ export default async function CreateNewBitcoinNodePage({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New NEAR Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateNEARNodeForm images={versions} />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New NEAR Node" />
+      <CreateNEARNodeForm images={versions} />
+    </div>
   );
 }

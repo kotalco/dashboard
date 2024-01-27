@@ -17,7 +17,7 @@ export default function LoadingCreateNode() {
 
         <div className="space-y-1">
           <Skeleton className="w-20 h-4" />
-          <Skeleton className="w-80 h-4" />
+          <Skeleton className="w-80 h-10" />
         </div>
 
         <div className="space-y-1">

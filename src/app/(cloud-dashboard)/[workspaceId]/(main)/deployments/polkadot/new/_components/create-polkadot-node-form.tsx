@@ -67,8 +67,8 @@ export const CreatePolkadotNodeForm: React.FC<{ images: Version[] }> = ({
         className="max-w-xs"
       />
 
-      <p className="text-sm font-medium leading-none space-y-1">
-        Client:{" "}
+      <p className="text-sm font-medium flex flex-col leading-none space-y-2">
+        <span>Client:</span>
         <ExternalLink href="https://github.com/paritytech/polkadot">
           Parity Polkadot
         </ExternalLink>

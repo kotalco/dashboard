@@ -48,7 +48,7 @@ export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
     <form
       data-testid="create-node"
       action={onSubmit}
-      className="max-w-sm space-y-4"
+      className="max-w-xs space-y-4"
     >
       <Input id="name" errors={fieldErrors} label="Node Name" />
 
@@ -60,8 +60,8 @@ export const CreateNEARNodeForm: React.FC<{ images: Version[] }> = ({
         errors={fieldErrors}
       />
 
-      <p className="text-sm font-medium leading-none space-y-1">
-        Client:{" "}
+      <p className="text-sm font-medium flex flex-col leading-none space-y-2">
+        <span>Client:</span>
         <ExternalLink href="https://github.com/near/nearcore">
           NEAR Core
         </ExternalLink>

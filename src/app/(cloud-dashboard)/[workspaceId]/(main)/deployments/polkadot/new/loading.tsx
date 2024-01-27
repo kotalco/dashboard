@@ -20,6 +20,13 @@ export default function LoadingCreateNode() {
           <Skeleton className="w-80 h-4" />
         </div>
 
+        <div className="flex space-x-4 items-center">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="w-11 h-6 rounded-full" />
+        </div>
+
+        <Skeleton className="w-[576px] h-[114px]" />
+
         <div className="space-y-1">
           <Skeleton className="h-10 w-[100px]" />
         </div>

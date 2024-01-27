@@ -56,7 +56,7 @@ export const CreateAptosNodeForm: React.FC<{ images: Clients }> = ({
         errors={fieldErrors}
       />
 
-      <p className="text-sm flex flex-col leading-none space-y-2">
+      <p className="text-sm font-medium flex flex-col leading-none space-y-2">
         <span>Client: </span>
         <ExternalLink href="https://github.com/aptos-labs/aptos-core">
           aptos-core

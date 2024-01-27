@@ -7,23 +7,12 @@ export default function LoadingCreateNode() {
       <div className="space-y-4">
         <div className="space-y-1">
           <Skeleton className="w-20 h-4" />
-          <Skeleton className="w-80 h-10" />
+          <Skeleton className="w-08 h-10" />
         </div>
 
         <div className="space-y-1">
           <Skeleton className="w-20 h-4" />
           <Skeleton className="w-80 h-10" />
-        </div>
-
-        <div className="space-y-1">
-          <Skeleton className="w-20 h-4" />
-          <Skeleton className="w-80 h-4" />
-        </div>
-
-        <div className="space-y-1">
-          <Skeleton className="w-20 h-4" />
-          <Skeleton className="w-80 h-10" />
-          <Skeleton className="w-72 h-5" />
         </div>
 
         <div className="space-y-1">
@@ -38,19 +27,14 @@ export default function LoadingCreateNode() {
         </div>
 
         <div className="space-y-1">
-          <Skeleton className="w-20 h-6" />
-          <Skeleton className="w-80 h-5" />
-        </div>
-
-        <div className="space-y-1">
-          <Skeleton className="w-20 h-4" />
-          <Skeleton className="w-80 h-10" />
-        </div>
-
-        <div className="space-y-1">
           <Skeleton className="w-20 h-4" />
           <Skeleton className="w-80 h-10" />
           <Skeleton className="w-72 h-5" />
+        </div>
+
+        <div className="space-y-1">
+          <Skeleton className="w-20 h-4" />
+          <Skeleton className="w-80 h-10" />
         </div>
 
         <div className="space-y-1">

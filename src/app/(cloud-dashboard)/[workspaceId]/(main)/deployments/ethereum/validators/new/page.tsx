@@ -1,13 +1,15 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateValidatorNodeForm } from "../components/create-validator-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { getNodes } from "@/services/get-nodes";
 import { Roles, SecretType } from "@/enums";
 import { BeaconNode } from "@/types";
 import { getSecrets } from "@/services/get-secrets";
+
+import { Heading } from "@/components/ui/heading";
+
+import { CreateValidatorNodeForm } from "./_components/create-validator-node-form";
 
 export default async function CreateNewValidatorNodePage({
   params,
@@ -38,18 +40,14 @@ export default async function CreateNewValidatorNodePage({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Validator Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateValidatorNodeForm
-          images={component}
-          beaconNodes={data}
-          passwords={passwords}
-          keystores={keystores}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New Validator Node" />
+      <CreateValidatorNodeForm
+        images={component}
+        beaconNodes={data}
+        passwords={passwords}
+        keystores={keystores}
+      />
+    </div>
   );
 }

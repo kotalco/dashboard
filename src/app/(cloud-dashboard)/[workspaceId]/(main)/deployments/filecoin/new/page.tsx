@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateNewFilecoinNode } from "../_components/create-filecoin-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
+
+import { Heading } from "@/components/ui/heading";
+
+import { CreateNewFilecoinNode } from "./_components/create-filecoin-node-form";
 
 export default async function CreateNewFilecoinNodePage({
   params,
@@ -22,13 +24,9 @@ export default async function CreateNewFilecoinNodePage({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Filecoin Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateNewFilecoinNode images={component} />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New Filecoin Node" />
+      <CreateNewFilecoinNode images={component} />
+    </div>
   );
 }
