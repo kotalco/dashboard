@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-
 import { ChainlinkNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { getEnumKey } from "@/lib/utils";
@@ -8,9 +6,6 @@ import { getClientVersions } from "@/services/get-client-versions";
 
 import { DeploymentsList } from "@/components/deployments-list";
 import { NoResult } from "@/components/shared/no-result/no-result";
-import { Skeleton } from "@/components/ui/skeleton";
-
-import { CreateChainlinkNodeButton } from "./create-chainlink-node-button";
 
 interface ChainlinkNodesListProps {
   workspaceId: string;
@@ -69,15 +64,5 @@ export const ChainlinkNodesList = async ({
     })
   );
 
-  return (
-    <>
-      <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 justify-self-end">
-        <Suspense fallback={<Skeleton className="w-full h-11" />}>
-          <CreateChainlinkNodeButton workspaceId={workspaceId} />
-        </Suspense>
-      </div>
-
-      <DeploymentsList data={mainNodesInfo} />
-    </>
-  );
+  return <DeploymentsList data={mainNodesInfo} />;
 };

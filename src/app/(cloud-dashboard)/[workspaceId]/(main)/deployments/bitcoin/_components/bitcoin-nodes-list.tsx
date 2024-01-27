@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-
 import { BitcoinNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
 import { getEnumKey } from "@/lib/utils";
@@ -8,9 +6,6 @@ import { getClientVersions } from "@/services/get-client-versions";
 
 import { DeploymentsList } from "@/components/deployments-list";
 import { NoResult } from "@/components/shared/no-result/no-result";
-import { Skeleton } from "@/components/ui/skeleton";
-
-import { CreateBitcoinNodeButton } from "./create-bitcoin-node-button";
 
 interface BitcoinNodesListProps {
   workspaceId: string;
@@ -61,15 +56,5 @@ export const BitcoinNodesList = async ({
     url: `/${workspaceId}/deployments/bitcoin/${name}`,
   }));
 
-  return (
-    <>
-      <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 justify-self-end">
-        <Suspense fallback={<Skeleton className="w-full h-11" />}>
-          <CreateBitcoinNodeButton workspaceId={workspaceId} />
-        </Suspense>
-      </div>
-
-      <DeploymentsList data={mainNodesInfo} />
-    </>
-  );
+  return <DeploymentsList data={mainNodesInfo} />;
 };
