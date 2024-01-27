@@ -32,7 +32,8 @@ export type OptionType = Record<"label" | "value", string> & {
 export interface MainNodeInfo {
   name: string;
   network: string;
-  client: string;
+  client?: string;
+  protocol?: string;
   url: string;
   createdAt: string;
   version?: string;

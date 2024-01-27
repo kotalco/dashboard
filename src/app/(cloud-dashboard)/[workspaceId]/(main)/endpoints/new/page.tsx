@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateEndpointForm } from "../components/create-endpoint-form";
+import { CreateEndpointForm } from "../_components/create-endpoint-form";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
 import { getDomainInfo } from "@/services/get-domain-info";
