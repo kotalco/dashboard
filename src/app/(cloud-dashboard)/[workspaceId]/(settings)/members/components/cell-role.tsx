@@ -61,9 +61,13 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
     );
   }
 
+  if (role === Roles.Customer) {
+    return <div className="pl-4">{getEnumKey(Roles, role)}</div>;
+  }
+
   return (
     <Select
-      disabled={pending || role === Roles.Customer}
+      disabled={pending}
       id="role"
       value={role}
       defaultValue={role}
