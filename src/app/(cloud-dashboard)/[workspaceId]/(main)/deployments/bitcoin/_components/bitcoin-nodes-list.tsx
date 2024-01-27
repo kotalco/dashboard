@@ -21,6 +21,19 @@ export const BitcoinNodesList = async ({
 }: BitcoinNodesListProps) => {
   const { data } = await getNodes<BitcoinNode>(workspaceId, "/bitcoin/nodes");
 
+  if (!data.length) {
+    return (
+      <NoResult
+        imageUrl="/images/bitcoin.svg"
+        title="No Bitcoin Nodes"
+        description="Bitcoin nodes retrieve and store data on the Bitcoin network."
+        createUrl={`/${workspaceId}/deployments/bitcoin/new`}
+        buttonText="New Bitcoin Node"
+        workspaceId={workspaceId}
+      />
+    );
+  }
+
   const promises = data.map(async (node) => {
     const { versions } = await getClientVersions(
       {
@@ -38,19 +51,6 @@ export const BitcoinNodesList = async ({
   });
 
   const nodes = await Promise.all(promises);
-
-  if (!data.length) {
-    return (
-      <NoResult
-        imageUrl="/images/bitcoin.svg"
-        title="No Bitcoin Nodes"
-        description="Bitcoin nodes retrieve and store data on the Bitcoin network."
-        createUrl={`/${workspaceId}/deployments/bitcoin/new`}
-        buttonText="New Bitcoin Node"
-        workspaceId={workspaceId}
-      />
-    );
-  }
 
   const mainNodesInfo = nodes.map(({ name, network, createdAt, version }) => ({
     name,

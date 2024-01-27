@@ -19,6 +19,19 @@ interface AptosNodesListProps {
 export const AptosNodesList = async ({ workspaceId }: AptosNodesListProps) => {
   const { data } = await getNodes<AptosNode>(workspaceId, "/aptos/nodes");
 
+  if (!data.length) {
+    return (
+      <NoResult
+        imageUrl="/images/aptos.svg"
+        title="No Aptos Nodes"
+        description="Aptos node listens to new transactions broadcasted in the network, executes them in EVM, and holds the latest state."
+        createUrl={`/${workspaceId}/deployments/aptos/new`}
+        buttonText="New Aptos Node"
+        workspaceId={workspaceId}
+      />
+    );
+  }
+
   const promises = data.map(async (node) => {
     const { versions } = await getClientVersions(
       {
@@ -37,19 +50,6 @@ export const AptosNodesList = async ({ workspaceId }: AptosNodesListProps) => {
   });
 
   const nodes = await Promise.all(promises);
-
-  if (!data.length) {
-    return (
-      <NoResult
-        imageUrl="/images/aptos.svg"
-        title="No Aptos Nodes"
-        description="Aptos node listens to new transactions broadcasted in the network, executes them in EVM, and holds the latest state."
-        createUrl={`/${workspaceId}/deployments/aptos/new`}
-        buttonText="New Aptos Node"
-        workspaceId={workspaceId}
-      />
-    );
-  }
 
   const mainNodesInfo = nodes.map(({ name, network, createdAt, version }) => ({
     name,

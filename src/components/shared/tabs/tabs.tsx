@@ -13,16 +13,26 @@ import {
 import { cn } from "@/lib/utils";
 
 interface TabsProps {
-  tabs: { label: string; value: string; description?: string }[];
+  tabs: {
+    label: string | React.ReactNode;
+    value: string;
+    description?: string;
+  }[];
   children: React.ReactNode[];
   cardDisplay?: boolean;
+  defaultTab?: string;
 }
 
-export const Tabs = ({ tabs, children, cardDisplay = true }: TabsProps) => {
+export const Tabs = ({
+  tabs,
+  children,
+  cardDisplay = true,
+  defaultTab,
+}: TabsProps) => {
   const filteredChildren = children.filter((child) => child);
 
   return (
-    <CNTabs defaultValue={tabs[0].value}>
+    <CNTabs defaultValue={defaultTab || tabs[0].value}>
       <TabsList>
         {tabs.map(({ label, value }) => (
           <TabsTrigger key={value} value={value}>

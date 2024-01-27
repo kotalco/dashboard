@@ -24,6 +24,19 @@ export const ChainlinkNodesList = async ({
     "/chainlink/nodes"
   );
 
+  if (!data.length) {
+    return (
+      <NoResult
+        imageUrl="/images/chainlink.svg"
+        title="No Chainlink Nodes"
+        description="Chainlink node connects smart contracts with external data using a decentralized oracle network."
+        createUrl={`/${workspaceId}/deployments/chainlink/new`}
+        buttonText="New Chainlink Node"
+        workspaceId={workspaceId}
+      />
+    );
+  }
+
   const promises = data.map(async (node) => {
     const { versions } = await getClientVersions(
       {
@@ -41,19 +54,6 @@ export const ChainlinkNodesList = async ({
   });
 
   const nodes = await Promise.all(promises);
-
-  if (!data.length) {
-    return (
-      <NoResult
-        imageUrl="/images/chainlink.svg"
-        title="No Chainlink Nodes"
-        description="Chainlink node connects smart contracts with external data using a decentralized oracle network."
-        createUrl={`/${workspaceId}/deployments/chainlink/new`}
-        buttonText="New Chainlink Node"
-        workspaceId={workspaceId}
-      />
-    );
-  }
 
   const mainNodesInfo = nodes.map(
     ({ name, ethereumChainId, linkContractAddress, createdAt, version }) => ({
