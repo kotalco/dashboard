@@ -69,7 +69,7 @@ export const FilecoinNodesList = async ({
           <CreateFileCoinNodeButton workspaceId={workspaceId} />
         </Suspense>
       </div>
-      <DeploymentsList data={mainNodesInfo} />;
+      <DeploymentsList data={mainNodesInfo} />
     </>
   );
 };
