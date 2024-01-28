@@ -227,6 +227,12 @@ jobs:
 
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+          
+      - name: Get Latest core-api ImageTag
+        id: core-api_latest_tag
+        uses: luoqiz/docker-images-latest-version@master
+        with:
+          image: kotalco/core-api
 
       - name: Checkout kotal-helm-chart Repo
         uses: actions/checkout@v3
@@ -254,7 +260,7 @@ jobs:
 
       - name: Testing and Update Kotal-Helm-Chart in DO with kotal dashboard new image [kotal.cloud]
         run: |
-          helm upgrade kotal kotal-helm-chart/charts/kotal --install --wait --namespace=kotal --create-namespace --set "dashboard.tag=${SHORT_SHA}" --set "staging=true" --set=app.name=kotal --reuse-values --atomic
+          helm upgrade kotal kotal-helm-chart/charts/kotal --install --wait --namespace=kotal --create-namespace --set-string "api.tag=${{ steps.core-api_latest_tag.outputs.version }}" --set-string "dashboard.tag=${SHORT_SHA}" --set "staging=true" --set=app.name=kotal --reuse-values --atomic
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -271,4 +277,4 @@ jobs:
 
       - name: Testing and Update Kotal-Helm-Chart in EKS with kotal dashboard new image
         run: |
-          helm upgrade kotal kotal-helm-chart/charts/kotal --install --wait --namespace=kotal --create-namespace --set-string "dashboard.tag=${SHORT_SHA}" --set "staging=true" --set=app.name=kotal --reuse-values --atomic
+          helm upgrade kotal kotal-helm-chart/charts/kotal --install --wait --namespace=kotal --create-namespace --set-string "api.tag=${{ steps.core-api_latest_tag.outputs.version }}" --set-string "dashboard.tag=${SHORT_SHA}" --set "staging=true" --set=app.name=kotal --reuse-values --atomic
