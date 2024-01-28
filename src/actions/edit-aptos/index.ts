@@ -8,7 +8,7 @@ import { logger } from "@/lib/utils";
 import { AptosNode } from "@/types";
 
 import { InputType, ReturnType } from "./types";
-import { EditAptos, EditAptosAPI } from "./schema";
+import { EditAptos } from "./schema";
 
 const handler = async (values: InputType): Promise<ReturnType> => {
   let node;

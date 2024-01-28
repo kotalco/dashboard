@@ -344,3 +344,21 @@ export const formatTimeDistance = (createdAt: string) => {
 
   return formatDistance(date, new Date(), { addSuffix: true });
 };
+
+export const getResourcesValues = (formData: FormData) => {
+  const [cpu, cpuLimit] = formData.getAll("cpu[]") as string[];
+  const [memory, memoryLimit] = formData.getAll("memory[]") as string[];
+  const storage = formData.get("storage") as string;
+
+  return {
+    cpu,
+    cpuLimit,
+    memory: `${memory}Gi`,
+    memoryLimit: `${memoryLimit}Gi`,
+    storage: `${storage}Gi`,
+  };
+};
+
+export const getCheckboxValue = (formData: FormData, name: string) => {
+  return formData.get(name) === "on";
+};

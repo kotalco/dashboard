@@ -15,7 +15,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
   const { workspaceId } = useParams();
 
   return (
-    <div className="space-y-8 mt-4">
+    <div className="space-y-8">
       <div>
         <p className="text-muted-foreground">
           By deleting this node, all connected apps will lose access to the

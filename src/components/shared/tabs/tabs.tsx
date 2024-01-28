@@ -41,7 +41,7 @@ export const Tabs = ({
         ))}
       </TabsList>
       {tabs.map(({ value, description }, index) => (
-        <TabsContent key={value} value={value}>
+        <TabsContent key={value} value={value} className="mt-4">
           <Card className={cardDisplay ? "" : "border-0 shadow-none"}>
             {description && (
               <CardHeader className={cn("p-1", cardDisplay ? "" : "px-0")}>

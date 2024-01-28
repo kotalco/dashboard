@@ -1,12 +1,13 @@
 import { z } from "zod";
-import { EditImageVersion } from "../edit-image-version/schema";
-import { EditResources } from "../edit-resources/schema";
 
-export const EditAptosAPI = z.object({
-  name: z.string(),
-  workspaceId: z.string(),
+import { EditImageVersion } from "@/schemas/image-version";
+import { EditResources } from "@/schemas/resources";
+import { Identifiers } from "@/schemas/identifiers";
+
+const EditAptosAPI = z.object({
   api: z.boolean(),
 });
 
-export const EditAptos =
-  EditAptosAPI.merge(EditImageVersion).merge(EditResources);
+export const EditAptos = EditAptosAPI.merge(EditImageVersion)
+  .merge(EditResources)
+  .merge(Identifiers);

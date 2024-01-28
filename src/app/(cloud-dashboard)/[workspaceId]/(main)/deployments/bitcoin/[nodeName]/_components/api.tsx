@@ -4,70 +4,47 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { MinusCircle, PlusCircle } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+import { BitcoinNode, OptionType } from "@/types";
+import { Roles, SecretType } from "@/enums";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/form/input";
 import { Select } from "@/components/form/select";
 import { Toggle } from "@/components/form/toggle";
-import { SubmitSuccess } from "@/components/form/submit-success";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitButton } from "@/components/form/submit-button";
 import { Label } from "@/components/ui/label";
+import { Heading } from "@/components/ui/heading";
 
-import { cn, readFieldArray } from "@/lib/utils";
-import { BitcoinNode, OptionType, RPCUser } from "@/types";
-import { Roles, SecretType } from "@/enums";
-import { useAction } from "@/hooks/use-action";
-import { editBitcoinAPI } from "@/actions/edit-bitcoin";
-
-interface APITabProps {
+interface ApiProps {
   node: BitcoinNode;
   role: Roles;
   secrets: OptionType[];
+  errors?: Record<string, string[] | undefined>;
 }
 
-export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
-  const { rpc, txIndex, rpcUsers, name } = node;
-  const { workspaceId } = useParams();
+export const Api = ({ node, role, secrets, errors }: ApiProps) => {
+  const { rpc, txIndex, rpcUsers } = node;
+  const { workspaceId } = useParams() as { workspaceId: string };
   const [usersCount, setUsersCount] = useState(rpcUsers.length);
-  const { execute, fieldErrors, error, success } = useAction(editBitcoinAPI);
-
-  const onSubmit = (formData: FormData) => {
-    const rpc = formData.get("rpc") === "on";
-    const txIndex = formData.get("txIndex") === "on";
-    const rpcUsers = readFieldArray<RPCUser>(
-      { rpcUsers: ["username", "passwordSecretName"] },
-      formData
-    ) as [RPCUser, ...RPCUser[]];
-
-    execute(
-      { rpc, txIndex, rpcUsers },
-      { name, workspaceId: workspaceId as string }
-    );
-  };
 
   return (
-    <form action={onSubmit} className="relative space-y-8">
-      <div className="px-6 py-2 rounded-lg border max-w-xs flex">
-        <Toggle
-          id="rpc"
-          label="JSON-RPC Server"
-          disabled={role === Roles.Reader}
-          errors={fieldErrors}
-          defaultChecked={rpc}
-          className="justify-between"
-        />
-      </div>
+    <div className="space-y-4">
+      <Heading variant="h2" title="API" />
+      <Toggle
+        id="rpc"
+        label="JSON-RPC Server"
+        disabled={role === Roles.Reader}
+        errors={errors}
+        defaultChecked={rpc}
+      />
 
-      <div className="px-6 py-2 rounded-lg border max-w-xs flex">
-        <Toggle
-          id="txIndex"
-          label="Transaction Index"
-          disabled={role === Roles.Reader}
-          errors={fieldErrors}
-          defaultChecked={txIndex}
-          className="justify-between"
-        />
-      </div>
+      <Toggle
+        id="txIndex"
+        label="Transaction Index"
+        disabled={role === Roles.Reader}
+        errors={errors}
+        defaultChecked={txIndex}
+      />
 
       <div className="space-y-2">
         <Label className="text-base">RPC Users</Label>
@@ -79,7 +56,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
                 id={`rpcUsers.${i}.username`}
                 disabled={role === Roles.Reader}
                 defaultValue={rpcUsers[i]?.username}
-                errors={fieldErrors}
+                errors={errors}
               />
             </div>
 
@@ -89,7 +66,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
                 id={`rpcUsers.${i}.passwordSecretName`}
                 disabled={role === Roles.Reader}
                 defaultValue={rpcUsers[i]?.passwordSecretName}
-                errors={fieldErrors}
+                errors={errors}
                 link={{
                   title: "Create New Password",
                   href: `/${workspaceId}/secrets/new?type=${SecretType.Password}`,
@@ -102,11 +79,7 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
               <div
                 className={cn(
                   "col-span-2",
-                  !fieldErrors
-                    ? "self-end"
-                    : i === 0
-                    ? "self-center"
-                    : "self-start"
+                  !errors ? "self-end" : i === 0 ? "self-center" : "self-start"
                 )}
               >
                 {usersCount > 1 && (
@@ -130,18 +103,6 @@ export const APITab: React.FC<APITabProps> = ({ node, role, secrets }) => {
           </div>
         ))}
       </div>
-
-      <SubmitSuccess success={success}>
-        API settings have been updated successfully.
-      </SubmitSuccess>
-
-      <SubmitError error={error} />
-
-      {role !== Roles.Reader && (
-        <SubmitButton data-testid="submit" type="submit">
-          Update
-        </SubmitButton>
-      )}
-    </form>
+    </div>
   );
 };

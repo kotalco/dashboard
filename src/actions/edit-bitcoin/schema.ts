@@ -1,18 +1,25 @@
 import { z } from "zod";
 
-export const EditBitcoinAPI = z.object({
-  rpc: z.boolean(),
-  txIndex: z.boolean(),
-  rpcUsers: z
-    .array(
-      z.object({
-        username: z.string().min(1, "Username is required"),
-        passwordSecretName: z.string().min(1, "Please select a password"),
-      })
-    )
-    .nonempty(),
+import { EditResources } from "@/schemas/resources";
+import { EditImageVersion } from "@/schemas/image-version";
+import { Identifiers } from "@/schemas/identifiers";
+
+const RpcUser = z.object({
+  username: z.string().min(1, "Username is required"),
+  passwordSecretName: z.string().min(1, "Please select a password"),
 });
 
-export const EditBitcoinWallet = z.object({
+const EditBitcoinAPI = z.object({
+  rpc: z.boolean(),
+  txIndex: z.boolean(),
+  rpcUsers: z.array(RpcUser).nonempty(),
+});
+
+const EditBitcoinWallet = z.object({
   wallet: z.boolean(),
 });
+
+export const EditBitcoinNode = EditBitcoinAPI.merge(EditBitcoinWallet)
+  .merge(EditResources)
+  .merge(EditImageVersion)
+  .merge(Identifiers);

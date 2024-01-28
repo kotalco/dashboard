@@ -1,51 +1,69 @@
 "use client";
 
-import { useParams } from "next/navigation";
-
+import { editBitcoinNode } from "@/actions/edit-bitcoin";
 import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
-import { AptosNode, Version } from "@/types";
-import { editAptosNode } from "@/actions/edit-aptos";
-import { getCheckboxValue, getResourcesValues } from "@/lib/utils";
-
-import { SubmitButton } from "@/components/form/submit-button";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitSuccess } from "@/components/form/submit-success";
-import { Resources } from "@/components/shared/deployments/resources";
-import { Api } from "./api";
+import {
+  getCheckboxValue,
+  getResourcesValues,
+  readFieldArray,
+} from "@/lib/utils";
+import { BitcoinNode, OptionType, RPCUser, Version } from "@/types";
+import { useParams } from "next/navigation";
 import { Protocol } from "./protocol";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
+import { Api } from "./api";
+import { Wallet } from "./wallet";
+import { Resources } from "@/components/shared/deployments/resources";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface NodeConfigProps {
-  node: AptosNode;
+  node: BitcoinNode;
   role: Roles;
   versions: (Version & {
     disabled?: boolean | undefined;
   })[];
+  secrets: OptionType[];
 }
 
-export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
+export const NodeConfig = ({
+  node,
+  role,
+  versions,
+  secrets,
+}: NodeConfigProps) => {
   const { name, image } = node;
   const { workspaceId } = useParams() as { workspaceId: string };
 
-  const { execute, fieldErrors, error, success } = useAction(editAptosNode);
+  const { execute, fieldErrors, error, success } = useAction(editBitcoinNode);
 
   const onSubmit = (formData: FormData) => {
     const image = formData.get("image") as string | null;
-    const api = getCheckboxValue(formData, "api");
+    const rpc = getCheckboxValue(formData, "rpc");
+    const txIndex = getCheckboxValue(formData, "txIndex");
+    const rpcUsers = readFieldArray<RPCUser>(
+      { rpcUsers: ["username", "passwordSecretName"] },
+      formData
+    ) as [RPCUser, ...RPCUser[]];
+    const wallet = getCheckboxValue(formData, "wallet");
     const { cpu, cpuLimit, memory, memoryLimit, storage } =
       getResourcesValues(formData);
 
     execute({
-      name,
       image,
-      api,
+      rpc,
+      txIndex,
+      rpcUsers,
+      wallet,
       cpu,
       cpuLimit,
       memory,
       memoryLimit,
       storage,
       workspaceId,
+      name,
     });
   };
 
@@ -65,7 +83,10 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
       </div>
 
       {/* API */}
-      <Api role={role} errors={fieldErrors} node={node} />
+      <Api role={role} errors={fieldErrors} node={node} secrets={secrets} />
+
+      {/* Wallet */}
+      <Wallet role={role} errors={fieldErrors} node={node} />
 
       {/* Resources */}
       <Resources role={role} errors={fieldErrors} node={node} />
