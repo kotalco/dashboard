@@ -1,4 +1,4 @@
-import { AptosNetworks, Roles } from "@/enums";
+import { AptosNetworks } from "@/enums";
 import { getEnumKey } from "@/lib/utils";
 import { AptosNode } from "@/types";
 

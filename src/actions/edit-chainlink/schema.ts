@@ -1,7 +1,11 @@
-import { ChainlinkLogging } from "@/enums";
 import { z } from "zod";
 
-export const EditDatabase = z.object({
+import { ChainlinkLogging } from "@/enums";
+import { Identifiers } from "@/schemas/identifiers";
+import { EditImageVersion } from "@/schemas/image-version";
+import { EditResources } from "@/schemas/resources";
+
+const EditDatabase = z.object({
   databaseURL: z
     .string({ required_error: "Database connection URL is required" })
     .min(1, "Database connection URL is required")
@@ -11,7 +15,7 @@ export const EditDatabase = z.object({
     }),
 });
 
-export const EditExecutionClient = z.object({
+const EditExecutionClient = z.object({
   ethereumWsEndpoint: z
     .string({ required_error: "Ethereum websocket is required" })
     .min(1, "Ethereum websocket is required")
@@ -31,25 +35,19 @@ export const EditExecutionClient = z.object({
     ),
 });
 
-export const EditWallet = z.object({
+const EditWallet = z.object({
   keystorePasswordSecretName: z.string({
     required_error: "Keystore password is required",
   }),
 });
 
-export const EditTLS = z
-  .object({
-    certSecretName: z.string().optional().nullable(),
-    tlsPort: z.coerce.number().optional(),
-    secureCookies: z.boolean(),
-  })
-  .transform((values) =>
-    values.certSecretName
-      ? values
-      : { certSecretName: "", secureCookies: false }
-  );
+const EditTLS = z.object({
+  certSecretName: z.string().optional().nullable(),
+  tlsPort: z.coerce.number().optional().nullable(),
+  secureCookies: z.boolean(),
+});
 
-export const EditAPI = z.object({
+const EditAPI = z.object({
   api: z.boolean(),
   apiCredentials: z.object({
     email: z
@@ -60,7 +58,7 @@ export const EditAPI = z.object({
   }),
 });
 
-export const EditAccessControl = z.object({
+const EditAccessControl = z.object({
   corsDomains: z
     .string()
     .transform((value) =>
@@ -71,6 +69,16 @@ export const EditAccessControl = z.object({
     }),
 });
 
-export const EditLogs = z.object({
+const EditLogs = z.object({
   logging: z.nativeEnum(ChainlinkLogging),
 });
+
+export const EditChainlinkNode = Identifiers.merge(EditImageVersion)
+  .merge(EditDatabase)
+  .merge(EditExecutionClient)
+  .merge(EditWallet)
+  .merge(EditTLS)
+  .merge(EditAPI)
+  .merge(EditAccessControl)
+  .merge(EditLogs)
+  .merge(EditResources);

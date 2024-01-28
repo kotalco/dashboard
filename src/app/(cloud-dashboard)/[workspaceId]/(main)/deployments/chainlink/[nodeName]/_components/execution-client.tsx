@@ -1,32 +1,25 @@
-"use client";
-
 import { ChainlinkNode, ExecutionClientNode } from "@/types";
 import { Roles } from "@/enums";
+
 import { SelectWithInput } from "@/components/form/select-with-input";
 import { MultiSelect } from "@/components/form/multi-select";
-import { useAction } from "@/hooks/use-action";
-import { editExecutionClient } from "@/actions/edit-chainlink";
-import { readSelectWithInputValue } from "@/lib/utils";
-import { useParams } from "next/navigation";
-import { SubmitButton } from "@/components/form/submit-button";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitSuccess } from "@/components/form/submit-success";
+import { Heading } from "@/components/ui/heading";
 
-interface ExecutionClientTabProps {
+interface ExecutionClientProps {
   node: ChainlinkNode;
   role: Roles;
   executionClients: ExecutionClientNode[];
+  errors?: Record<string, string[] | undefined>;
 }
 
-export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
+export const ExecutionClient = ({
   node,
   role,
   executionClients,
-}) => {
-  const { ethereumWsEndpoint, ethereumHttpEndpoints, name } = node;
-  const { workspaceId } = useParams();
-  const { execute, fieldErrors, error, success } =
-    useAction(editExecutionClient);
+  errors,
+}: ExecutionClientProps) => {
+  const { ethereumWsEndpoint, ethereumHttpEndpoints } = node;
+
   const wsActiveExecutionClients = executionClients
     .filter(({ ws }) => ws)
     .map(({ name, wsPort }) => ({
@@ -41,23 +34,9 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
       value: `http://${name}:${rpcPort}`,
     }));
 
-  const onSubmit = async (formData: FormData) => {
-    const ethereumWsEndpoint = readSelectWithInputValue(
-      "ethereumWsEndpoint",
-      formData
-    );
-    const ethereumHttpEndpoints = formData.getAll(
-      "ethereumHttpEndpoints"
-    ) as string[];
-
-    execute(
-      { ethereumWsEndpoint, ethereumHttpEndpoints },
-      { name: name, workspaceId: workspaceId as string }
-    );
-  };
-
   return (
-    <form action={onSubmit} className="relative space-y-8">
+    <div className="space-y-4">
+      <Heading variant="h2" title="Execution Client" />
       <SelectWithInput
         id="ethereumWsEndpoint"
         label="Execution Client Websocket Endpoint"
@@ -65,7 +44,7 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
         options={wsActiveExecutionClients}
         otherLabel="Externally Managed Node"
         description="Execution client nodes with WebSocket enabled"
-        errors={fieldErrors}
+        errors={errors}
         disabled={role === Roles.Reader}
         defaultValue={ethereumWsEndpoint}
         className="max-w-xs"
@@ -76,20 +55,12 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
         label="Execution Client HTTP Endpoints"
         placeholder="Select an Execution Client"
         options={rpcActiveExecutionClients}
-        errors={fieldErrors}
+        errors={errors}
         disabled={role === Roles.Reader}
         defaultValue={ethereumHttpEndpoints}
         className="max-w-xs"
         allowCustomValues
       />
-
-      <SubmitSuccess success={success}>
-        Execution client settings have been updated successfully.
-      </SubmitSuccess>
-
-      <SubmitError error={error} />
-
-      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
-    </form>
+    </div>
   );
 };
