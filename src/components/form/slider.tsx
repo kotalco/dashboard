@@ -6,16 +6,19 @@ import { Root } from "@radix-ui/react-slider";
 
 import { Slider as ShadCNSlider } from "@/components/slider";
 import { Label } from "@/components/ui/label";
+import { FormErrors } from "@/components/form/form-errors";
 
 interface SliderProps
   extends Omit<
     ComponentPropsWithoutRef<typeof Root>,
     "value" | "defaultValue"
   > {
+  id: string;
   value?: string[];
   defaultValue?: string[];
   label: string;
   unit: string;
+  errors?: Record<string, string[] | undefined>;
 }
 
 export const Slider = forwardRef<HTMLInputElement, SliderProps>(
@@ -30,6 +33,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
       max = 100,
       value,
       defaultValue,
+      errors,
       ...props
     },
     ref
@@ -40,25 +44,29 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
     const values = valuesStr?.map((v) => +v.match(/(\d+|[^\d]+)/g)?.[0]!);
 
     return (
-      <div>
-        <Label htmlFor={id}>{label}</Label>
+      <>
+        <div>
+          <Label htmlFor={id}>{label}</Label>
 
-        <ShadCNSlider
-          ref={ref}
-          id={id}
-          name={id}
-          min={min}
-          max={max}
-          disabled={pending || disabled}
-          aria-describedby={`${id}-error`}
-          value={value && values}
-          defaultValue={defaultValue && values}
-          {...props}
-        />
-        <div className="flex justify-end mt-3 text-muted-foreground text-xs">
-          {unit}
+          <ShadCNSlider
+            ref={ref}
+            id={id}
+            name={id}
+            min={min}
+            max={max}
+            disabled={pending || disabled}
+            aria-describedby={`${id}-error`}
+            value={value && values}
+            defaultValue={defaultValue && values}
+            {...props}
+          />
+          <div className="flex justify-end mt-3 text-muted-foreground text-xs">
+            {unit}
+          </div>
         </div>
-      </div>
+
+        <FormErrors id={id} errors={errors} />
+      </>
     );
   }
 );
