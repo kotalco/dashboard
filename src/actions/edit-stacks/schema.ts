@@ -1,12 +1,15 @@
 import { z } from "zod";
 
 import { BitcoinNode } from "@/types";
+import { Identifiers } from "@/schemas/identifiers";
+import { EditImageVersion } from "@/schemas/image-version";
+import { EditResources } from "@/schemas/resources";
 
-export const EditAPI = z.object({
+const EditAPI = z.object({
   rpc: z.boolean(),
 });
 
-export const EditBitcoin = z.object({
+const EditBitcoin = z.object({
   bitcoinNode: z.string().transform((value) => {
     const { name, p2pPort, rpcPort, rpcUsers } = JSON.parse(
       value
@@ -21,12 +24,19 @@ export const EditBitcoin = z.object({
   }),
 });
 
-export const EditMining = z.object({
+const EditMining = z.object({
   mineMicroBlocks: z.boolean(),
   miner: z.boolean(),
-  seedPrivateKeySecretName: z.string().optional(),
+  seedPrivateKeySecretName: z.string().optional().nullable(),
 });
 
-export const EditNetworking = z.object({
+const EditNetworking = z.object({
   nodePrivateKeySecretName: z.string().default(""),
 });
+
+export const EditStacks = Identifiers.merge(EditImageVersion)
+  .merge(EditResources)
+  .merge(EditNetworking)
+  .merge(EditAPI)
+  .merge(EditBitcoin)
+  .merge(EditMining);

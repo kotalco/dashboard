@@ -11,21 +11,17 @@ import { Select } from "@/components/form/select";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
 import { SubmitButton } from "@/components/form/submit-button";
+import { Heading } from "@/components/ui/heading";
 
-interface BitconTabProps {
+interface BitcoinProps {
   node: StacksNode;
   bitcoinNodes: BitcoinNode[];
   role: Roles;
+  errors?: Record<string, string[] | undefined>;
 }
 
-export const BitconTab: React.FC<BitconTabProps> = ({
-  node,
-  role,
-  bitcoinNodes,
-}) => {
-  const { bitcoinNode, name } = node;
-  const { workspaceId } = useParams();
-  const { execute, fieldErrors, error, success } = useAction(editBitcoin);
+export const Bitcoin = ({ node, role, bitcoinNodes, errors }: BitcoinProps) => {
+  const { bitcoinNode } = node;
 
   const nodes = bitcoinNodes
     .filter(({ rpc }) => rpc)
@@ -35,32 +31,20 @@ export const BitconTab: React.FC<BitconTabProps> = ({
     bitcoinNodes.find(({ name }) => bitcoinNode.endpoint === name)
   );
 
-  const onSubmit = (formData: FormData) => {
-    const bitcoinNode = formData.get("bitcoinNode") as string;
-    execute({ bitcoinNode }, { name, workspaceId: workspaceId as string });
-  };
-
   return (
-    <form action={onSubmit} className="relative space-y-8">
+    <div className="space-y-4">
+      <Heading variant="h2" title="Bitcoin" />
       <Select
         id="bitcoinNode"
         label="Bitcoin Node"
         placeholder="Select a Node"
         options={nodes}
-        errors={fieldErrors}
+        errors={errors}
         description="Bitcoin nodes with JSON-RPC server enabled"
         disabled={role === Roles.Reader}
         defaultValue={defaultNode}
         className="max-w-xs"
       />
-
-      <SubmitSuccess success={success}>
-        Bitcoin settings have been updated successfully.
-      </SubmitSuccess>
-
-      <SubmitError error={error} />
-
-      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
-    </form>
+    </div>
   );
 };

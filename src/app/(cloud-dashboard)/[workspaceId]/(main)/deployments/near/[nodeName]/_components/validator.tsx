@@ -22,7 +22,7 @@ export const Validator = ({
   privateKeys,
   errors,
 }: ValidatorProps) => {
-  const { validatorSecretName, name } = node;
+  const { validatorSecretName } = node;
   const { workspaceId } = useParams();
   const [secret, setSecret] = useState(validatorSecretName);
 
