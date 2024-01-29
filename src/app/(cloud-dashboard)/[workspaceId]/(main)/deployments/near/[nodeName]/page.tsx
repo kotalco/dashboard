@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { format, parseISO } from "date-fns";
 
 import { getWorkspace } from "@/services/get-workspace";
 import { getSecrets } from "@/services/get-secrets";
@@ -22,14 +21,7 @@ import { NodeConfig } from "./_components/node-config";
 
 const TABS = [
   { label: "Configurations", value: "config" },
-  // { label: "Protocol", value: "protocol" },
-  // { label: "Networking", value: "networking" },
-  // { label: "RPC", value: "rpc" },
-  // { label: "Validator", value: "validator" },
-  // { label: "Prometheus", value: "prometheus" },
-  // { label: "Telemetry", value: "telemetry" },
   { label: "Logs", value: "logs" },
-  // { label: "Resources", value: "resources" },
   { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
 ];
 
@@ -94,20 +86,9 @@ export default async function BitcoinPage({
             versions={versions}
             privateKeys={privateKeys}
           />
-          {/* <ProtocolTab node={node} role={role} versions={versions} />
-          <NetworkingTab node={node} role={role} secrets={options} />
-          <RPCTab node={node} role={role} />
-          <ValidatorTab node={node} role={role} secrets={options} />
-          <PrometheusTab node={node} role={role} />
-          <TelemetryTab node={node} role={role} /> */}
           <Logs
             url={`near/nodes/${node.name}/logs?authorization=Bearer ${token?.value}&workspace_id=${workspaceId}`}
           />
-          {/* <ResourcesForm
-            node={node}
-            role={role}
-            url={`/near/nodes/${node.name}?workspace_id=${workspaceId}`}
-          /> */}
           <DangerZoneTab node={node} />
         </Tabs>
       </div>
