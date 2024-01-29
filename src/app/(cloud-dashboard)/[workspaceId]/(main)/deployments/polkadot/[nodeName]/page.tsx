@@ -22,15 +22,7 @@ import { NodeConfig } from "./_components/node-config";
 
 const TABS = [
   { label: "Configurations", value: "config" },
-  // { label: "Protocol", value: "protocol" },
-  // { label: "Networking", value: "networking" },
-  // { label: "Validator", value: "validator" },
-  // { label: "Telemetry", value: "telemetry" },
-  // { label: "Prometheus", value: "prometheus" },
-  // { label: "API", value: "api" },
-  // { label: "Access Control", value: "access-control" },
   { label: "Logs", value: "logs" },
-  // { label: "Resources", value: "resources" },
   { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
 ];
 
@@ -103,22 +95,9 @@ export default async function PolkadotPage({
             versions={versions}
             privateKeys={privateKeys}
           />
-          {/* <ProtocolTab node={node} role={role} versions={versions} />
-          <NetworkingTab node={node} role={role} secrets={options} />
-          <ValidatorTab node={node} role={role} />
-          <TelemetryTab node={node} role={role} />
-          <PrometheusTab node={node} role={role} />
-          <APITab node={node} role={role} />
-          <AccessControlTab node={node} role={role} /> */}
-          {/* {token && <LogsTab node={node} role={role} token={token.value} />} */}
           <Logs
             url={`polkadot/nodes/${name}/logs?authorization=Bearer ${value}&workspace_id=${workspaceId}`}
           />
-          {/* <ResourcesForm
-            node={node}
-            role={role}
-            url={`/polkadot/nodes/${node.name}?workspace_id=${workspaceId}`}
-          /> */}
           <DangerZoneTab node={node} />
         </Tabs>
       </div>
