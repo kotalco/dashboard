@@ -1,21 +1,22 @@
 "use client";
 
 import useSWRSubscription from "swr/subscription";
+import { AlertCircle, AlertTriangle, RefreshCw } from "lucide-react";
 import type { SWRSubscription } from "swr/subscription";
 import { cx } from "class-variance-authority";
 
+import { getWsBaseURL } from "@/lib/utils";
+import { NEARStats, StatsError } from "@/types";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getWsBaseURL } from "@/lib/utils";
-import { AlertCircle, AlertTriangle, RefreshCw } from "lucide-react";
-import { BitcoinStats, NEARStats, StatsError } from "@/types";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { CardStats } from "@/components/shared/card-stats/card-stats";
 
 interface NEARNodeStatsProps {
   nodeName: string;
@@ -79,63 +80,32 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
           "error" in data ? "blur-lg" : ""
         )}
       >
-        <Card>
-          <CardHeader>
-            <CardTitle className="items-start">
-              Blocks
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <AlertCircle className="w-4 h-4 ml-2" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    If block number doesn&apos;t change, it means node is not
-                    syncing or syncing headers
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center text-3xl font-light text-foreground/50 truncate gap-x-2">
-            {!("error" in data) && (
-              <>
-                {data.syncing ? (
-                  <RefreshCw className="w-5 h-5 animate-spin" />
-                ) : (
-                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                )}
-                <span>
-                  {new Intl.NumberFormat("en-US").format(
-                    +data.latestBlockHeight
-                  )}
-                </span>
-              </>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="items-start">
-              Peers
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <AlertCircle className="w-4 h-4 ml-2" />
-                  </TooltipTrigger>
-                  <TooltipContent>Active peers / Max peers</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-light text-foreground/50 truncate">
-            {!("error" in data) && (
-              <>
-                {data.activePeersCount} / {data.maxPeersCount}
-              </>
-            )}
-          </CardContent>
-        </Card>
+        {/* Blocks */}
+        <CardStats title={<BlocksCardTitle />}>
+          {!("error" in data) && (
+            <div className="flex items-center space-x-2">
+              {data.syncing ? (
+                <RefreshCw className="w-6 h-6 animate-spin" />
+              ) : (
+                <AlertTriangle className="w-6 h-6 text-yellow-600" />
+              )}
+              <span>
+                {new Intl.NumberFormat("en-US").format(+data.latestBlockHeight)}
+              </span>
+            </div>
+          )}
+        </CardStats>
+
+        {/* Peers */}
+        <CardStats title={<PeersCardTitle />}>
+          {!("error" in data) && (
+            <>
+              {data.activePeersCount} / {data.maxPeersCount}
+            </>
+          )}
+        </CardStats>
       </div>
+
       {"error" in data && typeof data.error === "string" && (
         <div className="absolute inset-0 flex items-center justify-center space-x-4">
           <AlertTriangle
@@ -148,3 +118,34 @@ export const NEARNodeStats: React.FC<NEARNodeStatsProps> = ({
     </div>
   );
 };
+
+const BlocksCardTitle = () => (
+  <>
+    Blocks
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger>
+          <AlertCircle className="w-3 h-3 ml-2" />
+        </TooltipTrigger>
+        <TooltipContent>
+          If block number doesn&apos;t change, it means node is not syncing or
+          syncing headers
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  </>
+);
+
+const PeersCardTitle = () => (
+  <>
+    Peers
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger>
+          <AlertCircle className="w-3 h-3 ml-2" />
+        </TooltipTrigger>
+        <TooltipContent>Active peers / Max peers</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  </>
+);

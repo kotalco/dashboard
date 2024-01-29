@@ -60,11 +60,7 @@ export default async function AptosPage({
     <div className="flex-col">
       <div className="flex-1 space-y-8">
         <div className="flex items-start gap-x-2">
-          <NodeStatus
-            nodeName={name}
-            protocol={Protocol.Aptos}
-            token={token.value}
-          />
+          <NodeStatus nodeName={name} protocol={Protocol.Aptos} token={value} />
           <Heading
             title={name}
             description={`Created at ${formatDate(createdAt)}`}
