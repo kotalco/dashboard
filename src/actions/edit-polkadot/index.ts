@@ -8,24 +8,14 @@ import { PolkadotNode } from "@/types";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import {
-  EditAPI,
-  EditAccessControl,
-  EditLogs,
-  EditNetworking,
-  EditPrometheus,
-  EditTelemetry,
-  EditValidator,
-} from "./schema";
+import { EditPolkadot } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let node;
+  const { workspaceId, name, ...data } = values;
   try {
     const response = await server.put<PolkadotNode>(
-      `/polkadot/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/polkadot/nodes/${name}?workspace_id=${workspaceId}`,
       data
     );
     node = response.data;
@@ -34,16 +24,8 @@ const handler = async (
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(
-    `/${identifiers.workspaceId}/deployments/polkadot/${node.name}`
-  );
+  revalidatePath(`/${workspaceId}/deployments/polkadot/${node.name}`);
   return { data: node };
 };
 
-export const editAPI = createAction(EditAPI, handler);
-export const editAccessControl = createAction(EditAccessControl, handler);
-export const editLogs = createAction(EditLogs, handler);
-export const editNetworking = createAction(EditNetworking, handler);
-export const editPrometheus = createAction(EditPrometheus, handler);
-export const editTelemetry = createAction(EditTelemetry, handler);
-export const editValidator = createAction(EditValidator, handler);
+export const editPolkadotNode = createAction(EditPolkadot, handler);

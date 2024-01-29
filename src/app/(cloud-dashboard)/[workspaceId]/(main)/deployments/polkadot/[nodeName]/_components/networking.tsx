@@ -6,57 +6,38 @@ import { useParams } from "next/navigation";
 import { OptionType, PolkadotNode } from "@/types";
 import { PolkadotSyncModes, Roles, SecretType } from "@/enums";
 import { getSelectItems } from "@/lib/utils";
-import { useAction } from "@/hooks/use-action";
-import { editNetworking } from "@/actions/edit-polkadot";
 
 import { Select } from "@/components/form/select";
 import { Input } from "@/components/form/input";
-import { SubmitButton } from "@/components/form/submit-button";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitSuccess } from "@/components/form/submit-success";
 import { Toggle } from "@/components/form/toggle";
+import { Heading } from "@/components/ui/heading";
 
-interface NetWorkingTabProps {
+interface NetWorkingProps {
   node: PolkadotNode;
   role: Roles;
-  secrets: OptionType[];
+  privateKeys: OptionType[];
+  errors?: Record<string, string[] | undefined>;
 }
 
-export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
+export const Networking = ({
   node,
   role,
-  secrets,
-}) => {
+  privateKeys,
+  errors,
+}: NetWorkingProps) => {
   const {
     nodePrivateKeySecretName,
     p2pPort,
     syncMode,
     retainedBlocks,
     pruning,
-    name,
   } = node;
   const { workspaceId } = useParams();
   const [privateKey, setPrivateKey] = useState(nodePrivateKeySecretName);
-  const { execute, fieldErrors, error, success } = useAction(editNetworking);
-
-  const onSubmit = (formData: FormData) => {
-    const p2pPort = Number(formData.get("p2pPort"));
-    const syncMode = formData.get("syncMode") as PolkadotSyncModes;
-    const retainedBlocks = Number(formData.get("retainBlocks"));
-
-    execute(
-      {
-        nodePrivateKeySecretName: privateKey,
-        p2pPort,
-        syncMode,
-        retainedBlocks,
-      },
-      { name, workspaceId: workspaceId as string }
-    );
-  };
 
   return (
-    <form action={onSubmit} className="relative space-y-8">
+    <div className="space-y-4">
+      <Heading variant="h2" title="Networking" />
       <Select
         id="nodePrivateKeySecretName"
         label="Node Private Key"
@@ -65,8 +46,8 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
         defaultValue={privateKey}
         value={privateKey}
         onValueChange={setPrivateKey}
-        options={secrets}
-        errors={fieldErrors}
+        options={privateKeys}
+        errors={errors}
         link={{
           href: `/${workspaceId}/secrets/new?type=${SecretType["Polkadot Private Key"]}`,
           title: "Create New Private Key",
@@ -80,7 +61,7 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
         label="P2P Port"
         disabled={role === Roles.Reader}
         defaultValue={p2pPort}
-        errors={fieldErrors}
+        errors={errors}
         className="max-w-xs"
       />
 
@@ -90,36 +71,20 @@ export const NetworkingTab: React.FC<NetWorkingTabProps> = ({
         disabled={role === Roles.Reader}
         defaultValue={syncMode}
         options={getSelectItems(PolkadotSyncModes)}
-        errors={fieldErrors}
+        errors={errors}
         className="max-w-xs"
       />
 
-      <div className="px-3 py-2 rounded-lg border max-w-xs flex">
-        <Toggle
-          id="pruning"
-          label="Pruning"
-          disabled
-          defaultChecked={pruning}
-          className="justify-between"
-        />
-      </div>
+      <Toggle id="pruning" label="Pruning" disabled defaultChecked={pruning} />
 
       <Input
-        id="retainBlocks"
+        id="retainedBlocks"
         label="Retain Blocks"
         disabled={role === Roles.Reader}
         defaultValue={retainedBlocks}
-        errors={fieldErrors}
+        errors={errors}
         className="max-w-xs"
       />
-
-      <SubmitSuccess success={success}>
-        Networking settings have been updated successfully.
-      </SubmitSuccess>
-
-      <SubmitError error={error} />
-
-      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
-    </form>
+    </div>
   );
 };

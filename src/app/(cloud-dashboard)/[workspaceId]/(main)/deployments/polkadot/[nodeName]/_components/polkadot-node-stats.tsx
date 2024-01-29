@@ -16,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { CardStats } from "@/components/shared/card-stats/card-stats";
 
 interface PolkadotNodeStatsProps {
   nodeName: string;
@@ -85,44 +86,28 @@ export const PolkadotNodeStats: React.FC<PolkadotNodeStatsProps> = ({
           "error" in data ? "blur-lg" : ""
         )}
       >
-        <Card>
-          <CardHeader>
-            <CardTitle className="items-start">
-              Blocks
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <AlertCircle className="w-4 h-4 ml-2" />
-                  </TooltipTrigger>
-                  <TooltipContent>{syncPercentage}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center text-3xl font-light text-foreground/50 truncate gap-x-2">
-            {!("error" in data) && (
-              <>
-                {data.syncing ? (
-                  <RefreshCw className="w-5 h-5 animate-spin" />
-                ) : (
-                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                )}
-                <span>
-                  {new Intl.NumberFormat("en-US").format(+data.currentBlock)}
-                </span>
-              </>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="items-start">Peers</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-light text-foreground/50 truncate">
-            {!("error" in data) && data.peersCount}
-          </CardContent>
-        </Card>
+        {/* Blocks */}
+        <CardStats title={<BlockCardTitle syncPercentage={syncPercentage} />}>
+          {!("error" in data) && (
+            <div className="flex space-x-3 items-center">
+              {data.syncing ? (
+                <RefreshCw className="w-5 h-5 animate-spin" />
+              ) : (
+                <AlertTriangle className="w-5 h-5 text-yellow-600" />
+              )}
+              <span>
+                {new Intl.NumberFormat("en-US").format(+data.currentBlock)}
+              </span>
+            </div>
+          )}
+        </CardStats>
+
+        {/* Peers */}
+        <CardStats title="Peers">
+          {!("error" in data) && data.peersCount}
+        </CardStats>
       </div>
+
       {"error" in data && typeof data.error === "string" && (
         <div className="absolute inset-0 flex items-center justify-center space-x-4">
           <AlertTriangle
@@ -135,3 +120,21 @@ export const PolkadotNodeStats: React.FC<PolkadotNodeStatsProps> = ({
     </div>
   );
 };
+
+const BlockCardTitle = ({
+  syncPercentage,
+}: {
+  syncPercentage: string | false;
+}) => (
+  <>
+    Blocks
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger>
+          <AlertCircle className="w-4 h-4 ml-2" />
+        </TooltipTrigger>
+        <TooltipContent>{syncPercentage}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  </>
+);

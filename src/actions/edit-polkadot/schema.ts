@@ -1,46 +1,28 @@
-import { PolkadotLogging, PolkadotSyncModes } from "@/enums";
 import { z } from "zod";
 
-export const EditValidator = z
-  .object({
-    validator: z.boolean(),
-    rpc: z.boolean().optional().nullable(),
-  })
-  .transform(({ validator, rpc }) => {
-    if (validator && rpc) {
-      return { validator, rpc: false };
-    }
-    return { validator, rpc };
-  });
+import { PolkadotLogging, PolkadotSyncModes } from "@/enums";
+import { Identifiers } from "@/schemas/identifiers";
+import { EditImageVersion } from "@/schemas/image-version";
+import { EditResources } from "@/schemas/resources";
 
-export const EditTelemetry = z.object({
+const EditValidator = z.object({
+  validator: z.boolean(),
+});
+
+const EditTelemetry = z.object({
   telemetry: z.boolean(),
   telemetryURL: z.string().optional().nullable(),
 });
 
-export const EditPrometheus = z
-  .object({
-    prometheus: z.boolean(),
-    prometheusPort: z
-      .number({ invalid_type_error: "Prometheus Port is number" })
-      .optional()
-      .nullable(),
-  })
-  .refine(
-    ({ prometheus, prometheusPort }) =>
-      (prometheus &&
-        prometheusPort &&
-        prometheusPort >= 1 &&
-        prometheusPort <= 65535) ||
-      !prometheus,
-    {
-      message:
-        "Prometheus Port is required and must be a number between 1 and 65535",
-      path: ["prometheusPort"],
-    }
-  );
+const EditPrometheus = z.object({
+  prometheus: z.boolean(),
+  prometheusPort: z
+    .number({ invalid_type_error: "Prometheus Port is number" })
+    .optional()
+    .nullable(),
+});
 
-export const EditNetworking = z.object({
+const EditNetworking = z.object({
   nodePrivateKeySecretName: z.string().optional().nullable().default(""),
   p2pPort: z
     .number({ invalid_type_error: "P2P Port is number" })
@@ -54,44 +36,20 @@ export const EditNetworking = z.object({
     .default(256),
 });
 
-export const EditLogs = z.object({
+const EditLogs = z.object({
   logging: z.nativeEnum(PolkadotLogging),
 });
 
-export const EditAPI = z
-  .object({
-    validator: z.boolean().nullable().optional(),
-    rpc: z.boolean(),
-    rpcPort: z.number({ invalid_type_error: "RPC Port is number" }).optional(),
-    ws: z.boolean(),
-    wsPort: z
-      .number({ invalid_type_error: "WebSocket Port is number" })
-      .optional(),
-  })
-  .refine(
-    ({ rpc, rpcPort }) =>
-      (rpc && rpcPort && rpcPort >= 1 && rpcPort <= 65535) || !rpc,
-    {
-      message: "RPC Port is required and must be a number between 1 and 65535",
-      path: ["rpcPort"],
-    }
-  )
-  .refine(
-    ({ ws, wsPort }) => (ws && wsPort && wsPort >= 1 && wsPort <= 65535) || !ws,
-    {
-      message:
-        "WebSocket Port is required and must be a number between 1 and 65535",
-      path: ["wsPort"],
-    }
-  )
-  .transform(({ rpc, validator, ...rest }) => {
-    if (validator && rpc) {
-      return { rpc, ...rest, validator: false };
-    }
-    return { rpc, validator, ...rest };
-  });
+const EditAPI = z.object({
+  rpc: z.boolean(),
+  rpcPort: z.number({ invalid_type_error: "RPC Port is number" }).optional(),
+  ws: z.boolean(),
+  wsPort: z
+    .number({ invalid_type_error: "WebSocket Port is number" })
+    .optional(),
+});
 
-export const EditAccessControl = z.object({
+const EditAccessControl = z.object({
   corsDomains: z
     .string()
     .transform((value) =>
@@ -101,3 +59,13 @@ export const EditAccessControl = z.object({
       message: `Please specify your CORS domains or "all" to whitelist all domains`,
     }),
 });
+
+export const EditPolkadot = Identifiers.merge(EditImageVersion)
+  .merge(EditResources)
+  .merge(EditNetworking)
+  .merge(EditValidator)
+  .merge(EditAPI)
+  .merge(EditTelemetry)
+  .merge(EditPrometheus)
+  .merge(EditAccessControl)
+  .merge(EditLogs);

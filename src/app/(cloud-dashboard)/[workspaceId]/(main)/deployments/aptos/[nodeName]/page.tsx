@@ -43,7 +43,7 @@ export default async function AptosPage({
   }
 
   if (!token) return null;
-  const { name, createdAt } = node;
+  const { name, createdAt, image, network } = node;
   const { value } = token;
 
   const { versions } = await getClientVersions(
@@ -51,9 +51,9 @@ export default async function AptosPage({
       protocol: "aptos",
       component: "node",
       client: "aptos-core",
-      network: node.network,
+      network,
     },
-    node.image
+    image
   );
 
   return (
