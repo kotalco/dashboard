@@ -35,9 +35,7 @@ export const CreateBeaconNodeForm: React.FC<CreateBeaconNodeFormProps> = ({
   const { workspaceId } = useParams();
   const { execute, fieldErrors, error } = useAction(createBeaconNode, {
     onSuccess: ({ name }) => {
-      router.push(
-        `/${workspaceId}/deployments/ethereum?deployment=beacon-nodes`
-      );
+      router.push(`/${workspaceId}/deployments/ethereum?tab=beacon-nodes`);
       toast.message("Beacon node has been created", {
         description: `${name} node has been created successfully, and will be up and running in few seconds.`,
       });

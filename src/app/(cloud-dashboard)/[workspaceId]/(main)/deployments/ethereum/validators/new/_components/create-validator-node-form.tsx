@@ -41,7 +41,7 @@ export const CreateValidatorNodeForm: React.FC<
   const [selectedClient, setSelectedClient] = useState<string>();
   const { execute, fieldErrors, error } = useAction(createValidator, {
     onSuccess: ({ name }) => {
-      router.push(`/${workspaceId}/deployments/ethereum?deployment=validators`);
+      router.push(`/${workspaceId}/deployments/ethereum?tab=validators`);
       toast.message("Validator node has been created", {
         description: `${name} node has been created successfully, and will be up and running in few seconds.`,
       });

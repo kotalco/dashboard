@@ -22,7 +22,7 @@ export const CreateIPFSPeerForm: React.FC<{ images: Version[] }> = ({
   const { workspaceId } = useParams();
   const { execute, fieldErrors, error } = useAction(createPeer, {
     onSuccess: ({ name }) => {
-      router.push(`/${workspaceId}/deployments/ipfs?deployment=peers`);
+      router.push(`/${workspaceId}/deployments/ipfs?tab=peers`);
       toast.message("IPFS Peer has been created", {
         description: `${name} peer has been created successfully, and will be up and running in few seconds.`,
       });

@@ -48,7 +48,7 @@ export default async function ExecutionClientPage({
   );
 
   if (!peer) {
-    redirect(`/${workspaceId}/deployments/ipfs?deployment=peers`);
+    redirect(`/${workspaceId}/deployments/ipfs?tab=peers`);
   }
 
   const { versions } = await getClientVersions(

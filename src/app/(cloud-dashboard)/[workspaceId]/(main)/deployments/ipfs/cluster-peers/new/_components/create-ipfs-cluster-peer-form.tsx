@@ -37,7 +37,7 @@ export const CreateIPFSClusterPeerForm: React.FC<
   const { workspaceId } = useParams();
   const { execute, fieldErrors, error } = useAction(createClusterPeer, {
     onSuccess: ({ name }) => {
-      router.push(`/${workspaceId}/deployments/ipfs?deployment=cluster-peers`);
+      router.push(`/${workspaceId}/deployments/ipfs?tab=cluster-peers`);
       toast.message("Cluster peer has been created", {
         description: `${name} peer has been created successfully, and will be up and running in few seconds.`,
       });

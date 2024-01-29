@@ -34,7 +34,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
         <DeleteWithInputForm
           name={node.name}
           url={`/ipfs/clusterpeers/${node.name}?workspace_id=${workspaceId}`}
-          redirectUrl={`/${workspaceId}/deployments/ipfs?deployment=cluster-peers`}
+          redirectUrl={`/${workspaceId}/deployments/ipfs?tab=cluster-peers`}
         />
       </AlertModal>
     </div>

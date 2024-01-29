@@ -37,9 +37,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     }
   }
 
-  revalidatePath(
-    `/${workspace_id}/deployments/ethereum?deployment=beacon-nodes`
-  );
+  revalidatePath(`/${workspace_id}/deployments/ethereum?tab=beacon-nodes`);
   return { data: node };
 };
 

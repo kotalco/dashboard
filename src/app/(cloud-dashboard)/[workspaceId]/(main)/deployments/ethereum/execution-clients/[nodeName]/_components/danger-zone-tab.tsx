@@ -37,7 +37,7 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
         <DeleteWithInputForm
           name={node.name}
           url={`/ethereum/nodes/${node.name}?workspace_id=${workspaceId}`}
-          redirectUrl={`/${workspaceId}/deployments/ethereum?deployment=execution-clients`}
+          redirectUrl={`/${workspaceId}/deployments/ethereum?tab=execution-clients`}
         />
       </AlertModal>
     </div>

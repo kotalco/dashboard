@@ -49,9 +49,7 @@ export default async function ExecutionClientPage({
   );
 
   if (!node) {
-    redirect(
-      `/${workspaceId}/deployments/ethereum?deployment=execution-clients`
-    );
+    redirect(`/${workspaceId}/deployments/ethereum?tab=execution-clients`);
   }
 
   if (!token) return null;

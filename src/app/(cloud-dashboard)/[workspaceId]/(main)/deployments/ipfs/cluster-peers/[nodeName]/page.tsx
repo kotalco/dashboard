@@ -54,7 +54,7 @@ export default async function BeaconNodePage({
   );
 
   if (!peer) {
-    redirect(`/${workspaceId}/deployments/ipfs?deployment=cluster-peers`);
+    redirect(`/${workspaceId}/deployments/ipfs?tab=cluster-peers`);
   }
 
   const { versions } = await getClientVersions(

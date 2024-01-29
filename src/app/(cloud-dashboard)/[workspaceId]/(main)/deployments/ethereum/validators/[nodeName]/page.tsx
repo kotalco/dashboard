@@ -62,7 +62,7 @@ export default async function BeaconNodePage({
   );
 
   if (!node) {
-    redirect(`/${workspaceId}/deployments/ethereum?deployment=validators`);
+    redirect(`/${workspaceId}/deployments/ethereum?tab=validators`);
   }
 
   const { versions } = await getClientVersions(

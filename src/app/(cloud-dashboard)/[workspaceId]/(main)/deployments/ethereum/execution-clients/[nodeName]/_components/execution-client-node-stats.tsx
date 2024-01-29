@@ -7,7 +7,6 @@ import type { SWRSubscription } from "swr/subscription";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
 import { ExecutionClientStats, StatsError } from "@/types";

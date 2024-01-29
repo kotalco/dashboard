@@ -55,7 +55,7 @@ export default async function BeaconNodePage({
   );
 
   if (!node) {
-    redirect(`/${workspaceId}/deployments/ethereum?deployment=beacon-nodes`);
+    redirect(`/${workspaceId}/deployments/ethereum?tab=beacon-nodes`);
   }
 
   const { versions } = await getClientVersions(
