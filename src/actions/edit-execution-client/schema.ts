@@ -6,8 +6,11 @@ import {
   ExecutionClientLogging,
   ExecutionClientSyncMode,
 } from "@/enums";
+import { Identifiers } from "@/schemas/identifiers";
+import { EditImageVersion } from "@/schemas/image-version";
+import { EditResources } from "@/schemas/resources";
 
-export const EditNetworking = z.object({
+const EditNetworking = z.object({
   nodePrivateKeySecretName: z.string().optional().nullable(),
   syncMode: z.nativeEnum(ExecutionClientSyncMode),
   staticNodes: z
@@ -22,19 +25,48 @@ export const EditNetworking = z.object({
     ),
 });
 
-export const EditAPI = z
-  .object({
-    client: z.nativeEnum(ExecutionClientClients, {
-      errorMap: () => ({ message: "Please select a Client" }),
+const EditAPI = z.object({
+  client: z.nativeEnum(ExecutionClientClients, {
+    errorMap: () => ({ message: "Please select a Client" }),
+  }),
+  engine: z.boolean(),
+  jwtSecretName: z.string().optional().nullable(),
+  rpc: z.boolean(),
+  rpcAPI: z.array(z.nativeEnum(ExecutionClientAPI)).default([]).optional(),
+  ws: z.boolean(),
+  wsAPI: z.array(z.nativeEnum(ExecutionClientAPI)).default([]).optional(),
+  graphql: z.boolean().optional(),
+});
+
+const EditAccessControl = z.object({
+  hosts: z
+    .string()
+    .transform((value) =>
+      value ? value.split("\n").filter((value) => !!value) : []
+    )
+    .refine((value) => !!value.length, {
+      message: `Please specify your whitelisted hosts or "*" to whitelist all hosts`,
     }),
-    engine: z.boolean(),
-    jwtSecretName: z.string().optional().nullable(),
-    rpc: z.boolean(),
-    rpcAPI: z.array(z.nativeEnum(ExecutionClientAPI)).default([]).optional(),
-    ws: z.boolean(),
-    wsAPI: z.array(z.nativeEnum(ExecutionClientAPI)).default([]).optional(),
-    graphql: z.boolean().optional(),
-  })
+  corsDomains: z
+    .string()
+    .transform((value) =>
+      value ? value.split("\n").filter((value) => !!value) : []
+    )
+    .refine((value) => !!value.length, {
+      message: `Please specify your CORS domains or "*" to whitelist all domains`,
+    }),
+});
+
+const EditLogs = z.object({
+  logging: z.nativeEnum(ExecutionClientLogging),
+});
+
+export const EditExecutionClient = Identifiers.merge(EditImageVersion)
+  .merge(EditResources)
+  .merge(EditNetworking)
+  .merge(EditAPI)
+  .merge(EditAccessControl)
+  .merge(EditLogs)
   .refine(({ engine, jwtSecretName }) => (engine && jwtSecretName) || !engine, {
     message: "Please select a JWT secret.",
     path: ["jwtSecretName"],
@@ -61,26 +93,3 @@ export const EditAPI = z
   .transform(({ client, ...values }) => {
     return { ...values };
   });
-
-export const EditAccessControl = z.object({
-  hosts: z
-    .string()
-    .transform((value) =>
-      value ? value.split("\n").filter((value) => !!value) : []
-    )
-    .refine((value) => !!value.length, {
-      message: `Please specify your whitelisted hosts or "*" to whitelist all hosts`,
-    }),
-  corsDomains: z
-    .string()
-    .transform((value) =>
-      value ? value.split("\n").filter((value) => !!value) : []
-    )
-    .refine((value) => !!value.length, {
-      message: `Please specify your CORS domains or "*" to whitelist all domains`,
-    }),
-});
-
-export const EditLogs = z.object({
-  logging: z.nativeEnum(ExecutionClientLogging),
-});
