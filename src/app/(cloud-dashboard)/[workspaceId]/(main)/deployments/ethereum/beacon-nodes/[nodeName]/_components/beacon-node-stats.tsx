@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { CardStats } from "@/components/shared/card-stats/card-stats";
 
 interface BeaconNodeStatsProps {
   nodeName: string;
@@ -85,45 +86,27 @@ export const BeaconNodeStats: React.FC<BeaconNodeStatsProps> = ({
           "error" in data ? "blur-lg" : ""
         )}
       >
-        <Card>
-          <CardHeader>
-            <CardTitle className="items-start">
-              Blocks
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <AlertCircle className="w-4 h-4 ml-2" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{syncPercentage}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center text-3xl font-light text-gray-500 truncate gap-x-2">
-            {!("error" in data) && (
-              <>
-                {!data.syncing ? (
-                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                ) : (
-                  <RefreshCw className="w-5 h-5 animate-spin" />
-                )}
-                <span>
-                  {new Intl.NumberFormat("en-US").format(+data.currentSlot)}
-                </span>
-              </>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Peers</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-light text-gray-500 truncate">
-            {!("error" in data) && data.peersCount}
-          </CardContent>
-        </Card>
+        {/* Blocks */}
+        <CardStats title={<BlockCardTitle syncPercentage={syncPercentage} />}>
+          {" "}
+          {!("error" in data) && (
+            <div className="flex space-x-3 items-center">
+              {!data.syncing ? (
+                <AlertTriangle className="w-5 h-5 text-yellow-600" />
+              ) : (
+                <RefreshCw className="w-5 h-5 animate-spin" />
+              )}
+              <span>
+                {new Intl.NumberFormat("en-US").format(+data.currentSlot)}
+              </span>
+            </div>
+          )}
+        </CardStats>
+
+        {/* Peers */}
+        <CardStats title="Peers">
+          {!("error" in data) && data.peersCount}
+        </CardStats>
       </div>
       {"error" in data && typeof data.error === "string" && (
         <div className="absolute inset-0 flex items-center justify-center space-x-4">
@@ -137,3 +120,23 @@ export const BeaconNodeStats: React.FC<BeaconNodeStatsProps> = ({
     </div>
   );
 };
+
+const BlockCardTitle = ({
+  syncPercentage,
+}: {
+  syncPercentage: string | false;
+}) => (
+  <>
+    Blocks
+    <TooltipProvider delayDuration={0}>
+      <Tooltip>
+        <TooltipTrigger>
+          <AlertCircle className="w-4 h-4 ml-2" />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{syncPercentage}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  </>
+);

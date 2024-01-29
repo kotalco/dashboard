@@ -8,16 +8,14 @@ import { BeaconNode } from "@/types";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import { EditAPI, EditCheckpointSync, EditExecutionClient } from "./schema";
+import { EditBeaconNode } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let node;
+  const { workspaceId, name, ...data } = values;
   try {
     const response = await server.put<BeaconNode>(
-      `/ethereum2/beaconnodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/ethereum2/beaconnodes/${name}?workspace_id=${workspaceId}`,
       data
     );
     node = response.data;
@@ -27,11 +25,9 @@ const handler = async (
   }
 
   revalidatePath(
-    `/${identifiers.workspaceId}/deployments/ethereum/beacon-nodes/${node.name}`
+    `/${workspaceId}/deployments/ethereum/beacon-nodes/${node.name}`
   );
   return { data: node };
 };
 
-export const editAPI = createAction(EditAPI, handler);
-export const editCheckpointSync = createAction(EditCheckpointSync, handler);
-export const edeitExecutionClient = createAction(EditExecutionClient, handler);
+export const editBeaconNode = createAction(EditBeaconNode, handler);

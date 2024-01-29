@@ -2,36 +2,30 @@
 
 import { useParams } from "next/navigation";
 
-import { useAction } from "@/hooks/use-action";
-import { edeitExecutionClient } from "@/actions/edit-beacon-node";
-import { readSelectWithInputValue } from "@/lib/utils";
-
 import { BeaconNode, ExecutionClientNode, OptionType } from "@/types";
 import { Roles, SecretType } from "@/enums";
 
 import { Select } from "@/components/form/select";
 import { SelectWithInput } from "@/components/form/select-with-input";
-import { SubmitSuccess } from "@/components/form/submit-success";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitButton } from "@/components/form/submit-button";
+import { Heading } from "@/components/ui/heading";
 
-interface ExecutionClientTabProps {
+interface ExecutionClientProps {
   node: BeaconNode;
   executionClients: ExecutionClientNode[];
   role: Roles;
-  secrets: OptionType[];
+  jwts: OptionType[];
+  errors?: Record<string, string[] | undefined>;
 }
 
-export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
+export const ExecutionClient = ({
   node,
   role,
-  secrets,
+  jwts,
   executionClients,
-}) => {
-  const { executionEngineEndpoint, jwtSecretName, name } = node;
+  errors,
+}: ExecutionClientProps) => {
+  const { executionEngineEndpoint, jwtSecretName } = node;
   const { workspaceId } = useParams();
-  const { execute, fieldErrors, error, success } =
-    useAction(edeitExecutionClient);
 
   const activeExecutionClients = executionClients
     .filter(({ engine }) => engine)
@@ -40,20 +34,9 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
       value: `http://${name}:${enginePort}`,
     }));
 
-  const onSubmit = (formData: FormData) => {
-    const executionEngineEndpoint = readSelectWithInputValue(
-      "executionEngineEndpoint",
-      formData
-    );
-    const jwtSecretName = formData.get("jwtSecretName") as string;
-    execute(
-      { executionEngineEndpoint, jwtSecretName },
-      { name, workspaceId: workspaceId as string }
-    );
-  };
-
   return (
-    <form action={onSubmit} className="relative space-y-8">
+    <div className="space-y-4">
+      <Heading variant="h2" title="Execution Client" />{" "}
       <SelectWithInput
         id="executionEngineEndpoint"
         label="Execution Engine Endpoint"
@@ -63,32 +46,23 @@ export const ExecutionClientTab: React.FC<ExecutionClientTabProps> = ({
         options={activeExecutionClients}
         otherLabel="Use External Node"
         description="Nodes must have activated engine port"
-        errors={fieldErrors}
+        errors={errors}
         className="max-w-xs"
       />
-
       <Select
         id="jwtSecretName"
         label="JWT Secret"
         placeholder="Select a Secret"
         disabled={role === Roles.Reader}
         defaultValue={jwtSecretName}
-        errors={fieldErrors}
-        options={secrets}
+        errors={errors}
+        options={jwts}
         link={{
           href: `/${workspaceId}/secrets/new?type=${SecretType["JWT Secret"]}`,
           title: "Create New JWT Secret",
         }}
         className="max-w-xs"
       />
-
-      <SubmitSuccess success={success}>
-        Execution client settings have been updated successfully.
-      </SubmitSuccess>
-
-      <SubmitError error={error} />
-
-      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
-    </form>
+    </div>
   );
 };
