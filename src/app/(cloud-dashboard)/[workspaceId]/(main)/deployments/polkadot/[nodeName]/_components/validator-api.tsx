@@ -21,7 +21,7 @@ interface ValidatorApiProps {
 export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
   const { validator, pruning, rpc, rpcPort, ws, wsPort } = node;
   const [isValidatorOpen, setIsValidatorOpen] = useState(false);
-  const [isRpcOpen, setIsRpcOpen] = useState(false);
+  const [isRpcOpen, setIsRpcOpen] = useState({ value: false, type: "" });
   const [isValidator, setIsValidator] = useState(validator);
   const [isRpc, setIsRpc] = useState(rpc);
   const [isWs, setIsWs] = useState(ws);
@@ -29,11 +29,12 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
   const handleValidatorConfirm = () => {
     setIsValidator(true);
     setIsRpc(false);
+    setIsWs(false);
     setIsValidatorOpen(false);
   };
 
   const handleValidatorChange = (value: boolean) => {
-    if (value && isRpc) {
+    if (value && (isRpc || isWs)) {
       setIsValidatorOpen(value);
       return;
     }
@@ -41,17 +42,20 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
   };
 
   const handleRpcConfirm = () => {
-    setIsRpc(true);
+    if (isRpcOpen.type === "rpc") setIsRpc(true);
+    if (isRpcOpen.type === "ws") setIsWs(true);
+
     setIsValidator(false);
-    setIsRpcOpen(false);
+    setIsRpcOpen({ value: false, type: "" });
   };
 
-  const handleRpcChange = (value: boolean) => {
+  const handleRpcChange = (value: boolean, type: "rpc" | "ws") => {
     if (value && isValidator) {
-      setIsRpcOpen(value);
+      setIsRpcOpen({ value, type });
       return;
     }
-    setIsRpc(value);
+    if (type === "rpc") setIsRpc(value);
+    if (type === "ws") setIsWs(value);
   };
 
   return (
@@ -76,8 +80,8 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
           title="Warning"
         >
           <p className="text-foreground/70 text-sm">
-            Activating validator will disable JSON-RPC Port. Are you sure you
-            want to continue?
+            Activating validator will disable JSON-RPC and WebSocket Ports. Are
+            you sure you want to continue?
           </p>
 
           <CloseDialogButton>
@@ -100,7 +104,7 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
           label="JSON-RPC Server"
           defaultChecked={isRpc}
           checked={isRpc}
-          onCheckedChange={handleRpcChange}
+          onCheckedChange={(value) => handleRpcChange(value, "rpc")}
           errors={errors}
           disabled={role === Roles.Reader}
         />
@@ -119,7 +123,7 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
           label="WebSocket Server"
           defaultChecked={isWs}
           checked={isWs}
-          onCheckedChange={setIsWs}
+          onCheckedChange={(value) => handleRpcChange(value, "ws")}
           errors={errors}
           disabled={role === Roles.Reader}
         />
@@ -134,13 +138,13 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
         />
 
         <AlertModal
-          open={isRpcOpen}
-          onOpenChange={setIsRpcOpen}
+          open={isRpcOpen.value}
+          onOpenChange={(value) => setIsRpcOpen({ value, type: "" })}
           title="Warning"
         >
           <p className="text-foreground/70 text-sm">
-            Activating RPC will disable Validator Port. Are you sure you want to
-            continue?
+            Activating JSON-RPC or WebSocket Ports will disable Validator Port.
+            Are you sure you want to continue?
           </p>
 
           <CloseDialogButton>
