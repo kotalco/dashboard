@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getWsBaseURL } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
 import { IpfsPeerStats, StatsError } from "@/types";
+import { CardStats } from "@/components/shared/card-stats/card-stats";
 
 interface IPFSPeerStatsProps {
   nodeName: string;
@@ -72,22 +73,15 @@ export const IPFSPeerStats: React.FC<IPFSPeerStatsProps> = ({
           "error" in data ? "blur-lg" : ""
         )}
       >
-        <Card>
-          <CardHeader>
-            <CardTitle className="items-start">Peers</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center text-3xl text-muted-foreground font-light truncate gap-x-2">
-            {!("error" in data) && data.PeerCount}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Pins</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-light text-muted-foreground truncate">
-            {!("error" in data) && data.PinCount}
-          </CardContent>
-        </Card>
+        {/* Peers */}
+        <CardStats title="Peers">
+          {!("error" in data) && data.PeerCount}
+        </CardStats>
+
+        {/* Pins */}
+        <CardStats title="Pins">
+          {!("error" in data) && data.PinCount}
+        </CardStats>
       </div>
       {"error" in data && typeof data.error === "string" && (
         <div className="absolute inset-0 flex items-center justify-center space-x-4">
