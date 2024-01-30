@@ -4,47 +4,32 @@ import { useParams } from "next/navigation";
 
 import { OptionType, ValidatorNode } from "@/types";
 import { Roles, SecretType, ValidatorClients } from "@/enums";
-import { editKeystore } from "@/actions/edit-validator";
-import { useAction } from "@/hooks/use-action";
 
 import { MultiSelect } from "@/components/form/multi-select";
 import { Select } from "@/components/form/select";
-import { SubmitSuccess } from "@/components/form/submit-success";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitButton } from "@/components/form/submit-button";
+import { Heading } from "@/components/ui/heading";
 
-interface KeystoreTabProps {
+interface KeystoreProps {
   node: ValidatorNode;
   role: Roles;
   ethereumKeystores: OptionType[];
   passwords: OptionType[];
+  errors?: Record<string, string[] | undefined>;
 }
 
-export const KeystoreTab: React.FC<KeystoreTabProps> = ({
+export const Keystore = ({
   node,
   role,
   ethereumKeystores,
   passwords,
-}) => {
-  const { client, keystores, walletPasswordSecretName, name } = node;
+  errors,
+}: KeystoreProps) => {
+  const { client, keystores, walletPasswordSecretName } = node;
   const { workspaceId } = useParams();
 
-  const { execute, fieldErrors, error, success } = useAction(editKeystore);
-
-  const onSubmit = (formData: FormData) => {
-    const keystores = formData.getAll("keystores") as [string, ...string[]];
-    const walletPasswordSecretName = formData.get(
-      "walletPasswordSecretName"
-    ) as string;
-
-    execute(
-      { keystores, walletPasswordSecretName, client },
-      { name: name, workspaceId: workspaceId as string }
-    );
-  };
-
   return (
-    <form action={onSubmit} className="relative space-y-8">
+    <div className="space-y-4">
+      <Heading variant="h2" title="Keystore" />
       <MultiSelect
         id="keystores"
         label="Ethereum Keystores"
@@ -56,7 +41,7 @@ export const KeystoreTab: React.FC<KeystoreTabProps> = ({
           href: `/${workspaceId}/secrets/new?type=${SecretType["Ethereum Keystore"]}`,
           title: "Create New Keystore",
         }}
-        errors={fieldErrors}
+        errors={errors}
         className="max-w-sm"
       />
 
@@ -73,17 +58,9 @@ export const KeystoreTab: React.FC<KeystoreTabProps> = ({
             href: `/${workspaceId}/secrets/new?type=${SecretType.Password}`,
             title: "Create New Password",
           }}
-          errors={fieldErrors}
+          errors={errors}
         />
       )}
-
-      <SubmitSuccess success={success}>
-        Keystore settings has been updated successfully.
-      </SubmitSuccess>
-
-      <SubmitError error={error} />
-
-      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
-    </form>
+    </div>
   );
 };

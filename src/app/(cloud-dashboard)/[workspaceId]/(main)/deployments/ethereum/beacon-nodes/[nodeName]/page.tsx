@@ -8,6 +8,7 @@ import { getClientVersions } from "@/services/get-client-versions";
 import { Protocol, Roles, SecretType, StorageItems } from "@/enums";
 import { BeaconNode, ExecutionClientNode } from "@/types";
 import { getNodes } from "@/services/get-nodes";
+import { formatDate, getAuthorizedTabs } from "@/lib/utils";
 
 import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
@@ -17,17 +18,11 @@ import { Logs } from "@/components/logs";
 
 import { BeaconNodeStats } from "./_components/beacon-node-stats";
 import { DangerZoneTab } from "./_components/danger-zone-tab";
-import { formatDate, getAuthorizedTabs } from "@/lib/utils";
 import { NodeConfig } from "./_components/node-config";
 
 const TABS = [
   { label: "Configurations", value: "config" },
-  // { label: "Protocol", value: "protocol" },
-  // { label: "Execution Client", value: "execution-client" },
-  // { label: "Checkpoint Sync", value: "checkpoint-sync" },
-  // { label: "API", value: "api" },
   { label: "Logs", value: "logs" },
-  // { label: "Resources", value: "resources" },
   { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
 ];
 
@@ -110,23 +105,10 @@ export default async function BeaconNodePage({
             executionClients={executionClients}
           />
 
-          {/* <ProtocolTab node={node} role={role} versions={versions} />
-          <ExecutionClientTab
-            node={node}
-            role={role}
-            secrets={jwts}
-            executionClients={executionClients}
-          />
-          <CheckpointSyncTab node={node} role={role} />
-          <APITab node={node} role={role} /> */}
           <Logs
             url={`ethereum2/beaconnodes/${node.name}/logs?authorization=Bearer ${token?.value}&workspace_id=${params.workspaceId}`}
           />
-          {/* <ResourcesForm
-            node={node}
-            role={role}
-            url={`/ethereum2/beaconnodes/${node.name}?workspace_id=${workspaceId}`}
-          /> */}
+
           <DangerZoneTab node={node} />
         </Tabs>
       </div>
