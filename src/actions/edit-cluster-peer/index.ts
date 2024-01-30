@@ -8,16 +8,14 @@ import { IPFSClusterPeer } from "@/types";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import { EditPeers } from "./schema";
+import { EditIpfsClusterPeer } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let peer;
+  const { workspaceId, name, ...data } = values;
   try {
     const response = await server.put<IPFSClusterPeer>(
-      `/ipfs/clusterpeers/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/ipfs/clusterpeers/${name}?workspace_id=${workspaceId}`,
       data
     );
 
@@ -27,10 +25,8 @@ const handler = async (
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(
-    `/${identifiers.workspaceId}/deployments/ipfs/cluster-peers/${peer.name}`
-  );
+  revalidatePath(`/${workspaceId}/deployments/ipfs/cluster-peers/${peer.name}`);
   return { data: peer };
 };
 
-export const editPeers = createAction(EditPeers, handler);
+export const editIpfsClusterPeer = createAction(EditIpfsClusterPeer, handler);

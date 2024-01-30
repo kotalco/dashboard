@@ -1,10 +1,10 @@
 import { IPFSClusterPeer } from "@/types";
 
-interface SecurityTabProps {
+interface SecurityProps {
   node: IPFSClusterPeer;
 }
 
-export const SecurityTab: React.FC<SecurityTabProps> = ({ node }) => {
+export const Security = ({ node }: SecurityProps) => {
   return (
     <ul className="space-y-3">
       <li className="flex flex-col">

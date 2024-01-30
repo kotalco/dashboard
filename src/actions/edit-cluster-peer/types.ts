@@ -3,10 +3,7 @@ import { z } from "zod";
 import { IPFSClusterPeer } from "@/types";
 import { ActionState } from "@/lib/create-action";
 
-import { EditPeers } from "./schema";
+import { EditIpfsClusterPeer } from "./schema";
 
-type PeersInputType = z.infer<typeof EditPeers>;
-type PeersReturnType = ActionState<PeersInputType, IPFSClusterPeer>;
-
-export type InputType = PeersInputType;
-export type ReturnType = PeersReturnType;
+export type InputType = z.infer<typeof EditIpfsClusterPeer>;
+export type ReturnType = ActionState<InputType, IPFSClusterPeer>;

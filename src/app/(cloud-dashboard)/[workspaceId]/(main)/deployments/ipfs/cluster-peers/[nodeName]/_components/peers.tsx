@@ -1,36 +1,27 @@
-"use client";
-
-import { useParams } from "next/navigation";
-
 import { IPFSClusterPeer, IPFSPeer } from "@/types";
 import { Roles } from "@/enums";
-import { useAction } from "@/hooks/use-action";
-import { editPeers } from "@/actions/edit-cluster-peer";
 
 import { SelectWithInput } from "@/components/form/select-with-input";
 import { MultiSelect } from "@/components/form/multi-select";
 import { Label } from "@/components/ui/label";
-import { SubmitSuccess } from "@/components/form/submit-success";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitButton } from "@/components/form/submit-button";
-import { readSelectWithInputValue } from "@/lib/utils";
+import { Heading } from "@/components/ui/heading";
 
-interface PeersTabProps {
+interface PeersProps {
   node: IPFSClusterPeer;
   role: Roles;
   peers: IPFSPeer[];
   clusterPeers: IPFSClusterPeer[];
+  errors?: Record<string, string[] | undefined>;
 }
 
-export const PeersTab: React.FC<PeersTabProps> = ({
+export const Peers = ({
   node,
   role,
   peers,
   clusterPeers,
-}) => {
+  errors,
+}: PeersProps) => {
   const { peerEndpoint, bootstrapPeers, trustedPeers, name } = node;
-  const { workspaceId } = useParams();
-  const { execute, fieldErrors, error, success } = useAction(editPeers);
 
   const peerEndpoints = peers.map(({ name }) => ({
     label: name,
@@ -42,17 +33,9 @@ export const PeersTab: React.FC<PeersTabProps> = ({
     value: `/dns4/${name}/tcp/9096/p2p/${id}`,
   }));
 
-  const onSubmit = (formData: FormData) => {
-    const peerEndpoint = readSelectWithInputValue("peerEndpoint", formData);
-    const bootstrapPeers = formData.getAll("bootstrapPeers") as string[];
-    execute(
-      { peerEndpoint, bootstrapPeers },
-      { name, workspaceId: workspaceId as string }
-    );
-  };
-
   return (
-    <form action={onSubmit} className="relative space-y-8">
+    <div className="space-y-4">
+      <Heading variant="h2" title="Peers" />
       <SelectWithInput
         id="peerEndpoint"
         label="IPFS Peer"
@@ -60,7 +43,7 @@ export const PeersTab: React.FC<PeersTabProps> = ({
         options={peerEndpoints}
         otherLabel="Use External Peer"
         className="max-w-xs"
-        errors={fieldErrors}
+        errors={errors}
         disabled={role === Roles.Reader}
         defaultValue={peerEndpoint}
       />
@@ -72,7 +55,7 @@ export const PeersTab: React.FC<PeersTabProps> = ({
         options={ipfsClusterPeers}
         allowCustomValues
         className="max-w-xs"
-        errors={fieldErrors}
+        errors={errors}
         disabled={role === Roles.Reader}
         defaultValue={bootstrapPeers}
       />
@@ -89,14 +72,6 @@ export const PeersTab: React.FC<PeersTabProps> = ({
           </ul>
         </div>
       )}
-
-      <SubmitSuccess success={success}>
-        Peers settings have been updated successfully.
-      </SubmitSuccess>
-
-      <SubmitError error={error} />
-
-      {role !== Roles.Reader && <SubmitButton>Update</SubmitButton>}
-    </form>
+    </div>
   );
 };

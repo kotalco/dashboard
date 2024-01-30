@@ -57,7 +57,7 @@ export default async function ExecutionClientPage({
 
   return (
     <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
+      <div className="flex-1 space-y-8">
         <div className="flex items-start gap-x-2">
           <NodeStatus
             nodeName={name}
