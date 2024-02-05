@@ -30,6 +30,7 @@ const CLOSE_CONNECTION_MSG = "Disconnected. Connection Closed.";
 export const Logs: React.FC<LogsProps> = ({ url }) => {
   const [counter, setCounter] = useState<number>();
   const [count, setCount] = useState(1);
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
   const logsElement = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -39,6 +40,15 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
     if (logsElement.current) {
       const { scrollHeight, clientHeight } = logsElement.current;
       logsElement.current.scrollTop = scrollHeight - clientHeight;
+      setIsAtBottom(true);
+    }
+  };
+
+  const handleScroll = () => {
+    if (logsElement.current) {
+      const { scrollTop, scrollHeight, clientHeight } = logsElement.current;
+      const atBottom = scrollTop + clientHeight === scrollHeight;
+      setIsAtBottom(atBottom);
     }
   };
 
@@ -168,6 +178,7 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
         <div
           ref={logsElement}
           className="relative overflow-y-auto text-white bg-black border px-3 py-1 h-[500px] rounded-lg"
+          onScroll={handleScroll}
         >
           <ul>
             {data?.map((log, i) => (
@@ -228,12 +239,13 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
                   type="button"
                   variant="ghost"
                   size="icon"
+                  disabled={isAtBottom}
                 >
                   <ArrowDown className="w-7 h-7" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right" align="start">
-                Scroll to Bottom
+                Follow Logs
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
