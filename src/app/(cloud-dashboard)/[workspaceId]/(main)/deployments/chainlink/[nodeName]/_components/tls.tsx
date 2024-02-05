@@ -7,7 +7,6 @@ import { ChainlinkNode, OptionType } from "@/types";
 import { Roles, SecretType } from "@/enums";
 
 import { Select } from "@/components/form/select";
-import { Input } from "@/components/form/input";
 import { Toggle } from "@/components/form/toggle";
 import { Heading } from "@/components/ui/heading";
 
@@ -58,15 +57,6 @@ export const Tls = ({ node, role, tlss, errors }: TlsProps) => {
         onCheckedChange={setSecured}
         checked={secured}
         errors={errors}
-      />
-
-      <Input
-        id="tlsPort"
-        disabled={role === Roles.Reader}
-        label="TLS Port"
-        errors={errors}
-        defaultValue={tlsPort}
-        className="max-w-xs"
       />
     </div>
   );

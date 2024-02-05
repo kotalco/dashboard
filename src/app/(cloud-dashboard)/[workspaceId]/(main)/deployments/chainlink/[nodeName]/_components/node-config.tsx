@@ -68,7 +68,6 @@ export const NodeConfig = ({
       "keystorePasswordSecretName"
     ) as string;
     const certSecretName = formData.get("certSecretName") as string;
-    const tlsPort = formData.get("tlsPort") as string;
     const secureCookies = getCheckboxValue(formData, "secureCookies");
     const api = getCheckboxValue(formData, "api");
     const apiCredentials = {
@@ -89,7 +88,6 @@ export const NodeConfig = ({
       ethereumWsEndpoint,
       keystorePasswordSecretName,
       certSecretName,
-      tlsPort: certSecretName ? Number(tlsPort) : null,
       secureCookies: certSecretName ? secureCookies : false,
       api,
       apiCredentials,

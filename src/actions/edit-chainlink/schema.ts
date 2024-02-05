@@ -43,7 +43,6 @@ const EditWallet = z.object({
 
 const EditTLS = z.object({
   certSecretName: z.string().optional().nullable(),
-  tlsPort: z.coerce.number().optional().nullable(),
   secureCookies: z.boolean(),
 });
 
