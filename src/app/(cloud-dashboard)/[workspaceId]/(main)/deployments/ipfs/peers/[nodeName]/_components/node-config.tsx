@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { IPFSConfigProfile, IPFSRouting, Roles } from "@/enums";
+import { IPFSRouting, Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { IPFSPeer, Version } from "@/types";
 import { getCheckboxValue, getResourcesValues } from "@/lib/utils";
@@ -15,7 +15,6 @@ import { Resources } from "@/components/shared/deployments/resources";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
 
 import { Protocol } from "./protocol";
-import { ConfigrationProfiles } from "./configration-profiles";
 import { Api } from "./api";
 import { Routing } from "./routing";
 
@@ -35,7 +34,6 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
 
   const onSubmit = (formData: FormData) => {
     const image = formData.get("image") as string | null;
-    const profiles = formData.getAll("profiles") as IPFSConfigProfile[];
     const api = getCheckboxValue(formData, "api");
     const gateway = getCheckboxValue(formData, "gateway");
     const routing = formData.get("routing") as IPFSRouting;
@@ -45,7 +43,6 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
     execute({
       name,
       image,
-      profiles,
       api,
       gateway,
       routing,
@@ -72,9 +69,6 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
           errors={fieldErrors}
         />
       </div>
-
-      {/* Configuration Profile */}
-      <ConfigrationProfiles node={node} role={role} errors={fieldErrors} />
 
       {/* API */}
       <Api role={role} errors={fieldErrors} node={node} />

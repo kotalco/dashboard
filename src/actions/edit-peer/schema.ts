@@ -1,4 +1,4 @@
-import { IPFSConfigProfile, IPFSRouting } from "@/enums";
+import { IPFSRouting } from "@/enums";
 import { Identifiers } from "@/schemas/identifiers";
 import { EditImageVersion } from "@/schemas/image-version";
 import { EditResources } from "@/schemas/resources";
@@ -15,16 +15,7 @@ const EditAPI = z.object({
   gateway: z.boolean(),
 });
 
-const EditConfigProfiles = z.object({
-  profiles: z
-    .nativeEnum(IPFSConfigProfile, {
-      errorMap: () => ({ message: "Routing is required" }),
-    })
-    .array(),
-});
-
 export const EditPeer = Identifiers.merge(EditImageVersion)
   .merge(EditResources)
   .merge(EditRouting)
-  .merge(EditAPI)
-  .merge(EditConfigProfiles);
+  .merge(EditAPI);
