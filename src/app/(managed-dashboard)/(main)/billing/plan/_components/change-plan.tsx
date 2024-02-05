@@ -13,11 +13,7 @@ import { CardSelection } from "./card-selection";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface ChangePlanProps {
-  plans: Plan[];
-}
-
-export const ChangePlan: React.FC<ChangePlanProps> = async () => {
+export const ChangePlan = async () => {
   const supscriptionPromise = getCurrentSubscription();
   const plansPromise = getPlans();
 

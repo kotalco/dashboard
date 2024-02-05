@@ -13,7 +13,7 @@ export const PlanDetails = async () => {
   return (
     <div className="flex items-center space-x-10">
       <div className="space-y-3">
-        <div className="flex items-center space-x-3">
+        {/* <div className="flex items-center space-x-3">
           <Sparkles className="w-6 h-6 text-foreground" />
           <p className="text-xs font-bold">
             <span className="font-normal opacity-50">
@@ -31,48 +31,26 @@ export const PlanDetails = async () => {
                 : "request/sec"}
             </span>
           </p>
-        </div>
+        </div> */}
 
         <div className="flex space-x-5">
-          <div className="flex items-center space-x-3">
-            <Calendar className="w-6 h-6 text-foreground" />
-            <div>
-              <div className="text-sm font-semibold leading-5">Started at</div>
-              <div className="text-xs font-normal opacity-70">
+          <div className="flex items-center text-sm">
+            <Calendar className="w-6 h-6 text-foreground mr-3" />
+            <div className="gap-x-2">
+              <span className="text-muted-foreground">Started at </span>
+              <span>
                 {format(fromUnixTime(subscription.start_date), "MMMM do, yyyy")}
-              </div>
+              </span>
             </div>
           </div>
-          {/* <div className="flex items-center space-x-3">
-            <Calendar className="w-6 h-6 text-foreground" />
-
-            <div>
-              <div className="text-xs font-semibold leading-5">
-                {remainingDays ? "Ends at" : "Ended at"}
-              </div>
-              <div className="text-xs font-normal opacity-70">
-                {remainingDays && (
-                  <span className="font-bold">
-                    {remainingDays !== 1
-                      ? `${remainingDays} Days`
-                      : `${remainingDays} Day`}
-                    ,{` `}
-                  </span>
-                )}
-                {subscription.end_date
-                  ? format(fromUnixTime(subscription.end_date), "MMMM do, yyyy")
-                  : "-"}
-              </div>
-            </div>
-          </div> */}
         </div>
 
         {/* If subscription is canceled */}
         {!!subscription.canceled_at && (
           <div className="flex items-center bg-destructive/30 px-3 rounded-xl py-2 space-x-3">
-            <p className="text-xs font-bold leading-5">
+            <p className="text-sm leading-5">
               <span className="font-normal opacity-50">
-                Subscription was canceled at
+                Your subscription was canceled at
               </span>{" "}
               {format(fromUnixTime(subscription.canceled_at), "MMMM do, yyyy")}
             </p>
@@ -89,20 +67,20 @@ export const PlanDetails = async () => {
         {invoice && (
           <div className="flex items-center space-x-3">
             <CreditCard className="w-6 h-6 text-foreground" />
-            <p className="text-xs font-bold leading-5">
-              <span className="font-normal opacity-50">
-                Next payment amount
-              </span>{" "}
-              {formatCurrency(invoice.amount_due)}
-              <span className="font-normal opacity-50">, due </span> (
-              {remainingDays && (
+            <p className="text-sm leading-5">
+              <span className="opacity-50">Next payment</span>{" "}
+              {/* {formatCurrency(invoice.amount_due)} */}
+              <span className="opacity-50"> due </span>
+              {/* ( */}
+              {/* {remainingDays && (
                 <span className="font-bold text-foreground">
                   {remainingDays !== 1
                     ? `${remainingDays} Days`
                     : `${remainingDays} Day`}
                 </span>
-              )}
-              )<span className="font-normal opacity-50">, at </span>
+              )} */}
+              {/* ) */}
+              {/* <span className="font-normal opacity-50">, at </span> */}
               {subscription.end_date
                 ? format(fromUnixTime(subscription.end_date), "MMMM do, yyyy")
                 : "-"}

@@ -1,33 +1,27 @@
 import { Suspense } from "react";
+
+import { cn, getEnumKey } from "@/lib/utils";
+
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { SubscriptionStatus } from "@/enums";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert } from "@/components/ui/alert";
 
 import { getCurrentSubscription } from "@/services/get-current-subscription";
-import { getPlans } from "@/services/get-plans";
 import { ChangePlan } from "./change-plan";
 import { CancelPlan } from "./cancel-plan";
 import { ReactivatePlan } from "./reactivate-plan";
 import { PlanDetails } from "./plan-details";
 import { UserCreditBalance } from "./user-credit-balance";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn, getEnumKey } from "@/lib/utils";
-import { SubscriptionStatus } from "@/enums";
-import { Alert } from "@/components/ui/alert";
 
 export const ManagePlanCard = async () => {
-  const supscriptionPromise = getCurrentSubscription();
-  const plansPromise = getPlans();
-
-  const [{ subscription }, { plans }] = await Promise.all([
-    supscriptionPromise,
-    plansPromise,
-  ]);
+  const { subscription } = await getCurrentSubscription();
 
   return (
     <div className="space-y-3">
@@ -43,18 +37,29 @@ export const ManagePlanCard = async () => {
       )}
       <Card>
         <CardHeader>
-          <CardTitle className="text-3xl">
-            {subscription.plan.name} Plan{" "}
-            <span
-              className={cn("text-sm font-semibold tracking-wider", {
-                "text-green-600":
-                  subscription.status === SubscriptionStatus.Active,
-                "text-destructive":
-                  subscription.status !== SubscriptionStatus.Active,
-              })}
-            >
-              {getEnumKey(SubscriptionStatus, subscription.status)}
-            </span>
+          <CardTitle className="text-3xl flex items-center justify-between">
+            <div>
+              {subscription.plan.name} Plan{" "}
+              <span
+                className={cn("text-sm font-semibold tracking-wider", {
+                  "text-success":
+                    subscription.status === SubscriptionStatus.Active,
+                  "text-destructive":
+                    subscription.status !== SubscriptionStatus.Active,
+                })}
+              >
+                {getEnumKey(SubscriptionStatus, subscription.status)}
+              </span>
+            </div>
+            <div className="flex flex-col items-end">
+              <p className="text-sm text-muted-foreground">
+                ${subscription.price.price} / Month
+              </p>
+              <p className="text-base">
+                {subscription.endpoint_limit} endpoints -{" "}
+                {subscription.request_limit} requests / sec
+              </p>
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -63,8 +68,10 @@ export const ManagePlanCard = async () => {
         <CardFooter className="flex justify-end gap-x-2">
           {!subscription.canceled_at && (
             <div className="space-x-4">
-              <ChangePlan plans={plans} />
-              <CancelPlan subscriptionId={subscription.id} />
+              <ChangePlan />
+              {!!subscription.price.price && (
+                <CancelPlan subscriptionId={subscription.id} />
+              )}
             </div>
           )}
 
