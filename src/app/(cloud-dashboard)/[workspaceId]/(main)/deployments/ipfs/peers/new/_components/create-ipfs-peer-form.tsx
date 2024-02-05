@@ -3,8 +3,6 @@
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { IPFSConfigProfile } from "@/enums";
-import { getSelectItems } from "@/lib/utils";
 import { Version } from "@/types";
 import { createPeer } from "@/actions/create-peer";
 import { useAction } from "@/hooks/use-action";
@@ -13,7 +11,6 @@ import { Input } from "@/components/form/input";
 import { ExternalLink } from "@/components/ui/external-link";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
-import { CheckboxGroup } from "@/components/form/checkbox-group";
 
 export const CreateIPFSPeerForm: React.FC<{ images: Version[] }> = ({
   images,
@@ -31,14 +28,9 @@ export const CreateIPFSPeerForm: React.FC<{ images: Version[] }> = ({
 
   const onSubmit = (formData: FormData) => {
     const name = formData.get("name") as string;
-    const initProfiles = formData.getAll("initProfiles") as [
-      IPFSConfigProfile,
-      ...IPFSConfigProfile[]
-    ];
 
     execute({
       name,
-      initProfiles,
       workspace_id: workspaceId as string,
       image: images[0].image,
     });
@@ -61,15 +53,6 @@ export const CreateIPFSPeerForm: React.FC<{ images: Version[] }> = ({
         <span>Client:</span>
         <ExternalLink href="https://github.com/ipfs/kubo">Kubo</ExternalLink>
       </p>
-
-      <CheckboxGroup
-        label="Initial Configuration Profiles"
-        className="grid grid-cols-2 ml-5 gap-3"
-        options={getSelectItems(IPFSConfigProfile)}
-        id="initProfiles"
-        errors={fieldErrors}
-        defaultValues={[IPFSConfigProfile["default-datastore"]]}
-      />
 
       <SubmitError error={error} />
 
