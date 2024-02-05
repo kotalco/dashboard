@@ -18,7 +18,7 @@ interface TlsProps {
 }
 
 export const Tls = ({ node, role, tlss, errors }: TlsProps) => {
-  const { certSecretName, tlsPort, secureCookies } = node;
+  const { certSecretName, secureCookies } = node;
   const { workspaceId } = useParams();
   const [secured, setSecured] = useState(secureCookies);
   const [certificate, setCertificate] = useState(certSecretName);

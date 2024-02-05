@@ -24,7 +24,7 @@ export const Networking = ({
   privateKeys,
   errors,
 }: NetworkingProps) => {
-  const { nodePrivateKeySecretName, minPeers, p2pPort, bootnodes } = node;
+  const { nodePrivateKeySecretName, minPeers, bootnodes } = node;
   const [privateKey, setPrivateKey] = useState(nodePrivateKeySecretName);
   const { workspaceId } = useParams();
 

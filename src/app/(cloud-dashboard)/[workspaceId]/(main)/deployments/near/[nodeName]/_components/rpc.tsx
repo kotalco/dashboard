@@ -1,7 +1,3 @@
-"use client";
-
-import { useState } from "react";
-
 import { NEARNode } from "@/types";
 import { Roles } from "@/enums";
 
@@ -15,8 +11,7 @@ interface RpcProps {
 }
 
 export const Rpc = ({ node, role, errors }: RpcProps) => {
-  const { rpc, rpcPort } = node;
-  const [rpcState, setRpcState] = useState(rpc);
+  const { rpc } = node;
 
   return (
     <div className="space-y-4">
@@ -25,8 +20,6 @@ export const Rpc = ({ node, role, errors }: RpcProps) => {
         id="rpc"
         label="JSON-RPC Server"
         disabled={role === Roles.Reader}
-        checked={rpcState}
-        onCheckedChange={setRpcState}
         errors={errors}
         defaultChecked={rpc}
       />

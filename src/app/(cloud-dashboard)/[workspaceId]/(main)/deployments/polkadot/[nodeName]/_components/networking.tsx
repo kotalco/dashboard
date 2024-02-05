@@ -25,13 +25,7 @@ export const Networking = ({
   privateKeys,
   errors,
 }: NetWorkingProps) => {
-  const {
-    nodePrivateKeySecretName,
-    p2pPort,
-    syncMode,
-    retainedBlocks,
-    pruning,
-  } = node;
+  const { nodePrivateKeySecretName, syncMode, retainedBlocks, pruning } = node;
   const { workspaceId } = useParams();
   const [privateKey, setPrivateKey] = useState(nodePrivateKeySecretName);
 
@@ -54,15 +48,6 @@ export const Networking = ({
         }}
         className="max-w-xs"
         clear={{ onClear: () => setPrivateKey("") }}
-      />
-
-      <Input
-        id="p2pPort"
-        label="P2P Port"
-        disabled={role === Roles.Reader}
-        defaultValue={p2pPort}
-        errors={errors}
-        className="max-w-xs"
       />
 
       <Select

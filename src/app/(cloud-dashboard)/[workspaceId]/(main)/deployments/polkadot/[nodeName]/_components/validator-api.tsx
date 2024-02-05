@@ -10,7 +10,6 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { CloseDialogButton } from "@/components/ui/close-dialog-button";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import { Input } from "@/components/form/input";
 
 interface ValidatorApiProps {
   node: PolkadotNode;
@@ -19,7 +18,7 @@ interface ValidatorApiProps {
 }
 
 export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
-  const { validator, pruning, rpc, rpcPort, ws, wsPort } = node;
+  const { validator, pruning, rpc, ws } = node;
   const [isValidatorOpen, setIsValidatorOpen] = useState(false);
   const [isRpcOpen, setIsRpcOpen] = useState({ value: false, type: "" });
   const [isValidator, setIsValidator] = useState(validator);
@@ -109,15 +108,6 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
           disabled={role === Roles.Reader}
         />
 
-        <Input
-          className="max-w-xs"
-          id="rpcPort"
-          label="JSON-RPC Port"
-          disabled={role === Roles.Reader || !isRpc}
-          errors={errors}
-          defaultValue={rpcPort}
-        />
-
         <Toggle
           id="ws"
           label="WebSocket Server"
@@ -126,15 +116,6 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
           onCheckedChange={(value) => handleRpcChange(value, "ws")}
           errors={errors}
           disabled={role === Roles.Reader}
-        />
-
-        <Input
-          className="max-w-xs"
-          id="wsPort"
-          label="WebSocket Server Port"
-          disabled={role === Roles.Reader || !isWs}
-          errors={errors}
-          defaultValue={wsPort}
         />
 
         <AlertModal

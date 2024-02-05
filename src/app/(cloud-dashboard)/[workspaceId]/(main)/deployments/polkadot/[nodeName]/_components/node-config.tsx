@@ -47,18 +47,14 @@ export const NodeConfig = ({
     const nodePrivateKeySecretName = formData.get(
       "nodePrivateKeySecretName"
     ) as string;
-    const p2pPort = Number(formData.get("p2pPort"));
     const syncMode = formData.get("syncMode") as PolkadotSyncModes;
     const retainedBlocks = Number(formData.get("retainedBlocks"));
     const validator = getCheckboxValue(formData, "validator");
     const rpc = getCheckboxValue(formData, "rpc");
-    const rpcPort = Number(formData.get("rpcPort"));
     const ws = getCheckboxValue(formData, "ws");
-    const wsPort = Number(formData.get("wsPort"));
     const telemetry = getCheckboxValue(formData, "telemetry");
     const telemetryURL = formData.get("telemetryURL") as string;
     const prometheus = getCheckboxValue(formData, "prometheus");
-    const prometheusPort = Number(formData.get("prometheusPort"));
     const corsDomains = formData.get("corsDomains") as string;
     const logging = formData.get("logging") as PolkadotLogging;
     const { cpu, cpuLimit, memory, memoryLimit, storage } =
@@ -68,18 +64,14 @@ export const NodeConfig = ({
       name,
       image,
       nodePrivateKeySecretName,
-      p2pPort,
       syncMode,
       retainedBlocks,
       validator,
       rpc,
-      rpcPort,
       ws,
-      wsPort,
       telemetry,
       telemetryURL,
       prometheus,
-      prometheusPort,
       corsDomains,
       logging,
       cpu,
