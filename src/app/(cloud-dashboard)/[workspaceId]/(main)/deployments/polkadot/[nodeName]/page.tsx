@@ -21,7 +21,7 @@ import { Logs } from "@/components/logs";
 import { NodeConfig } from "./_components/node-config";
 
 const TABS = [
-  { label: "Configurations", value: "config" },
+  { label: "Configuration", value: "config" },
   { label: "Logs", value: "logs" },
   { label: "Danger Zone", value: "dangerZone", role: Roles.Admin },
 ];
