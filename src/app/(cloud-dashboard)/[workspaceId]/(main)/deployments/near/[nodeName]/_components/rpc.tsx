@@ -5,7 +5,6 @@ import { useState } from "react";
 import { NEARNode } from "@/types";
 import { Roles } from "@/enums";
 
-import { Input } from "@/components/form/input";
 import { Toggle } from "@/components/form/toggle";
 import { Heading } from "@/components/ui/heading";
 
@@ -30,15 +29,6 @@ export const Rpc = ({ node, role, errors }: RpcProps) => {
         onCheckedChange={setRpcState}
         errors={errors}
         defaultChecked={rpc}
-      />
-
-      <Input
-        id="rpcPort"
-        label="JSON-RPC Port"
-        disabled={role === Roles.Reader || !rpcState}
-        errors={errors}
-        defaultValue={rpcPort}
-        className="max-w-xs"
       />
     </div>
   );

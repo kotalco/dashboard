@@ -58,15 +58,6 @@ export const Networking = ({
         className="max-w-xs"
       />
 
-      <Input
-        id="p2pPort"
-        label="P2P Port"
-        disabled={role === Roles.Reader}
-        defaultValue={p2pPort}
-        errors={errors}
-        className="max-w-xs"
-      />
-
       <Textarea
         id="bootnodes"
         label="Boot Nodes"

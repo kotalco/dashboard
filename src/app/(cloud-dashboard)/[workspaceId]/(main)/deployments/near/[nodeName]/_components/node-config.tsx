@@ -18,7 +18,6 @@ import { Protocol } from "./protocol";
 import { Networking } from "./networking";
 import { Rpc } from "./rpc";
 import { Validator } from "./validator";
-import { Prometheus } from "./prometheus";
 import { Telemetry } from "./telemetry";
 
 interface NodeConfigProps {
@@ -47,12 +46,9 @@ export const NodeConfig = ({
       "nodePrivateKeySecretName"
     ) as string;
     const minPeers = Number(formData.get("minPeers"));
-    const p2pPort = Number(formData.get("p2pPort"));
     const bootnodes = formData.get("bootnodes") as string;
     const rpc = getCheckboxValue(formData, "rpc");
-    const rpcPort = Number(formData.get("rpcPort"));
     const validatorSecretName = formData.get("validatorSecretName") as string;
-    const prometheusPort = Number(formData.get("prometheusPort"));
     const telemetryURL = formData.get("telemetryURL") as string;
     const { cpu, cpuLimit, memory, memoryLimit, storage } =
       getResourcesValues(formData);
@@ -62,12 +58,9 @@ export const NodeConfig = ({
       image,
       nodePrivateKeySecretName,
       minPeers,
-      p2pPort,
       bootnodes,
       rpc,
-      rpcPort: rpc ? rpcPort : null,
       validatorSecretName,
-      prometheusPort,
       telemetryURL,
       cpu,
       cpuLimit,
@@ -106,9 +99,6 @@ export const NodeConfig = ({
         privateKeys={privateKeys}
         errors={fieldErrors}
       />
-
-      {/* Prometheus */}
-      <Prometheus node={node} role={role} errors={fieldErrors} />
 
       {/* Telemetry */}
       <Telemetry node={node} role={role} errors={fieldErrors} />

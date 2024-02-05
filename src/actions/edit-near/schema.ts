@@ -12,13 +12,6 @@ const EditNetworking = z.object({
     .optional()
     .nullable()
     .default(5),
-  p2pPort: z
-    .number({ invalid_type_error: "P2P Port is number" })
-    .min(1, "P2P Port is between 1 and 65535")
-    .max(65535, "P2P Port is between 1 and 65535")
-    .optional()
-    .nullable()
-    .default(24567),
   bootnodes: z
     .string()
     .transform((value) =>
@@ -28,21 +21,8 @@ const EditNetworking = z.object({
     .nullable(),
 });
 
-const EditPrometheus = z.object({
-  prometheusPort: z
-    .number({ invalid_type_error: "Prometheus Port is number" })
-    .min(1, "Prometheus Port is between 1 and 65535")
-    .max(65535, "Prometheus Port is between 1 and 65535")
-    .optional()
-    .nullable(),
-});
-
 const EditRPC = z.object({
   rpc: z.boolean(),
-  rpcPort: z
-    .number({ invalid_type_error: "RPC Port is number" })
-    .optional()
-    .nullable(),
 });
 
 const EditTelemetry = z.object({
@@ -58,5 +38,4 @@ export const EditNearNode = Identifiers.merge(EditImageVersion)
   .merge(EditNetworking)
   .merge(EditRPC)
   .merge(EditValidator)
-  .merge(EditPrometheus)
   .merge(EditTelemetry);
