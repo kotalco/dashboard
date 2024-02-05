@@ -47,6 +47,13 @@ export const DeploymentsList: React.FC<DeployemntsListProps> = async ({
                   <div className="flex-1 min-w-0 space-y-2">
                     <Heading variant="h3" title={name} />
                     <div className="flex text-sm gap-x-4 text-muted-foreground">
+                      {protocol && (
+                        <div className="flex items-center gap-x-1">
+                          <Link2 strokeWidth={1} className="w-5 h-5" />
+                          {protocol}
+                        </div>
+                      )}
+
                       {network && (
                         <div className="flex items-center gap-x-1">
                           <Globe strokeWidth={1} className="w-5 h-5" />
@@ -58,13 +65,6 @@ export const DeploymentsList: React.FC<DeployemntsListProps> = async ({
                         <div className="flex items-center gap-x-1">
                           <Cpu strokeWidth={1} className="w-5 h-5" />
                           {client} ({version})
-                        </div>
-                      )}
-
-                      {protocol && (
-                        <div className="flex items-center gap-x-1">
-                          <Link2 strokeWidth={1} className="w-5 h-5" />
-                          {protocol}
                         </div>
                       )}
 
