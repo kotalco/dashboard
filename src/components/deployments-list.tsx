@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Cpu, FileKey2, Globe, Link2 } from "lucide-react";
+import { Cpu, Globe, Link2 } from "lucide-react";
 
 import { ListInfo } from "@/types";
 
@@ -10,12 +10,10 @@ import { cn, formatTimeDistance } from "@/lib/utils";
 
 interface DeployemntsListProps {
   data: ListInfo[];
-  children?: React.ReactNode;
 }
 
 export const DeploymentsList: React.FC<DeployemntsListProps> = async ({
   data,
-  children,
 }) => {
   const router = useRouter();
 
@@ -71,10 +69,7 @@ export const DeploymentsList: React.FC<DeployemntsListProps> = async ({
                       )}
 
                       {type && (
-                        <div className="flex items-center gap-x-1">
-                          <FileKey2 strokeWidth={1} className="w-5 h-5" />
-                          {type}
-                        </div>
+                        <div className="flex items-center gap-x-1">{type}</div>
                       )}
                     </div>
                   </div>
