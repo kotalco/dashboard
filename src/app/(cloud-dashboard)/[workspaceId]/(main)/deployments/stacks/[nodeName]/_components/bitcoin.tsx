@@ -1,16 +1,7 @@
-"use client";
-
-import { useParams } from "next/navigation";
-
 import { BitcoinNode, StacksNode } from "@/types";
 import { Roles } from "@/enums";
-import { useAction } from "@/hooks/use-action";
-import { editBitcoin } from "@/actions/edit-stacks";
 
 import { Select } from "@/components/form/select";
-import { SubmitSuccess } from "@/components/form/submit-success";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitButton } from "@/components/form/submit-button";
 import { Heading } from "@/components/ui/heading";
 
 interface BitcoinProps {
