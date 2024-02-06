@@ -86,10 +86,10 @@ export const NodeMetrics: React.FC<NodeMetricsProps> = ({
     return (
       <>
         <div className="space-y-2 lg:col-span-1">
-          <Skeleton className="w-full h-[128px]" />
+          <Skeleton className="w-full h-[118px]" />
         </div>
         <div className="space-y-2 lg:col-span-1">
-          <Skeleton className="w-full h-[128px]" />
+          <Skeleton className="w-full h-[118px]" />
         </div>
       </>
     );
