@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Cpu, Globe, Link2 } from "lucide-react";
+import { Cpu, Globe } from "lucide-react";
 
 import { ListInfo } from "@/types";
 
@@ -49,7 +49,7 @@ export const DeploymentsList: React.FC<DeployemntsListProps> = async ({
                     <div className="flex text-sm gap-x-4 text-muted-foreground">
                       {protocol && (
                         <div className="flex items-center gap-x-1">
-                          <Link2 strokeWidth={1} className="w-5 h-5" />
+                          <Cpu strokeWidth={1} className="w-5 h-5" />
                           {protocol}
                         </div>
                       )}
