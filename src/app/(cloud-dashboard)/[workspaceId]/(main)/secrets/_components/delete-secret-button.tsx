@@ -31,12 +31,13 @@ export const DeleteSecretButton = ({ name }: DeleteSecretButtonProps) => {
 
   return (
     <>
-      <div className="mb-7">
+      <div className="mb-7 opacity-0 group-hover:opacity-100 transition-all">
         <Button
           onClick={() => setIsOpen(true)}
           type="button"
-          variant="destructive"
+          variant="outline"
           size="icon"
+          className="mr-6 hover:bg-destructive"
         >
           <Trash2 strokeWidth={1} className="w-5 h-5" />
         </Button>

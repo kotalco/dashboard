@@ -18,7 +18,7 @@ export const DeleteSecretsButtons = async ({
   if (role === Roles.Reader) return null;
 
   return (
-    <div className="col-span-12 absolute inset-y-0 flex flex-col items-end justify-around right-4 sm:right-6">
+    <div className="col-span-12 absolute w-full rounded-md inset-y-0 group flex flex-col items-end justify-around">
       {secrets.map(({ name }) => (
         <DeleteSecretButton key={name} name={name} />
       ))}
