@@ -23,7 +23,7 @@ const Example = ({ example }: ExampleProps) => {
     <div>
       <h3 className="text-base">Example</h3>
       <div className="relative">
-        <pre className="px-5 mt-2 overflow-x-scroll bg-muted text-muted-foreground text-xs font-mono rounded-md py-7">
+        <div className="px-5 mt-2 overflow-x-scroll bg-muted text-muted-foreground text-xs font-mono rounded-md py-7">
           {example}
 
           <TooltipProvider delayDuration={0}>
@@ -36,7 +36,7 @@ const Example = ({ example }: ExampleProps) => {
               <TooltipContent>Copy</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </pre>
+        </div>
       </div>
     </div>
   );
