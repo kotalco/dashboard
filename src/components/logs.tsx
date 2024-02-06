@@ -10,12 +10,8 @@ import { getWsBaseURL } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip } from "@/components/tooltip";
+import { Textarea } from "@/components/ui/textarea";
 
 interface LogsProps {
   url: string;
@@ -32,7 +28,7 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
   const [count, setCount] = useState(1);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
-  const logsElement = useRef<HTMLDivElement>(null);
+  const logsElement = useRef<HTMLTextAreaElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
   const counterRef = useRef<NodeJS.Timeout>();
 
@@ -52,7 +48,7 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
     }
   };
 
-  const subscription: SWRSubscription<[string, number], string[], string> = (
+  const subscription: SWRSubscription<[string, number], string, string> = (
     [url, count],
     { next }
   ) => {
@@ -60,12 +56,12 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
 
     socket.onopen = () => {
       next(null, (prev) => {
-        const prevData = prev || [];
+        const prevData = prev?.split("\n") || [];
         if (prevData.length > MAX_LENGTH) {
-          return [...prevData.slice(1), OPEN_CONNECTION_MSG];
+          return `${prevData.slice(1).join("\n")}\n${OPEN_CONNECTION_MSG}`;
         }
 
-        return [...prevData, OPEN_CONNECTION_MSG];
+        return `${prevData.join("\n")}\n${OPEN_CONNECTION_MSG}`;
       });
     };
 
@@ -85,28 +81,29 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
           }
         }
 
-        const prevData = prev || [];
+        const prevData = prev?.split("\n") || [];
         if (prevData.length > MAX_LENGTH) {
-          return [...prevData.slice(1), event.data];
+          return `${prevData.slice(1).join("\n")}\n${event.data}`;
         }
-        return [...prevData, event.data];
+
+        return `${prevData.join("\n")}\n${event.data}`;
       });
     };
 
     socket.onclose = () => {
       next(null, (prev) => {
-        const prevData = prev || [];
+        const prevData = prev?.split("\n") || [];
         setCounter(TIME_INTERVAL);
         timeoutRef.current = setTimeout(() => {
           setCount((c) => c + 1);
         }, TIME_INTERVAL);
 
-        return [...prevData, CLOSE_CONNECTION_MSG];
+        return `${prevData.join("\n")}\n${CLOSE_CONNECTION_MSG}`;
       });
     };
 
     return () => {
-      next(null, () => []);
+      next(null, () => "");
       socket.close();
     };
   };
@@ -175,80 +172,54 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
         Showing latest 200 logs
       </p>
       <div className="relative">
-        <div
+        <Textarea
           ref={logsElement}
-          className="relative overflow-y-auto text-white bg-black border px-3 py-1 h-[500px] rounded-lg"
+          disabled
+          className="h-[500px] disabled:cursor-default overflow-y-auto border-foreground/10 disabled:opacity-100 py-0 resize-none"
+          value={data}
           onScroll={handleScroll}
-        >
-          <ul>
-            {data?.map((log, i) => (
-              <li
-                className={`${
-                  log === OPEN_CONNECTION_MSG
-                    ? "text-success"
-                    : log === CLOSE_CONNECTION_MSG
-                    ? "text-destructive"
-                    : ""
-                }`}
-                key={i}
-              >
-                <span>{log}</span>
-              </li>
-            ))}
-            {!!counter && (
-              <li>
-                <span>
-                  {`Will retry to connect in ${counter / 1000} seconds. `}
+          readOnly
+        />
+        {!!counter && (
+          <p>
+            <span>
+              {`Will retry to connect in ${counter / 1000}  seconds.`}, click to{" "}
+            </span>
+            <Button
+              variant="link"
+              type="button"
+              onClick={cancelReconnect}
+              className="p-0 text-destructive hover:cursor-pointer"
+              asChild
+            >
+              <span>Cancel</span>
+            </Button>
+          </p>
+        )}
+        <div className="absolute z-1 flex flex-col -right-14 top-0">
+          <Tooltip content="FullScreen" side="right">
+            <Button
+              onClick={toggleFullscreen}
+              type="button"
+              variant="ghost"
+              size="icon"
+            >
+              <Expand className="w-7 h-7" />
+            </Button>
+          </Tooltip>
 
-                  <button
-                    type="button"
-                    onClick={cancelReconnect}
-                    className={`underline hover:no-underline text-xs text-red-500 disabled:sr-only`}
-                  >
-                    Cancel
-                  </button>
-                </span>
-              </li>
-            )}
-          </ul>
-        </div>
-        <div className="absolute z-10 text-white space-y-4 flex flex-col -right-14 top-0">
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={toggleFullscreen}
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                >
-                  <Expand className="w-7 h-7" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right" align="start">
-                FullScreen
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={scrollToBottom}
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  disabled={isAtBottom}
-                >
-                  <ArrowDown className="w-7 h-7" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right" align="start">
-                Follow Logs
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Tooltip content="Follow Logs" side="right">
+            <Button
+              className="mt-4"
+              onClick={scrollToBottom}
+              type="button"
+              variant="ghost"
+              size="icon"
+              disabled={isAtBottom}
+            >
+              <ArrowDown className="w-7 h-7" />
+            </Button>
+          </Tooltip>
         </div>
       </div>
     </div>
