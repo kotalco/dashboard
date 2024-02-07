@@ -16,7 +16,7 @@ export const CheckpointSync = ({ node, role, errors }: CheckpointSyncProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Checkpoint Sync" />{" "}
+      <Heading variant="h2" title="Checkpoint Sync" id="checkpoint-sync" />{" "}
       <Input
         className="max-w-xs"
         id="checkpointSyncUrl"

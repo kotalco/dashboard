@@ -3,6 +3,7 @@ import { getClientUrl, getEnumKey } from "@/lib/utils";
 import { BeaconNode } from "@/types";
 
 import { ExternalLink } from "@/components/ui/external-link";
+import { Heading } from "@/components/ui/heading";
 
 interface ProtocolProps {
   node: BeaconNode;
@@ -12,6 +13,7 @@ export const Protocol = ({ node }: ProtocolProps) => {
   const { network, client } = node;
   return (
     <>
+      <Heading variant="h2" title="Protocol" id="protocol" />
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm">Protocol</span>

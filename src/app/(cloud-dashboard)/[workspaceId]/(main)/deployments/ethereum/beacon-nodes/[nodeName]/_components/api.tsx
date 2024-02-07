@@ -15,7 +15,7 @@ export const Api = ({ node, role, errors }: ApiProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="API" />
+      <Heading variant="h2" title="API" id="api" />
       {(client === BeaconNodeClients["ConsenSys Teku"] ||
         client === BeaconNodeClients["Sigma Prime Lighthouse"] ||
         client === BeaconNodeClients["Status.im Nimbus"]) && (
