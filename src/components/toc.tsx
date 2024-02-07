@@ -11,7 +11,7 @@ export const TOC = ({ children }: TOCProps) => {
   useEffect(() => {
     tocbot.init({
       tocSelector: ".toc",
-      contentSelector: "#content",
+      contentSelector: ".content",
       headingSelector: "h2",
       positionFixedSelector: ".toc",
       fixedSidebarOffset: 250,
@@ -21,9 +21,9 @@ export const TOC = ({ children }: TOCProps) => {
   }, []);
 
   return (
-    <div className="relative">
-      <nav className="toc right-0 translate-x-0 top-0 h-full w-72 overflow-y-auto z-[1] pt-4 p-8 absolute" />
-      <div id="content">{children}</div>
+    <div>
+      <nav className="toc right-0 translate-x-0 mt-1 top-80 h-full w-72 lg:w-96 overflow-y-auto z-[1] pt-4 p-8 absolute" />
+      <div className="content">{children}</div>
     </div>
   );
 };
