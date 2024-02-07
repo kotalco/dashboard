@@ -18,6 +18,7 @@ import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
+import { TableOfContent } from "@/components/table-of-content";
 import { Resources } from "@/components/shared/deployments/resources";
 
 import { Protocol } from "./protocol";
@@ -99,55 +100,57 @@ export const NodeConfig = ({
   };
 
   return (
-    <form action={onSubmit} className="space-y-16">
-      <div className="space-y-4">
-        {/* Protocol */}
-        <Protocol node={node} />
+    <TableOfContent>
+      <form action={onSubmit} className="space-y-16">
+        <div className="space-y-4">
+          {/* Protocol */}
+          <Protocol node={node} />
 
-        {/* Image Version */}
-        <ImageVersion
+          {/* Image Version */}
+          <ImageVersion
+            role={role}
+            versions={versions}
+            image={image}
+            errors={fieldErrors}
+          />
+        </div>
+
+        {/* Networking */}
+        <Networking
           role={role}
-          versions={versions}
-          image={image}
           errors={fieldErrors}
+          node={node}
+          privateKeys={privateKeys}
         />
-      </div>
 
-      {/* Networking */}
-      <Networking
-        role={role}
-        errors={fieldErrors}
-        node={node}
-        privateKeys={privateKeys}
-      />
+        {/* API */}
+        <Api role={role} errors={fieldErrors} node={node} jwts={jwts} />
 
-      {/* API */}
-      <Api role={role} errors={fieldErrors} node={node} jwts={jwts} />
-
-      {/* Access Control */}
-      {node.client !== ExecutionClientClients.Nethermind && (
-        <AccessControl node={node} role={role} errors={fieldErrors} />
-      )}
-
-      {/* Logs */}
-      <Logging role={role} errors={fieldErrors} node={node} />
-
-      {/* Resources */}
-      <Resources role={role} errors={fieldErrors} node={node} />
-
-      <div className="space-y-4">
-        <SubmitSuccess success={success}>
-          Your node configrations have been updated successfully.
-        </SubmitSuccess>
-
-        <SubmitError error={error} />
-
-        {role !== Roles.Reader && (
-          <SubmitButton data-testid="submit" type="submit">
-            Update
-          </SubmitButton>
+        {/* Access Control */}
+        {node.client !== ExecutionClientClients.Nethermind && (
+          <AccessControl node={node} role={role} errors={fieldErrors} />
         )}
-      </div>
-    </form>
+
+        {/* Logs */}
+        <Logging role={role} errors={fieldErrors} node={node} />
+
+        {/* Resources */}
+        <Resources role={role} errors={fieldErrors} node={node} />
+
+        <div className="space-y-4">
+          <SubmitSuccess success={success}>
+            Your node configrations have been updated successfully.
+          </SubmitSuccess>
+
+          <SubmitError error={error} />
+
+          {role !== Roles.Reader && (
+            <SubmitButton data-testid="submit" type="submit">
+              Update
+            </SubmitButton>
+          )}
+        </div>
+      </form>
+    </TableOfContent>
   );
 };

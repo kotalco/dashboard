@@ -16,7 +16,7 @@ export const Logging = ({ node, role, errors }: LoggingProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Logging" />{" "}
+      <Heading variant="h2" title="Logging" id="logging" />{" "}
       <Select
         id="logging"
         label="Verbosity Levels"
