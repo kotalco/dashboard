@@ -1,5 +1,6 @@
 import { IPFSPeer } from "@/types";
 
+import { Heading } from "@/components/ui/heading";
 import { ExternalLink } from "@/components/ui/external-link";
 
 interface ProtocolProps {
@@ -9,6 +10,7 @@ interface ProtocolProps {
 export const Protocol = ({ node }: ProtocolProps) => {
   return (
     <>
+      <Heading title="Protocol" id="protocol" variant="h2" />
       <ul className="space-y-3">
         <li>
           <span className="text-sm">Protocol</span>

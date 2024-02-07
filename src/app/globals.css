@@ -116,3 +116,23 @@ body,
 .alert-info {
   @apply border-info/50 text-info dark:border-info [&>svg]:text-info;
 }
+
+.toc > .toc-list {
+  @apply overflow-hidden relative;
+}
+
+.toc-list {
+  @apply m-0 pl-6 text-lg text-muted-foreground space-y-3;
+}
+
+.is-active-link {
+  @apply font-bold before:bg-primary text-foreground !important;
+}
+
+.toc-link {
+  @apply before:bg-muted before:inline-block before:h-full before:left-0 before:-mt-px before:absolute before:w-0.5;
+}
+
+.toc.is-position-fixed {
+  @apply fixed top-20 right-10;
+}

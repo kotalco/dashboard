@@ -19,7 +19,7 @@ export const Resources = <T extends ResourcesInfo>({
 
   return (
     <div className="space-y-4 max-w-xs">
-      <Heading variant="h2" title="Resources" />
+      <Heading variant="h2" title="Resources" id="resources" />
       <Slider
         id="cpu"
         label="CPU"

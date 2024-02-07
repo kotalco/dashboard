@@ -16,7 +16,7 @@ export const Routing = ({ node, role, errors }: RoutingProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Routing" />
+      <Heading variant="h2" title="Routing" id="routing" />
       <Select
         id="routing"
         label="Content Routing Mechanism"
