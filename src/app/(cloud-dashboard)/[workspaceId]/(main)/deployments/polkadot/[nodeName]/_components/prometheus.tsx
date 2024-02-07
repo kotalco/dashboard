@@ -15,7 +15,7 @@ export const Prometheus = ({ node, role, errors }: PrometheusProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Prometheus" />{" "}
+      <Heading variant="h2" title="Prometheus" id="prometheus" />
       <Toggle
         id="prometheus"
         label="Prometheus"

@@ -31,7 +31,7 @@ export const Networking = ({
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Networking" />
+      <Heading variant="h2" title="Networking" id="networking" />
       <Select
         id="nodePrivateKeySecretName"
         label="Node Private Key"

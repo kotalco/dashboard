@@ -15,7 +15,7 @@ export const AccessControl = ({ node, role, errors }: AccessControlProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Access Control" />
+      <Heading variant="h2" title="Access Control" id="access-control" />
 
       <Textarea
         id="corsDomains"

@@ -13,7 +13,7 @@ export const Protocol = ({ node }: ProtocolProps) => {
   const { network, image, name } = node;
   return (
     <>
-      <Heading variant="h2" title="Protocol" />
+      <Heading variant="h2" title="Protocol" id="protocol" />
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm">Protocol</span>

@@ -13,6 +13,7 @@ import { SubmitError } from "@/components/form/submit-error";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
 import { Resources } from "@/components/shared/deployments/resources";
+import { TableOfContent } from "@/components/table-of-content";
 
 import { Protocol } from "./protocol";
 import { Networking } from "./networking";
@@ -84,59 +85,61 @@ export const NodeConfig = ({
   };
 
   return (
-    <form action={onSubmit} className="space-y-16">
-      <div className="space-y-4">
-        {/* Protocol */}
-        <Protocol node={node} />
+    <TableOfContent>
+      <form action={onSubmit} className="space-y-16">
+        <div className="space-y-4">
+          {/* Protocol */}
+          <Protocol node={node} />
 
-        {/* Image Version */}
-        <ImageVersion
+          {/* Image Version */}
+          <ImageVersion
+            role={role}
+            versions={versions}
+            image={image}
+            errors={fieldErrors}
+          />
+        </div>
+
+        {/* Networking */}
+        <Networking
           role={role}
-          versions={versions}
-          image={image}
           errors={fieldErrors}
+          node={node}
+          privateKeys={privateKeys}
         />
-      </div>
 
-      {/* Networking */}
-      <Networking
-        role={role}
-        errors={fieldErrors}
-        node={node}
-        privateKeys={privateKeys}
-      />
+        {/* Validator & API */}
+        <ValidatorApi role={role} errors={fieldErrors} node={node} />
 
-      {/* Validator & API */}
-      <ValidatorApi role={role} errors={fieldErrors} node={node} />
+        {/* Telemetry */}
+        <Telemetry role={role} errors={fieldErrors} node={node} />
 
-      {/* Telemetry */}
-      <Telemetry role={role} errors={fieldErrors} node={node} />
+        {/* Prometheus */}
+        <Prometheus role={role} errors={fieldErrors} node={node} />
 
-      {/* Prometheus */}
-      <Prometheus role={role} errors={fieldErrors} node={node} />
+        {/* Access Control */}
+        <AccessControl role={role} errors={fieldErrors} node={node} />
 
-      {/* Access Control */}
-      <AccessControl role={role} errors={fieldErrors} node={node} />
+        {/* Logs */}
+        <Logging role={role} errors={fieldErrors} node={node} />
 
-      {/* Logs */}
-      <Logging role={role} errors={fieldErrors} node={node} />
+        {/* Resources */}
+        <Resources role={role} errors={fieldErrors} node={node} />
 
-      {/* Resources */}
-      <Resources role={role} errors={fieldErrors} node={node} />
+        <div className="space-y-4">
+          <SubmitSuccess success={success}>
+            Your node configrations have been updated successfully.
+          </SubmitSuccess>
 
-      <div className="space-y-4">
-        <SubmitSuccess success={success}>
-          Your node configrations have been updated successfully.
-        </SubmitSuccess>
+          <SubmitError error={error} />
 
-        <SubmitError error={error} />
-
-        {role !== Roles.Reader && (
-          <SubmitButton data-testid="submit" type="submit">
-            Update
-          </SubmitButton>
-        )}
-      </div>
-    </form>
+          {role !== Roles.Reader && (
+            <SubmitButton data-testid="submit" type="submit">
+              Update
+            </SubmitButton>
+          )}
+        </div>
+      </form>
+    </TableOfContent>
   );
 };

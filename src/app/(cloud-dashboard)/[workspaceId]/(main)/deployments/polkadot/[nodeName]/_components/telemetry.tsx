@@ -21,7 +21,7 @@ export const Telemetry = ({ node, role, errors }: TelemetryProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Telemetry" />
+      <Heading variant="h2" title="Telemetry" id="telemetry" />
       <Toggle
         id="telemetry"
         label="Telemetry"

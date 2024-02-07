@@ -61,7 +61,7 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
     <>
       {/* Validator */}
       <div className="space-y-4">
-        <Heading variant="h2" title="Validator" />
+        <Heading variant="h2" title="Validator" id="validator" />
         <Toggle
           id="validator"
           label="Validator"
@@ -97,7 +97,7 @@ export const ValidatorApi = ({ node, role, errors }: ValidatorApiProps) => {
 
       {/* API */}
       <div className="space-y-4">
-        <Heading variant="h2" title="API" />
+        <Heading variant="h2" title="API" id="api" />
         <Toggle
           id="rpc"
           label="JSON-RPC Server"
