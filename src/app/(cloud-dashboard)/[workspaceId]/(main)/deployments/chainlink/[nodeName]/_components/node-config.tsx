@@ -10,25 +10,28 @@ import {
   OptionType,
   Version,
 } from "@/types";
-import { Protocol } from "./protocol";
-import { ImageVersion } from "@/components/shared/deployments/image-version";
 import { editChainlinkNode } from "@/actions/edit-chainlink";
-import { Database } from "./database";
-import { SubmitSuccess } from "@/components/form/submit-success";
-import { SubmitError } from "@/components/form/submit-error";
-import { SubmitButton } from "@/components/form/submit-button";
 import {
   getCheckboxValue,
   getResourcesValues,
   readSelectWithInputValue,
 } from "@/lib/utils";
+
+import { ImageVersion } from "@/components/shared/deployments/image-version";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitButton } from "@/components/form/submit-button";
+import { Resources } from "@/components/shared/deployments/resources";
+import { TableOfContent } from "@/components/table-of-content";
+
+import { Protocol } from "./protocol";
+import { Database } from "./database";
 import { ExecutionClient } from "./execution-client";
 import { Wallet } from "./wallet";
 import { Tls } from "./tls";
 import { Api } from "./api";
 import { AccessControl } from "./access-control";
 import { Logging } from "./logging";
-import { Resources } from "@/components/shared/deployments/resources";
 
 interface NodeConfigProps {
   node: ChainlinkNode;
@@ -103,67 +106,74 @@ export const NodeConfig = ({
   };
 
   return (
-    <form action={onSubmit} className="space-y-16">
-      <div className="space-y-4">
-        {/* Protocol */}
-        <Protocol node={node} />
+    <TableOfContent>
+      <form action={onSubmit} className="space-y-16">
+        <div className="space-y-4">
+          {/* Protocol */}
+          <Protocol node={node} />
 
-        {/* Image Version */}
-        <ImageVersion
+          {/* Image Version */}
+          <ImageVersion
+            role={role}
+            versions={versions}
+            image={image}
+            errors={fieldErrors}
+          />
+        </div>
+
+        {/* Database */}
+        <Database role={role} errors={fieldErrors} node={node} />
+
+        {/* Execution Client */}
+        <ExecutionClient
           role={role}
-          versions={versions}
-          image={image}
           errors={fieldErrors}
+          node={node}
+          executionClients={executionClients}
         />
-      </div>
 
-      {/* Database */}
-      <Database role={role} errors={fieldErrors} node={node} />
+        {/* Wallet */}
+        <Wallet
+          role={role}
+          errors={fieldErrors}
+          node={node}
+          passwords={passwords}
+        />
 
-      {/* Execution Client */}
-      <ExecutionClient
-        role={role}
-        errors={fieldErrors}
-        node={node}
-        executionClients={executionClients}
-      />
+        {/* TLS */}
+        <Tls role={role} errors={fieldErrors} node={node} tlss={tlss} />
 
-      {/* Wallet */}
-      <Wallet
-        role={role}
-        errors={fieldErrors}
-        node={node}
-        passwords={passwords}
-      />
+        {/* API */}
+        <Api
+          role={role}
+          errors={fieldErrors}
+          node={node}
+          passwords={passwords}
+        />
 
-      {/* TLS */}
-      <Tls role={role} errors={fieldErrors} node={node} tlss={tlss} />
+        {/* Access Control */}
+        <AccessControl role={role} errors={fieldErrors} node={node} />
 
-      {/* API */}
-      <Api role={role} errors={fieldErrors} node={node} passwords={passwords} />
+        {/* Logs */}
+        <Logging role={role} errors={fieldErrors} node={node} />
 
-      {/* Access Control */}
-      <AccessControl role={role} errors={fieldErrors} node={node} />
+        {/* Resources */}
+        <Resources role={role} errors={fieldErrors} node={node} />
 
-      {/* Logs */}
-      <Logging role={role} errors={fieldErrors} node={node} />
+        <div className="space-y-4">
+          <SubmitSuccess success={success}>
+            Your node configrations have been updated successfully.
+          </SubmitSuccess>
 
-      {/* Resources */}
-      <Resources role={role} errors={fieldErrors} node={node} />
+          <SubmitError error={error} />
 
-      <div className="space-y-4">
-        <SubmitSuccess success={success}>
-          Your node configrations have been updated successfully.
-        </SubmitSuccess>
-
-        <SubmitError error={error} />
-
-        {role !== Roles.Reader && (
-          <SubmitButton data-testid="submit" type="submit">
-            Update
-          </SubmitButton>
-        )}
-      </div>
-    </form>
+          {role !== Roles.Reader && (
+            <SubmitButton data-testid="submit" type="submit">
+              Update
+            </SubmitButton>
+          )}
+        </div>
+      </form>
+    </TableOfContent>
   );
 };

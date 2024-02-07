@@ -36,7 +36,7 @@ export const ExecutionClient = ({
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Execution Client" />
+      <Heading variant="h2" title="Execution Client" id="execution-client" />
       <SelectWithInput
         id="ethereumWsEndpoint"
         label="Execution Client Websocket Endpoint"

@@ -23,7 +23,7 @@ export const Api = ({ node, role, passwords, errors }: ApiProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="API" />
+      <Heading variant="h2" title="API" id="api" />
       <Toggle
         id="api"
         label="API"

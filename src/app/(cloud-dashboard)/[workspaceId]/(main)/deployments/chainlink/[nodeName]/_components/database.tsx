@@ -15,7 +15,7 @@ export const Database = ({ node, role, errors }: DatabaseProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Database" />
+      <Heading variant="h2" title="Database" id="database" />
       <Input
         id="databaseURL"
         label="Database Connection URL"

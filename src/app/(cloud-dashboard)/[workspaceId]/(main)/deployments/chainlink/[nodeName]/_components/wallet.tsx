@@ -19,7 +19,7 @@ export const Wallet = ({ node, role, passwords }: WalletProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Wallet" />
+      <Heading variant="h2" title="Wallet" id="wallet" />
       <Select
         id="keystorePasswordSecretName"
         label="Keystore password"

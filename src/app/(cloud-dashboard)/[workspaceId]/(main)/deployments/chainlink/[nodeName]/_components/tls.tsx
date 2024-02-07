@@ -25,7 +25,7 @@ export const Tls = ({ node, role, tlss, errors }: TlsProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="TLS" />
+      <Heading variant="h2" title="TLS" id="tls" />
       <Select
         id="certSecretName"
         label="Certificate"

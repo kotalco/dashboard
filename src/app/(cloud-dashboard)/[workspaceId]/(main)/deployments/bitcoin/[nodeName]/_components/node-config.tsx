@@ -1,5 +1,7 @@
 "use client";
 
+import { useParams } from "next/navigation";
+
 import { editBitcoinNode } from "@/actions/edit-bitcoin";
 import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
@@ -9,16 +11,17 @@ import {
   readFieldArray,
 } from "@/lib/utils";
 import { BitcoinNode, OptionType, RPCUser, Version } from "@/types";
-import { useParams } from "next/navigation";
-import { Protocol } from "./protocol";
-import { ImageVersion } from "@/components/shared/deployments/image-version";
-import { Api } from "./api";
-import { Wallet } from "./wallet";
+
 import { Resources } from "@/components/shared/deployments/resources";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { SubmitError } from "@/components/form/submit-error";
 import { SubmitButton } from "@/components/form/submit-button";
 import { TableOfContent } from "@/components/table-of-content";
+
+import { Protocol } from "./protocol";
+import { ImageVersion } from "@/components/shared/deployments/image-version";
+import { Api } from "./api";
+import { Wallet } from "./wallet";
 
 interface NodeConfigProps {
   node: BitcoinNode;
