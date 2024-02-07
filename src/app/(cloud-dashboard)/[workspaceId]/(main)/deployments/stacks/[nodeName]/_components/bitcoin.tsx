@@ -24,7 +24,7 @@ export const Bitcoin = ({ node, role, bitcoinNodes, errors }: BitcoinProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Bitcoin" />
+      <Heading variant="h2" title="Bitcoin" id="bitcoin" />
       <Select
         id="bitcoinNode"
         label="Bitcoin Node"

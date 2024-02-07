@@ -24,7 +24,7 @@ export const Mining = ({ node, role, privateKeys, errors }: MiningProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Mining" />
+      <Heading variant="h2" title="Mining" id="mining" />
       <Toggle
         id="miner"
         label="Miner"
