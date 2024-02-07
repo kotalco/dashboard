@@ -17,7 +17,9 @@ export const TOC = ({ children }: TOCProps) => {
       fixedSidebarOffset: 250,
     });
 
-    return () => tocbot.destroy();
+    return () => {
+      tocbot.destroy();
+    };
   }, []);
 
   return (

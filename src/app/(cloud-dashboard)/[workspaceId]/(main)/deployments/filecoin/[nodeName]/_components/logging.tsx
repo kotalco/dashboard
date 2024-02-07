@@ -15,7 +15,7 @@ export const Logging = ({ node, role, errors }: LoggingProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Logs" />
+      <Heading variant="h2" title="Logs" id="logging" />
       <Toggle
         id="disableMetadataLog"
         label="Disable Metadata Logs"

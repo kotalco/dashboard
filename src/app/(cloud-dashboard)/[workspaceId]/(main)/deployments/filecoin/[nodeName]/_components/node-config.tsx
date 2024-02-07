@@ -17,6 +17,7 @@ import { SubmitError } from "@/components/form/submit-error";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
 import { Resources } from "@/components/shared/deployments/resources";
+import { TOC } from "@/components/toc";
 
 import { Protocol } from "./protocol";
 import { Api } from "./api";
@@ -76,45 +77,47 @@ export const NodeConfig = ({
   };
 
   return (
-    <form action={onSubmit} className="space-y-16">
-      <div className="space-y-4">
-        {/* Protocol */}
-        <Protocol node={node} />
+    <TOC>
+      <form action={onSubmit} className="space-y-16">
+        <div className="space-y-4">
+          {/* Protocol */}
+          <Protocol node={node} />
 
-        {/* Image Version */}
-        <ImageVersion
-          role={role}
-          versions={versions}
-          image={image}
-          errors={fieldErrors}
-        />
-      </div>
+          {/* Image Version */}
+          <ImageVersion
+            role={role}
+            versions={versions}
+            image={image}
+            errors={fieldErrors}
+          />
+        </div>
 
-      {/* API */}
-      <Api role={role} errors={fieldErrors} node={node} />
+        {/* API */}
+        <Api role={role} errors={fieldErrors} node={node} />
 
-      {/* IPFS */}
-      <Ipfs role={role} errors={fieldErrors} node={node} peers={peers} />
+        {/* IPFS */}
+        <Ipfs role={role} errors={fieldErrors} node={node} peers={peers} />
 
-      {/* Logs */}
-      <Logging role={role} errors={fieldErrors} node={node} />
+        {/* Logs */}
+        <Logging role={role} errors={fieldErrors} node={node} />
 
-      {/* Resources */}
-      <Resources role={role} errors={fieldErrors} node={node} />
+        {/* Resources */}
+        <Resources role={role} errors={fieldErrors} node={node} />
 
-      <div className="space-y-4">
-        <SubmitSuccess success={success}>
-          Your node configrations have been updated successfully.
-        </SubmitSuccess>
+        <div className="space-y-4">
+          <SubmitSuccess success={success}>
+            Your node configrations have been updated successfully.
+          </SubmitSuccess>
 
-        <SubmitError error={error} />
+          <SubmitError error={error} />
 
-        {role !== Roles.Reader && (
-          <SubmitButton data-testid="submit" type="submit">
-            Update
-          </SubmitButton>
-        )}
-      </div>
-    </form>
+          {role !== Roles.Reader && (
+            <SubmitButton data-testid="submit" type="submit">
+              Update
+            </SubmitButton>
+          )}
+        </div>
+      </form>
+    </TOC>
   );
 };

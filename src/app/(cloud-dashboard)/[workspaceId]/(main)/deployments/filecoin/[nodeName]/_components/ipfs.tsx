@@ -22,7 +22,7 @@ export const Ipfs = ({ node, role, peers, errors }: IpfsProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="IPFS" />
+      <Heading variant="h2" title="IPFS" id="ipfs" />
       <Toggle
         id="ipfsForRetrieval"
         label="Use IPFS For Retrieval"
