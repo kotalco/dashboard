@@ -17,7 +17,7 @@ import { SubmitError } from "@/components/form/submit-error";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
 import { Resources } from "@/components/shared/deployments/resources";
-import { TOC } from "@/components/toc";
+import { TableOfContent } from "@/components/table-of-content";
 
 import { Protocol } from "./protocol";
 import { Api } from "./api";
@@ -77,7 +77,7 @@ export const NodeConfig = ({
   };
 
   return (
-    <TOC>
+    <TableOfContent>
       <form action={onSubmit} className="space-y-16">
         <div className="space-y-4">
           {/* Protocol */}
@@ -118,6 +118,6 @@ export const NodeConfig = ({
           )}
         </div>
       </form>
-    </TOC>
+    </TableOfContent>
   );
 };

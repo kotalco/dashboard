@@ -13,11 +13,11 @@ import { SubmitError } from "@/components/form/submit-error";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { Resources } from "@/components/shared/deployments/resources";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
-import { TOC } from "@/components/toc";
 
 import { Protocol } from "./protocol";
 import { Api } from "./api";
 import { Routing } from "./routing";
+import { TableOfContent } from "@/components/table-of-content";
 
 interface NodeConfigProps {
   node: IPFSPeer;
@@ -57,7 +57,7 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
   };
 
   return (
-    <TOC>
+    <TableOfContent>
       <form action={onSubmit} className="space-y-16">
         <div className="space-y-4">
           {/* Protocol */}
@@ -95,6 +95,6 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
           )}
         </div>
       </form>
-    </TOC>
+    </TableOfContent>
   );
 };
