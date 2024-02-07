@@ -8,8 +8,8 @@ import { Roles, SecretType } from "@/enums";
 
 import { Select } from "@/components/form/select";
 import { Textarea } from "@/components/form/textarea";
-import { Input } from "@/components/form/input";
 import { Heading } from "@/components/ui/heading";
+import { Slider } from "@/components/form/slider";
 
 interface NetworkingProps {
   node: NEARNode;
@@ -49,14 +49,19 @@ export const Networking = ({
         className="max-w-xs"
       />
 
-      <Input
-        id="minPeers"
-        label="Minimum Peers"
-        disabled={role === Roles.Reader}
-        defaultValue={minPeers}
-        errors={errors}
-        className="max-w-xs"
-      />
+      <div className="max-w-xs">
+        <Slider
+          id="minPeers"
+          label="Minimum Peers"
+          defaultValue={[minPeers.toString()]}
+          min={3}
+          max={60}
+          step={3}
+          unit="Peers"
+          disabled={role === Roles.Reader}
+          errors={errors}
+        />
+      </div>
 
       <Textarea
         id="bootnodes"

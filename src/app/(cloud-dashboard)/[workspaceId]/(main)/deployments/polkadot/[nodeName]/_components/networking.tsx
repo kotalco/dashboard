@@ -8,9 +8,9 @@ import { PolkadotSyncModes, Roles, SecretType } from "@/enums";
 import { getSelectItems } from "@/lib/utils";
 
 import { Select } from "@/components/form/select";
-import { Input } from "@/components/form/input";
 import { Toggle } from "@/components/form/toggle";
 import { Heading } from "@/components/ui/heading";
+import { Slider } from "@/components/form/slider";
 
 interface NetWorkingProps {
   node: PolkadotNode;
@@ -62,14 +62,19 @@ export const Networking = ({
 
       <Toggle id="pruning" label="Pruning" disabled defaultChecked={pruning} />
 
-      <Input
-        id="retainedBlocks"
-        label="Retain Blocks"
-        disabled={role === Roles.Reader}
-        defaultValue={retainedBlocks}
-        errors={errors}
-        className="max-w-xs"
-      />
+      <div className="max-w-xs">
+        <Slider
+          id="retainedBlocks"
+          label="Retain Blocks"
+          defaultValue={[retainedBlocks.toString()]}
+          min={256}
+          max={10240}
+          step={256}
+          unit="Blocks"
+          disabled={role === Roles.Reader}
+          errors={errors}
+        />
+      </div>
     </div>
   );
 };
