@@ -14,7 +14,7 @@ export const Protocol = ({ node }: ProtocolProps) => {
 
   return (
     <>
-      <Heading variant="h2" title="Protocol" />
+      <Heading variant="h2" title="Protocol" id="protocol" />
       <ul className="space-y-4">
         <li className="flex flex-col">
           <span className="leading-none text-sm">Protocol</span>

@@ -16,6 +16,7 @@ import { ImageVersion } from "@/components/shared/deployments/image-version";
 
 import { Api } from "./api";
 import { Protocol } from "./protocol";
+import { TableOfContent } from "@/components/table-of-content";
 
 interface NodeConfigProps {
   node: AptosNode;
@@ -51,39 +52,41 @@ export const NodeConfig = ({ node, role, versions }: NodeConfigProps) => {
   };
 
   return (
-    <form action={onSubmit} className="space-y-16">
-      <div className="space-y-4">
-        {/* Protocol */}
-        <Protocol node={node} />
+    <TableOfContent>
+      <form action={onSubmit} className="space-y-16">
+        <div className="space-y-4">
+          {/* Protocol */}
+          <Protocol node={node} />
 
-        {/* Image Version */}
-        <ImageVersion
-          role={role}
-          versions={versions}
-          image={image}
-          errors={fieldErrors}
-        />
-      </div>
+          {/* Image Version */}
+          <ImageVersion
+            role={role}
+            versions={versions}
+            image={image}
+            errors={fieldErrors}
+          />
+        </div>
 
-      {/* API */}
-      <Api role={role} errors={fieldErrors} node={node} />
+        {/* API */}
+        <Api role={role} errors={fieldErrors} node={node} />
 
-      {/* Resources */}
-      <Resources role={role} errors={fieldErrors} node={node} />
+        {/* Resources */}
+        <Resources role={role} errors={fieldErrors} node={node} />
 
-      <div className="space-y-4">
-        <SubmitSuccess success={success}>
-          Your node configrations have been updated successfully.
-        </SubmitSuccess>
+        <div className="space-y-4">
+          <SubmitSuccess success={success}>
+            Your node configrations have been updated successfully.
+          </SubmitSuccess>
 
-        <SubmitError error={error} />
+          <SubmitError error={error} />
 
-        {role !== Roles.Reader && (
-          <SubmitButton data-testid="submit" type="submit">
-            Update
-          </SubmitButton>
-        )}
-      </div>
-    </form>
+          {role !== Roles.Reader && (
+            <SubmitButton data-testid="submit" type="submit">
+              Update
+            </SubmitButton>
+          )}
+        </div>
+      </form>
+    </TableOfContent>
   );
 };
