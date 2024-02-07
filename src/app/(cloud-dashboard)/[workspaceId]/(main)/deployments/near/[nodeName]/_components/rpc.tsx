@@ -15,7 +15,7 @@ export const Rpc = ({ node, role, errors }: RpcProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="RPC" />
+      <Heading variant="h2" title="RPC" id="rpc" />
       <Toggle
         id="rpc"
         label="JSON-RPC Server"

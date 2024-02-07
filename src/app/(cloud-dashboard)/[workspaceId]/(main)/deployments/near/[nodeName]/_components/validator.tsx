@@ -28,7 +28,7 @@ export const Validator = ({
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Validator" />
+      <Heading variant="h2" title="Validator" id="validator" />
       <Select
         id="validatorSecretName"
         label="Validator Key"
