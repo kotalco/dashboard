@@ -13,10 +13,10 @@ import { SubmitError } from "@/components/form/submit-error";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { Resources } from "@/components/shared/deployments/resources";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
+import { TableOfContent } from "@/components/table-of-content";
 
 import { Api } from "./api";
 import { Protocol } from "./protocol";
-import { TableOfContent } from "@/components/table-of-content";
 
 interface NodeConfigProps {
   node: AptosNode;

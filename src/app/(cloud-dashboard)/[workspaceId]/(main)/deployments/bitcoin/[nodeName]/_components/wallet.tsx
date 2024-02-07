@@ -17,7 +17,7 @@ export const Wallet = ({ node, role, errors }: WalletProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Wallet" />
+      <Heading variant="h2" title="Wallet" id="wallet" />
       <Toggle
         id="wallet"
         label="Wallet"
