@@ -38,7 +38,7 @@ export const BeaconNodeConfig = ({
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Beacon Node" />
+      <Heading variant="h2" title="Beacon Node" id="beacon-node" />
       <MultiSelect
         id="beaconEndpoints"
         label="Beacon Node Endpoints"

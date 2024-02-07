@@ -29,7 +29,7 @@ export const Keystore = ({
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Keystore" />
+      <Heading variant="h2" title="Keystore" id="keystore" />
       <MultiSelect
         id="keystores"
         label="Ethereum Keystores"

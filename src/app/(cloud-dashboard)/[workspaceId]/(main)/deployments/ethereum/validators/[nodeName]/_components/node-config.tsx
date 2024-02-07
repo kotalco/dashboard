@@ -13,6 +13,7 @@ import { SubmitError } from "@/components/form/submit-error";
 import { SubmitSuccess } from "@/components/form/submit-success";
 import { Resources } from "@/components/shared/deployments/resources";
 import { ImageVersion } from "@/components/shared/deployments/image-version";
+import { TableOfContent } from "@/components/table-of-content";
 
 import { Protocol } from "./protocol";
 import { Graffiti } from "./graffiti";
@@ -73,58 +74,60 @@ export const NodeConfig = ({
       workspaceId,
     });
   };
-  console.log(fieldErrors);
-  return (
-    <form action={onSubmit} className="space-y-16">
-      <div className="space-y-4">
-        {/* Protocol */}
-        <Protocol node={node} />
 
-        {/* Image Version */}
-        <ImageVersion
+  return (
+    <TableOfContent>
+      <form action={onSubmit} className="space-y-16">
+        <div className="space-y-4">
+          {/* Protocol */}
+          <Protocol node={node} />
+
+          {/* Image Version */}
+          <ImageVersion
+            role={role}
+            versions={versions}
+            image={image}
+            errors={fieldErrors}
+          />
+        </div>
+
+        {/* Graffiti */}
+        <Graffiti node={node} role={role} errors={fieldErrors} />
+
+        {/* Keystores */}
+        <Keystore
+          node={node}
           role={role}
-          versions={versions}
-          image={image}
+          errors={fieldErrors}
+          ethereumKeystores={keystores}
+          passwords={passwords}
+        />
+
+        {/* Beacon Node */}
+        <BeaconNodeConfig
+          node={node}
+          role={role}
+          beaconNodes={beaconNodes}
           errors={fieldErrors}
         />
-      </div>
 
-      {/* Graffiti */}
-      <Graffiti node={node} role={role} errors={fieldErrors} />
+        {/* Resources */}
+        <Resources role={role} errors={fieldErrors} node={node} />
 
-      {/* Keystores */}
-      <Keystore
-        node={node}
-        role={role}
-        errors={fieldErrors}
-        ethereumKeystores={keystores}
-        passwords={passwords}
-      />
+        <div className="space-y-4">
+          <SubmitSuccess success={success}>
+            Your node configrations have been updated successfully.
+          </SubmitSuccess>
 
-      {/* Beacon Node */}
-      <BeaconNodeConfig
-        node={node}
-        role={role}
-        beaconNodes={beaconNodes}
-        errors={fieldErrors}
-      />
+          <SubmitError error={error} />
 
-      {/* Resources */}
-      <Resources role={role} errors={fieldErrors} node={node} />
-
-      <div className="space-y-4">
-        <SubmitSuccess success={success}>
-          Your node configrations have been updated successfully.
-        </SubmitSuccess>
-
-        <SubmitError error={error} />
-
-        {role !== Roles.Reader && (
-          <SubmitButton data-testid="submit" type="submit">
-            Update
-          </SubmitButton>
-        )}
-      </div>
-    </form>
+          {role !== Roles.Reader && (
+            <SubmitButton data-testid="submit" type="submit">
+              Update
+            </SubmitButton>
+          )}
+        </div>
+      </form>
+    </TableOfContent>
   );
 };

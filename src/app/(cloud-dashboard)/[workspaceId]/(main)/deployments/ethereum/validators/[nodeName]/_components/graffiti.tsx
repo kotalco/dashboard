@@ -15,7 +15,7 @@ export const Graffiti = ({ node, role, errors }: GraffitiProps) => {
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Graffiti" />
+      <Heading variant="h2" title="Graffiti" id="graffiti" />
       <Input
         id="graffiti"
         label="Graffiti"
