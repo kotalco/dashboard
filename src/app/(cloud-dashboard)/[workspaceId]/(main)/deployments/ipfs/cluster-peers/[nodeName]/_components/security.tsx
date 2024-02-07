@@ -8,7 +8,7 @@ interface SecurityProps {
 
 export const Security = ({ node }: SecurityProps) => {
   return (
-    <>
+    <div className="space-y-4">
       <Heading variant="h2" title="Security" id="security" />
       <ul className="space-y-3">
         <li className="flex flex-col">
@@ -20,6 +20,6 @@ export const Security = ({ node }: SecurityProps) => {
           </span>
         </li>
       </ul>
-    </>
+    </div>
   );
 };
