@@ -35,7 +35,7 @@ export const Peers = ({
 
   return (
     <div className="space-y-4">
-      <Heading variant="h2" title="Peers" />
+      <Heading variant="h2" title="Peers" id="peers" />
       <SelectWithInput
         id="peerEndpoint"
         label="IPFS Peer"

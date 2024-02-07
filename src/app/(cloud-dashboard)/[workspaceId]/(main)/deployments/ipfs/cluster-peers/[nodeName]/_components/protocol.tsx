@@ -3,6 +3,7 @@ import { getEnumKey } from "@/lib/utils";
 import { IPFSClusterPeer } from "@/types";
 
 import { ExternalLink } from "@/components/ui/external-link";
+import { Heading } from "@/components/ui/heading";
 
 interface ProtocolProps {
   node: IPFSClusterPeer;
@@ -13,6 +14,7 @@ export const Protocol = ({ node }: ProtocolProps) => {
 
   return (
     <>
+      <Heading variant="h2" title="Protocol" id="protocol" />
       <ul className="space-y-3">
         <li className="flex flex-col">
           <span className="text-sm">Protocol</span>
