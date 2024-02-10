@@ -66,18 +66,7 @@ export const ManagePlanCard = async () => {
           <PlanDetails />
         </CardContent>
         <CardFooter className="flex justify-end gap-x-2">
-          {!subscription.canceled_at && (
-            <div className="space-x-4">
-              <ChangePlan />
-              {!!subscription.price.price && (
-                <CancelPlan subscriptionId={subscription.id} />
-              )}
-            </div>
-          )}
-
-          {!!subscription.canceled_at && (
-            <ReactivatePlan subscriptionId={subscription.id} />
-          )}
+          {!subscription.canceled_at && <ChangePlan />}
         </CardFooter>
       </Card>
     </div>
