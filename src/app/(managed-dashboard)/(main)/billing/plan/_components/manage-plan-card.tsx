@@ -2,30 +2,25 @@ import { Suspense } from "react";
 
 import { cn, getEnumKey } from "@/lib/utils";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { SubscriptionStatus } from "@/enums";
-import { Skeleton } from "@/components/ui/skeleton";
+import { getCurrentSubscription } from "@/services/get-current-subscription";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert } from "@/components/ui/alert";
 
-import { getCurrentSubscription } from "@/services/get-current-subscription";
-import { ChangePlan } from "./change-plan";
-import { CancelPlan } from "./cancel-plan";
-import { ReactivatePlan } from "./reactivate-plan";
-import { PlanDetails } from "./plan-details";
-import { UserCreditBalance } from "./user-credit-balance";
+import { ChangePlan, ChangePlanSkeleton } from "./change-plan";
+import { PlanDetails, PlanDetailsSkeleton } from "./plan-details";
+import {
+  UserCreditBalance,
+  UserCreditBalanceSkeleton,
+} from "./user-credit-balance";
 
 export const ManagePlanCard = async () => {
   const { subscription } = await getCurrentSubscription();
 
   return (
     <div className="space-y-3">
-      <Suspense fallback={<Skeleton className="w-[200px] h-10" />}>
+      <Suspense fallback={<UserCreditBalanceSkeleton />}>
         <UserCreditBalance />
       </Suspense>
       {subscription.status === SubscriptionStatus["Past Due"] && (
@@ -62,12 +57,16 @@ export const ManagePlanCard = async () => {
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <PlanDetails />
+        <CardContent className="flex justify-between items-end">
+          <Suspense fallback={<PlanDetailsSkeleton />}>
+            <PlanDetails />
+          </Suspense>
+          {!subscription.canceled_at && (
+            <Suspense fallback={<ChangePlanSkeleton />}>
+              <ChangePlan />
+            </Suspense>
+          )}
         </CardContent>
-        <CardFooter className="flex justify-end gap-x-2">
-          {!subscription.canceled_at && <ChangePlan />}
-        </CardFooter>
       </Card>
     </div>
   );

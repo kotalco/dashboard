@@ -3,6 +3,8 @@ import { Wallet } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { getUserCredit } from "@/services/get-user-credit";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 export const UserCreditBalance = async () => {
   const { creditBalance } = await getUserCredit();
 
@@ -21,4 +23,12 @@ export const UserCreditBalance = async () => {
   }
 
   return null;
+};
+
+export const UserCreditBalanceSkeleton = () => {
+  return (
+    <div className="flex justify-end">
+      <Skeleton className="w-[200px] h-10" />
+    </div>
+  );
 };

@@ -24,7 +24,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   }
 
   await delay(1000);
-  revalidatePath("/billing/plan", "page");
+  revalidatePath("/billing/plan");
   return { data: message };
 };
 

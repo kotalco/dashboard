@@ -1,138 +1,39 @@
-"use client";
+import { getPlans } from "@/services/get-plans";
+import { getCurrentSubscription } from "@/services/get-current-subscription";
 
-import { Fragment, useTransition } from "react";
-
-import { Plan, Subscription } from "@/types";
-import { dispatchLocalStorageUpdate, findPrice } from "@/lib/utils";
-
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getProration } from "@/lib/actions";
-import { StorageItems } from "@/enums";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 
-interface PlanSelectionProps {
-  currentSubscription: Subscription;
-  plans: Plan[];
-}
+import { PlanSelectionForm } from "./plan-selection-form";
+import { Suspense } from "react";
+import { CardSelection } from "./card-selection";
 
-export const PlanSelection: React.FC<PlanSelectionProps> = ({
-  currentSubscription,
-  plans,
-}) => {
-  const [isPending, startTransition] = useTransition();
-  const planData = useLocalStorage(StorageItems.CHANGE_PLAN_DATA);
-  const currentPlanId = currentSubscription.plan.id;
-  const currentPriceId = currentSubscription.price.id;
-  const currentPrice = currentSubscription.price.price;
-  const subscriptionId = currentSubscription.id;
+export const PlanSelection = async () => {
+  const subscriptionPromise = getCurrentSubscription();
+  const plansPromise = getPlans();
 
-  const handlePlanChange = async (value: string) => {
-    startTransition(async () => {
-      localStorage.removeItem(StorageItems.CHANGE_PLAN_DATA);
-      dispatchLocalStorageUpdate(StorageItems.CHANGE_PLAN_DATA, null);
-      const state = await getProration(subscriptionId, value);
-      localStorage.setItem(
-        StorageItems.CHANGE_PLAN_DATA,
-        JSON.stringify(state)
-      );
-      dispatchLocalStorageUpdate(
-        StorageItems.CHANGE_PLAN_DATA,
-        JSON.stringify(state)
-      );
-    });
-  };
+  const [{ plans }, { subscription }] = await Promise.all([
+    plansPromise,
+    subscriptionPromise,
+  ]);
+
+  const otherPlans = plans?.filter((plan) => plan.id !== subscription.plan.id);
 
   return (
-    <>
-      <div className="w-5/12 pr-6">
-        <RadioGroup
-          name="plan"
-          defaultValue={`${currentPlanId},${currentPriceId},${currentPrice}`}
-          onValueChange={handlePlanChange}
-          className="space-y-3"
-        >
-          {plans?.map((plan) => {
-            const price = findPrice(plan);
-            return (
-              <Label
-                key={plan.id}
-                className={`p-4 relative rounded-lg border flex justify-between items-center cursor-pointer`}
-              >
-                <div>
-                  <div className="flex space-x-5 items-center">
-                    <p className="text-lg font-bold font-nunito">{plan.name}</p>
-                    {`${currentPlanId},${currentPriceId},${currentPrice}` ===
-                      `${plan.id},${price?.id},${price?.price}` && (
-                      <Badge className="">Current Plan</Badge>
-                    )}
-                  </div>
-                  <div className="flex gap-x-4 w-full mb-3">
-                    <p className="text-base font-semibold">
-                      {plan.endpoint_limit}{" "}
-                      {plan.endpoint_limit > 1 ? "endpoints" : "endpoint"}
-                    </p>
-                    <p className="text-base font-semibold">
-                      {plan.request_limit}{" "}
-                      {plan.request_limit > 1 ? "requests/sec" : "request/sec"}
-                    </p>
-                  </div>
+    <div className="space-y-3">
+      <PlanSelectionForm plans={otherPlans} subscriptionId={subscription.id}>
+        <Suspense fallback={<div>Loading</div>}>
+          <CardSelection />
+        </Suspense>
+      </PlanSelectionForm>
+    </div>
+  );
+};
 
-                  <p className="text-sm">
-                    $
-                    {
-                      plan.prices.find(({ period }) => period === "monthly")
-                        ?.price
-                    }{" "}
-                    / Month
-                  </p>
-                </div>
-                <div className="inline-block w-4 h-4 rounded-full">
-                  <div className="w-2 h-2 m-auto mt-0.5 rounded-full ui-checked:border-2 ui-checked:border-primary ui-checked:bg-primary" />
-                </div>
-                <RadioGroupItem
-                  disabled={
-                    `${currentPlanId},${currentPriceId},${currentPrice}` ===
-                    `${plan.id},${price?.id},${price?.price}`
-                  }
-                  value={`${plan.id},${price?.id},${price?.price}`}
-                />
-              </Label>
-            );
-          })}
-        </RadioGroup>
-      </div>
-
-      {isPending && (
-        <div className="w-7/12 pl-6">
-          <div className="justify-between flex flex-col relative h-full overflow-hidden">
-            <div className="space-y-3">
-              {Array.from({ length: 2 }, (_, index) => (
-                <Fragment key={index}>
-                  <div className="flex justify-between">
-                    <Skeleton className="w-2/4 h-6" />
-                    <Skeleton className="w-1/4 h-6" />
-                  </div>
-                  <div className="flex justify-between">
-                    <Skeleton className="w-1/4 h-6" />
-                    <Skeleton className="w-1/4 h-6" />
-                  </div>
-                </Fragment>
-              ))}
-            </div>
-
-            <Skeleton className="w-full h-10 mt-20" />
-          </div>
-        </div>
-      )}
-
-      {!planData && !isPending && (
-        <div className="w-7/12 pl-6 flex justify-center items-center border text-xl font-semibold rounded-lg text-accent-foreground">
-          <p>Please select your new plan</p>
-        </div>
-      )}
-    </>
+export const PlanSelectionSkeleton = () => {
+  return (
+    <div className="flex flex-col space-y-3">
+      <Skeleton className="w-full h-[118px]" />
+      <Skeleton className="w-full h-[118px]" />
+    </div>
   );
 };

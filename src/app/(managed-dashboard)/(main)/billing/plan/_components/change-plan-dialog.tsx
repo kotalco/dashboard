@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { StorageItems } from "@/enums";
+import { useChangeSubscriptionModal } from "@/hooks/use-change-subscription-modal";
+import { delay } from "@/lib/utils";
 
 interface ChangePlanDialogProps {
   children: React.ReactNode;
@@ -12,19 +14,23 @@ interface ChangePlanDialogProps {
 export const ChangePlanDialog: React.FC<ChangePlanDialogProps> = ({
   children,
 }) => {
-  const [open, setOpen] = useState(false);
+  const { onClose, setStep, isOpen, onOpen } = useChangeSubscriptionModal();
 
-  const handleOpenChange = (open: boolean) => {
+  const handleOpenChange = async (open: boolean) => {
     if (!open) {
-      localStorage.removeItem(StorageItems.CHANGE_PLAN_DATA);
+      onClose();
+      await delay(100);
+      setStep(1);
     }
 
-    setOpen(open);
+    if (open) {
+      onOpen();
+    }
   };
 
   return (
     <>
-      <Dialog open={open} onOpenChange={handleOpenChange}>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
           <Button type="button">Change Plan</Button>
         </DialogTrigger>

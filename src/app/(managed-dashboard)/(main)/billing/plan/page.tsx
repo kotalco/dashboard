@@ -13,7 +13,9 @@ export default async function PlanPage({
 }) {
   return (
     <div className="space-y-8">
-      <ManagePlanCard />
+      <Suspense fallback={<Skeleton className="w-full h-36" />}>
+        <ManagePlanCard />
+      </Suspense>
       <Suspense fallback={<Skeleton className="w-full h-60" />}>
         <InvoicesHistory limit={searchParams.limit} />
       </Suspense>

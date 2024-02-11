@@ -74,7 +74,7 @@ export const CardSelection = async () => {
             {defaultCard ? (
               <Badge variant="secondary">Default</Badge>
             ) : (
-              <div className="ml-14" />
+              <div className="ml-16" />
             )}
           </Label>
         )
