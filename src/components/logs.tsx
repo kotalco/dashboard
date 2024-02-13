@@ -175,7 +175,7 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
         <Textarea
           ref={logsElement}
           disabled
-          className="h-[500px] disabled:cursor-default overflow-y-auto border-foreground/10 disabled:opacity-100 py-0 resize-none"
+          className="h-[500px] disabled:cursor-default overflow-y-auto bg-[#1E1E1E] text-white/90 border-foreground/10 disabled:opacity-100 py-0 resize-none"
           value={data}
           onScroll={handleScroll}
           readOnly
