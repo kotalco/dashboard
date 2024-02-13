@@ -28,7 +28,7 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
       <CardHeader>
         <CardTitle>Invoices</CardTitle>
       </CardHeader>
-      <CardContent className="text-center">
+      <CardContent className="text-center px-0">
         <table className="w-full">
           <tbody>
             {invoices.map(
@@ -42,28 +42,25 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
                 amount_due,
               }) => (
                 <Fragment key={id}>
-                  <tr className="relative text-sm group">
+                  <tr className="relative text-sm group hover:bg-muted transition-all duration-300">
                     <td
-                      className={`flex items-center pt-3 align-middle space-x-3 max-w-fit`}
+                      className={`flex items-center pt-3 space-x-3 max-w-fit pl-6`}
                     >
                       <span className="font-bold leading-6">
                         {format(fromUnixTime(created_at), "MMMM do, yyyy")}
                       </span>
                     </td>
-                    <td className="pt-3 font-medium leading-6">
-                      {description}
-                    </td>
-                    <td className="pt-3 text-muted-foreground leading-6 text-right align-middle">
+                    <td className="text-muted-foreground leading-6 text-right">
                       {formatCurrency(amount_due)}
                     </td>
                     <td
-                      className={`text-sm font-normal align-middle pt-3 leading-6 text-right capitalize ${
+                      className={`text-sm font-normal leading-6 text-right capitalize ${
                         InvoiceStatus.Paid ? "text-success" : "text-red-800"
                       }`}
                     >
                       {status}
                     </td>
-                    <td className={`flex justify-end pt-3`}>
+                    <td className={`flex justify-end pr-6`}>
                       <div className="opacity-0 group-hover:opacity-100 transition-all duration-300">
                         <DownloadInvoice invoicePDF={invoice_pdf} />
                       </div>
@@ -71,7 +68,7 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
                   </tr>
                   <tr>
                     <td
-                      colSpan={4}
+                      colSpan={3}
                       className="pb-3 text-xs leading-6 text-left"
                     >
                       {status !== InvoiceStatus.Paid && (
