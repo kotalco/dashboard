@@ -34,6 +34,7 @@ export const EndpointDetails = async ({
           />
           <div className="flex items-start gap-x-2">
             <Heading
+              variant="h1"
               title={endpoint.name_label || endpoint.name}
               description={`Created at ${formatDate(endpoint.created_at)}`}
             />
@@ -61,7 +62,7 @@ export const EndpointDetails = async ({
 
               {/* References */}
               <div>
-                <h3 className="text-base">References</h3>
+                <Heading variant="h3" title="References" />
                 <ul className="space-y-1 list-disc">
                   {references.map((reference) => (
                     <li className="list-none" key={reference}>
