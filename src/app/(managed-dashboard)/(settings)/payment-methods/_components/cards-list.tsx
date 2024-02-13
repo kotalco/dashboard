@@ -31,7 +31,7 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
           <div
             key={id}
             className={cn(
-              "col-span-12 p-4 group relative transition-all border shadow border-secondary space-y-10 lg:col-span-6 hover:border-primary xl:col-span-4 rounded-xl",
+              "col-span-12 p-4 group relative transition-all border shadow border-secondary space-y-10 lg:col-span-6 xl:col-span-4 rounded-xl",
               defaultCard && "border-primary"
             )}
           >
