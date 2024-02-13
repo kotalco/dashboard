@@ -1,7 +1,10 @@
 import Image from "next/image";
 
 import { PaymentCard } from "@/types";
+import { cn } from "@/lib/utils";
+
 import { Badge } from "@/components/ui/badge";
+
 import { SetDefaultCard } from "./set-default-card";
 import { DeleteCard } from "./delete-card";
 
@@ -27,7 +30,10 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
         ({ id, exp_month, exp_year, last4, brand, default: defaultCard }) => (
           <div
             key={id}
-            className="col-span-12 p-5 transition-all border shadow border-secondary space-y-7 lg:col-span-6 hover:border-primary 2xl:col-span-3 xl:col-span-4 rounded-xl"
+            className={cn(
+              "col-span-12 p-4 group relative transition-all border shadow border-secondary space-y-10 lg:col-span-6 hover:border-primary xl:col-span-4 rounded-xl",
+              defaultCard && "border-primary"
+            )}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -37,9 +43,11 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
                   width={44}
                   height={44}
                 />
-                {defaultCard && <Badge variant="outline">Default</Badge>}
+                {defaultCard && (
+                  <Badge className="absolute top-2 right-2">Default</Badge>
+                )}
               </div>
-              <div className="flex space-x-2">
+              <div className="flex space-x-2 absolute right-2 top-10 opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <SetDefaultCard id={id} isDefault={defaultCard} />
                 <DeleteCard id={id} />
               </div>
@@ -47,7 +55,7 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
 
             <div className="flex justify-between">
               <p className="text-xl font-semibold leading-5">
-                <span className="align-sub">**** **** ****</span>
+                <span className="align-sub">****</span>
                 {` `}
                 <span>{last4}</span>
               </p>
