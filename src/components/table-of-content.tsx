@@ -42,7 +42,7 @@ export const TableOfContent = ({ children }: TableOfContentProps) => {
         id="toc"
         className={cn(
           "w-72 h-full absolute top-80 hidden lg:block lg:w-96 right-0 overflow-y-auto z-[1] pt-4 text-muted-foreground text-lg",
-          isFixed && "fixed top-12"
+          isFixed && "fixed top-24"
         )}
       >
         <ul className="space-y-3 px-6 overflow-hidden relative">
