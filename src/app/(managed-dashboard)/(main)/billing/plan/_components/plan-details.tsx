@@ -1,5 +1,4 @@
 import { format, fromUnixTime } from "date-fns";
-import { Calendar, CreditCard } from "lucide-react";
 
 import { getCurrentSubscription } from "@/services/get-current-subscription";
 import { getUpcomingInvoice } from "@/services/get-upcoming-payment";
@@ -15,7 +14,6 @@ export const PlanDetails = async () => {
       <div className="space-y-3">
         <div className="flex space-x-5">
           <div className="flex items-center text-sm">
-            <Calendar className="w-6 h-6 text-foreground mr-3" />
             <div className="gap-x-2">
               <span className="text-muted-foreground">Started at </span>
               <span>
@@ -46,7 +44,6 @@ export const PlanDetails = async () => {
         {/* If subscription is not canceled show upcoming Payment */}
         {invoice && (
           <div className="flex items-center space-x-3">
-            <CreditCard className="w-6 h-6 text-foreground" />
             <p className="text-sm leading-5">
               <span className="opacity-50">Next payment</span>{" "}
               <span className="opacity-50"> due </span>

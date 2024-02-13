@@ -30,9 +30,9 @@ export const ManagePlanCard = async () => {
           invoices section.
         </Alert>
       )}
-      <Card>
+      <Card className="bg-[#4E39F8]/20 border-[#4E39F8]">
         <CardHeader>
-          <CardTitle className="text-3xl flex items-center justify-between">
+          <CardTitle className="text-3xl flex items-start justify-between">
             <div>
               {subscription.plan.name} Plan{" "}
               <span
@@ -47,12 +47,12 @@ export const ManagePlanCard = async () => {
               </span>
             </div>
             <div className="flex flex-col items-end">
+              <p className="text-lg">
+                {subscription.request_limit} Requests / Sec
+              </p>
+              <p className="text-lg">{subscription.endpoint_limit} Endpoints</p>
               <p className="text-sm text-muted-foreground">
                 ${subscription.price.price} / Month
-              </p>
-              <p className="text-base">
-                {subscription.endpoint_limit} endpoints -{" "}
-                {subscription.request_limit} requests / sec
               </p>
             </div>
           </CardTitle>
