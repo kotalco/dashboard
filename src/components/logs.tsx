@@ -186,14 +186,12 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
         />
         {!!counter && (
           <p>
-            <span>
-              {`Will retry to connect in ${counter / 1000}  seconds.`}, click to{" "}
-            </span>
+            <span>{`Trying again in ${counter / 1000}  seconds.`} </span>
             <Button
               variant="link"
               type="button"
               onClick={cancelReconnect}
-              className="p-0 text-destructive hover:cursor-pointer"
+              className="p-0 underline hover:cursor-pointer"
               asChild
             >
               <span>Cancel</span>
