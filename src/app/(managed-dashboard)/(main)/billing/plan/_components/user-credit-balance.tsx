@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const UserCreditBalance = async () => {
   const { creditBalance } = await getUserCredit();
 
-  if (creditBalance) {
+  if (creditBalance?.balance) {
     return (
       <div className="flex justify-end">
         <div className="flex justify-between w-full max-w-[200px] px-3 py-2 text-xs leading-6 rounded-xl bg-primary/5 text-foreground">
