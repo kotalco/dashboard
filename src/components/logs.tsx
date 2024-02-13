@@ -179,6 +179,10 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
           value={data}
           onScroll={handleScroll}
           readOnly
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
         />
         {!!counter && (
           <p>
