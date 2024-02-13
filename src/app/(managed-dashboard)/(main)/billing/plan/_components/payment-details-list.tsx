@@ -11,6 +11,8 @@ import { SubmitError } from "@/components/form/submit-error";
 import { SubmitButton } from "@/components/form/submit-button";
 
 import { PaymentElement } from "./payment-element";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 interface PaymentDetailsListProps {
   children?: React.ReactNode;
@@ -26,6 +28,7 @@ export const PaymentDetailsList = ({
     setStep,
     planPrice,
     data: newSubscriptionInfo,
+    backStep,
   } = useChangeSubscriptionModal();
   const {
     error,
@@ -59,10 +62,12 @@ export const PaymentDetailsList = ({
             <span>Plan Price</span>
             <span>{formatCurrency(planPrice)}</span>
           </li>
-          <li className="flex justify-between text-sm leading-9 opacity-70">
-            <span>Credit</span>
-            <span>{formatCurrency(data.credit_balance)}</span>
-          </li>
+          {!!data.credit_balance && (
+            <li className="flex justify-between text-sm leading-9 opacity-70">
+              <span>Credit</span>
+              <span>{formatCurrency(data.credit_balance)}</span>
+            </li>
+          )}
           {data.items.map(({ amount, description }) => (
             <li
               key={description}
@@ -72,7 +77,8 @@ export const PaymentDetailsList = ({
               <span>{formatCurrency(amount)}</span>
             </li>
           ))}
-          <li className="flex justify-between text-sm font-bold leading-9">
+          <Separator className="my-2" />
+          <li className="flex justify-between text-xl leading-9">
             <span>Total Price</span>
             <span>{formatCurrency(data.amount_due)}</span>
           </li>
@@ -88,12 +94,15 @@ export const PaymentDetailsList = ({
       )}
 
       <div className="mt-5">
-        <SubmitButton
-          className="w-full"
-          // disabled={pending || disabled}
-        >
+        <SubmitButton className="w-full">
           Pay {formatCurrency(data.amount_due)}
         </SubmitButton>
+      </div>
+
+      <div className="text-center">
+        <Button variant="link" type="button" onClick={backStep}>
+          Back to Plans
+        </Button>
       </div>
     </form>
   );

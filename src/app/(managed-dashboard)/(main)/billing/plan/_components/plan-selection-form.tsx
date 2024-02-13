@@ -63,21 +63,25 @@ export const PlanSelectionForm = ({
             >
               <div>
                 <div className="flex space-x-5 items-center">
-                  <p className="text-lg font-bold font-nunito">{plan.name}</p>
+                  <p className="text-base font-semibold font-nunito">
+                    {plan.name}
+                  </p>
                 </div>
                 <div className="flex gap-x-4 w-full mb-3">
-                  <p className="text-base font-semibold">
+                  <p className="text-lg font-bold">
                     {plan.endpoint_limit}{" "}
                     {plan.endpoint_limit > 1 ? "endpoints" : "endpoint"}
                   </p>
-                  <p className="text-base font-semibold">
+                  <p className="text-lg font-bold">
                     {plan.request_limit}{" "}
                     {plan.request_limit > 1 ? "requests/sec" : "request/sec"}
                   </p>
                 </div>
 
                 {plan.prices.map((price) => (
-                  <p key={price.id}>${price.price} / Month</p>
+                  <p key={price.id} className="text-muted-foreground">
+                    ${price.price} / Month
+                  </p>
                 ))}
               </div>
               <div className="inline-block w-4 h-4 rounded-full">

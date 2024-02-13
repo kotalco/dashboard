@@ -15,18 +15,12 @@ export const ChangePlan = async () => {
     <ChangePlanDialog>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Change Subscription Plan</DialogTitle>
+          <DialogTitle className="text-2xl">Change Plan</DialogTitle>
         </DialogHeader>
         <div>
           <Suspense fallback={<PlanSelectionSkeleton />}>
             <PlanSelection />
           </Suspense>
-
-          {/* <PaymentDetailsList>
-            <Suspense fallback={<CardsSkeleton />}>
-              <CardSelection />
-            </Suspense>
-          </PaymentDetailsList> */}
         </div>
       </DialogContent>
     </ChangePlanDialog>
