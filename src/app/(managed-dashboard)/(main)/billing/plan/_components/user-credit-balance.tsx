@@ -6,9 +6,11 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { BadgeInfo } from "lucide-react";
 
 export const UserCreditBalance = async () => {
   const { creditBalance } = await getUserCredit();
@@ -31,7 +33,11 @@ export const UserCreditBalance = async () => {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader />
+            <DialogHeader>
+              <DialogTitle>
+                <BadgeInfo className="w-10 h-10 text-muted-foreground" />
+              </DialogTitle>
+            </DialogHeader>
             <div className="text-muted-foreground">
               Account credit is a remaining balance after downgrading from a
               plan to another of less price. Account credit can be used in
