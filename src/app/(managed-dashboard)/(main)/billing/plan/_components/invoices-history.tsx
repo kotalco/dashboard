@@ -69,7 +69,7 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
                   <tr>
                     <td
                       colSpan={3}
-                      className="pb-3 text-xs leading-6 text-left"
+                      className="pl-6 text-xs leading-6 text-left"
                     >
                       {status !== InvoiceStatus.Paid && (
                         <InvoicePayment intentId={provider_payment_intent_id} />

@@ -7,23 +7,16 @@ import { getEnumKey } from "@/lib/utils";
 import { Networks, Protocol } from "@/enums";
 
 import { DeploymentsList } from "@/components/deployments-list";
-import { NoResult } from "@/components/shared/no-result/no-result";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+
+import { NoEndpoints } from "./no-endpoints";
 
 export const EndpointsList = async () => {
   const { data } = await getVirtualEndpoints();
 
   if (!data.length) {
-    return (
-      <NoResult
-        imageUrl="/images/endpoint.svg"
-        title="No Endpoints"
-        description="Endpoints are secure routes that allow developers to call your deployed nodes' APIs."
-        createUrl="/virtual-endpoints/new"
-        buttonText="New Endpoint"
-      />
-    );
+    return <NoEndpoints />;
   }
 
   const endpoints = data.map(
