@@ -10,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Heading } from "@/components/ui/heading";
 
 interface ExampleProps {
   example: string;
@@ -26,7 +27,7 @@ const Example = ({ example }: ExampleProps) => {
 
   return (
     <div>
-      <h3 className="text-base">Example</h3>
+      <Heading variant="h3" title="Example" />
       <div className="relative">
         <div className="px-5 mt-2 overflow-x-scroll bg-muted text-muted-foreground text-xs font-mono rounded-md py-7">
           {example}

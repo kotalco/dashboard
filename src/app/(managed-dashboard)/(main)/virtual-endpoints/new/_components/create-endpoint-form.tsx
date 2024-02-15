@@ -1,6 +1,5 @@
 "use client";
 
-import * as z from "zod";
 import { useState } from "react";
 
 import { Networks, ProtocolsWithoutEthereum2 } from "@/enums";
@@ -13,24 +12,6 @@ import { Select } from "@/components/form/select";
 import { Toggle } from "@/components/form/toggle";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
-
-const schema = z.object({
-  name: z
-    .string()
-    .min(1, "Node name is required")
-    .max(64, "Too long name")
-    .trim()
-    .refine((value) => /^\S*$/.test(value), {
-      message: "Invalid character used",
-    }),
-  protocol: z.nativeEnum(ProtocolsWithoutEthereum2, {
-    required_error: "Protocol name is required",
-  }),
-  network: z.string().optional(),
-  use_basic_auth: z.boolean().optional(),
-});
-
-type Schema = z.infer<typeof schema>;
 
 export interface CreateEndpointFormProps {
   services: Record<ProtocolsWithoutEthereum2, string[]>;
@@ -70,7 +51,7 @@ export const CreateEndpointForm: React.FC<CreateEndpointFormProps> = ({
     <form
       data-testid="create-endpoint"
       action={onSubmit}
-      className="max-w-sm space-y-4"
+      className="max-w-xs space-y-4"
     >
       <Input id="name" label="Endpoint Name" errors={fieldErrors} />
 
@@ -80,7 +61,7 @@ export const CreateEndpointForm: React.FC<CreateEndpointFormProps> = ({
         onValueChange={setSelectedProtocol as (value: string) => void}
         defaultValue={selectedProtocol}
         value={selectedProtocol}
-        placeholder="Choose a protocol"
+        placeholder="Select a protocol"
         errors={fieldErrors}
         options={protocols}
       />
@@ -91,7 +72,7 @@ export const CreateEndpointForm: React.FC<CreateEndpointFormProps> = ({
           <Select
             id="network"
             label="Network"
-            placeholder="Choose a network"
+            placeholder="Select a network"
             errors={fieldErrors}
             options={networks}
           />

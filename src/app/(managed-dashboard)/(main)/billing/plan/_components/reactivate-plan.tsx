@@ -1,9 +1,10 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useAction } from "@/hooks/use-action";
+import { reactivatePlan } from "@/actions/reactivate-plan";
 
-import { Button } from "@/components/ui/button";
-import { reactivatePlan } from "@/lib/actions";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
 
 interface ReactivatePlanProps {
   subscriptionId: string;
@@ -12,28 +13,17 @@ interface ReactivatePlanProps {
 export const ReactivatePlan: React.FC<ReactivatePlanProps> = ({
   subscriptionId,
 }) => {
-  const initialState = { message: null };
-  const [state, dispatch] = useFormState<{ message: null | string }>(
-    reactivatePlan.bind(null, subscriptionId),
-    initialState
-  );
+  const { execute, error } = useAction(reactivatePlan);
+  const onSubmit = () => {
+    execute({ subscription_id: subscriptionId, provider: "stripe" });
+  };
 
   return (
     <>
-      <form action={dispatch}>
-        <ReactivateButton />
+      <form action={onSubmit}>
+        <SubmitButton>Reactivate Subscription</SubmitButton>
       </form>
-      {state.message && (
-        <p key={state.message} className="text-destructive text-xs">
-          {state.message}
-        </p>
-      )}
+      <SubmitError error={error} />
     </>
   );
-};
-
-export const ReactivateButton = () => {
-  const { pending } = useFormStatus();
-
-  return <Button disabled={pending}>Reactivate Subscription</Button>;
 };

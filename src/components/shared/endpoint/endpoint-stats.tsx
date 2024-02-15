@@ -1,5 +1,6 @@
 import { EndpointStatsChart } from "@/components/shared/endpoint/endpoint-stats-chart";
 import { Tabs } from "@/components/shared/tabs/tabs";
+import { Heading } from "@/components/ui/heading";
 
 import { getDaysOfCurrentMonth } from "@/lib/utils";
 
@@ -19,7 +20,7 @@ export const EndpointStats = ({
 }: EndpointStatsProps) => {
   return (
     <>
-      <h3 className="text-base">Usage</h3>
+      <Heading variant="h3" title="Usage" />
       <Tabs tabs={TABS} cardDisplay={false}>
         <div className="min-h-[250px]">
           <EndpointStatsChart

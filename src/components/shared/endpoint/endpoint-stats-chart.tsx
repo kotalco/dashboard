@@ -58,12 +58,10 @@ export const EndpointStatsChart = ({
             backgroundColor: tooltipBgColor,
             titleColor: tooltipTextColor,
             bodyColor: tooltipTextColor,
+            yAlign: "bottom",
             callbacks: {
               label: (item) => `${item.formattedValue} hits`,
-              title: (items) =>
-                items.map((item) =>
-                  isNaN(Number(item.label)) ? item.label : `Day ${item.label}`
-                ),
+              title: () => "",
             },
           },
         },

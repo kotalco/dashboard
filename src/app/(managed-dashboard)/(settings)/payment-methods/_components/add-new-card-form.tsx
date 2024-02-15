@@ -1,7 +1,12 @@
-import { Alert } from "@/components/ui/alert";
+"use client";
+
+import { useTheme } from "next-themes";
 import { Elements, PaymentElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Loader2 } from "lucide-react";
+
+import { Alert } from "@/components/ui/alert";
+
 import { AddNewCardButton } from "./add-new-card-button";
 
 const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -11,6 +16,7 @@ interface AddNewCardFormProps {
 }
 
 export const AddNewCardForm: React.FC<AddNewCardFormProps> = ({ state }) => {
+  const { theme } = useTheme();
   if (!state.message && !state.si_secret)
     return (
       <div className="flex items-center justify-center">
@@ -26,7 +32,7 @@ export const AddNewCardForm: React.FC<AddNewCardFormProps> = ({ state }) => {
       <Elements
         options={{
           clientSecret: state.si_secret,
-          appearance: { theme: "stripe" },
+          appearance: { theme: theme === "dark" ? "night" : "stripe" },
         }}
         stripe={stripe}
       >

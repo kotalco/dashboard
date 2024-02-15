@@ -175,21 +175,23 @@ export const Logs: React.FC<LogsProps> = ({ url }) => {
         <Textarea
           ref={logsElement}
           disabled
-          className="h-[500px] disabled:cursor-default overflow-y-auto border-foreground/10 disabled:opacity-100 py-0 resize-none"
+          className="h-[500px] disabled:cursor-default overflow-y-auto bg-[#1E1E1E] text-white/90 border-foreground/10 disabled:opacity-100 py-0 resize-none"
           value={data}
           onScroll={handleScroll}
           readOnly
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
         />
         {!!counter && (
           <p>
-            <span>
-              {`Will retry to connect in ${counter / 1000}  seconds.`}, click to{" "}
-            </span>
+            <span>{`Trying again in ${counter / 1000}  seconds.`} </span>
             <Button
               variant="link"
               type="button"
               onClick={cancelReconnect}
-              className="p-0 text-destructive hover:cursor-pointer"
+              className="p-0 underline hover:cursor-pointer"
               asChild
             >
               <span>Cancel</span>

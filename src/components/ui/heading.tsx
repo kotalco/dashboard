@@ -45,7 +45,7 @@ export const Heading: React.FC<HeadingProps> = ({
         <h3
           id={id}
           className={cn(
-            "text-xl font-semibold tracking-tight font-nunito",
+            "text-xl font-normal tracking-tight font-nunito",
             className
           )}
         >

@@ -49,7 +49,7 @@ export function useManagedNavigation(endpointsCount?: number) {
       Icon: User2,
     },
     {
-      label: "Payment Methods",
+      label: "My Cards",
       href: `/payment-methods`,
       active: pathname.includes("payment-methods"),
       Icon: CreditCard,

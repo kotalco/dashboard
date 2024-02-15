@@ -11,6 +11,7 @@ import {
 import { createSetupIntent } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { AddNewCardForm } from "./add-new-card-form";
+import { Plus } from "lucide-react";
 
 type InitialState = {
   message: null | string;
@@ -26,12 +27,14 @@ export const AddPaymentCard = () => {
     <Dialog>
       <DialogTrigger asChild>
         <form action={dispatch}>
-          <Button>Add a new payment card</Button>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" /> New Card
+          </Button>
         </form>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Card</DialogTitle>
+          <DialogTitle>New Card</DialogTitle>
         </DialogHeader>
         <AddNewCardForm state={state} />
       </DialogContent>

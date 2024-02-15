@@ -20,7 +20,7 @@ export const Sidebar = async ({ children }: { children: React.ReactNode }) => {
         </div>
         <div className="pt-4 flex flex-col flex-1">
           <nav className="flex flex-col flex-1">
-            <ul className="flex-1 flex flex-col space-y-1">{children}</ul>
+            <ul className="flex-1 flex flex-col">{children}</ul>
           </nav>
         </div>
       </div>

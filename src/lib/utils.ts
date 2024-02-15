@@ -124,25 +124,12 @@ export const getClientUrl = (client: string) => {
   }
 };
 
-export function calculateRemainingDays(secondsInUnix: number) {
-  return (
-    secondsInUnix !== 0 &&
-    Math.ceil(
-      (new Date(secondsInUnix * 1000).getTime() - new Date().getTime()) /
-        (1000 * 60 * 60 * 24)
-    )
-  );
-}
-
 export function formatCurrency(valueInCents: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(valueInCents / 100);
 }
-
-export const findPrice = (plan: Plan) =>
-  plan.prices.find(({ period }) => period === "monthly");
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
