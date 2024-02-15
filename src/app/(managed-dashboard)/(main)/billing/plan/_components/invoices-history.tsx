@@ -35,7 +35,6 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
               ({
                 id,
                 created_at,
-                description,
                 status,
                 invoice_pdf,
                 provider_payment_intent_id,
@@ -43,12 +42,8 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
               }) => (
                 <Fragment key={id}>
                   <tr className="relative text-sm group hover:bg-muted transition-all duration-300">
-                    <td
-                      className={`flex items-center pt-3 space-x-3 max-w-fit pl-6`}
-                    >
-                      <span className="font-bold leading-6">
-                        {format(fromUnixTime(created_at), "MMMM do, yyyy")}
-                      </span>
+                    <td className={`flex items-center pt-3 space-x-3 pl-6`}>
+                      {format(fromUnixTime(created_at), "MMMM do, yyyy")}
                     </td>
                     <td className="text-muted-foreground leading-6 text-right">
                       {formatCurrency(amount_due)}
