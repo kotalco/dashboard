@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateIPFSClusterPeerForm } from "../components/create-ipfs-cluster-peer-form";
+import { CreateIPFSClusterPeerForm } from "./_components/create-ipfs-cluster-peer-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { getNodes } from "@/services/get-nodes";
 import { Roles, SecretType } from "@/enums";
 import { IPFSClusterPeer, IPFSPeer } from "@/types";
 import { getSecrets } from "@/services/get-secrets";
+import { Heading } from "@/components/ui/heading";
 
 export default async function CreateIPFSClusterPeerPage({
   params,
@@ -42,19 +43,15 @@ export default async function CreateIPFSClusterPeerPage({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Cluster Peer</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateIPFSClusterPeerForm
-          images={versions}
-          privateKeys={peerKeys}
-          clusterSecrets={secrets}
-          peers={peers}
-          clsuterPeers={clusterPeers}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New IPFS Cluster Peer" />
+      <CreateIPFSClusterPeerForm
+        images={versions}
+        privateKeys={peerKeys}
+        clusterSecrets={secrets}
+        peers={peers}
+        clsuterPeers={clusterPeers}
+      />
+    </div>
   );
 }

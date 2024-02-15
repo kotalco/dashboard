@@ -15,6 +15,7 @@ export const getVirtualEndpoint = async (endpointName: string) => {
     const response = await server.get<Endpoint>(
       `/virtual-endpoints/${endpointName}`
     );
+
     endpoint = response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 404) {

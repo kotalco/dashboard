@@ -14,7 +14,7 @@ const handler = async ({
   workspaceId,
 }: APIInputType): Promise<APIReturnType> => {
   try {
-    await server.delete(`/core/secrets/${name}`);
+    await server.delete(`/core/secrets/${name}?workspace_id=${workspaceId}`);
   } catch (error) {
     logger("DeleteSecret", error);
     return { error: "Something went wrong." };

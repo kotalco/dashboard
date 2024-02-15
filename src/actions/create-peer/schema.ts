@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { IPFSConfigProfile } from "@/enums";
-
 export const CreatePeer = z.object({
   name: z
     .string()
@@ -11,10 +9,7 @@ export const CreatePeer = z.object({
     .refine((value) => /^\S*$/.test(value), {
       message: "Invalid character used",
     }),
-  initProfiles: z
-    .nativeEnum(IPFSConfigProfile)
-    .array()
-    .nonempty("Initial configration profiles are required"),
+
   workspace_id: z.string().min(1),
   image: z.string().min(1),
 });

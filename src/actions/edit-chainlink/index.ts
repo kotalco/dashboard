@@ -8,24 +8,14 @@ import { ChainlinkNode } from "@/types";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import {
-  EditAPI,
-  EditAccessControl,
-  EditDatabase,
-  EditExecutionClient,
-  EditLogs,
-  EditTLS,
-  EditWallet,
-} from "./schema";
+import { EditChainlinkNode } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let node;
+  const { name, workspaceId, ...data } = values;
   try {
     const response = await server.put<ChainlinkNode>(
-      `/chainlink/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/chainlink/nodes/${name}?workspace_id=${workspaceId}`,
       data
     );
     node = response.data;
@@ -34,16 +24,8 @@ const handler = async (
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(
-    `/${identifiers.workspaceId}/deployments/chainlink/${node.name}`
-  );
+  revalidatePath(`/${workspaceId}/deployments/chainlink/${node.name}`);
   return { data: node };
 };
 
-export const editDatabase = createAction(EditDatabase, handler);
-export const editExecutionClient = createAction(EditExecutionClient, handler);
-export const editWallet = createAction(EditWallet, handler);
-export const editTLS = createAction(EditTLS, handler);
-export const editAPI = createAction(EditAPI, handler);
-export const editAccessControl = createAction(EditAccessControl, handler);
-export const editLogs = createAction(EditLogs, handler);
+export const editChainlinkNode = createAction(EditChainlinkNode, handler);

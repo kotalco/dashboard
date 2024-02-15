@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 
-import { MainNavigationItems } from "@/components/main-navigation-items";
-import { Sidebar } from "@/components/sidebar";
 import { findUser } from "@/services/find-user";
 import { getCounts } from "@/services/get-counts";
+
+import { MainNavigationItems } from "@/components/main-navigation-items";
+import { Sidebar } from "@/components/sidebar";
 
 export default async function DashboardLayout({
   children,

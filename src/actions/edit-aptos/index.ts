@@ -8,16 +8,14 @@ import { logger } from "@/lib/utils";
 import { AptosNode } from "@/types";
 
 import { InputType, ReturnType } from "./types";
-import { EditAptosAPI } from "./schema";
+import { EditAptos } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let node;
+  const { name, workspaceId, ...data } = values;
   try {
     const response = await server.put<AptosNode>(
-      `/aptos/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/aptos/nodes/${name}?workspace_id=${workspaceId}`,
       data
     );
     node = response.data;
@@ -26,8 +24,8 @@ const handler = async (
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(`/${identifiers.workspaceId}/deployments/aptos/${node.name}`);
+  revalidatePath(`/${workspaceId}/deployments/aptos/${node.name}`);
   return { data: node };
 };
 
-export const editAptosNode = createAction(EditAptosAPI, handler);
+export const editAptosNode = createAction(EditAptos, handler);

@@ -1,4 +1,11 @@
-import { eachDayOfInterval, endOfMonth, startOfMonth } from "date-fns";
+import {
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  formatDistance,
+  parseISO,
+  startOfMonth,
+} from "date-fns";
 
 import { FormDataResult } from "@/actions/create-secret/types";
 import {
@@ -117,25 +124,12 @@ export const getClientUrl = (client: string) => {
   }
 };
 
-export function calculateRemainingDays(secondsInUnix: number) {
-  return (
-    secondsInUnix !== 0 &&
-    Math.ceil(
-      (new Date(secondsInUnix * 1000).getTime() - new Date().getTime()) /
-        (1000 * 60 * 60 * 24)
-    )
-  );
-}
-
 export function formatCurrency(valueInCents: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(valueInCents / 100);
 }
-
-export const findPrice = (plan: Plan) =>
-  plan.prices.find(({ period }) => period === "monthly");
 
 export const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -326,4 +320,32 @@ export const getAuthorizedTabs = (
   return allTabs
     .filter(({ role }) => (role ? role === currentRole : true))
     .map(({ label, value, description }) => ({ label, value, description }));
+};
+
+export const formatDate = (date: string) => {
+  return format(parseISO(date), "MMMM do, yyyy");
+};
+
+export const formatTimeDistance = (createdAt: string) => {
+  const date = new Date(createdAt);
+
+  return formatDistance(date, new Date(), { addSuffix: true });
+};
+
+export const getResourcesValues = (formData: FormData) => {
+  const [cpu, cpuLimit] = formData.getAll("cpu[]") as string[];
+  const [memory, memoryLimit] = formData.getAll("memory[]") as string[];
+  const storage = formData.get("storage") as string;
+
+  return {
+    cpu,
+    cpuLimit,
+    memory: `${memory}Gi`,
+    memoryLimit: `${memoryLimit}Gi`,
+    storage: `${storage}Gi`,
+  };
+};
+
+export const getCheckboxValue = (formData: FormData, name: string) => {
+  return formData.get(name) === "on";
 };

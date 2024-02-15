@@ -7,7 +7,7 @@ import { getNodes } from "@/services/get-nodes";
 import { ExecutionClientNode } from "@/types";
 import { getSecrets } from "@/services/get-secrets";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Heading } from "@/components/ui/heading";
 
 import { CreateChainlinkNodeForm } from "./_components/create-chainlink-node-form";
 
@@ -38,17 +38,13 @@ export default async function CreateNewChainlinkNodePage({
   if (role === Roles.Reader) notFound();
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Chainlink Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateChainlinkNodeForm
-          images={versions}
-          executionClients={data}
-          passwords={options}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New Chainlink Node" />
+      <CreateChainlinkNodeForm
+        images={versions}
+        executionClients={data}
+        passwords={options}
+      />
+    </div>
   );
 }

@@ -8,16 +8,14 @@ import { logger } from "@/lib/utils";
 import { BitcoinNode } from "@/types";
 
 import { InputType, ReturnType } from "./types";
-import { EditBitcoinAPI, EditBitcoinWallet } from "./schema";
+import { EditBitcoinNode } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let node;
+  const { name, workspaceId, ...data } = values;
   try {
     const response = await server.put<BitcoinNode>(
-      `/bitcoin/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/bitcoin/nodes/${name}?workspace_id=${workspaceId}`,
       data
     );
     node = response.data;
@@ -26,11 +24,8 @@ const handler = async (
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(
-    `/${identifiers.workspaceId}/deployments/bitcoin/${node.name}`
-  );
+  revalidatePath(`/${workspaceId}/deployments/bitcoin/${node.name}`);
   return { data: node };
 };
 
-export const editBitcoinAPI = createAction(EditBitcoinAPI, handler);
-export const editBitcoinWallet = createAction(EditBitcoinWallet, handler);
+export const editBitcoinNode = createAction(EditBitcoinNode, handler);

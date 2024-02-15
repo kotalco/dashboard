@@ -52,7 +52,7 @@ const SetDefaultCardButton = () => {
             )}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Delete</TooltipContent>
+        <TooltipContent>Set as Default</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

@@ -25,9 +25,6 @@ export const DangerZoneTab: React.FC<DangerZoneTabProps> = ({ node }) => {
           Node attached volume that persists Blockchain data will not be
           removed, you need to delete it yourself.
         </p>
-        <p className="text-muted-foreground">
-          Are you sure you want to delete this node?
-        </p>
       </div>
       <AlertModal triggerText="Delete Node" title="Delete Aptos Node">
         <DeleteWithInputForm

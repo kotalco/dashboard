@@ -1,3 +1,5 @@
+"use client";
+
 import { ComponentPropsWithoutRef } from "react";
 import { useFormStatus } from "react-dom";
 import { Root } from "@radix-ui/react-switch";
@@ -31,7 +33,7 @@ export const Toggle = ({
 
   return (
     <div className="space-y-2 w-full">
-      <div className={cn("flex items-center space-x-2", className)}>
+      <div className={cn("flex items-center space-x-4", className)}>
         {label && labelPosition === "left" && (
           <Label htmlFor={id}>{label}</Label>
         )}

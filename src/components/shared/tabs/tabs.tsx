@@ -3,7 +3,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Tabs as CNTabs,
@@ -14,37 +13,42 @@ import {
 import { cn } from "@/lib/utils";
 
 interface TabsProps {
-  tabs: { label: string; value: string; description?: string }[];
+  tabs: {
+    label: string | React.ReactNode;
+    value: string;
+    description?: string;
+  }[];
   children: React.ReactNode[];
   cardDisplay?: boolean;
+  defaultTab?: string;
 }
 
-export const Tabs = ({ tabs, children, cardDisplay = true }: TabsProps) => {
+export const Tabs = ({
+  tabs,
+  children,
+  cardDisplay = true,
+  defaultTab,
+}: TabsProps) => {
   const filteredChildren = children.filter((child) => child);
 
   return (
-    <CNTabs defaultValue={tabs[0].value}>
+    <CNTabs defaultValue={defaultTab || tabs[0].value}>
       <TabsList>
         {tabs.map(({ label, value }) => (
-          <TabsTrigger
-            key={value}
-            value={value}
-            className={cn(
-              value.includes("danger") &&
-                "data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground text-destructive"
-            )}
-          >
+          <TabsTrigger key={value} value={value}>
             {label}
           </TabsTrigger>
         ))}
       </TabsList>
-      {tabs.map(({ label, value, description }, index) => (
-        <TabsContent key={value} value={value}>
-          <Card className={cardDisplay ? "" : "border-0"}>
-            <CardHeader className={cardDisplay ? "" : "px-0"}>
-              {description && <CardDescription>{description}</CardDescription>}
-            </CardHeader>
-            <CardContent className={cardDisplay ? "" : "px-0"}>
+      {tabs.map(({ value, description }, index) => (
+        <TabsContent key={value} value={value} className="mt-4">
+          <Card className={cardDisplay ? "" : "border-0 shadow-none"}>
+            {description && (
+              <CardHeader className={cn("p-1", cardDisplay ? "" : "px-0")}>
+                <CardDescription>{description}</CardDescription>
+              </CardHeader>
+            )}
+            <CardContent className={cardDisplay ? "" : "p-0"}>
               {filteredChildren[index]}
             </CardContent>
           </Card>

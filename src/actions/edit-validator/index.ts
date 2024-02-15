@@ -8,16 +8,14 @@ import { ValidatorNode } from "@/types";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import { EditBeaconNode, EditGraffiti, EditKeystore } from "./schema";
+import { EditValidator } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let node;
+  const { workspaceId, name, ...data } = values;
   try {
     const response = await server.put<ValidatorNode>(
-      `/ethereum2/validators/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/ethereum2/validators/${name}?workspace_id=${workspaceId}`,
       data
     );
     node = response.data;
@@ -27,11 +25,9 @@ const handler = async (
   }
 
   revalidatePath(
-    `/${identifiers.workspaceId}/deployments/ethereum/validators/${node.name}`
+    `/${workspaceId}/deployments/ethereum/validators/${node.name}`
   );
   return { data: node };
 };
 
-export const editBeaconNode = createAction(EditBeaconNode, handler);
-export const editGraffiti = createAction(EditGraffiti, handler);
-export const editKeystore = createAction(EditKeystore, handler);
+export const editValidatorNode = createAction(EditValidator, handler);

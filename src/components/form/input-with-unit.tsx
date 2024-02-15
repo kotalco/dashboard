@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, forwardRef } from "react";
 import { useFormStatus } from "react-dom";
 

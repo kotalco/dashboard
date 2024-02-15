@@ -3,14 +3,15 @@
 import useSWRSubscription from "swr/subscription";
 import type { SWRSubscription } from "swr/subscription";
 import { AlertTriangle } from "lucide-react";
+import { useParams } from "next/navigation";
+
+import { getWsBaseURL } from "@/lib/utils";
+import { Protocol } from "@/enums";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Protocol } from "@/enums";
-import { getWsBaseURL } from "@/lib/utils";
+import { CardStats } from "@/components/shared/card-stats/card-stats";
 import { Chart } from "@/components/ui/chart";
-import { useParams } from "next/navigation";
 
 interface NodeMetricsProps {
   nodeName: string;
@@ -80,44 +81,38 @@ export const NodeMetrics: React.FC<NodeMetricsProps> = ({
       </Alert>
     );
   }
+
   if (!data)
     return (
       <>
         <div className="space-y-2 lg:col-span-1">
-          <Skeleton className="w-full h-[128px]" />
+          <Skeleton className="w-full h-[118px]" />
         </div>
         <div className="space-y-2 lg:col-span-1">
-          <Skeleton className="w-full h-[128px]" />
+          <Skeleton className="w-full h-[118px]" />
         </div>
       </>
     );
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>CPU</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Chart
-            unit="Cores"
-            data={data.cpu}
-            borderColor="hsl(142.1, 76.2%, 36.3%)"
-          />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Memory</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Chart
-            unit="GB"
-            data={data.memory}
-            borderColor="hsl(142.1, 76.2%, 36.3%)"
-          />
-        </CardContent>
-      </Card>
+      {/* CPU */}
+      <CardStats title="CPU">
+        <Chart
+          unit="Cores"
+          data={data.cpu}
+          borderColor="hsl(142.1, 76.2%, 36.3%)"
+        />
+      </CardStats>
+
+      {/* Memory */}
+      <CardStats title="Memory">
+        <Chart
+          unit="GB"
+          data={data.memory}
+          borderColor="hsl(142.1, 76.2%, 36.3%)"
+        />
+      </CardStats>
     </>
   );
 };

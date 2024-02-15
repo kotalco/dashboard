@@ -1,11 +1,10 @@
 import Image from "next/image";
 import { Fragment } from "react";
-import { format, parseISO } from "date-fns";
 
 import { Endpoint, EndpointStats as TEndpointStats } from "@/types";
+import { formatDate } from "@/lib/utils";
 
 import { Heading } from "@/components/ui/heading";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RouteURL } from "@/components/shared/endpoint/route-url";
 import { ExternalLink } from "@/components/ui/external-link";
 import { Separator } from "@/components/ui/separator";
@@ -35,15 +34,12 @@ export const EndpointDetails = async ({
           />
           <div className="flex items-start gap-x-2">
             <Heading
-              title={endpoint.name}
-              description={`Created at ${format(
-                parseISO(endpoint.created_at),
-                "MMMM do, yyyy"
-              )}`}
+              variant="h1"
+              title={endpoint.name_label || endpoint.name}
+              description={`Created at ${formatDate(endpoint.created_at)}`}
             />
           </div>
         </div>
-        <Separator className="max-w-md" />
       </div>
 
       {endpoint.routes.map(({ name, route, example, references }, i) => (
@@ -66,7 +62,7 @@ export const EndpointDetails = async ({
 
               {/* References */}
               <div>
-                <h3 className="text-base">References</h3>
+                <Heading variant="h3" title="References" />
                 <ul className="space-y-1 list-disc">
                   {references.map((reference) => (
                     <li className="list-none" key={reference}>

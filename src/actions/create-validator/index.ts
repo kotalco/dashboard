@@ -37,7 +37,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     }
   }
 
-  revalidatePath(`/${workspace_id}/deployments/ethereum?deployment=validators`);
+  revalidatePath(`/${workspace_id}/deployments/ethereum?tab=validators`);
   return { data: aptosNode };
 };
 
