@@ -7,17 +7,15 @@ import { server } from "@/lib/server-instance";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import { EditAPI, EditAccessControl, EditLogs, EditNetworking } from "./schema";
+import { EditExecutionClient } from "./schema";
 import { ExecutionClientNode } from "@/types";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let node;
+  const { workspaceId, name, ...data } = values;
   try {
     const response = await server.put<ExecutionClientNode>(
-      `/ethereum/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/ethereum/nodes/${name}?workspace_id=${workspaceId}`,
       data
     );
     node = response.data;
@@ -27,12 +25,12 @@ const handler = async (
   }
 
   revalidatePath(
-    `/${identifiers.workspaceId}/deployments/ethereum/execution-clients/${node.name}`
+    `/${workspaceId}/deployments/ethereum/execution-clients/${node.name}`
   );
   return { data: node };
 };
 
-export const editAPI = createAction(EditAPI, handler);
-export const editAccessControl = createAction(EditAccessControl, handler);
-export const editLogs = createAction(EditLogs, handler);
-export const editNetworking = createAction(EditNetworking, handler);
+export const editExecutionClientNode = createAction(
+  EditExecutionClient,
+  handler
+);

@@ -29,11 +29,15 @@ export type OptionType = Record<"label" | "value", string> & {
   image?: string;
 };
 
-export interface MainNodeInfo {
+export interface ListInfo {
   name: string;
-  network: string;
-  client: string;
-  url: string;
+  type?: string;
+  network?: string;
+  client?: string;
+  protocol?: string;
+  url?: string;
+  createdAt: string;
+  version?: string;
 }
 
 export interface ResourcesInfo {
@@ -283,6 +287,7 @@ export interface StacksNode extends ClientImage, ResourcesInfo {
 export interface Endpoint {
   name: string;
   protocol: Protocol;
+  network: string;
   routes: {
     name: string;
     route: string;
@@ -290,6 +295,7 @@ export interface Endpoint {
     references: string[];
   }[];
   created_at: string;
+  name_label?: string;
 }
 
 export interface EndpointStats {

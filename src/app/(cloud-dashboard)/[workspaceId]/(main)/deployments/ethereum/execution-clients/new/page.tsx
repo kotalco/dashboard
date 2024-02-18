@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateExecutionClientNodeForm } from "../components/create-execution-client-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
+
+import { Heading } from "@/components/ui/heading";
+
+import { CreateExecutionClientNodeForm } from "./_components/create-execution-client-node-form";
 
 export default async function CreateNewExecutionClientNodePage({
   params,
@@ -22,13 +24,9 @@ export default async function CreateNewExecutionClientNodePage({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Execution Client Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateExecutionClientNodeForm images={component} />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New Execution Client Node" />
+      <CreateExecutionClientNodeForm images={component} />
+    </div>
   );
 }

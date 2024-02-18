@@ -7,7 +7,7 @@ import { server } from "@/lib/server-instance";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import { EditImageVersion } from "./schema";
+import { EditImageVersion } from "../../schemas/image-version";
 
 export const handler = async (
   data: InputType,

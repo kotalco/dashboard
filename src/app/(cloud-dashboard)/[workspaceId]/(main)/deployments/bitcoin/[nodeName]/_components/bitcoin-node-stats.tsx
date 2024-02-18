@@ -4,13 +4,14 @@ import useSWRSubscription from "swr/subscription";
 import type { SWRSubscription } from "swr/subscription";
 import { cx } from "class-variance-authority";
 import { useParams } from "next/navigation";
+import { AlertTriangle } from "lucide-react";
+
+import { getWsBaseURL } from "@/lib/utils";
+import { BitcoinStats, StatsError } from "@/types";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { CardStats } from "@/components/shared/card-stats/card-stats";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getWsBaseURL } from "@/lib/utils";
-import { AlertTriangle } from "lucide-react";
-import { BitcoinStats, StatsError } from "@/types";
 
 interface BitcoinNodeStatsProps {
   nodeName: string;
@@ -56,10 +57,10 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
     return (
       <>
         <div className="space-y-2 lg:col-span-1">
-          <Skeleton className="w-full h-[128px]" />
+          <Skeleton className="w-full h-[118px]" />
         </div>
         <div className="space-y-2 lg:col-span-1">
-          <Skeleton className="w-full h-[128px]" />
+          <Skeleton className="w-full h-[118px]" />
         </div>
       </>
     );
@@ -72,23 +73,16 @@ export const BitcoinNodeStats: React.FC<BitcoinNodeStatsProps> = ({
           "error" in data ? "blur-lg" : ""
         )}
       >
-        <Card>
-          <CardHeader>
-            <CardTitle>Blocks</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-light text-gray-500 truncate">
-            {!("error" in data) &&
-              new Intl.NumberFormat("en-US").format(+data.blockCount)}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Peers</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-light text-gray-500 truncate">
-            {!("error" in data) && data.peerCount}
-          </CardContent>
-        </Card>
+        {/* Blocks */}
+        <CardStats title="Blocks">
+          {!("error" in data) &&
+            new Intl.NumberFormat("en-US").format(+data.blockCount)}
+        </CardStats>
+
+        {/* Peers */}
+        <CardStats title="Peers">
+          {!("error" in data) && data.peerCount}
+        </CardStats>
       </div>
       {"error" in data && typeof data.error === "string" && (
         <div className="absolute inset-0 flex items-center justify-center space-x-4">

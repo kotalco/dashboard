@@ -13,12 +13,14 @@ export const EmailVerifiedAlert = () => {
 
   if (status === "200") {
     return (
-      <Alert variant="success" className="mb-4">
-        <AlertDescription>
-          Your email has been verified. You can now login and enjoy our
-          services.
-        </AlertDescription>
-      </Alert>
+      <div className="absolute top-10 inset-x-0 flex justify-center">
+        <Alert className="mb-4 text-center max-w-3xl alert-success">
+          <AlertDescription>
+            Your email has been verified. You can now login and enjoy our
+            services.
+          </AlertDescription>
+        </Alert>
+      </div>
     );
   }
 

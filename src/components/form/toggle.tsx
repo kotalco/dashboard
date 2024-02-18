@@ -1,3 +1,5 @@
+"use client";
+
 import { ComponentPropsWithoutRef } from "react";
 import { useFormStatus } from "react-dom";
 import { Root } from "@radix-ui/react-switch";
@@ -30,20 +32,16 @@ export const Toggle = ({
   const { pending } = useFormStatus();
 
   return (
-    <div className="space-y-2">
-      <div className={cn("flex items-center space-x-2", className)}>
+    <div className="space-y-2 w-full">
+      <div className={cn("flex items-center space-x-4", className)}>
         {label && labelPosition === "left" && (
-          <Label htmlFor={id} className="font-semibold text-neutral-700">
-            {label}
-          </Label>
+          <Label htmlFor={id}>{label}</Label>
         )}
 
         <Switch disabled={pending || disabled} name={id} id={id} {...props} />
 
         {label && labelPosition === "right" && (
-          <Label htmlFor={id} className="font-semibold text-neutral-700">
-            {label}
-          </Label>
+          <Label htmlFor={id}>{label}</Label>
         )}
       </div>
 

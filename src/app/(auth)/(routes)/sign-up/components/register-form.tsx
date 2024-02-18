@@ -22,6 +22,8 @@ export const RegisterForm = () => {
 
   return (
     <form action={onSubmit} className="space-y-4">
+      <SubmitError error={error} />
+
       <Input id="email" label="Email Address" errors={fieldErrors} />
 
       <Input
@@ -39,8 +41,6 @@ export const RegisterForm = () => {
       />
 
       <SubmitButton className="w-full">Sign Up</SubmitButton>
-
-      <SubmitError error={error} />
     </form>
   );
 };

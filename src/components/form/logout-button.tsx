@@ -12,7 +12,7 @@ export const LogoutButton = () => {
       className="justify-start w-full text-muted-foreground"
       disabled={pending}
     >
-      <LogOut className="w-6 h-6 mr-3" />
+      <LogOut strokeWidth={1} className="w-6 h-6 mr-3" />
       Logout
     </Button>
   );

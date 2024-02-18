@@ -38,7 +38,7 @@ export const RadioGroup = ({
             className="flex items-center space-x-3 space-y-0 cursor-pointer"
           >
             <RadioGroupItem value={value} />
-            <span className="font-semibold text-neutral-700">{label}</span>
+            <span className="font-semibold ">{label}</span>
           </Label>
         ))}
       </SRadioGroup>

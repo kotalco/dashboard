@@ -11,7 +11,7 @@ export default async function DashboardLayout({
       <Sidebar>
         <SettingsNavigationItems />
       </Sidebar>
-      <main className="container flex-1 max-h-screen pt-10 pb-4 overflow-y-auto">
+      <main className="flex-1 ml-64 max-h-screen max-w-7xl p-4 sm:p-6 md:p-10 overflow-y-auto">
         {children}
       </main>
     </div>

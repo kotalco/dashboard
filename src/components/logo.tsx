@@ -6,17 +6,12 @@ export const Logo = () => {
       <Image
         src="/images/logo.svg"
         alt="logo"
-        width={80}
-        height={80}
+        width={70}
+        height={70}
         priority
-        className="w-20 h-20"
+        className="w-[70px] h-[70px]"
       />
-      <p className="mt-3 text-4xl font-bold leading-4">
-        Kotal <br />
-        <span className="block mt-2 tracking-wider uppercase logo-slogan">
-          Professional
-        </span>
-      </p>
+      <p className="text-5xl font-bold leading-4">Kotal</p>
     </div>
   );
 };

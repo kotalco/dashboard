@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ExternalLink } from "@/components/ui/external-link";
-import { TabsFooter } from "@/components/ui/tabs";
+
 import { Select } from "@/components/form/select";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
@@ -48,17 +48,27 @@ export const EditImageVersionForm = ({
   return (
     <form action={onSubmit} className="mt-3 space-y-4">
       <div className="text-sm">
-        <Select
-          id="image"
-          label="Client Version"
-          disabled={role === Roles.Reader}
-          defaultValue={image}
-          onValueChange={setCurrentImage}
-          description="Latest version is recommended"
-          options={options}
-          errors={fieldErrors}
-          className="max-w-xs"
-        />
+        <div className="flex items-center space-x-10">
+          <Select
+            id="image"
+            label="Client Version"
+            disabled={role === Roles.Reader}
+            defaultValue={image}
+            onValueChange={setCurrentImage}
+            description="Latest version is recommended"
+            options={options}
+            errors={fieldErrors}
+          />
+
+          {role !== Roles.Reader && currentImage !== image && (
+            <SubmitButton
+              disabled={currentImage === image}
+              data-testid="submit"
+            >
+              Update
+            </SubmitButton>
+          )}
+        </div>
 
         <ExternalLink
           href={
@@ -71,7 +81,7 @@ export const EditImageVersionForm = ({
       </div>
 
       {versions?.find((version) => version.image === image)?.canBeUpgraded && (
-        <Alert variant="info">
+        <Alert className="alert-info">
           New image version is avaliable. It is recommended to update to latest
           version.
         </Alert>
@@ -82,14 +92,6 @@ export const EditImageVersionForm = ({
       </SubmitSuccess>
 
       <SubmitError error={error} />
-
-      {role !== Roles.Reader && (
-        <TabsFooter>
-          <SubmitButton disabled={currentImage === image} data-testid="submit">
-            Save
-          </SubmitButton>
-        </TabsFooter>
-      )}
     </form>
   );
 };

@@ -1,16 +1,17 @@
 "use client";
 
+import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 
-import { Input } from "@/components/form/input";
 import { ChainlinkNetworks, SecretType } from "@/enums";
-import { Select } from "@/components/form/select";
 import { getSelectItems, readSelectWithInputValue } from "@/lib/utils";
 import { ExecutionClientNode, OptionType, Version } from "@/types";
-import { Label } from "@/components/ui/label";
 import { useAction } from "@/hooks/use-action";
 import { createChainlink } from "@/actions/create-chainlink";
-import { toast } from "sonner";
+
+import { Input } from "@/components/form/input";
+import { Select } from "@/components/form/select";
+import { Label } from "@/components/ui/label";
 import { SubmitButton } from "@/components/form/submit-button";
 import { SubmitError } from "@/components/form/submit-error";
 import { ExternalLink } from "@/components/ui/external-link";
@@ -88,7 +89,7 @@ export const CreateChainlinkNodeForm: React.FC<
         options={getSelectItems(ChainlinkNetworks)}
       />
 
-      <p className="text-sm font-medium leading-none space-y-1">
+      <p className="text-sm font-medium flex flex-col leading-none space-y-2">
         <span>Client: </span>
         <ExternalLink href="https://github.com/smartcontractkit/chainlink">
           Chainlink
@@ -125,7 +126,7 @@ export const CreateChainlinkNodeForm: React.FC<
         description="For securing access to chainlink wallet"
       />
 
-      <div className="space-y-4">
+      <div className="space-y-4 pt-4">
         <div>
           <Label className="text-xl">API Credentials</Label>
           <p className="text-sm text-muted-foreground">

@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 
 import { getEnumKey, getSelectItems } from "@/lib/utils";
 import { useAPIMessage } from "@/hooks/useAPIMessage";
-import { Roles, RolesWithCustomer } from "@/enums";
+import { Roles } from "@/enums";
 import { useAction } from "@/hooks/use-action";
 import { changeRole } from "@/actions/change-role";
 
@@ -24,18 +24,18 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
     onSuccess: () => {
       setMessage({
         message: `Member (${data.email}) role has been changed for this workspace`,
-        type: { variant: "success" },
+        variant: "success",
       });
     },
     onError: () => {
       setMessage({
         message: "Something went wrong.",
-        type: { variant: "destructive" },
+        variant: "destructive",
       });
     },
   });
 
-  const { isCurrentUser, role, id, withCustomerRole } = data;
+  const { isCurrentUser, role, id } = data;
 
   useEffect(() => {
     return () => clearMessage();
@@ -50,12 +50,19 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
     });
   };
 
+  const roles = getSelectItems(Roles);
+  const roleOptions = roles.filter(({ value }) => value !== Roles.Customer);
+
   if (pending) {
     return (
       <div className="flex items-center justify-center max-w-[120px]">
         <Loader2 className="w-4 h-4 animate-spin text-foreground/50" />
       </div>
     );
+  }
+
+  if (role === Roles.Customer) {
+    return <div className="pl-4">{getEnumKey(Roles, role)}</div>;
   }
 
   return (
@@ -65,7 +72,7 @@ export const CellRole: React.FC<CellRoleProps> = ({ data }) => {
       value={role}
       defaultValue={role}
       onValueChange={onChangeRole}
-      options={getSelectItems(withCustomerRole ? RolesWithCustomer : Roles)}
+      options={roleOptions}
       className="max-w-[120px]"
     />
   );

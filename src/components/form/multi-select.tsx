@@ -89,11 +89,11 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
     // on delete key press, remove last selected item
     React.useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Backspace" && selected.length > 0) {
-          setSelected(
-            selected.filter((_, index) => index !== selected.length - 1)
-          );
-        }
+        // if (e.key === "Backspace" && selected.length > 0) {
+        //   setSelected(
+        //     selected.filter((_, index) => index !== selected.length - 1)
+        //   );
+        // }
 
         // close on escape
         if (e.key === "Escape") {
@@ -126,10 +126,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       <div className="space-y-2">
         <div className="space-y-2">
           {label && (
-            <Label
-              htmlFor={id}
-              className="font-semibold block text-neutral-700"
-            >
+            <Label htmlFor={id} className="block">
               {label}
             </Label>
           )}
@@ -141,7 +138,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className={`group w-full bg-white hover:bg-white justify-between ${
+                className={`group w-full justify-between ${
                   selected.length > 1 ? "h-full" : "h-10"
                 }`}
                 onClick={() => setOpen(!open)}

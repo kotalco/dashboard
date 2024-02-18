@@ -34,7 +34,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     }
   }
 
-  revalidatePath(`/${workspace_id}/deployments/ipfs?deployment=peers`);
+  revalidatePath(`/${workspace_id}/deployments/ipfs?tab=peers`);
   return { data: peer };
 };
 

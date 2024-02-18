@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useEffect, useTransition } from "react";
 import { useParams, usePathname } from "next/navigation";
-import { Boxes, Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { WorksapcesList } from "@/types";
@@ -74,7 +74,6 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
           aria-label="Select a wrokspace"
           className={cn("justify-between px-3 text-lg font-normal", className)}
         >
-          <Boxes className="w-8 h-8 mr-3" />
           {currentWorkspace?.name}
           <span className="ml-1 text-sm font-light">
             ({currentWorkspace?.user_id === userId ? "Owner" : "Member"})
@@ -86,7 +85,7 @@ export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
       <PopoverContent className="w-full p-0">
         <Command>
           <CommandList>
-            <CommandInput disabled={pending} placeholder="Search a Workspace" />
+            <CommandInput disabled={pending} placeholder="Search..." />
             <CommandEmpty>No Workspaces Found.</CommandEmpty>
             <CommandGroup>
               {workspaces.map((workspace) => (

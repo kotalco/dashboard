@@ -40,6 +40,9 @@ export const LoginForm = () => {
   return (
     <>
       <Verification2FAModal isOpen={open} onClose={() => setOpen(false)} />
+      <SubmitError error={error} />
+      {email && <ReverifyEmailALert email={email} />}
+
       <form action={onSubmit} className="space-y-4">
         <Input id="email" label="Email Address" errors={fieldErrors} />
 
@@ -50,23 +53,20 @@ export const LoginForm = () => {
           type="password"
         />
 
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <Checkbox id="remember-me" label="Remember Me" errors={fieldErrors} />
           <div className="text-sm whitespace-nowrap">
             <Link
               href="/forget-password"
-              className="text-primary hover:underline underline-offset-4"
+              className="underline hover:text-muted-foreground"
             >
               Forgot your password?
             </Link>
           </div>
         </div>
 
-        <SubmitError error={error} />
-
         <SubmitButton className="w-full">Login</SubmitButton>
       </form>
-      {email && <ReverifyEmailALert email={email} />}
     </>
   );
 };

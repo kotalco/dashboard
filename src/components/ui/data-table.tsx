@@ -41,13 +41,16 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="overflow-hidden bg-white border rounded-md">
+    <div className="overflow-hidden border rounded-md">
       <Table>
         <TableHeader className="bg-secondary">
           {table.getHeaderGroups().map(({ id, headers }) => (
             <TableRow key={id}>
               {headers.map(({ id, isPlaceholder, column, getContext }) => (
-                <TableHead key={id}>
+                <TableHead
+                  key={id}
+                  className={column.id === "name" ? "w-1/2" : ""}
+                >
                   {isPlaceholder
                     ? null
                     : flexRender(column.columnDef.header, getContext())}

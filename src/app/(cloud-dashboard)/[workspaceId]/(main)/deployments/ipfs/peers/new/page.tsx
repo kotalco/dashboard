@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateIPFSPeerForm } from "../components/create-ipfs-peer-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
+
+import { Heading } from "@/components/ui/heading";
+
+import { CreateIPFSPeerForm } from "./_components/create-ipfs-peer-form";
 
 export default async function CreateNewExecutionClientNodePage({
   params,
@@ -23,13 +25,9 @@ export default async function CreateNewExecutionClientNodePage({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New IPFS Peer</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateIPFSPeerForm images={versions} />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New IPFS Peer" />
+      <CreateIPFSPeerForm images={versions} />
+    </div>
   );
 }

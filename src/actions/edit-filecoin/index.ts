@@ -8,16 +8,14 @@ import { FilecoinNode } from "@/types";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import { EditAPI, EditIPFS, EditLogging } from "./schema";
+import { EditFilecoin } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let node;
+  const { name, workspaceId, ...data } = values;
   try {
     const response = await server.put<FilecoinNode>(
-      `/filecoin/nodes/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/filecoin/nodes/${name}?workspace_id=${workspaceId}`,
       data
     );
     node = response.data;
@@ -26,12 +24,8 @@ const handler = async (
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(
-    `/${identifiers.workspaceId}/deployments/filecoin/${node.name}`
-  );
+  revalidatePath(`/${workspaceId}/deployments/filecoin/${node.name}`);
   return { data: node };
 };
 
-export const editAPI = createAction(EditAPI, handler);
-export const editIPFS = createAction(EditIPFS, handler);
-export const editLogging = createAction(EditLogging, handler);
+export const editFilecoinNode = createAction(EditFilecoin, handler);

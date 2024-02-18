@@ -1,30 +1,26 @@
 import { z } from "zod";
 
-export const EditLogging = z.object({
+import { Identifiers } from "@/schemas/identifiers";
+import { EditImageVersion } from "@/schemas/image-version";
+import { EditResources } from "@/schemas/resources";
+
+const EditLogging = z.object({
   disableMetadataLog: z.boolean(),
 });
 
-export const EditIPFS = z.object({
+const EditIPFS = z.object({
   ipfsForRetrieval: z.boolean(),
   ipfsOnlineMode: z.boolean(),
-  ipfsPeerEndpoint: z.string().trim().optional(),
+  ipfsPeerEndpoint: z.string().trim().optional().nullable(),
 });
 
-export const EditAPI = z
-  .object({
-    api: z.boolean(),
-    apiRequestTimeout: z
-      .number({
-        invalid_type_error: "Please enter a valid number with seconds",
-      })
-      .optional()
-      .nullable(),
-  })
-  .refine(
-    ({ api, apiRequestTimeout }) =>
-      api ? apiRequestTimeout && apiRequestTimeout > 0 : true,
-    {
-      message: "Please enter a valid number with seconds",
-      path: ["apiRequestTimeout"],
-    }
-  );
+const EditAPI = z.object({
+  api: z.boolean(),
+  apiRequestTimeout: z.number().optional().nullable(),
+});
+
+export const EditFilecoin = Identifiers.merge(EditImageVersion)
+  .merge(EditAPI)
+  .merge(EditIPFS)
+  .merge(EditLogging)
+  .merge(EditResources);

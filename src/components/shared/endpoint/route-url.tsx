@@ -24,7 +24,7 @@ export const RouteURL: React.FC<RouteURLProps> = ({ route }) => {
 
   return (
     <div className="flex items-center">
-      <div className="px-3 max-w-xl border rounded-l-md h-10 truncate py-2 text-sm">
+      <div className="px-3 max-w-xl border text-muted-foreground rounded-l-md h-10 truncate py-2 text-sm">
         {route}
       </div>
       <Button

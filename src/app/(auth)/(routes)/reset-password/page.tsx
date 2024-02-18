@@ -1,6 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ResetPasswordForm } from "./components/reset-password-form";
 import { redirect } from "next/navigation";
+
+import { CardWrapper } from "@/components/shared/auth/card-wrapper";
+
+import { ResetPasswordForm } from "./components/reset-password-form";
 
 export default async function Page({
   searchParams,
@@ -12,15 +14,8 @@ export default async function Page({
   }
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-center">Reset Password</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResetPasswordForm />
-        </CardContent>
-      </Card>
-    </>
+    <CardWrapper title="Reset Password">
+      <ResetPasswordForm />
+    </CardWrapper>
   );
 }

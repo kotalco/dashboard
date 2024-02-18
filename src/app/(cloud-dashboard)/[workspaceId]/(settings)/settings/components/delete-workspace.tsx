@@ -24,7 +24,7 @@ export const DeleteWorkspace: React.FC<DeleteWorkspaceProps> = ({
   };
 
   return (
-    <div className="flex justify-between gap-x-4">
+    <div className="flex justify-between items-center gap-x-10 max-w-3xl">
       <p>
         Delete the current workspace. Please take care this is going to delete
         all deployments running in the current workspace

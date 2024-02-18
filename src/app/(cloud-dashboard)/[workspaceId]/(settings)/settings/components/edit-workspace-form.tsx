@@ -39,7 +39,7 @@ export const EditWorkspaceForm: React.FC<EditWorkspaceFormProps> = ({
       </SubmitSuccess>
       <SubmitError error={error} />
 
-      <SubmitButton>Save</SubmitButton>
+      <SubmitButton>Update</SubmitButton>
     </form>
   );
 };

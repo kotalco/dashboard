@@ -1,23 +1,20 @@
-import { format, parseISO } from "date-fns";
+import { Suspense } from "react";
 
-import { EndpointsClient } from "./components/client";
-import { getVirtualEndpoints } from "@/services/get-virtual-endpoints";
+import { Heading } from "@/components/ui/heading";
+import { NodesListSkeleton } from "@/components/nodes-list-skeleton";
+
+import { EndpointsList } from "./_components/endpoints-list";
 
 export default async function EndpointsPage() {
-  const { data } = await getVirtualEndpoints();
-
-  const formattedEndpoints = data.map(({ protocol, name, created_at }) => ({
-    protocol,
-    name,
-    created_at: format(parseISO(created_at), "MMMM do, yyyy"),
-    href: `/virtual-endpoints/${name}`,
-  }));
-
   return (
-    <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
-        <EndpointsClient data={formattedEndpoints} />
+    <div className="grid grid-cols-12 items-center gap-8 pr-10">
+      <div className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
+        <Heading title="Endpoints" />
       </div>
+
+      <Suspense fallback={<NodesListSkeleton />}>
+        <EndpointsList />
+      </Suspense>
     </div>
   );
 }

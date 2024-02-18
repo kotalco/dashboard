@@ -2,6 +2,7 @@
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
 
 import { ProtocolsWithoutEthereum2 } from "@/enums";
@@ -9,18 +10,6 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-const CHART_COLORS = {
-  aptos: "#000000",
-  bitcoin: "#F6931A",
-  chainlink: "#295ADA",
-  ethereum: "#8C8C8C",
-  filecoin: "#0090FF",
-  ipfs: "#5CB5BE",
-  near: "#000000",
-  polkadot: "#E6007A",
-  stacks: "#5546FE",
-};
 
 const LABELS = {
   aptos: "Aptos",
@@ -107,6 +96,19 @@ export const DeploymentsChart = ({ counts }: DeploymentsChartProps) => {
   const params = useParams();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
+  const { theme } = useTheme();
+
+  const CHART_COLORS = {
+    aptos: theme === "light" ? "#000000" : "#FFFFFF",
+    bitcoin: "#F6931A",
+    chainlink: "#295ADA",
+    ethereum: "#8C8C8C",
+    filecoin: "#0090FF",
+    ipfs: "#5CB5BE",
+    near: theme === "light" ? "#000000" : "#FFFFFF",
+    polkadot: "#E6007A",
+    stacks: "#5546FE",
+  };
 
   const keys = Object.keys(counts) as ProtocolsWithoutEthereum2[];
   const filteredKeys = keys.filter((key) => counts[key]);
@@ -141,6 +143,7 @@ export const DeploymentsChart = ({ counts }: DeploymentsChartProps) => {
                 ],
               }}
               options={{
+                borderColor: "transparent",
                 animation: false,
                 cutout: "50%",
                 maintainAspectRatio: false,

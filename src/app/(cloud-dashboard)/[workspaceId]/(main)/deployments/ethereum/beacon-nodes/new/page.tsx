@@ -1,13 +1,15 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateBeaconNodeForm } from "../components/create-beacon-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { getNodes } from "@/services/get-nodes";
 import { Roles, SecretType } from "@/enums";
 import { ExecutionClientNode } from "@/types";
 import { getSecrets } from "@/services/get-secrets";
+
+import { Heading } from "@/components/ui/heading";
+
+import { CreateBeaconNodeForm } from "./_components/create-beacon-node-form";
 
 export default async function CreateNewBeaconNodePage({
   params,
@@ -30,17 +32,13 @@ export default async function CreateNewBeaconNodePage({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Beacon Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateBeaconNodeForm
-          images={component}
-          executionClients={data}
-          secrets={options}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New Beacon Node" />
+      <CreateBeaconNodeForm
+        images={component}
+        executionClients={data}
+        secrets={options}
+      />
+    </div>
   );
 }

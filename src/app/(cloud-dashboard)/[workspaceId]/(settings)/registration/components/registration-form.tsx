@@ -32,21 +32,19 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
       action={onSubmit}
       className="space-y-4"
     >
-      <div className="p-4 border rounded-lg">
-        <Toggle
-          id="enable_registration"
-          label="Enable Registration"
-          description="If disabled, users will not be able to register their own accounts."
-          defaultChecked={isEnabled}
-          errors={fieldErrors}
-          className="justify-between"
-        />
-      </div>
+      <Toggle
+        id="enable_registration"
+        label="Enable Registration"
+        description="If disabled, users will not be able to register their own accounts."
+        defaultChecked={isEnabled}
+        errors={fieldErrors}
+        className="space-x-10"
+      />
 
-      <SubmitButton>Save</SubmitButton>
+      <SubmitButton>Update</SubmitButton>
 
       <SubmitSuccess success={success}>
-        Your registration settings have been saved successfuly
+        Your registration settings have been updated successfuly
       </SubmitSuccess>
 
       <SubmitError error={error} />

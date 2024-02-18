@@ -1,24 +1,26 @@
-import { getWorkspace } from "@/services/get-workspace";
-import { getNodes } from "@/services/get-nodes";
-import { FilecoinNode } from "@/types";
-import { FilecoinClient } from "./components/client";
+import { Suspense } from "react";
+
+import { Heading } from "@/components/ui/heading";
+import { NodesListSkeleton } from "@/components/nodes-list-skeleton";
+
+import { FilecoinNodesList } from "./_components/filecoin-nodes-list";
 
 export default async function FilecoinPage({
   params,
 }: {
   params: { workspaceId: string };
 }) {
-  const { data } = await getNodes<FilecoinNode>(
-    params.workspaceId,
-    "/filecoin/nodes"
-  );
-  const { role } = await getWorkspace(params.workspaceId);
+  const { workspaceId } = params;
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
-        <FilecoinClient data={data} role={role} />
+    <div className="grid grid-cols-12 items-center gap-8 pr-10">
+      <div className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
+        <Heading title="Filecoin Deployments" />
       </div>
+
+      <Suspense fallback={<NodesListSkeleton />}>
+        <FilecoinNodesList workspaceId={workspaceId} />
+      </Suspense>
     </div>
   );
 }

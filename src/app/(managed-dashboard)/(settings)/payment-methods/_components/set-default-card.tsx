@@ -36,7 +36,7 @@ const SetDefaultCardButton = () => {
   const { pending } = useFormStatus();
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -52,7 +52,7 @@ const SetDefaultCardButton = () => {
             )}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Delete</TooltipContent>
+        <TooltipContent>Set as Default</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

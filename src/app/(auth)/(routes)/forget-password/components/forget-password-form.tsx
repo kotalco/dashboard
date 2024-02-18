@@ -19,16 +19,16 @@ export const ForgetPasswordForm = () => {
 
   return (
     <form action={onSubmit} className="space-y-4">
-      <Input id="email" label="Email Address" errors={fieldErrors} />
-
-      <SubmitButton className="w-full">Send Reset Email</SubmitButton>
-
       <SubmitSuccess success={success}>
         Reset password email has been sent to your email. Please check your mail
         to continue.
       </SubmitSuccess>
 
       <SubmitError error={error} />
+
+      <Input id="email" label="Email Address" errors={fieldErrors} />
+
+      <SubmitButton className="w-full">Send Reset Email</SubmitButton>
     </form>
   );
 };

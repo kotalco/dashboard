@@ -14,12 +14,6 @@ export default async function PublicPageLayout({
   if (!token?.value) return <>{children}</>;
 
   const { user, error } = await findUser();
-  // No user and Invalid Subscription
-  if (!user && error?.response?.data.name === "INVALID_SUBSCRIPTION")
-    redirect("/");
-
-  // No user and Subscription Conflict
-  if (!user && error?.response?.data.name === "Conflict") redirect("/");
 
   // No user and no auth token or invalid token
   if (!user) return <>{children}</>;

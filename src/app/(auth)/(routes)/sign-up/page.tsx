@@ -1,32 +1,22 @@
 import Link from "next/link";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardWrapper } from "@/components/shared/auth/card-wrapper";
+
 import { RegisterForm } from "./components/register-form";
 
 export default function Page() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-center">Sign In</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <RegisterForm />
-      </CardContent>
-      <CardFooter className="gap-x-1">
+    <CardWrapper title="Sign Up">
+      <RegisterForm />
+      <p className="gap-x-1">
         Already have an account?
         <Link
           href="/sign-in"
-          className="text-primary hover:underline underline-offset-4"
+          className="underline ml-2 hover:text-muted-foreground"
         >
           Login
         </Link>
-      </CardFooter>
-    </Card>
+      </p>
+    </CardWrapper>
   );
 }

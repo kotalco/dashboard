@@ -14,11 +14,12 @@ export default async function DashboardLayout({
       <Sidebar>
         <ManagedNavigationItems endpointCount={count} />
       </Sidebar>
-      <div className="flex flex-col flex-1 w-0 min-h-screen overflow-y-auto">
-        <main className="flex-1 pt-10 focus:outline-none" tabIndex={0}>
-          <div className="h-full px-4 py-6 mx-auto max-w-7xl sm:px-6 md:px-8">
-            {children}
-          </div>
+      <div className="flex flex-col ml-64 flex-1 w-0 min-h-screen overflow-y-auto">
+        <main
+          className="flex-1 h-full focus:outline-none max-w-7xl p-4 sm:p-6 md:p-10"
+          tabIndex={0}
+        >
+          {children}
         </main>
       </div>
     </div>

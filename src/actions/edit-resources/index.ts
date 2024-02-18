@@ -7,7 +7,7 @@ import { server } from "@/lib/server-instance";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import { EditResources } from "./schema";
+import { EditResources } from "../../schemas/resources";
 
 export const handler = async (
   data: InputType,

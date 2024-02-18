@@ -2,7 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import { Nunito } from "next/font/google";
 
+import { ModeToggle } from "@/components/ui/mode-toggle";
+
 import { ModalProvider } from "@/providers/modal-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -28,11 +31,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${nunito.variable}`}>
-        <ModalProvider />
-        <Toaster richColors />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ModalProvider />
+          <Toaster richColors />
+          <div className="absolute right-5 top-5">
+            <ModeToggle />
+          </div>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

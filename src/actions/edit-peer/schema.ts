@@ -1,21 +1,21 @@
-import { IPFSConfigProfile, IPFSRouting } from "@/enums";
+import { IPFSRouting } from "@/enums";
+import { Identifiers } from "@/schemas/identifiers";
+import { EditImageVersion } from "@/schemas/image-version";
+import { EditResources } from "@/schemas/resources";
 import { z } from "zod";
 
-export const EditRouting = z.object({
+const EditRouting = z.object({
   routing: z.nativeEnum(IPFSRouting, {
     errorMap: () => ({ message: "Routing is required" }),
   }),
 });
 
-export const EditAPI = z.object({
+const EditAPI = z.object({
   api: z.boolean(),
   gateway: z.boolean(),
 });
 
-export const EditConfigProfiles = z.object({
-  profiles: z
-    .nativeEnum(IPFSConfigProfile, {
-      errorMap: () => ({ message: "Routing is required" }),
-    })
-    .array(),
-});
+export const EditPeer = Identifiers.merge(EditImageVersion)
+  .merge(EditResources)
+  .merge(EditRouting)
+  .merge(EditAPI);

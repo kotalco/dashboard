@@ -23,9 +23,25 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
   return (
     <>
       {items.map(
-        ({ title, label, href, active, Icon, prefetch, items, count }, index) =>
+        (
+          {
+            title,
+            label,
+            href,
+            active,
+            Icon,
+            prefetch,
+            items,
+            count,
+            position,
+          },
+          index
+        ) =>
           href ? (
-            <li key={index}>
+            <li
+              key={index}
+              className={position === "bottom" ? "mt-auto" : "mt-1"}
+            >
               {title && (
                 <div className="mt-3 mb-1 text-xs font-normal text-gray-500">
                   {title}
@@ -41,7 +57,10 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
                 )}
               >
                 <Link href={href} prefetch={prefetch}>
-                  <Icon className={cn(`w-6 h-6`, label ? "mr-3" : "")} />
+                  <Icon
+                    strokeWidth={1}
+                    className={cn(`w-6 h-6`, label ? "mr-3" : "")}
+                  />
                   {label}
                   {!!count && (
                     <span className="flex ml-auto items-center justify-center w-6 h-6 rounded-full bg-foreground/10 text-primary">
@@ -61,7 +80,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
                   active ? "bg-accent text-accent-foreground" : ""
                 )}
               >
-                <Icon className="w-6 h-6 mr-3" />
+                <Icon strokeWidth={1} className="w-6 h-6 mr-3" />
                 {label}
                 <ChevronRight
                   className={cn(
@@ -73,7 +92,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
               <ul
                 className={cn(
                   "overflow-y-auto transition-all",
-                  open ? "max-h-full" : "max-h-0"
+                  open ? "max-h-full py-1" : "max-h-0"
                 )}
               >
                 {items?.map(({ label, href, active, count }) => (

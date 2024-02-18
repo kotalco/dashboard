@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import { Bar } from "react-chartjs-2";
 import { ChartData } from "chart.js";
 import {
@@ -9,38 +10,37 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 
 interface EndpointStatsChartProps {
   data: number[];
   labels: string[] | number[];
-  title: string;
 }
 
 export const EndpointStatsChart = ({
   data,
   labels,
-  title,
 }: EndpointStatsChartProps) => {
+  const { theme } = useTheme();
+  const barColor =
+    theme === "dark" ? "hsl(142.1, 70.6%, 45.3%)" : "hsl(142.1, 76.2%, 36.3%)";
+  const labelsColor =
+    theme === "dark" ? "hsl(210, 20%, 98%)" : "hsl(224, 71.4%, 4.1%)";
+  const tooltipBgColor =
+    theme === "dark" ? "hsl(0, 0%, 100%)" : "hsl(224, 71.4%, 4.1%)";
+  const tooltipTextColor =
+    theme === "dark" ? "hsl(224, 71.4%, 4.1%)" : "hsl(210, 20%, 98%)";
+
   const dataConfig: ChartData<"bar", number[], string | number> = {
     labels,
     datasets: [
       {
         barThickness: 20,
         borderRadius: 5,
-        label: "No. of hits",
         data,
-        backgroundColor: "hsl(142, 72%, 29%)",
+        backgroundColor: barColor,
       },
     ],
   };
@@ -52,29 +52,29 @@ export const EndpointStatsChart = ({
         maintainAspectRatio: false,
         responsive: true,
         plugins: {
-          legend: { align: "end" },
-          title: {
-            display: true,
-            text: title,
-            font: {
-              size: 16,
-              weight: "normal",
-            },
-          },
+          legend: { display: false },
           tooltip: {
             boxPadding: 5,
+            backgroundColor: tooltipBgColor,
+            titleColor: tooltipTextColor,
+            bodyColor: tooltipTextColor,
+            yAlign: "bottom",
             callbacks: {
               label: (item) => `${item.formattedValue} hits`,
-              title: (items) =>
-                items.map((item) =>
-                  isNaN(Number(item.label)) ? item.label : `Day ${item.label}`
-                ),
+              title: () => "",
             },
           },
         },
         scales: {
-          x: { grid: { display: false } },
-          y: { grid: { display: false }, ticks: { stepSize: 1 } },
+          x: {
+            grid: { display: false },
+          },
+          y: {
+            grid: { display: false },
+            ticks: {
+              stepSize: 1,
+            },
+          },
         },
       }}
       data={dataConfig}

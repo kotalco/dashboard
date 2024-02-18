@@ -50,11 +50,7 @@ export const Select = ({
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        {label && (
-          <Label htmlFor={id} className="font-semibold text-neutral-700">
-            {label}
-          </Label>
-        )}
+        {label && <Label htmlFor={id}>{label}</Label>}
         <div className="flex">
           <ShadSelect
             disabled={pending || disabled}
@@ -63,11 +59,7 @@ export const Select = ({
             value={value}
             {...props}
           >
-            <SelectTrigger
-              id={id}
-              data-testid={id}
-              className={cn(className, "bg-white")}
-            >
+            <SelectTrigger id={id} data-testid={id} className={cn(className)}>
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>

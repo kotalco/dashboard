@@ -8,16 +8,14 @@ import { IPFSPeer } from "@/types";
 import { logger } from "@/lib/utils";
 
 import { InputType, ReturnType } from "./types";
-import { EditAPI, EditConfigProfiles, EditRouting } from "./schema";
+import { EditPeer } from "./schema";
 
-const handler = async (
-  data: InputType,
-  identifiers: Record<string, string>
-): Promise<ReturnType> => {
+const handler = async (values: InputType): Promise<ReturnType> => {
   let peer;
+  const { workspaceId, name, ...data } = values;
   try {
     const response = await server.put<IPFSPeer>(
-      `/ipfs/peers/${identifiers.name}?workspace_id=${identifiers.workspaceId}`,
+      `/ipfs/peers/${name}?workspace_id=${workspaceId}`,
       data
     );
 
@@ -27,12 +25,8 @@ const handler = async (
     return { error: "Something went wrong." };
   }
 
-  revalidatePath(
-    `/${identifiers.workspaceId}/deployments/ipfs/peers/${peer.name}`
-  );
+  revalidatePath(`/${workspaceId}/deployments/ipfs/peers/${peer.name}`);
   return { data: peer };
 };
 
-export const editAPI = createAction(EditAPI, handler);
-export const editConfigProfiles = createAction(EditConfigProfiles, handler);
-export const editRouting = createAction(EditRouting, handler);
+export const editIpfsPeer = createAction(EditPeer, handler);

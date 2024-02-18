@@ -51,7 +51,7 @@ export const CardSelection = async () => {
           default: defaultCard,
         }) => (
           <Label
-            className="flex items-center p-6 transition-all bg-white border rounded-lg cursor-pointer"
+            className="flex items-center p-6 transition-all border rounded-lg cursor-pointer"
             key={id}
           >
             <RadioGroupItem value={provider_id} />
@@ -74,7 +74,7 @@ export const CardSelection = async () => {
             {defaultCard ? (
               <Badge variant="secondary">Default</Badge>
             ) : (
-              <div className="ml-14" />
+              <div className="ml-16" />
             )}
           </Label>
         )

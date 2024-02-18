@@ -1,12 +1,16 @@
 import Image from "next/image";
-import { format, parseISO } from "date-fns";
+import { Fragment } from "react";
 
 import { Endpoint, EndpointStats as TEndpointStats } from "@/types";
+import { formatDate } from "@/lib/utils";
 
 import { Heading } from "@/components/ui/heading";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RouteURL } from "@/components/shared/endpoint/route-url";
+import { ExternalLink } from "@/components/ui/external-link";
+import { Separator } from "@/components/ui/separator";
+
 import { EndpointStats } from "./endpoint-stats";
+import Example from "./example";
 
 interface EndpointDetailsProps {
   endpoint: Endpoint;
@@ -18,8 +22,8 @@ export const EndpointDetails = async ({
   stats,
 }: EndpointDetailsProps) => {
   return (
-    <>
-      <div className="flex-1 p-8 pl-0 pt-6 space-y-4">
+    <div className="space-y-8">
+      <div className="space-y-2">
         <div className="flex items-center gap-x-3">
           <Image
             src={`/images/${endpoint.protocol}.svg`}
@@ -28,65 +32,51 @@ export const EndpointDetails = async ({
             alt="Endpoint"
             className="w-10 h-10"
           />
-          <Heading
-            title={endpoint.name}
-            description={`Created at ${format(
-              parseISO(endpoint.created_at),
-              "MMMM do, yyyy"
-            )}`}
-          />
+          <div className="flex items-start gap-x-2">
+            <Heading
+              variant="h1"
+              title={endpoint.name_label || endpoint.name}
+              description={`Created at ${formatDate(endpoint.created_at)}`}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="space-y-4">
-        {endpoint.routes.map(({ name, route, example, references }, i) => (
-          <Card key={name}>
-            <CardHeader>
-              {/* Route Name */}
-              <CardTitle className="uppercase font-nunito">{name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3 text-sm text-gray-500 pt-7 first:pt-2">
-                {/* Chart Stats */}
-                <EndpointStats
-                  dailyAggregation={stats[name].daily_aggregation}
-                  weeklyAggregation={stats[name].weekly_aggregation}
-                />
+      {endpoint.routes.map(({ name, route, example, references }, i) => (
+        <Fragment key={name}>
+          <div>
+            {/* Route Name */}
+            <Heading variant="h2" title={name} className="uppercase" />
+            <div className="space-y-3 text-sm pt-7 first:pt-2">
+              {/* Route URL */}
+              <RouteURL route={route} />
 
-                {/* Route URL */}
-                <RouteURL route={route} />
+              {/* Example */}
+              <Example example={example} />
 
-                {/* Example */}
-                <div>
-                  <h3 className="text-gray-900 text-base">Example</h3>
-                  <pre className="px-5 mt-2 overflow-x-scroll bg-gray-100 text-gray-700 text-xs font-mono rounded-md py-7">
-                    {example}
-                  </pre>
-                </div>
+              {/* Chart Stats */}
+              <EndpointStats
+                dailyAggregation={stats[name].daily_aggregation}
+                weeklyAggregation={stats[name].weekly_aggregation}
+              />
 
-                {/* References */}
-                <div>
-                  <h3 className="text-gray-700 text-base">References</h3>
-                  <ul className="space-y-1 list-disc">
-                    {references.map((reference) => (
-                      <li className="list-none" key={reference}>
-                        <a
-                          className="text-primary mt-1 hover:underline hover:underline-offset-4"
-                          href={reference}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {reference}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              {/* References */}
+              <div>
+                <Heading variant="h3" title="References" />
+                <ul className="space-y-1 list-disc">
+                  {references.map((reference) => (
+                    <li className="list-none" key={reference}>
+                      <ExternalLink href={reference}>{reference}</ExternalLink>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </>
+            </div>
+          </div>
+
+          {i !== endpoint.routes.length - 1 && <Separator />}
+        </Fragment>
+      ))}
+    </div>
   );
 };

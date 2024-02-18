@@ -8,7 +8,6 @@ import { AddMemberForm } from "./components/add-member-form";
 import { Separator } from "@/components/ui/separator";
 import { findUser } from "@/services/find-user";
 import { APIMessage } from "@/components/api-message";
-import { getSubscriptionInfo } from "@/services/get-subscription-info";
 
 export default async function MembersPage({
   params,
@@ -17,14 +16,12 @@ export default async function MembersPage({
 }) {
   const workspaceData = getWorkspace(params.workspaceId);
   const teamMembersData = getTeamMembers(params.workspaceId);
-  const subscriptionData = getSubscriptionInfo();
   const userData = findUser();
 
-  const [workspace, teamMembers, { user }, subscription] = await Promise.all([
+  const [workspace, teamMembers, { user }] = await Promise.all([
     workspaceData,
     teamMembersData,
     userData,
-    subscriptionData,
   ]);
 
   if (!user) return null;
@@ -35,7 +32,6 @@ export default async function MembersPage({
       email,
       role,
       isCurrentUser: id === user.id,
-      withCustomerRole: !!subscription.endpoint_limit,
       currentRole: workspace.role,
     })
   );

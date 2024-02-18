@@ -25,11 +25,12 @@ export function useManagedNavigation(endpointsCount?: number) {
       count: endpointsCount,
     },
     {
-      label: "Manage Plan",
+      label: "My Plan",
       href: `/billing/plan`,
       Icon: Zap,
     },
     {
+      position: "bottom",
       label: "Settings",
       href: `/account`,
       Icon: Cog,
@@ -48,7 +49,7 @@ export function useManagedNavigation(endpointsCount?: number) {
       Icon: User2,
     },
     {
-      label: "Payment Methods",
+      label: "My Cards",
       href: `/payment-methods`,
       active: pathname.includes("payment-methods"),
       Icon: CreditCard,

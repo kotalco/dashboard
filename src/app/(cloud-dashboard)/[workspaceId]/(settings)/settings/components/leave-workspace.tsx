@@ -20,7 +20,7 @@ export const LeaveWorkspace: React.FC<LeaveWorkspaceProps> = ({ id }) => {
   };
 
   return (
-    <div className="flex justify-between gap-x-4">
+    <div className="flex justify-between items-center max-w-3xl gap-x-10">
       <p>
         Leave the current workspace, this action is critical and cann&apos;t be
         undone untill you have been invited again.

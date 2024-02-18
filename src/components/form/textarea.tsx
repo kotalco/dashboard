@@ -49,13 +49,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className="space-y-2">
         <div className="space-y-1">
           <div>
-            {label && (
-              <Label htmlFor={id} className="font-semibold text-neutral-700">
-                {label}
-              </Label>
-            )}
+            {label && <Label htmlFor={id}>{label}</Label>}
             {tooltip && (
-              <TooltipProvider>
+              <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger>
                     <AlertCircle className="w-3 h-3 ml-2" />
