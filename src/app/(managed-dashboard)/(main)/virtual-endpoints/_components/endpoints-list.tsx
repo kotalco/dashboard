@@ -19,15 +19,13 @@ export const EndpointsList = async () => {
     return <NoEndpoints />;
   }
 
-  const endpoints = data.map(
-    ({ protocol, name, name_label, created_at, network }) => ({
-      name: name_label || name,
-      protocol: getEnumKey(Protocol, protocol),
-      network: getEnumKey(Networks, network),
-      createdAt: created_at,
-      url: `/virtual-endpoints/${name}`,
-    })
-  );
+  const endpoints = data.map(({ protocol, name, created_at, network }) => ({
+    name,
+    protocol: getEnumKey(Protocol, protocol),
+    network: getEnumKey(Networks, network),
+    createdAt: created_at,
+    url: `/virtual-endpoints/${name}`,
+  }));
 
   return (
     <>
