@@ -35,7 +35,7 @@ export const EndpointDetails = async ({
           <div className="flex items-start gap-x-2">
             <Heading
               variant="h1"
-              title={endpoint.name_label || endpoint.name}
+              title={endpoint.name}
               description={`Created at ${formatDate(endpoint.created_at)}`}
             />
           </div>

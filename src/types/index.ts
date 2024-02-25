@@ -295,7 +295,6 @@ export interface Endpoint {
     references: string[];
   }[];
   created_at: string;
-  name_label?: string;
 }
 
 export interface EndpointStats {

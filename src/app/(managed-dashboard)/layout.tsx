@@ -2,6 +2,8 @@ import { notFound, redirect } from "next/navigation";
 
 import { findUser } from "@/services/find-user";
 
+import { ManagedActions } from "@/components/shared/command-actions/managed-actions";
+
 export default async function PrivatePageLayout({
   children,
 }: {
@@ -15,5 +17,10 @@ export default async function PrivatePageLayout({
   // Make sure user is a customer
   if (!user?.is_customer) notFound();
 
-  return <>{children}</>;
+  return (
+    <>
+      <ManagedActions />
+      {children}
+    </>
+  );
 }
