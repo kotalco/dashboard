@@ -277,7 +277,7 @@ export const logger = (tag: string, e: unknown) => {
         JSON.parse(e.config.data).hasOwnProperty("password_confirmation");
     }
 
-    const error = {
+    const error = JSON.stringify({
       tag,
       name: e.name,
       message: e.message,
@@ -287,7 +287,7 @@ export const logger = (tag: string, e: unknown) => {
       payload: hasSensitiveData ? "sensitive_data" : e.config?.data,
       response: e.response?.data,
       status: e.status,
-    };
+    });
     console.error(error);
     return;
   }
