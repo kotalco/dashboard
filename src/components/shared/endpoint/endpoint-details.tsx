@@ -32,12 +32,15 @@ export const EndpointDetails = async ({
             alt="Endpoint"
             className="w-10 h-10"
           />
-          <div className="flex items-start gap-x-2">
+          <div>
             <Heading
               variant="h1"
-              title={endpoint.name}
-              description={`Created at ${formatDate(endpoint.created_at)}`}
+              title={endpoint.name_label || endpoint.name}
             />
+            <div className="text-sm text-muted-foreground">
+              <p>Created at {formatDate(endpoint.created_at)}</p>
+              {endpoint.name_label && <p>ID: {endpoint.name}</p>}
+            </div>
           </div>
         </div>
       </div>
@@ -55,10 +58,10 @@ export const EndpointDetails = async ({
               <Example example={example} />
 
               {/* Chart Stats */}
-              <EndpointStats
+              {/* <EndpointStats
                 dailyAggregation={stats[name].daily_aggregation}
                 weeklyAggregation={stats[name].weekly_aggregation}
-              />
+              /> */}
 
               {/* References */}
               <div>
