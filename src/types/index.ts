@@ -299,7 +299,7 @@ export interface Endpoint {
 }
 
 export interface EndpointStats {
-  [key: string]: { daily_aggregation: number[]; weekly_aggregation: number[] };
+  [key: string]: { [date: string]: number }[];
 }
 
 export interface Service {
