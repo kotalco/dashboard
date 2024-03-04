@@ -12,11 +12,13 @@ import { DeleteEndpointButton } from "./delete-endpoint-button";
 interface CloudEndpointDetailsProps {
   workspaceId: string;
   name: string;
+  filter?: "last_month" | "last_week";
 }
 
 export const CloudEndpointDetails = async ({
   name,
   workspaceId,
+  filter = "last_month",
 }: CloudEndpointDetailsProps) => {
   const { endpoint } = await getEndpoint(workspaceId, name);
 
@@ -24,7 +26,7 @@ export const CloudEndpointDetails = async ({
     redirect(`/${workspaceId}/endpoints`);
   }
 
-  const { stats } = await getEndpointStats(workspaceId, name);
+  const { stats } = await getEndpointStats(workspaceId, name, filter);
 
   return (
     <>

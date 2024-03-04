@@ -26,8 +26,6 @@ export const EndpointStatsChart = ({
   const { theme } = useTheme();
   const barColor =
     theme === "dark" ? "hsl(142.1, 70.6%, 45.3%)" : "hsl(142.1, 76.2%, 36.3%)";
-  const labelsColor =
-    theme === "dark" ? "hsl(210, 20%, 98%)" : "hsl(224, 71.4%, 4.1%)";
   const tooltipBgColor =
     theme === "dark" ? "hsl(0, 0%, 100%)" : "hsl(224, 71.4%, 4.1%)";
   const tooltipTextColor =
@@ -51,6 +49,7 @@ export const EndpointStatsChart = ({
       options={{
         maintainAspectRatio: false,
         responsive: true,
+        animation: false,
         plugins: {
           legend: { display: false },
           tooltip: {

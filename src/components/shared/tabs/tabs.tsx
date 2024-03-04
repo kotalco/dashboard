@@ -21,6 +21,7 @@ interface TabsProps {
   children: React.ReactNode[];
   cardDisplay?: boolean;
   defaultTab?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export const Tabs = ({
@@ -28,11 +29,15 @@ export const Tabs = ({
   children,
   cardDisplay = true,
   defaultTab,
+  onValueChange,
 }: TabsProps) => {
   const filteredChildren = children.filter((child) => child);
 
   return (
-    <CNTabs defaultValue={defaultTab || tabs[0].value}>
+    <CNTabs
+      defaultValue={defaultTab || tabs[0].value}
+      onValueChange={onValueChange}
+    >
       <TabsList>
         {tabs.map(({ label, value }) => (
           <TabsTrigger key={value} value={value}>

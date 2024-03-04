@@ -322,8 +322,8 @@ export const getAuthorizedTabs = (
     .map(({ label, value, description }) => ({ label, value, description }));
 };
 
-export const formatDate = (date: string) => {
-  return format(parseISO(date), "MMMM do, yyyy");
+export const formatDate = (date: string, formatTemp?: string) => {
+  return format(parseISO(date), formatTemp || "MMMM do, yyyy");
 };
 
 export const formatTimeDistance = (createdAt: string) => {

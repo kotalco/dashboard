@@ -58,10 +58,7 @@ export const EndpointDetails = async ({
               <Example example={example} />
 
               {/* Chart Stats */}
-              {/* <EndpointStats
-                dailyAggregation={stats[name].daily_aggregation}
-                weeklyAggregation={stats[name].weekly_aggregation}
-              /> */}
+              <EndpointStats stats={stats[name]} />
 
               {/* References */}
               <div>

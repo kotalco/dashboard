@@ -5,15 +5,20 @@ import { VirtualEndpointDetails } from "./_components/virtual-endpoint-details";
 
 export default async function EndpointPage({
   params,
+  searchParams,
 }: {
   params: { endpointName: string };
+  searchParams: { filter?: "last_month" | "last_week" };
 }) {
   const { endpointName } = params;
 
   return (
     <div className="flex-col">
       <Suspense fallback={<EndpointDetailsSkeleton />}>
-        <VirtualEndpointDetails name={endpointName} />
+        <VirtualEndpointDetails
+          name={endpointName}
+          filter={searchParams.filter}
+        />
       </Suspense>
     </div>
   );
