@@ -26,7 +26,7 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
     onSuccess: ({ domain }) => {
       const interval = setInterval(() => setCount((c) => c - 1), 1000);
       setTimeout(() => {
-        window.open(`https://${domain}`, "_self");
+        window.open(`https://app.${domain}`, "_self");
         clearInterval(interval);
       }, 10000);
     },
