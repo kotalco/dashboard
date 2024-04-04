@@ -266,3 +266,8 @@ export enum InvoiceStatus {
   Draft = "draft",
   Uncollectible = "uncollectible",
 }
+
+export enum Providers {
+  "Lets Encrypt" = "letsencrypt",
+  "Paid TLS Certificate" = "secret",
+}
