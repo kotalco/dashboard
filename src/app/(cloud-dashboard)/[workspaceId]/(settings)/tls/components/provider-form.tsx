@@ -19,10 +19,6 @@ export const ProviderForm = () => {
   const { execute, success, error, fieldErrors } = useAction(editProvider);
 
   const onSubmit = (formData: FormData) => {
-    const cert = formData.get("cert");
-    console.log("Cert: ", cert);
-    const key = formData.get("key");
-    console.log("Key: ", key);
     execute(formData);
   };
 
