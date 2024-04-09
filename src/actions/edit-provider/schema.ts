@@ -38,7 +38,7 @@ export const EditProvider = z
   .refine(
     (formData) => {
       const key = formData.get("key") as File;
-      return !key || key.name.includes(".pem");
+      return !key || key.name.includes(".key");
     },
-    { message: "Invalid file type. Please upload *.pem file.", path: ["key"] }
+    { message: "Invalid file type. Please upload *.key file.", path: ["key"] }
   );

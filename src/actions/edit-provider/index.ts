@@ -9,7 +9,7 @@ import { EditProvider } from "./schema";
 
 const handler = async (values: InputType): Promise<ReturnType> => {
   try {
-    await server.post("/settings/tls", values, {
+    const res = await server.post("/settings/tls", values, {
       headers: { "Content-Type": "multipart/form-data" },
     });
   } catch (error) {

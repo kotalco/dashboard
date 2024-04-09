@@ -20,7 +20,9 @@ export const ProviderForm = () => {
 
   const onSubmit = (formData: FormData) => {
     const cert = formData.get("cert");
-    console.log(cert);
+    console.log("Cert: ", cert);
+    const key = formData.get("key");
+    console.log("Key: ", key);
     execute(formData);
   };
 
@@ -40,7 +42,7 @@ export const ProviderForm = () => {
         <>
           <Input
             id="cert"
-            label="key.crt"
+            label="domain.crt"
             errors={fieldErrors}
             type="file"
             accept="application/x-x509-ca-cert"
@@ -48,10 +50,10 @@ export const ProviderForm = () => {
           />
           <Input
             id="key"
-            label="key.pem"
+            label="domain.key"
             errors={fieldErrors}
             type="file"
-            accept="application/x-x509-ca-cert"
+            accept="application/x-iwork-keynote-sffkey"
             className="cursor-pointer file:cursor-pointer file:bg-secondary hover:file:bg-secondary/50 file:px-4 file:mr-4 text-foreground/50 p-0 h-full file:h-10"
           />
         </>
