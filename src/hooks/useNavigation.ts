@@ -136,7 +136,7 @@ export function useMainNavigation(counts?: Record<string, number>) {
       Icon: Globe,
     },
     {
-      label: "Provider",
+      label: "TLS Provider",
       href: `/${workspaceId}/tls`,
       active: pathname === `/${workspaceId}/tls`,
       Icon: ShieldCheck,
