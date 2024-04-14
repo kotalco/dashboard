@@ -9,10 +9,10 @@ import {
   KeyRound,
   Link,
   Lock,
-  LogOut,
   User2,
   UserPlus2,
   Users2,
+  ShieldCheck,
 } from "lucide-react";
 
 import { SidebarNavItem } from "@/types";
@@ -134,6 +134,12 @@ export function useMainNavigation(counts?: Record<string, number>) {
       href: `/${workspaceId}/domain`,
       active: pathname === `/${workspaceId}/domain`,
       Icon: Globe,
+    },
+    {
+      label: "TLS Provider",
+      href: `/${workspaceId}/tls`,
+      active: pathname === `/${workspaceId}/tls`,
+      Icon: ShieldCheck,
     },
     {
       label: "Registration",
