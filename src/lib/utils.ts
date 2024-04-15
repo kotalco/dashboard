@@ -56,7 +56,7 @@ export function getSelectItems<T extends Record<string, string>>(
 export const getWsBaseURL = function () {
   let url = process.env.NEXT_PUBLIC_WS_API_URL;
 
-  if (url?.startsWith("/")) {
+  if (url?.startsWith("/") && typeof window !== "undefined") {
     const tls = location.protocol.endsWith("s:");
     const domain = location.host;
     url = (tls ? "wss" : "ws") + "://" + domain + url;
