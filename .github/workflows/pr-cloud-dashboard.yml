@@ -21,7 +21,10 @@ jobs:
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.STAGING_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
         API_URL: "${{ secrets.STAGING_API_URL }}"
       run: |
+        echo "print .env.production file for testing if it's exist"
+        cat .env.production
         envsubst < ./.env.production | tee .env.production
+        cat .env.production
 
     # - name: Install pnpm
     #   uses: pnpm/action-setup@v2
