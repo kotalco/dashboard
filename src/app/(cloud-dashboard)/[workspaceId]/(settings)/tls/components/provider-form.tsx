@@ -23,7 +23,7 @@ export const ProviderForm = () => {
   };
 
   return (
-    <form action={onSubmit} className="space-y-4 max-w-xs">
+    <form action={onSubmit} className="space-y-4">
       <Select
         id="tls_provider"
         label="Certificate Provider"
@@ -32,6 +32,7 @@ export const ProviderForm = () => {
         placeholder="Select provider"
         options={getSelectItems(Providers)}
         errors={fieldErrors}
+        className="max-w-xs"
       />
 
       {provider === Providers["Paid TLS Certificate"] && (
@@ -42,7 +43,8 @@ export const ProviderForm = () => {
             errors={fieldErrors}
             type="file"
             accept="application/x-x509-ca-cert"
-            className="cursor-pointer file:cursor-pointer file:bg-secondary hover:file:bg-secondary/50 file:px-4 file:mr-4 text-foreground/50 p-0 h-full file:h-10"
+            className="cursor-pointer file:cursor-pointer max-w-xs file:bg-secondary hover:file:bg-secondary/50 file:px-4 file:mr-4 text-foreground/50 p-0 h-full file:h-10"
+            description="To ensure the complete chain is available, concatenate your server certificate, followed by the intermediate certificates into a single file."
           />
           <Input
             id="key"
@@ -50,7 +52,7 @@ export const ProviderForm = () => {
             errors={fieldErrors}
             type="file"
             accept="application/x-iwork-keynote-sffkey"
-            className="cursor-pointer file:cursor-pointer file:bg-secondary hover:file:bg-secondary/50 file:px-4 file:mr-4 text-foreground/50 p-0 h-full file:h-10"
+            className="cursor-pointer max-w-xs file:cursor-pointer file:bg-secondary hover:file:bg-secondary/50 file:px-4 file:mr-4 text-foreground/50 p-0 h-full file:h-10"
           />
         </>
       )}
