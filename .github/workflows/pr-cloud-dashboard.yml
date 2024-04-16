@@ -15,14 +15,16 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: check-for-env-file
+      run: |
+        cat .env.production
+
     - name: update managed-dashboard with secrets values - staging
       env:
         NEXT_PUBLIC_WS_API_URL: "${{ secrets.STAGING_NEXT_PUBLIC_WS_API_URL }}"
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.STAGING_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
         API_URL: "${{ secrets.STAGING_API_URL }}"
       run: |
-        echo "print .env.production file for testing if it's exist"
-        cat .env.production
         envsubst < ./.env.production | tee .env.production
         cat .env.production
 
