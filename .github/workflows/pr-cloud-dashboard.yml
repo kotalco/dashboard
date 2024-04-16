@@ -13,11 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-
-    - name: check-for-env-file
-      run: |
-        cat .env.production
+    - uses: actions/checkout@v2
 
     - name: update managed-dashboard with secrets values - staging
       env:
@@ -25,8 +21,8 @@ jobs:
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.STAGING_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
         API_URL: "${{ secrets.STAGING_API_URL }}"
       run: |
-        envsubst < ./.env.production | tee .env.production
-        cat .env.production
+        envsubst < .env.production > .env.production.tmp
+        mv .env.production.tmp .env.production
 
     # - name: Install pnpm
     #   uses: pnpm/action-setup@v2
