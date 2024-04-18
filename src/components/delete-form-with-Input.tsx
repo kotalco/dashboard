@@ -44,11 +44,10 @@ export const DeleteWithInputForm: React.FC<DeleteFormWithInputProps> = ({
         <strong>{name}</strong>).
       </p>
 
-      <Input
-        id="name"
-        label={`Please type the name (${name}) to confirm`}
-        onChange={(e) => setValue(e.target.value)}
-      />
+      <p className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        Please type ( <strong>{name}</strong> ) to confirm
+      </p>
+      <Input id="name" onChange={(e) => setValue(e.target.value)} />
 
       <SubmitError error={error} />
 
