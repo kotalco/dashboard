@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
-import { logger } from "@/lib/utils";
+import { delay, logger } from "@/lib/utils";
 import { UpdatePlanStatus } from "@/types";
 import { SubscriptionStatus } from "@/enums";
 
@@ -19,7 +19,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       "/subscriptions/change",
       values
     );
-
+    await delay(1000);
     if (response.data.status === SubscriptionStatus.Active) {
       revalidatePath("/billing/plan");
     }
