@@ -8,5 +8,5 @@ import { LoginUser } from "./schema";
 export type InputType = z.infer<typeof LoginUser>;
 export type ReturnType = ActionState<
   InputType,
-  LoginResponse | { email: string; status: number }
+  LoginResponse | { email: string; status: number } | { message: string }
 >;

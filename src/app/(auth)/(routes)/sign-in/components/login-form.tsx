@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { loginUser } from "@/actions/login";
 import { useAction } from "@/hooks/use-action";
@@ -17,6 +18,10 @@ import { ReverifyEmailALert } from "./reverify-email-alert";
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextUrl = searchParams.get("redirect");
+
   const { execute, error, fieldErrors } = useAction(loginUser, {
     onSuccess: (data) => {
       if ("Authorized" in data) {
@@ -26,6 +31,8 @@ export const LoginForm = () => {
       if ("email" in data) {
         setEmail(data.email);
       }
+
+      router.push(nextUrl || "/");
     },
   });
 

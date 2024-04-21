@@ -2,8 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
-import { isAxiosError } from "axios";
+import { cookies, headers } from "next/headers";
+import axios, { isAxiosError } from "axios";
 
 import { createAction } from "@/lib/create-action";
 import { server } from "@/lib/server-instance";
@@ -38,7 +38,7 @@ const handler = async (values: InputType): Promise<ReturnType> => {
   }
 
   revalidatePath("/");
-  redirect("/");
+  return { data: { message: "login success" } };
 };
 
 export const loginUser = createAction(LoginUser, handler);
