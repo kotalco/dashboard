@@ -48,14 +48,16 @@ export const CreateEndpointForm: React.FC<CreateEndpointFormProps> = ({
   };
 
   return (
-    <form
-      data-testid="create-endpoint"
-      action={onSubmit}
-      className="max-w-xs space-y-4"
-    >
-      <Input id="name" label="Endpoint Name" errors={fieldErrors} />
+    <form data-testid="create-endpoint" action={onSubmit} className="space-y-4">
+      <Input
+        className="max-w-xs"
+        id="name"
+        label="Endpoint Name"
+        errors={fieldErrors}
+      />
 
       <Select
+        className="max-w-xs"
         id="protocol"
         label="Protocol"
         onValueChange={setSelectedProtocol as (value: string) => void}
@@ -70,6 +72,7 @@ export const CreateEndpointForm: React.FC<CreateEndpointFormProps> = ({
         networks &&
         !!services[selectedProtocol]?.filter((el) => !!el).length && (
           <Select
+            className="max-w-xs"
             id="network"
             label="Network"
             placeholder="Select a network"
