@@ -4,6 +4,7 @@ import { Plan } from "@/types";
 import { useAction } from "@/hooks/use-action";
 import { getProration } from "@/actions/get-proration";
 import { useChangeSubscriptionModal } from "@/hooks/use-change-subscription-modal";
+import { formatCurrency } from "@/lib/utils";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -80,7 +81,7 @@ export const PlanSelectionForm = ({
 
                 {plan.prices.map((price) => (
                   <p key={price.id} className="text-muted-foreground">
-                    ${price.price} / Month
+                    {formatCurrency(price.price)} / Month
                   </p>
                 ))}
               </div>
