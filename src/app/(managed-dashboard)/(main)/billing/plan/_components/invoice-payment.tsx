@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 
+import { getPaymentMethods } from "@/services/get-payment-methods";
+
 import {
   DialogContent,
   DialogHeader,
@@ -11,16 +13,18 @@ import { InvoicePaymentDialog } from "./invoice-payment-dialog";
 import { CardSelection } from "./card-selection";
 import { InvoicePaymentForm } from "./invoice-payment-form";
 
-export const InvoicePayment: React.FC<{ intentId: string }> = ({
+export const InvoicePayment: React.FC<{ intentId: string }> = async ({
   intentId,
 }) => {
+  const { cards } = await getPaymentMethods();
+
   return (
     <InvoicePaymentDialog intentId={intentId}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Invoice Payment</DialogTitle>
         </DialogHeader>
-        <InvoicePaymentForm>
+        <InvoicePaymentForm cardsLength={cards.length}>
           <Suspense fallback={<CardsSkeleton />}>
             <CardSelection />
           </Suspense>

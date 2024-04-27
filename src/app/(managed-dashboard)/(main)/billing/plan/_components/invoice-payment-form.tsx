@@ -15,6 +15,7 @@ import { PayWithNewCard } from "./pay-with-new-card";
 
 interface InvoicePaymentFormProps {
   children: React.ReactNode;
+  cardsLength: number;
 }
 
 type PaymentIntentState = {
@@ -26,6 +27,7 @@ const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export const InvoicePaymentForm: React.FC<InvoicePaymentFormProps> = ({
   children,
+  cardsLength,
 }) => {
   const [showCards, setShowCards] = useState(true);
   const intentState = useLocalStorage<PaymentIntentState>(
@@ -57,7 +59,10 @@ export const InvoicePaymentForm: React.FC<InvoicePaymentFormProps> = ({
       >
         {showCards && (
           <>
-            <PayWithSavedCard clientSecret={pi_secret}>
+            <PayWithSavedCard
+              clientSecret={pi_secret}
+              cardsLength={cardsLength}
+            >
               {children}
             </PayWithSavedCard>
             <Button

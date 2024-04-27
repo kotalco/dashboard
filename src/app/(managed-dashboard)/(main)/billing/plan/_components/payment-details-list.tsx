@@ -13,6 +13,7 @@ import { SubmitButton } from "@/components/form/submit-button";
 import { PaymentElement } from "./payment-element";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import AddNewCardButton from "./add-new-card-button";
 
 interface PaymentDetailsListProps {
   children?: React.ReactNode;
@@ -58,7 +59,16 @@ export const PaymentDetailsList = ({
   return (
     <form action={onSubmit}>
       <div>
-        {data.amount_due > 0 && children}
+        {data.amount_due > 0 && (
+          <>
+            {children}
+            <AddNewCardButton>
+              {cardsLength
+                ? "Use Another Payment Card"
+                : "Add New Payment Card"}
+            </AddNewCardButton>
+          </>
+        )}
         <ul>
           <li className="flex justify-between text-sm leading-9 opacity-70">
             <span>Plan Price</span>
