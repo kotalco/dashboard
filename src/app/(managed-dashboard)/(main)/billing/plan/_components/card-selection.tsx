@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
+import AddNewCardButton from "./add-new-card-button";
+
 export const paymentBrands = {
   visa: "/images/visa.svg",
   amex: "/images/amex.svg",
@@ -30,55 +32,60 @@ export const CardSelection = async () => {
         <p className="mt-2 text-xs font-normal leading-5 opacity-50">
           Add your card here to be able to create your subscription.
         </p>
+
+        <AddNewCardButton>Add New Payment Card</AddNewCardButton>
       </div>
     );
   }
 
   return (
-    <RadioGroup
-      name="cardId"
-      defaultValue={defaultCard?.provider_id}
-      className="mb-2 space-y-2"
-    >
-      {cards.map(
-        ({
-          id,
-          brand,
-          exp_month,
-          exp_year,
-          last4,
-          provider_id,
-          default: defaultCard,
-        }) => (
-          <Label
-            className="flex items-center p-6 transition-all border rounded-lg cursor-pointer"
-            key={id}
-          >
-            <RadioGroupItem value={provider_id} />
-            <div className="flex items-start justify-between ml-3 mr-4">
-              <Image
-                alt={brand}
-                src={paymentBrands[brand]}
-                width={25}
-                height={18}
-              />
-            </div>
-            <p className="text-sm font-semibold leading-5">
-              <span className="align-sub">**** **** ****</span>
-              {` `}
-              <span>{last4}</span>
-            </p>
-            <p className="ml-auto text-xs font-normal leading-5 mr-7">
-              {exp_month}/{exp_year}
-            </p>
-            {defaultCard ? (
-              <Badge variant="secondary">Default</Badge>
-            ) : (
-              <div className="ml-16" />
-            )}
-          </Label>
-        )
-      )}
-    </RadioGroup>
+    <>
+      <RadioGroup
+        name="cardId"
+        defaultValue={defaultCard?.provider_id}
+        className="mb-2 space-y-2"
+      >
+        {cards.map(
+          ({
+            id,
+            brand,
+            exp_month,
+            exp_year,
+            last4,
+            provider_id,
+            default: defaultCard,
+          }) => (
+            <Label
+              className="flex items-center p-6 transition-all border rounded-lg cursor-pointer"
+              key={id}
+            >
+              <RadioGroupItem value={provider_id} />
+              <div className="flex items-start justify-between ml-3 mr-4">
+                <Image
+                  alt={brand}
+                  src={paymentBrands[brand]}
+                  width={25}
+                  height={18}
+                />
+              </div>
+              <p className="text-sm font-semibold leading-5">
+                <span className="align-sub">**** **** ****</span>
+                {` `}
+                <span>{last4}</span>
+              </p>
+              <p className="ml-auto text-xs font-normal leading-5 mr-7">
+                {exp_month}/{exp_year}
+              </p>
+              {defaultCard ? (
+                <Badge variant="secondary">Default</Badge>
+              ) : (
+                <div className="ml-16" />
+              )}
+            </Label>
+          )
+        )}
+      </RadioGroup>
+      <AddNewCardButton>Use Another Payment Card</AddNewCardButton>
+    </>
   );
 };

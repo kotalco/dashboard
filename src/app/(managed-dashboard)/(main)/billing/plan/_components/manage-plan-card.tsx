@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { cn, getEnumKey } from "@/lib/utils";
+import { cn, formatCurrency, getEnumKey } from "@/lib/utils";
 
 import { SubscriptionStatus } from "@/enums";
 import { getCurrentSubscription } from "@/services/get-current-subscription";
@@ -52,7 +52,7 @@ export const ManagePlanCard = async () => {
               </p>
               <p className="text-lg">{subscription.endpoint_limit} Endpoints</p>
               <p className="text-sm text-muted-foreground">
-                ${subscription.price.price} / Month
+                {formatCurrency(subscription.price.price)} / Month
               </p>
             </div>
           </CardTitle>

@@ -19,12 +19,14 @@ import { PaymentDetailsList } from "./payment-details-list";
 interface PlanSelectionFormProps {
   plans: Plan[];
   subscriptionId: string;
+  cardsLength: number;
   children?: React.ReactNode;
 }
 
 export const PlanSelectionForm = ({
   plans,
   subscriptionId,
+  cardsLength,
   children,
 }: PlanSelectionFormProps) => {
   const { step, nextStep, setPlanPrice, setNewSubscriptionData } =
@@ -112,7 +114,11 @@ export const PlanSelectionForm = ({
   }
 
   if (step === 2) {
-    return <PaymentDetailsList data={data}>{children}</PaymentDetailsList>;
+    return (
+      <PaymentDetailsList data={data} cardsLength={cardsLength}>
+        {children}
+      </PaymentDetailsList>
+    );
   }
 
   return null;
