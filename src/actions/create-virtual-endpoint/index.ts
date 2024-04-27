@@ -23,6 +23,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         return { error: "Name already exists." };
       }
 
+      if (response?.status === 402) {
+        return {
+          error:
+            "You've reached your endpoint limit. To enjoy more endpoints, consider upgrading your plan.",
+        };
+      }
+
       logger("CreateVirtualEndpoint", error);
       return { error: "Something went wrong." };
     }

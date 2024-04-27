@@ -25,11 +25,11 @@ export const LoginForm = () => {
   const { execute, error, fieldErrors } = useAction(loginUser, {
     onSuccess: (data) => {
       if ("Authorized" in data) {
-        setOpen(true);
+        return setOpen(true);
       }
 
       if ("email" in data) {
-        setEmail(data.email);
+        return setEmail(data.email);
       }
 
       router.push(nextUrl || "/");

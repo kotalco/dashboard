@@ -8,11 +8,13 @@ import { Loader2 } from "lucide-react";
 interface PayWithSavedCardProps {
   clientSecret: string;
   children: React.ReactNode;
+  cardsLength: number;
 }
 
 export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
   clientSecret,
   children,
+  cardsLength,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -72,7 +74,7 @@ export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
     <form onSubmit={payInvoice} className="space-y-2">
       {children}
       {errorMessage && <Alert variant="destructive">{errorMessage}</Alert>}
-      <Button className="w-full" disabled={isLoading}>
+      <Button className="w-full" disabled={isLoading || !cardsLength}>
         {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Pay{" "}
         {formatCurrency(amount)}
       </Button>

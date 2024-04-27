@@ -4,6 +4,7 @@ import { Plan } from "@/types";
 import { useAction } from "@/hooks/use-action";
 import { getProration } from "@/actions/get-proration";
 import { useChangeSubscriptionModal } from "@/hooks/use-change-subscription-modal";
+import { formatCurrency } from "@/lib/utils";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -18,12 +19,14 @@ import { PaymentDetailsList } from "./payment-details-list";
 interface PlanSelectionFormProps {
   plans: Plan[];
   subscriptionId: string;
+  cardsLength: number;
   children?: React.ReactNode;
 }
 
 export const PlanSelectionForm = ({
   plans,
   subscriptionId,
+  cardsLength,
   children,
 }: PlanSelectionFormProps) => {
   const { step, nextStep, setPlanPrice, setNewSubscriptionData } =
@@ -80,7 +83,7 @@ export const PlanSelectionForm = ({
 
                 {plan.prices.map((price) => (
                   <p key={price.id} className="text-muted-foreground">
-                    ${price.price} / Month
+                    {formatCurrency(price.price)} / Month
                   </p>
                 ))}
               </div>
@@ -111,7 +114,11 @@ export const PlanSelectionForm = ({
   }
 
   if (step === 2) {
-    return <PaymentDetailsList data={data}>{children}</PaymentDetailsList>;
+    return (
+      <PaymentDetailsList data={data} cardsLength={cardsLength}>
+        {children}
+      </PaymentDetailsList>
+    );
   }
 
   return null;

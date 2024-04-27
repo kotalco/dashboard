@@ -30,7 +30,6 @@ export const useChangeSubscriptionModal =
     nextStep: () => set(({ step }) => ({ step: step + 1 })),
     onOpen: () => set({ isOpen: true }),
     onClose: () => set({ isOpen: false }),
-    setPlanPrice: (price?: number) =>
-      set({ planPrice: price && Number(price) * 100 }),
+    setPlanPrice: (price?: number) => set({ planPrice: Number(price) }),
     setNewSubscriptionData: (data: ChangeSubscriptionData) => set({ data }),
   }));
