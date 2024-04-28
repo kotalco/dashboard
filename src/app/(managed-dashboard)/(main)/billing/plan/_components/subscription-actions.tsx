@@ -11,7 +11,7 @@ export const SubscriptionActions = async () => {
       {!!subscription.canceled_at && (
         <ReactivatePlan subscriptionId={subscription.id} />
       )}
-      {!subscription.canceled_at && (
+      {!subscription.canceled_at && subscription.price.price > 0 && (
         <CancelPlan subscriptionId={subscription.id} />
       )}
     </div>

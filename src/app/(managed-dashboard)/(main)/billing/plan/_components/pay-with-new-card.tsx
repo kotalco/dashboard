@@ -23,7 +23,7 @@ export const PayWithNewCard: React.FC<PayWithNewCardProps> = ({
   const [amount, setAmount] = useState<number>();
   const stripe = useStripe();
   const elements = useElements();
-  console.log("PayWithNewCard");
+
   useEffect(() => {
     if (!elements || !stripe) {
       return;
