@@ -165,7 +165,20 @@ export const PaymentDetailsList = ({
   }
 
   if (!showCards && siSecret) {
-    return <AddNewCardForm si_secret={siSecret} />;
+    return (
+      <>
+        <AddNewCardForm si_secret={siSecret} />
+        <div className="text-center">
+          <Button
+            variant="link"
+            type="button"
+            onClick={() => setShowCards(true)}
+          >
+            Back to Cards
+          </Button>
+        </div>
+      </>
+    );
   }
 
   return null;

@@ -51,7 +51,11 @@ export const AddNewCardButton = () => {
           {message}
         </Alert>
       )}
-      <Button disabled={isLoading} onClick={addNewPaymentMethod}>
+      <Button
+        disabled={isLoading}
+        onClick={addNewPaymentMethod}
+        className="w-full"
+      >
         {isLoading && <Loader2 className="w-4 h-4 animate-spin mr-3" />}
         Add Card
       </Button>
