@@ -7,8 +7,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { Loader2 } from "lucide-react";
 
+import { delay, formatCurrency, getBaseURL } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
-import { formatCurrency, getBaseURL } from "@/lib/utils";
 
 interface PayWithNewCardProps {
   clientSecret: string;
@@ -22,7 +23,7 @@ export const PayWithNewCard: React.FC<PayWithNewCardProps> = ({
   const [amount, setAmount] = useState<number>();
   const stripe = useStripe();
   const elements = useElements();
-
+  console.log("PayWithNewCard");
   useEffect(() => {
     if (!elements || !stripe) {
       return;

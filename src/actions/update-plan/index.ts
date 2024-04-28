@@ -7,6 +7,7 @@ import { UpdatePlanStatus } from "@/types";
 
 import { InputType, ReturnType } from "./types";
 import { UpdatePlan } from "./schema";
+import { revalidatePath } from "next/cache";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { cardId, ...values } = data;
@@ -24,12 +25,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       "/subscriptions/change",
       values
     );
-    await delay(1000);
+    await delay(3000);
 
     if (response.data.status === "incomplete") {
+      revalidatePath("/billing/plan");
       return {
         error:
-          "Your payment couldn't be proccessed. Please use another different method",
+          "Your payment couldn't be proccessed. Please use another payment card.",
       };
     }
 

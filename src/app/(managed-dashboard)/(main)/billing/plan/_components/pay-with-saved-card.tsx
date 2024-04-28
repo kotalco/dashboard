@@ -1,9 +1,11 @@
+import { Loader2 } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
+
+import { delay, formatCurrency, getBaseURL } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
-import { formatCurrency, getBaseURL } from "@/lib/utils";
 import { Alert } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
 
 interface PayWithSavedCardProps {
   clientSecret: string;
@@ -64,7 +66,7 @@ export const PayWithSavedCard: React.FC<PayWithSavedCardProps> = ({
       setIsLoading(false);
       return;
     }
-
+    await delay(3000);
     window.location.reload();
   };
 
