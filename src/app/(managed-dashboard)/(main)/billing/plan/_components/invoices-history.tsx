@@ -3,7 +3,7 @@ import { format, fromUnixTime } from "date-fns";
 
 import { getInvoices } from "@/services/get-invoices";
 import { InvoiceStatus } from "@/enums";
-import { formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -49,9 +49,16 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
                       {formatCurrency(amount_due)}
                     </td>
                     <td
-                      className={`text-sm font-normal leading-6 text-right capitalize ${
-                        InvoiceStatus.Paid ? "text-success" : "text-red-800"
-                      }`}
+                      className={cn(
+                        "text-sm font-normal leading-6 text-right capitalize",
+                        {
+                          "text-success": InvoiceStatus.Paid === status,
+                          "text-secondary-foreground/50":
+                            InvoiceStatus.Void === status,
+                          "text-red-800": InvoiceStatus.Failed === status,
+                          "text-warning": InvoiceStatus.Open === status,
+                        }
+                      )}
                     >
                       {status}
                     </td>
@@ -66,7 +73,7 @@ export const InvoicesHistory: React.FC<InvoicesHistoryProps> = async ({
                       colSpan={3}
                       className="pl-6 text-xs leading-6 text-left"
                     >
-                      {status !== InvoiceStatus.Paid && (
+                      {status === InvoiceStatus.Open && (
                         <InvoicePayment intentId={provider_payment_intent_id} />
                       )}
                     </td>

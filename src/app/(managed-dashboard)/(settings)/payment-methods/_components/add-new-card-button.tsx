@@ -27,7 +27,7 @@ export const AddNewCardButton = () => {
     });
 
     if (setupIntent) {
-      await delay(300);
+      await delay(3000);
       window.location.reload();
     }
 

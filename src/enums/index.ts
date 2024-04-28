@@ -265,6 +265,7 @@ export enum InvoiceStatus {
   Open = "open",
   Draft = "draft",
   Uncollectible = "uncollectible",
+  Void = "void",
 }
 
 export enum Providers {
