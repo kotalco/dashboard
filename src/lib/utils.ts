@@ -282,7 +282,7 @@ export const logger = (tag: string, e: unknown) => {
       name: e.name,
       message: e.message,
       code: e.code,
-      mehtod: e.config?.method,
+      method: e.config?.method,
       url: e.config?.url,
       payload: hasSensitiveData ? "sensitive_data" : e.config?.data,
       response: e.response?.data,
