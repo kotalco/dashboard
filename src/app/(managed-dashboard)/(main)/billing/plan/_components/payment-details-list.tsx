@@ -140,11 +140,11 @@ export const PaymentDetailsList = ({
 
         {addNewCardMessage && <SubmitError error={addNewCardMessage} />}
 
-        {status?.client_secret && status.cardId && (
+        {/* {status?.client_secret && status.cardId && (
           <PaymentElement
             data={{ clientSecret: status.client_secret, cardId: status.cardId }}
           />
-        )}
+        )} */}
 
         <div className="mt-5">
           <SubmitButton

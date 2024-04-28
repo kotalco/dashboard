@@ -26,6 +26,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     );
     await delay(1000);
 
+    if (response.data.status === "incomplete") {
+      return {
+        error:
+          "Your payment couldn't be proccessed. Please use another different method",
+      };
+    }
+
     status = { ...response.data, cardId };
   } catch (error) {
     logger("UpdatePlan", error);
