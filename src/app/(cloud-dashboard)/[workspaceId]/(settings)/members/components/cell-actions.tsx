@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Trash2 } from "lucide-react";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { useWorkspace } from "@/hooks/useWorkspace";
 import { Roles } from "@/enums";
-import { client } from "@/lib/client-instance";
+import { useAction } from "@/hooks/use-action";
+import { removeUser } from "@/actions/remove-member";
+
 import { Button } from "@/components/ui/button";
-import { DeprecatedAlertModal } from "@/components/modals/deprecated-alert-modal";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { SubmitError } from "@/components/form/submit-error";
+import { CloseDialogButton } from "@/components/ui/close-dialog-button";
+import { SubmitButton } from "@/components/form/submit-button";
+
 import { TeamMemberColumn } from "./columns";
 
 interface CellRoleProps {
@@ -16,63 +19,51 @@ interface CellRoleProps {
 }
 
 export const CellActions: React.FC<CellRoleProps> = ({ data }) => {
-  const params = useParams();
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const { workspace, isLoading: isInitialLoading } = useWorkspace(
-    params.workspaceId as string
-  );
+  const { workspaceId } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { execute, error } = useAction(removeUser, {
+    onSuccess: () => setIsOpen(false),
+  });
   const { isCurrentUser, id, email } = data;
 
-  if (isInitialLoading) return <Skeleton className="w-4 h-4 " />;
+  if (isCurrentUser || data.currentRole !== Roles.Admin) return null;
 
-  if (isCurrentUser || workspace?.role !== Roles.Admin) return null;
-
-  async function onDeleteMember() {
-    try {
-      setLoading(true);
-      await client.delete(`/workspaces/${params.workspaceId}/members/${id}`);
-      router.refresh();
-    } catch (error) {
-      setError("Something went wrong.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function onClose() {
-    setError("");
-    setOpen(false);
-  }
+  const onSubmit = () => {
+    execute({ workspaceId: workspaceId as string, id });
+  };
 
   return (
     <>
-      <DeprecatedAlertModal
-        isOpen={open}
-        onClose={onClose}
-        onConfirm={onDeleteMember}
-        title="Remove Team Member"
-        description={`Are you sure you want to delete member (${email})? This user will not be able to access any deployment untill invited again`}
-        loading={loading}
-      >
-        {error && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-      </DeprecatedAlertModal>
       <div className="flex justify-end">
         <Button
-          onClick={() => setOpen(true)}
-          disabled={loading}
+          onClick={() => setIsOpen(true)}
+          type="button"
           variant="destructive"
           size="icon"
         >
           <Trash2 className="w-4 h-4" />
         </Button>
       </div>
+      <AlertModal
+        title="Remove Team Member"
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      >
+        <p className="text-foreground/50 text-sm">
+          Are you sure you want to remove member <strong>({email})</strong>?
+          This user will not be able to access any deployment untill invited
+          again!
+        </p>
+
+        <SubmitError error={error} />
+
+        <form action={onSubmit}>
+          <CloseDialogButton>
+            <SubmitButton variant="destructive">Continue</SubmitButton>
+          </CloseDialogButton>
+        </form>
+      </AlertModal>
     </>
   );
 };

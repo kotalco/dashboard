@@ -1,238 +1,116 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { isAxiosError } from "axios";
+import { usePathname } from "next/navigation";
+
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InputWithUnit } from "@/components/form/input-with-unit";
+
+import { SubmitButton } from "@/components/form/submit-button";
 
 import { Roles, StorageUnits } from "@/enums";
 import { ResourcesInfo } from "@/types";
-import { client } from "@/lib/client-instance";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { InputWithUnit } from "@/components/ui/input-with-unit";
-import { TabsFooter } from "@/components/ui/tabs";
 import { getSelectItems } from "@/lib/utils";
+import { useAction } from "@/hooks/use-action";
+import { editResources } from "@/actions/edit-resources";
 
 interface ResourcesFormProps<T> {
   node: T;
-  updateUrl: string;
+  url: string;
   role: Roles;
 }
 
-const schema = z.object({
-  cpu: z
-    .string()
-    .min(1, "Please define CPU cores")
-    .refine((value) => /^[1-9]\d*$/.test(value), {
-      message: "CPU Cores must be a number",
-    }),
-  cpuLimit: z
-    .string()
-    .min(1, "Please define maximum CPU cores")
-    .refine((value) => /^[1-9]\d*$/.test(value), {
-      message: "CPU Cores must be a number",
-    }),
-  memory: z
-    .string()
-    .min(3, "Please define memory")
-    .refine((value) => /(^\d+(G|T|M)i)/.test(value), {
-      message: "Memory must be a number",
-    }),
-  memoryLimit: z
-    .string()
-    .min(3, "Please define memory limit")
-    .refine((value) => /(^\d+(G|T|M)i)/.test(value), {
-      message: "Memory limit must be a number",
-    }),
-  storage: z
-    .string()
-    .min(3, "Please define storage")
-    .refine((value) => /(^\d+(G|T|M)i)/.test(value), {
-      message: "Storage must be a number",
-    }),
-});
-
-type Schema = z.infer<typeof schema>;
-
 export function ResourcesForm<T extends ResourcesInfo>({
   node,
-  updateUrl,
+  url,
   role,
 }: ResourcesFormProps<T>) {
   const { cpu, cpuLimit, memory, memoryLimit, storage } = node;
+  const pathname = usePathname();
+  const { execute, fieldErrors, error, data } = useAction(editResources);
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
-    defaultValues: { cpu, cpuLimit, memory, memoryLimit, storage },
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    reset,
-    setError,
-  } = form;
-
-  const onSubmit = async (values: Schema) => {
-    try {
-      await client.put(updateUrl, values);
-      reset({ ...values });
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
+  const onSubmit = (formData: FormData) => {
+    const cpu = formData.get("cpu-amount") as string;
+    const cpuLimit = formData.get("cpuLimit-amount") as string;
+    const memoryAmount = formData.get("memory-amount");
+    const memoryUnit = formData.get("memory-unit");
+    const memory = `${memoryAmount}${memoryUnit}`;
+    const memoryLimitAmount = formData.get("memoryLimit-amount");
+    const memoryLimitUnit = formData.get("memoryLimit-unit");
+    const memoryLimit = `${memoryLimitAmount}${memoryLimitUnit}`;
+    const storageAmount = formData.get("storage-amount");
+    const storageUnit = formData.get("storage-unit");
+    const storage = `${storageAmount}${storageUnit}`;
+    execute({ cpu, cpuLimit, memory, memoryLimit, storage }, { url, pathname });
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="relative space-y-4"
-      >
-        <div className="max-w-sm space-y-4">
-          <FormField
-            control={form.control}
-            name="cpu"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CPU Cores Required</FormLabel>
-                <FormControl>
-                  <InputWithUnit
-                    disabled={isSubmitting || role === Roles.Reader}
-                    unit={`Core${+field.value !== 1 ? "s" : ""}`}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <form action={onSubmit} className="relative space-y-4">
+      <div className="max-w-xs space-y-4">
+        <InputWithUnit
+          label="CPU Cores Required"
+          disabled={role === Roles.Reader}
+          unit="Core"
+          defaultValue={cpu}
+          errors={fieldErrors}
+          id="cpu"
+        />
 
-          <FormField
-            control={form.control}
-            name="cpuLimit"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Maximum CPU Cores</FormLabel>
-                <FormControl>
-                  <InputWithUnit
-                    disabled={isSubmitting || role === Roles.Reader}
-                    unit={`Core${+field.value !== 1 ? "s" : ""}`}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <InputWithUnit
+          label="Maximum CPU Cores"
+          disabled={role === Roles.Reader}
+          unit="Core"
+          defaultValue={cpuLimit}
+          errors={fieldErrors}
+          id="cpuLimit"
+        />
 
-          <FormField
-            control={form.control}
-            name="memory"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Memory Required</FormLabel>
-                <FormControl>
-                  <InputWithUnit
-                    disabled={isSubmitting || role === Roles.Reader}
-                    unit={getSelectItems(StorageUnits)}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <InputWithUnit
+          label="Memory Required"
+          disabled={role === Roles.Reader}
+          unit={getSelectItems(StorageUnits)}
+          defaultValue={memory}
+          errors={fieldErrors}
+          id="memory"
+        />
 
-          <FormField
-            control={form.control}
-            name="memoryLimit"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>MAX Memory</FormLabel>
-                <FormControl>
-                  <InputWithUnit
-                    disabled={isSubmitting || role === Roles.Reader}
-                    unit={getSelectItems(StorageUnits)}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <InputWithUnit
+          label="MAX Memory"
+          disabled={role === Roles.Reader}
+          unit={getSelectItems(StorageUnits)}
+          defaultValue={memoryLimit}
+          errors={fieldErrors}
+          id="memoryLimit"
+        />
 
-          <FormField
-            control={form.control}
-            name="storage"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Disk Space Required</FormLabel>
-                <FormControl>
-                  <InputWithUnit
-                    disabled={isSubmitting || role === Roles.Reader}
-                    unit={getSelectItems(StorageUnits)}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <InputWithUnit
+          label="Disk Space Required"
+          disabled={role === Roles.Reader}
+          unit={getSelectItems(StorageUnits)}
+          defaultValue={storage}
+          errors={fieldErrors}
+          id="storage"
+        />
+      </div>
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Resources settings have been updated successfully.
-            </AlertDescription>
-          </Alert>
-        )}
+      {!!data && (
+        <Alert className="text-center alert-success">
+          <AlertDescription>
+            Resources settings have been updated successfully.
+          </AlertDescription>
+        </Alert>
+      )}
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
+      {error && (
+        <Alert variant="destructive" className="text-center">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-        {role !== Roles.Reader && (
-          <TabsFooter>
-            <Button
-              disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-              data-testid="submit"
-              type="submit"
-            >
-              Save
-            </Button>
-          </TabsFooter>
-        )}
-      </form>
-    </Form>
+      {role !== Roles.Reader && (
+        <SubmitButton data-testid="submit" type="submit">
+          Update
+        </SubmitButton>
+      )}
+    </form>
   );
 }

@@ -1,4 +1,5 @@
 import { Logo } from "@/components/logo";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default async function AuthLayout({
   children,
@@ -7,8 +8,7 @@ export default async function AuthLayout({
 }) {
   return (
     <div className="flex flex-col items-center justify-center h-full space-y-10">
-      <Logo />
-      <div className="w-full px-3 sm:max-w-2xl">{children}</div>
+      {children}
     </div>
   );
 }

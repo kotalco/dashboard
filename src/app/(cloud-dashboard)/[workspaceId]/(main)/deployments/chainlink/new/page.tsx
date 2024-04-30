@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateChainlinkNodeForm } from "../components/create-chainlink-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles, SecretType } from "@/enums";
@@ -9,7 +7,9 @@ import { getNodes } from "@/services/get-nodes";
 import { ExecutionClientNode } from "@/types";
 import { getSecrets } from "@/services/get-secrets";
 
-export const revalidate = 0;
+import { Heading } from "@/components/ui/heading";
+
+import { CreateChainlinkNodeForm } from "./_components/create-chainlink-node-form";
 
 export default async function CreateNewChainlinkNodePage({
   params,
@@ -17,33 +17,34 @@ export default async function CreateNewChainlinkNodePage({
   params: { workspaceId: string };
 }) {
   const { workspaceId } = params;
-  const { role } = await getWorkspace(workspaceId);
-  const { data } = await getNodes<ExecutionClientNode>(
-    workspaceId,
-    "/ethereum/nodes"
-  );
-  const secrets = await getSecrets(workspaceId, SecretType.Password);
-
-  if (role === Roles.Reader) notFound();
-
-  const { versions } = await getClientVersions({
+  const workspaceData = getWorkspace(workspaceId);
+  const clientVersionData = getClientVersions({
     protocol: "chainlink",
     component: "node",
     client: "chainlink",
   });
+  const executionClientData = getNodes<ExecutionClientNode>(
+    workspaceId,
+    "/ethereum/nodes"
+  );
+  const secretsData = getSecrets(workspaceId, SecretType.Password);
+  const [{ role }, { versions }, { data }, { options }] = await Promise.all([
+    workspaceData,
+    clientVersionData,
+    executionClientData,
+    secretsData,
+  ]);
+
+  if (role === Roles.Reader) notFound();
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Chainlink Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreateChainlinkNodeForm
-          images={versions}
-          executionClients={data}
-          passwords={secrets}
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New Chainlink Node" />
+      <CreateChainlinkNodeForm
+        images={versions}
+        executionClients={data}
+        passwords={options}
+      />
+    </div>
   );
 }

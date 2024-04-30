@@ -9,8 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import { findUser } from "@/services/find-user";
 import { APIMessage } from "@/components/api-message";
 
-export const revalidate = 0;
-
 export default async function MembersPage({
   params,
 }: {
@@ -34,6 +32,7 @@ export default async function MembersPage({
       email,
       role,
       isCurrentUser: id === user.id,
+      currentRole: workspace.role,
     })
   );
 
@@ -46,7 +45,7 @@ export default async function MembersPage({
       <div className="py-10 mx-auto space-y-5">
         {workspace.role === Roles.Admin && (
           <>
-            <AddMemberForm workspaceId={workspace.id} />
+            <AddMemberForm />
             <Separator />
           </>
         )}

@@ -1,13 +1,17 @@
-import { getWorkspace } from "@/services/get-workspace";
-import { getNodes } from "@/services/get-nodes";
-import { BeaconNode, ExecutionClientNode, ValidatorNode } from "@/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Suspense } from "react";
+
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
-import { ExecutionClientClient } from "./components/execution-client-client";
-import { BeaconNodesClient } from "./components/beacon-node-client";
-import { ValidatorClient } from "./components/validator-client";
-import { Roles } from "@/enums";
-import { ButtonGroup } from "@/components/ui/button-group";
+import { NodesListSkeleton } from "@/components/nodes-list-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { ExecutionClientsList } from "./_components/execution-clients-list";
+import { BeaconNodesList } from "./_components/beacon-nodes-list";
+import { ValidatorsList } from "./_components/validators-list";
+import { ExecutionClientTriggerTab } from "./_components/execution-client-trigger-tab";
+import { BeaconNodeTriggerTab } from "./_components/beacon-node-trigger-tab";
+import { ValidatorTriggerTab } from "./_components/validator-trigger-tab";
+import { CreateEthereumNodesButton } from "./_components/create-ethereum-nodes-button";
 
 export default async function EthereumPage({
   params,
@@ -15,80 +19,52 @@ export default async function EthereumPage({
 }: {
   params: { workspaceId: string };
   searchParams: {
-    deployment: "execution-clients" | "beacon-nodes" | "validators";
+    tab: "execution-clients" | "beacon-nodes" | "validators";
   };
 }) {
-  const menu = [
+  const { workspaceId } = params;
+  const { tab } = searchParams;
+
+  const tabs = [
     {
-      title: "Execution Client",
-      href: `/${params.workspaceId}/deployments/ethereum/execution-clients/new`,
+      label: <ExecutionClientTriggerTab workspaceId={workspaceId} />,
+      value: "execution-clients",
     },
     {
-      title: "Beacon Node",
-      href: `/${params.workspaceId}/deployments/ethereum/beacon-nodes/new`,
+      label: <BeaconNodeTriggerTab workspaceId={workspaceId} />,
+      value: "beacon-nodes",
     },
     {
-      title: "Validator",
-      href: `/${params.workspaceId}/deployments/ethereum/validators/new`,
+      label: <ValidatorTriggerTab workspaceId={workspaceId} />,
+      value: "validators",
     },
   ];
 
-  const { data: executionClients, count: executionClientsCount } =
-    await getNodes<ExecutionClientNode>(params.workspaceId, "/ethereum/nodes");
-
-  const { data: beaconnodes, count: beaconnodesCount } =
-    await getNodes<BeaconNode>(params.workspaceId, "/ethereum2/beaconnodes");
-
-  const { data: validators, count: validatorsCount } =
-    await getNodes<ValidatorNode>(params.workspaceId, "/ethereum2/validators");
-
-  const { role } = await getWorkspace(params.workspaceId);
-
   return (
-    <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <Heading title="Ethereum Deployments" />
-          {role !== Roles.Reader && (
-            <ButtonGroup title="Create New" menu={menu} />
-          )}
-        </div>
-        <Tabs defaultValue={searchParams.deployment || "execution-clients"}>
-          <TabsList>
-            <TabsTrigger value="execution-clients">
-              Execution Client Nodes
-              {!!executionClientsCount && (
-                <span className="flex items-center justify-center w-6 h-6 ml-2 rounded-full bg-foreground/10 text-primary">
-                  {executionClientsCount}
-                </span>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="beacon-nodes">
-              Beacon Nodes
-              {!!beaconnodesCount && (
-                <span className="flex items-center justify-center w-6 h-6 ml-2 rounded-full bg-foreground/10 text-primary">
-                  {beaconnodesCount}
-                </span>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="validators">
-              Validators
-              {!!validatorsCount && (
-                <span className="flex items-center justify-center w-6 h-6 ml-2 rounded-full bg-foreground/10 text-primary">
-                  {validatorsCount}
-                </span>
-              )}
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="execution-clients">
-            <ExecutionClientClient data={executionClients} role={role} />
-          </TabsContent>
-          <TabsContent value="beacon-nodes">
-            <BeaconNodesClient data={beaconnodes} role={role} />
-          </TabsContent>
-          <TabsContent value="validators">
-            <ValidatorClient data={validators} role={role} />
-          </TabsContent>
+    <div className="grid grid-cols-12 items-center gap-8 pr-10">
+      <div className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
+        <Heading title="Ethereum Deployments" />
+      </div>
+
+      <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 justify-self-end">
+        <Suspense fallback={<Skeleton className="w-full h-11" />}>
+          <CreateEthereumNodesButton workspaceId={workspaceId} />
+        </Suspense>
+      </div>
+
+      <div className="col-span-12">
+        <Tabs tabs={tabs} defaultTab={tab} cardDisplay={false}>
+          <Suspense fallback={<NodesListSkeleton />}>
+            <ExecutionClientsList workspaceId={workspaceId} />
+          </Suspense>
+
+          <Suspense fallback={<NodesListSkeleton />}>
+            <BeaconNodesList workspaceId={workspaceId} />
+          </Suspense>
+
+          <Suspense fallback={<NodesListSkeleton />}>
+            <ValidatorsList workspaceId={workspaceId} />
+          </Suspense>
         </Tabs>
       </div>
     </div>

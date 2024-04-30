@@ -2,25 +2,14 @@
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { useTheme } from "next-themes";
 import { useParams, useRouter } from "next/navigation";
 
 import { ProtocolsWithoutEthereum2 } from "@/enums";
-import { useDeploymentsCount } from "@/hooks/useDeploymentsCount";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-const CHART_COLORS = {
-  aptos: "#000000",
-  bitcoin: "#F6931A",
-  chainlink: "#295ADA",
-  ethereum: "#8C8C8C",
-  filecoin: "#0090FF",
-  ipfs: "#5CB5BE",
-  near: "#000000",
-  polkadot: "#E6007A",
-  stacks: "#5546FE",
-};
 
 const LABELS = {
   aptos: "Aptos",
@@ -99,27 +88,48 @@ const NODES = [
 
 const randomProtocol = NODES[Math.floor(Math.random() * NODES.length)];
 
-export const DeploymentsChart = () => {
+interface DeploymentsChartProps {
+  counts: Record<string, number>;
+}
+
+export const DeploymentsChart = ({ counts }: DeploymentsChartProps) => {
   const params = useParams();
   const router = useRouter();
-  const { count: deploymentsCount, isLoading } = useDeploymentsCount(
-    params.workspaceId as string
-  );
+  const [isMounted, setIsMounted] = useState(false);
+  const { theme } = useTheme();
 
-  const keys = Object.keys(deploymentsCount) as ProtocolsWithoutEthereum2[];
-  const filteredKeys = keys.filter((key) => deploymentsCount[key]);
+  const CHART_COLORS = {
+    aptos: theme === "light" ? "#000000" : "#FFFFFF",
+    bitcoin: "#F6931A",
+    chainlink: "#295ADA",
+    ethereum: "#8C8C8C",
+    filecoin: "#0090FF",
+    ipfs: "#5CB5BE",
+    near: theme === "light" ? "#000000" : "#FFFFFF",
+    polkadot: "#E6007A",
+    stacks: "#5546FE",
+  };
+
+  const keys = Object.keys(counts) as ProtocolsWithoutEthereum2[];
+  const filteredKeys = keys.filter((key) => counts[key]);
   const colors = filteredKeys.map((key) => CHART_COLORS[key]);
-  const count = filteredKeys.map((key) => deploymentsCount[key]);
+  const count = filteredKeys.map((key) => counts[key]);
   const labels = filteredKeys.map((key) => LABELS[key]);
 
-  const totalCount = Object.values(deploymentsCount).reduce(
+  const totalCount = Object.values(counts).reduce(
     (current, prev) => current + prev,
     0
   );
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
+
   return (
     <div>
-      {!!totalCount && !isLoading && (
+      {!!totalCount && (
         <div className="col-span-4">
           <div className="flex">
             <Doughnut
@@ -133,6 +143,7 @@ export const DeploymentsChart = () => {
                 ],
               }}
               options={{
+                borderColor: "transparent",
                 animation: false,
                 cutout: "50%",
                 maintainAspectRatio: false,
@@ -159,7 +170,7 @@ export const DeploymentsChart = () => {
           </div>
         </div>
       )}
-      {!totalCount && !isLoading && (
+      {!totalCount && (
         <div>
           <p className="pb-6 mb-6 text-sm text-muted-foreground border-b">
             You haven’t created any deployments yet.

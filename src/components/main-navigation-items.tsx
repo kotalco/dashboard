@@ -2,9 +2,20 @@
 
 import { NavigationItems } from "@/components/navigation-items";
 import { useMainNavigation } from "@/hooks/useNavigation";
+import { LogoutForm } from "@/components/ui/logout-form";
 
-export const MainNavigationItems = () => {
-  const { main } = useMainNavigation();
+interface MainNavigationItemsProps {
+  counts: Record<string, number>;
+}
 
-  return <NavigationItems items={main} />;
+export const MainNavigationItems = ({ counts }: MainNavigationItemsProps) => {
+  const { main } = useMainNavigation(counts);
+
+  return (
+    <NavigationItems items={main}>
+      <li>
+        <LogoutForm />
+      </li>
+    </NavigationItems>
+  );
 };

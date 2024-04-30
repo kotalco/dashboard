@@ -1,228 +1,110 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isAxiosError } from "axios";
-
-import { client } from "@/lib/client-instance";
-import { User } from "@/types";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
+
+import { useAction } from "@/hooks/use-action";
+import { editDomain } from "@/actions/edit-domain";
+import { IPAddress } from "@/types";
+
+import { Input } from "@/components/form/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/components/form/checkbox";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitButton } from "@/components/form/submit-button";
 
 interface DomainFormProps {
-  ip: string;
+  ip: IPAddress;
   domainName?: string;
 }
 
-const schema = z
-  .object({
-    domain: z.string().min(1, "Domain name is required"),
-    isAware: z.literal<boolean>(true, {
-      errorMap: () => ({
-        message:
-          "Please confirm that you are aware that will lead to old endpoints dysfunctional.",
-      }),
-    }),
-    isUpdated: z.literal<boolean>(true, {
-      errorMap: () => ({
-        message:
-          "Please confirm that you updated your domain DNS records according to out instructions.",
-      }),
-    }),
-  })
-  .transform(({ domain }) => {
-    return { domain };
-  });
-
-type SchemaType = z.input<typeof schema>;
-
 export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
   const [count, setCount] = useState(10);
-  const defaultValues = {
-    domain: domainName || "",
-    isAware: false,
-    isUpdated: false,
-  };
-
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    watch,
-    setError,
-  } = form;
-
-  const domain = watch("domain");
-
-  async function onSubmit(values: z.infer<typeof schema>) {
-    try {
-      await client.post("/settings/domain", values);
+  const [value, setValue] = useState(domainName || "");
+  const { execute, success, error, fieldErrors } = useAction(editDomain, {
+    onSuccess: ({ domain }) => {
       const interval = setInterval(() => setCount((c) => c - 1), 1000);
       setTimeout(() => {
-        window.open(`https://${values.domain}`, "_self");
+        window.open(`https://app.${domain}`, "_self");
         clearInterval(interval);
       }, 10000);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
+    },
+  });
 
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
+  const onSubmit = (formData: FormData) => {
+    const isAware = formData.get("isAware") === "on";
+    const isUpdated = formData.get("isUpdated") === "on";
+    execute({ domain: value, isAware, isUpdated });
+  };
 
   return (
-    <Form {...form}>
-      <form
-        data-testid="domain-form"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="domain"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Domain Name</FormLabel>
-              <FormControl>
-                <Input
-                  data-testid="domain-name"
-                  disabled={isSubmitting}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="space-y-4">
+      <Input
+        className="max-w-xs"
+        id="domain"
+        label="Domain Name"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        errors={fieldErrors}
+      />
 
-        {domain && (
-          <Alert>
+      {value && (
+        <Alert className="max-w-lg">
+          {ip.ip_address && (
+            <AlertDescription>
+              Add DNS record of type A that maps <strong>{value}</strong> to{" "}
+              <strong>{ip.ip_address}</strong>, <br />
+              Add DNS record of type A that maps <strong>
+                *.{value}
+              </strong> to <strong>{ip.ip_address}</strong>
+            </AlertDescription>
+          )}
+
+          {!ip.ip_address && (
             <AlertDescription>
               <p>
-                Add DNS record of type A that maps <strong>{domain}</strong> to{" "}
-                <strong>{ip}</strong>
+                Add DNS record of type CNAME that maps <strong>{value}</strong>{" "}
+                to <strong>{ip.host_name}</strong>
               </p>
               <p>
-                Add DNS record of type A that maps <strong>*.{domain}</strong>{" "}
-                to <strong>{ip}</strong>
+                Add DNS record of type CNAME that maps{" "}
+                <strong>*.{value}</strong> to <strong>{ip.host_name}</strong>
               </p>
             </AlertDescription>
-          </Alert>
-        )}
-
-        <FormField
-          control={form.control}
-          name="isUpdated"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    data-testid="is-updated"
-                    disabled={isSubmitting}
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>
-                    I confirm that I have updated my domain DNS records
-                  </FormLabel>
-                </div>
-              </div>
-              <FormMessage />
-            </FormItem>
           )}
-        />
+        </Alert>
+      )}
 
-        <FormField
-          control={form.control}
-          name="isAware"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    data-testid="is-aware"
-                    disabled={isSubmitting}
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>
-                    I am aware that updating domain will render old endpoints
-                    dysfunctional
-                  </FormLabel>
-                </div>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Checkbox
+        id="isUpdated"
+        label="I confirm that I have updated my domain DNS records"
+        errors={fieldErrors}
+      />
 
-        <Button
-          disabled={
-            (isSubmitted && !isValid) ||
-            isSubmitting ||
-            !isDirty ||
-            isSubmitSuccessful
-          }
-          data-testid="submit"
-          type="submit"
-        >
-          {isSubmitSuccessful ? (
-            <span className="flex items-center">
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Redirecting in{" "}
-              {count}s
-            </span>
-          ) : (
-            "Save"
-          )}
-        </Button>
+      <Checkbox
+        id="isAware"
+        label="I am aware that updating domain will render old endpoints dysfunctional"
+        errors={fieldErrors}
+      />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              You domain settings has been changed. Please wait while we
-              redirect you to your new domain.
-            </AlertDescription>
-          </Alert>
+      <SubmitError error={error} />
+
+      <SubmitSuccess success={success}>
+        You domain settings has been changed. Please wait while we redirect you
+        to your new domain.
+      </SubmitSuccess>
+
+      <SubmitButton disabled={success}>
+        {success ? (
+          <span className="flex items-center">
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Redirecting in{" "}
+            {count}s
+          </span>
+        ) : (
+          "Update"
         )}
-
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      </SubmitButton>
+    </form>
   );
 };

@@ -2,9 +2,22 @@
 
 import { NavigationItems } from "@/components/navigation-items";
 import { useManagedNavigation } from "@/hooks/useManagedNavigation";
+import { LogoutForm } from "@/components/ui/logout-form";
 
-export const ManagedNavigationItems = () => {
-  const { managed } = useManagedNavigation();
+interface ManagedNavigationItemsProps {
+  endpointCount: number;
+}
 
-  return <NavigationItems items={managed} />;
+export const ManagedNavigationItems = ({
+  endpointCount,
+}: ManagedNavigationItemsProps) => {
+  const { managed } = useManagedNavigation(endpointCount);
+
+  return (
+    <NavigationItems items={managed}>
+      <li>
+        <LogoutForm />
+      </li>
+    </NavigationItems>
+  );
 };

@@ -3,24 +3,45 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { SidebarNavItem } from "@/types";
+import { cn } from "@/lib/utils";
+
+import { Button } from "@/components/ui/button";
 
 interface NavigationItemsProps {
   items: SidebarNavItem[];
+  children?: React.ReactNode;
 }
 
-export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
+export const NavigationItems: React.FC<NavigationItemsProps> = ({
+  items,
+  children,
+}) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(() => pathname.includes("deployments"));
 
   return (
     <>
       {items.map(
-        ({ title, label, href, active, Icon, prefetch, items, count }, index) =>
+        (
+          {
+            title,
+            label,
+            href,
+            active,
+            Icon,
+            prefetch,
+            items,
+            count,
+            position,
+          },
+          index
+        ) =>
           href ? (
-            <li key={index}>
+            <li
+              key={index}
+              className={position === "bottom" ? "mt-auto" : "mt-1"}
+            >
               {title && (
                 <div className="mt-3 mb-1 text-xs font-normal text-gray-500">
                   {title}
@@ -36,7 +57,10 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
                 )}
               >
                 <Link href={href} prefetch={prefetch}>
-                  <Icon className={cn(`w-6 h-6`, label ? "mr-3" : "")} />
+                  <Icon
+                    strokeWidth={1}
+                    className={cn(`w-6 h-6`, label ? "mr-3" : "")}
+                  />
                   {label}
                   {!!count && (
                     <span className="flex ml-auto items-center justify-center w-6 h-6 rounded-full bg-foreground/10 text-primary">
@@ -56,7 +80,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
                   active ? "bg-accent text-accent-foreground" : ""
                 )}
               >
-                <Icon className="w-6 h-6 mr-3" />
+                <Icon strokeWidth={1} className="w-6 h-6 mr-3" />
                 {label}
                 <ChevronRight
                   className={cn(
@@ -68,7 +92,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
               <ul
                 className={cn(
                   "overflow-y-auto transition-all",
-                  open ? "max-h-full" : "max-h-0"
+                  open ? "max-h-full py-1" : "max-h-0"
                 )}
               >
                 {items?.map(({ label, href, active, count }) => (
@@ -96,6 +120,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({ items }) => {
             </li>
           )
       )}
+      {children}
     </>
   );
 };

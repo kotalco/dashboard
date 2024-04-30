@@ -1,115 +1,34 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isAxiosError } from "axios";
+import { useAction } from "@/hooks/use-action";
+import { forgotPassword } from "@/actions/forgot-password";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { client } from "@/lib/client-instance";
-
-const schema = z.object({
-  email: z
-    .string({ required_error: "Email is required" })
-    .email("Invalid Email")
-    .trim()
-    .toLowerCase(),
-});
-
-type SchemaType = z.infer<typeof schema>;
-
-const defaultValues = { email: "" };
+import { Input } from "@/components/form/input";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitError } from "@/components/form/submit-error";
 
 export const ForgetPasswordForm = () => {
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
+  const { execute, error, success, fieldErrors } = useAction(forgotPassword);
 
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isSubmitSuccessful,
-      isValid,
-      isDirty,
-      errors,
-    },
-    setError,
-  } = form;
+  const onSubmit = (formData: FormData) => {
+    const email = formData.get("email") as string;
 
-  async function onSubmit(values: SchemaType) {
-    try {
-      await client.post("/users/forget_password", values);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        if (response?.status === 404) {
-          return setError("root", {
-            type: response?.status.toString(),
-            message: `Cann't find user with email ${values.email}`,
-          });
-        }
-
-        return setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
+    execute({ email });
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Address</FormLabel>
-              <FormControl>
-                <Input disabled={isSubmitting} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form action={onSubmit} className="space-y-4">
+      <SubmitSuccess success={success}>
+        Reset password email has been sent to your email. Please check your mail
+        to continue.
+      </SubmitSuccess>
 
-        <Button
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          className="w-full"
-          type="submit"
-        >
-          Send Reset Email
-        </Button>
+      <SubmitError error={error} />
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Reset password email has been sent to your email. Please check
-              your mail to continue.
-            </AlertDescription>
-          </Alert>
-        )}
+      <Input id="email" label="Email Address" errors={fieldErrors} />
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitButton className="w-full">Send Reset Email</SubmitButton>
+    </form>
   );
 };

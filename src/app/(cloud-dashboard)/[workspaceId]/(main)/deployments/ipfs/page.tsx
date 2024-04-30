@@ -1,12 +1,15 @@
-import { getWorkspace } from "@/services/get-workspace";
-import { getNodes } from "@/services/get-nodes";
-import { IPFSClusterPeer, IPFSPeer } from "@/types";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Suspense } from "react";
+
+import { Tabs } from "@/components/shared/tabs/tabs";
 import { Heading } from "@/components/ui/heading";
-import { IPFSPeersClient } from "./components/ipfs-peers-client";
-import { IPFSClusterPeersClient } from "./components/ipfs-cluster-peers-client";
-import { Roles } from "@/enums";
-import { ButtonGroup } from "@/components/ui/button-group";
+import { Skeleton } from "@/components/ui/skeleton";
+import { NodesListSkeleton } from "@/components/nodes-list-skeleton";
+
+import { IPFSPeersList } from "./_components/ipfs-peers-list";
+import { IPFSClusterPeersList } from "./_components/ipfs-cluster-peers-list";
+import { PeersTriggerTab } from "./_components/peers-trigger-tab";
+import { ClusterPeersTriggerTab } from "./_components/cluster-peers-trigger-tab";
+import { CreateIPFSButton } from "./_components/create-ipfs-button";
 
 export default async function IPFSPage({
   params,
@@ -14,64 +17,44 @@ export default async function IPFSPage({
 }: {
   params: { workspaceId: string };
   searchParams: {
-    deployment: "peers" | "cluster-peers";
+    tab: "peers" | "cluster-peers";
   };
 }) {
-  const menu = [
+  const { workspaceId } = params;
+  const { tab } = searchParams;
+
+  const tabs = [
     {
-      title: "Peers",
-      href: `/${params.workspaceId}/deployments/ipfs/peers/new`,
+      label: <PeersTriggerTab workspaceId={workspaceId} />,
+      value: "peers",
     },
     {
-      title: "Cluster Peers",
-      href: `/${params.workspaceId}/deployments/ipfs/cluster-peers/new`,
+      label: <ClusterPeersTriggerTab workspaceId={workspaceId} />,
+      value: "cluster-peers",
     },
   ];
 
-  const { data: ipfsPeers, count: ipfsPeersCount } = await getNodes<IPFSPeer>(
-    params.workspaceId,
-    "/ipfs/peers"
-  );
-
-  const { data: ipfsClusterPeers, count: ipfsClusterPeersCount } =
-    await getNodes<IPFSClusterPeer>(params.workspaceId, "/ipfs/clusterpeers");
-
-  const { role } = await getWorkspace(params.workspaceId);
-
   return (
-    <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <Heading title="IPFS Deployments" />
-          {role !== Roles.Reader && (
-            <ButtonGroup title="Create New" menu={menu} />
-          )}
-        </div>
-        <Tabs defaultValue={searchParams.deployment || "peers"}>
-          <TabsList>
-            <TabsTrigger value="peers">
-              Peers
-              {!!ipfsPeersCount && (
-                <span className="flex items-center justify-center w-6 h-6 ml-2 rounded-full bg-foreground/10 text-primary">
-                  {ipfsPeersCount}
-                </span>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="cluster-peers">
-              Cluster Peers
-              {!!ipfsClusterPeersCount && (
-                <span className="flex items-center justify-center w-6 h-6 ml-2 rounded-full bg-foreground/10 text-primary">
-                  {ipfsClusterPeersCount}
-                </span>
-              )}
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="peers">
-            <IPFSPeersClient data={ipfsPeers} role={role} />
-          </TabsContent>
-          <TabsContent value="cluster-peers">
-            <IPFSClusterPeersClient data={ipfsClusterPeers} role={role} />
-          </TabsContent>
+    <div className="grid grid-cols-12 items-center gap-8 pr-10">
+      <div className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
+        <Heading title="IPFS Deployments" />
+      </div>
+
+      <div className="col-span-12 md:col-span-5 lg:col-span-4 xl:col-span-3 justify-self-end">
+        <Suspense fallback={<Skeleton className="w-full h-11" />}>
+          <CreateIPFSButton workspaceId={workspaceId} />
+        </Suspense>
+      </div>
+
+      <div className="col-span-12">
+        <Tabs tabs={tabs} defaultTab={tab} cardDisplay={false}>
+          <Suspense fallback={<NodesListSkeleton />}>
+            <IPFSPeersList workspaceId={workspaceId} />
+          </Suspense>
+
+          <Suspense fallback={<NodesListSkeleton />}>
+            <IPFSClusterPeersList workspaceId={workspaceId} />
+          </Suspense>
         </Tabs>
       </div>
     </div>

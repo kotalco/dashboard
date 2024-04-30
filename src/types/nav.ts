@@ -14,6 +14,7 @@ export type SidebarNavItem = {
   prefetch?: boolean;
   count?: number;
   Icon: LucideIcon;
+  position?: "top" | "bottom";
 } & (
   | {
       href: string;

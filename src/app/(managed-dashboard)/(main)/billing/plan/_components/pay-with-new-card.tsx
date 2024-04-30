@@ -7,8 +7,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { Loader2 } from "lucide-react";
 
+import { delay, formatCurrency, getBaseURL } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
 
 interface PayWithNewCardProps {
   clientSecret: string;
@@ -54,7 +55,7 @@ export const PayWithNewCard: React.FC<PayWithNewCardProps> = ({
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${process.env["NEXT_PUBLIC_RETURN_URL_ROOT"]}/billing/plan`,
+        return_url: `${getBaseURL()}/billing/plan`,
       },
     });
 

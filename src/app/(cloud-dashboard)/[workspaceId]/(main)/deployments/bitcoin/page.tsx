@@ -1,24 +1,26 @@
-import { getWorkspace } from "@/services/get-workspace";
-import { getNodes } from "@/services/get-nodes";
-import { BitcoinNode } from "@/types";
-import { BitcoinClient } from "./components/client";
+import { Suspense } from "react";
+
+import { Heading } from "@/components/ui/heading";
+import { NodesListSkeleton } from "@/components/nodes-list-skeleton";
+
+import { BitcoinNodesList } from "./_components/bitcoin-nodes-list";
 
 export default async function BitcoinPage({
   params,
 }: {
   params: { workspaceId: string };
 }) {
-  const { data } = await getNodes<BitcoinNode>(
-    params.workspaceId,
-    "/bitcoin/nodes"
-  );
-  const { role } = await getWorkspace(params.workspaceId);
+  const { workspaceId } = params;
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
-        <BitcoinClient data={data} role={role} />
+    <div className="grid grid-cols-12 items-center gap-8 pr-10">
+      <div className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
+        <Heading title="Bitcoin Deployments" />
       </div>
+
+      <Suspense fallback={<NodesListSkeleton />}>
+        <BitcoinNodesList workspaceId={workspaceId} />
+      </Suspense>
     </div>
   );
 }

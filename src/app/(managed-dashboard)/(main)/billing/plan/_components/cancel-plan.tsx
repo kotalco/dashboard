@@ -1,23 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+
+import { useAction } from "@/hooks/use-action";
+import { cancelPlan } from "@/actions/cancel-plan";
 
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { cancelSubscription } from "@/lib/actions";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
 
 interface CancelPlanProps {
   subscriptionId: string;
 }
 
 export const CancelPlan: React.FC<CancelPlanProps> = ({ subscriptionId }) => {
-  const initialState = { message: null };
   const [open, setOpen] = useState(false);
-  const [state, dispatch] = useFormState<{ message: null | string }>(
-    cancelSubscription.bind(null, subscriptionId),
-    initialState
-  );
+
+  const { execute, error } = useAction(cancelPlan, {
+    onSuccess: () => setOpen(false),
+  });
+
+  const onSubmit = () => {
+    execute({ subscription_id: subscriptionId });
+  };
 
   return (
     <>
@@ -31,42 +37,21 @@ export const CancelPlan: React.FC<CancelPlanProps> = ({ subscriptionId }) => {
         isOpen={open}
         onClose={() => setOpen(false)}
       >
-        <form action={dispatch} className="space-y-3">
-          <Buttons onClose={() => setOpen(false)} />
-          {state.message && (
-            <p key={state.message} className="text-destructive text-xs">
-              {state.message}
-            </p>
-          )}
+        <form action={onSubmit} className="space-y-3">
+          <div className="space-x-4">
+            <Button
+              type="button"
+              data-testid="cancel-button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+            <SubmitButton variant="destructive">Continue</SubmitButton>
+          </div>
+          <SubmitError error={error} />
         </form>
       </Modal>
     </>
-  );
-};
-
-const Buttons: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { pending } = useFormStatus();
-
-  return (
-    <div className="space-x-4">
-      <Button
-        type="button"
-        data-testid="cancel-button"
-        disabled={pending}
-        variant="outline"
-        onClick={onClose}
-      >
-        Cancel
-      </Button>
-
-      <Button
-        type="submit"
-        data-testid="confirm-button"
-        disabled={pending}
-        variant="destructive"
-      >
-        Continue
-      </Button>
-    </div>
   );
 };

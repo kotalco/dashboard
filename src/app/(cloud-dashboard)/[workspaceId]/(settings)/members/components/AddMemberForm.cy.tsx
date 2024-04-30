@@ -3,7 +3,7 @@ import { AddMemberForm } from "./add-member-form";
 
 describe("<AddMemberForm />", () => {
   beforeEach(() => {
-    cy.mount(<AddMemberForm workspaceId="1" />);
+    cy.mount(<AddMemberForm />);
     cy.findByTestId("email").as("emailInput");
     cy.findByTestId("role").as("roleSelect");
     cy.findByTestId("submit").as("submitButton").should("be.disabled");

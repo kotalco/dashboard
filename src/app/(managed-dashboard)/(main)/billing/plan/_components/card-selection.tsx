@@ -41,20 +41,12 @@ export const CardSelection = async () => {
       className="mb-2 space-y-2"
     >
       {cards.map(
-        ({
-          id,
-          brand,
-          exp_month,
-          exp_year,
-          last4,
-          provider_id,
-          default: defaultCard,
-        }) => (
+        ({ id, brand, exp_month, exp_year, last4, default: defaultCard }) => (
           <Label
-            className="flex items-center p-6 transition-all bg-white border rounded-lg cursor-pointer"
+            className="flex items-center p-6 transition-all border rounded-lg cursor-pointer"
             key={id}
           >
-            <RadioGroupItem value={provider_id} />
+            <RadioGroupItem value={id} />
             <div className="flex items-start justify-between ml-3 mr-4">
               <Image
                 alt={brand}
@@ -74,7 +66,7 @@ export const CardSelection = async () => {
             {defaultCard ? (
               <Badge variant="secondary">Default</Badge>
             ) : (
-              <div className="ml-14" />
+              <div className="ml-16" />
             )}
           </Label>
         )

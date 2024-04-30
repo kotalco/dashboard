@@ -24,11 +24,20 @@ export * from "@/types/nav";
 export * from "@/types/settings";
 export * from "@/types/secrets";
 
-export interface MainNodeInfo {
+export type OptionType = Record<"label" | "value", string> & {
+  disabled?: boolean;
+  image?: string;
+};
+
+export interface ListInfo {
   name: string;
-  network: string;
-  client: string;
-  url: string;
+  type?: string;
+  network?: string;
+  client?: string;
+  protocol?: string;
+  url?: string;
+  createdAt: string;
+  version?: string;
 }
 
 export interface ResourcesInfo {
@@ -86,12 +95,17 @@ export interface AptosNode extends ClientImage, ResourcesInfo {
   validator: boolean;
 }
 
+export type RPCUser = {
+  username: string;
+  passwordSecretName: string;
+};
+
 export interface BitcoinNode extends ClientImage, ResourcesInfo {
   name: string;
   network: string;
   rpc: boolean;
   txIndex: boolean;
-  rpcUsers: { username: string; passwordSecretName: string }[];
+  rpcUsers: [RPCUser, ...RPCUser[]];
   wallet: boolean;
   createdAt: string;
   p2pPort: number;
@@ -272,7 +286,9 @@ export interface StacksNode extends ClientImage, ResourcesInfo {
 
 export interface Endpoint {
   name: string;
+  name_label?: string;
   protocol: Protocol;
+  network: string;
   routes: {
     name: string;
     route: string;
@@ -280,6 +296,10 @@ export interface Endpoint {
     references: string[];
   }[];
   created_at: string;
+}
+
+export interface EndpointStats {
+  [key: string]: { [date: string]: number }[];
 }
 
 export interface Service {
@@ -383,6 +403,7 @@ export interface Plan {
 }
 
 export interface Subscription {
+  name?: string;
   id: string;
   status: SubscriptionStatus;
   start_date: number;
@@ -390,8 +411,8 @@ export interface Subscription {
   canceled_at?: number;
   plan: Omit<Plan, "prices">;
   price: PlanPrice;
-  request_limit: number;
-  endpoint_limit: number;
+  request_limit?: number;
+  endpoint_limit?: number;
 }
 
 export interface Plan {

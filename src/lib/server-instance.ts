@@ -1,19 +1,96 @@
-import axios from "axios";
-import { cookies } from "next/headers";
+"use server";
+
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
+import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { StorageItems } from "@/enums";
-import { responseInterceptor } from "@/lib/utils";
 
-export const server = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-});
+// if base url is absolute path, convert it to full url
+// exmaple: /api/v1 will be converted to http://domain/api/v1
+const getBaseURL = () => {
+  let url = process.env.API_URL;
+
+  if (url?.startsWith("/")) {
+    const headersList = headers();
+    const protocol = headersList.get("x-forwarded-proto");
+    const domain = headersList.get("host");
+
+    url = `${protocol}://${domain}${url}`;
+  }
+
+  return url;
+};
+
+interface CustomAxiosResponse extends AxiosResponse {
+  config: InternalAxiosRequestConfig & {
+    fromCache?: boolean;
+  };
+}
+
+interface CacheEntry {
+  timestamp: number;
+  response: AxiosResponse;
+}
+
+interface Cache {
+  [key: string]: CacheEntry;
+}
+
+const responseCache: Cache = {};
+
+const getCacheKey = (config: AxiosRequestConfig): string => {
+  return `${config.method}:${config.url}`;
+};
+
+export const server = axios.create();
 
 server.interceptors.request.use((config) => {
+  const key = getCacheKey(config);
+  const now = Date.now();
+  config.baseURL = getBaseURL();
+
   const token = cookies().get(StorageItems.AUTH_TOKEN);
+  if (!token?.value && config.url === "/whoami") {
+    redirect("/sign-in");
+  }
 
   if (token?.value) config.headers.Authorization = `Bearer ${token.value}`;
+
+  if (responseCache[key] && now - responseCache[key].timestamp < 2000) {
+    return Promise.resolve({
+      ...responseCache[key].response,
+      ...config,
+      fromCache: true,
+    });
+  }
 
   return config;
 });
 
-server.interceptors.response.use(responseInterceptor);
+server.interceptors.response.use(
+  (response: CustomAxiosResponse) => {
+    if (!response.config.fromCache) {
+      const key = getCacheKey(response.config);
+      responseCache[key] = {
+        timestamp: Date.now(),
+        response: response,
+      };
+    }
+
+    if (response.config.responseType === "arraybuffer") {
+      return response;
+    }
+
+    response.data = response.data.data;
+    return response;
+  },
+  (error: AxiosError) => {
+    return Promise.reject(error);
+  }
+);

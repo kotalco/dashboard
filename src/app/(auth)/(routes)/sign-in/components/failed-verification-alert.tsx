@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
-import { isAxiosError } from "axios";
+import { useAction } from "@/hooks/use-action";
+import { reverifyEmail } from "@/actions/reveify-email";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { client } from "@/lib/client-instance";
+import { SubmitButton } from "@/components/form/submit-button";
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
 
 interface FailedVerificationAlertProps {
   email: string;
@@ -16,75 +16,64 @@ interface FailedVerificationAlertProps {
 export const FailedVerificationAlert: React.FC<
   FailedVerificationAlertProps
 > = ({ email, status }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const { execute, error, success } = useAction(reverifyEmail);
 
-  async function resendVerificationEmail() {
-    try {
-      setIsLoading(true);
-      setIsSuccess(false);
+  const onSubmit = () => {
+    execute({ email });
+  };
 
-      await client.post("/users/resend_email_verification", {
-        email,
-      });
-
-      setIsSuccess(true);
-    } catch (error) {
-      setIsSuccess(false);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  if (isLoading)
+  if (success)
     return (
-      <div className="flex justify-center mb-4">
-        <Loader2 className="animate-spin" />
+      <div className="absolute top-10 inset-x-0 flex justify-center">
+        <SubmitSuccess success={true}>
+          Verification email has been sent. Please check your email.
+        </SubmitSuccess>
       </div>
     );
 
-  if (isSuccess)
+  if (error) {
     return (
-      <Alert variant="success" className="mb-4">
-        <AlertDescription>
-          Verification email has been sent. Please check your email.
-        </AlertDescription>
-      </Alert>
+      <div className="absolute top-10 inset-x-0 flex justify-center">
+        <SubmitError error={error} />
+      </div>
     );
+  }
 
   if (status === "401") {
     return (
-      <Alert variant="destructive" className="mb-4">
-        <AlertDescription>
-          <span>This verification email is already expired. Please click </span>
-          <Button
-            variant="link"
-            type="button"
-            onClick={resendVerificationEmail}
-            className="px-0"
-          >
-            here
-          </Button>
-          <span> to resend another one.</span>
-        </AlertDescription>
-      </Alert>
+      <div className="absolute top-10 inset-x-0 flex justify-center">
+        <Alert variant="destructive" className="max-w-3xl text-center">
+          <AlertDescription>
+            <span>
+              This verification email is already expired. Please click{" "}
+            </span>
+            <form className="inline" action={onSubmit}>
+              <SubmitButton variant="link" className="p-0">
+                here
+              </SubmitButton>
+            </form>
+
+            <span> to resend another one.</span>
+          </AlertDescription>
+        </Alert>
+      </div>
     );
   }
 
   return (
-    <Alert variant="destructive" className="mb-4">
-      <AlertDescription>
-        <span>Verification failed. Please click </span>
-        <Button
-          variant="link"
-          type="button"
-          onClick={resendVerificationEmail}
-          className="px-0"
-        >
-          here
-        </Button>
-        <span> to resend another verification email.</span>
-      </AlertDescription>
-    </Alert>
+    <div className="absolute top-10 inset-x-0 flex justify-center">
+      <Alert variant="destructive" className="max-w-3xl text-center">
+        <AlertDescription>
+          <span>Verification failed. Please click </span>
+          <form className="inline" action={onSubmit}>
+            <SubmitButton variant="link" className="px-0">
+              here
+            </SubmitButton>
+          </form>
+
+          <span> to resend another verification email.</span>
+        </AlertDescription>
+      </Alert>
+    </div>
   );
 };

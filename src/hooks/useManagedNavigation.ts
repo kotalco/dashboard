@@ -1,4 +1,5 @@
 import { usePathname } from "next/navigation";
+
 import {
   ArrowLeft,
   Cog,
@@ -11,12 +12,9 @@ import {
 } from "lucide-react";
 
 import { SidebarNavItem } from "@/types";
-import { useVirtualEndpointsCount } from "./useVirtualEndpointsCount";
 
-export function useManagedNavigation() {
+export function useManagedNavigation(endpointsCount?: number) {
   const pathname = usePathname();
-
-  const { count: endpointsCount } = useVirtualEndpointsCount();
 
   const managed: SidebarNavItem[] = [
     {
@@ -27,20 +25,15 @@ export function useManagedNavigation() {
       count: endpointsCount,
     },
     {
-      label: "Manage Plan",
+      label: "My Plan",
       href: `/billing/plan`,
       Icon: Zap,
     },
     {
+      position: "bottom",
       label: "Settings",
       href: `/account`,
       Icon: Cog,
-    },
-    {
-      label: "Logout",
-      href: `/logout`,
-      Icon: LogOut,
-      prefetch: false,
     },
   ];
 
@@ -56,7 +49,7 @@ export function useManagedNavigation() {
       Icon: User2,
     },
     {
-      label: "Payment Methods",
+      label: "My Cards",
       href: `/payment-methods`,
       active: pathname.includes("payment-methods"),
       Icon: CreditCard,

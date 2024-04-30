@@ -1,28 +1,26 @@
-import { format, parseISO } from "date-fns";
+import { Suspense } from "react";
 
-import { getWorkspace } from "@/services/get-workspace";
-import { EndpointsClient } from "./components/client";
-import { getEndpoints } from "@/services/get-endpoints";
+import { Heading } from "@/components/ui/heading";
+import { NodesListSkeleton } from "@/components/nodes-list-skeleton";
+
+import { EndpointsList } from "./_components/endpoints-list";
 
 export default async function EndpointsPage({
   params,
 }: {
   params: { workspaceId: string };
 }) {
-  const { data } = await getEndpoints(params.workspaceId);
-  const { role } = await getWorkspace(params.workspaceId);
-  const formattedEndpoints = data.map(({ protocol, name, created_at }) => ({
-    protocol,
-    name,
-    created_at: format(parseISO(created_at), "MMMM do, yyyy"),
-    href: `/${params.workspaceId}/endpoints/${name}`,
-  }));
+  const { workspaceId } = params;
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 p-8 pt-6 space-y-4">
-        <EndpointsClient data={formattedEndpoints} role={role} />
+    <div className="grid grid-cols-12 items-center gap-8 pr-10">
+      <div className="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
+        <Heading title="Endpoints" />
       </div>
+
+      <Suspense fallback={<NodesListSkeleton />}>
+        <EndpointsList workspaceId={workspaceId} />
+      </Suspense>
     </div>
   );
 }

@@ -2,12 +2,15 @@ import React from "react";
 import { DomainForm } from "./domain-form";
 
 describe("<DomainForm />", () => {
-  const data = { domainName: "kotal.co", ip: "10.0.0.1" };
+  const data = {
+    domainName: "kotal.co",
+    ip: { ip_address: "10.0.0.1", host_name: "" },
+  };
   context("With default value", () => {
     it("Renders with default value", () => {
       cy.mount(<DomainForm ip={data.ip} domainName={data.domainName} />);
       cy.findByRole("alert").contains(data.domainName);
-      cy.findByRole("alert").contains(data.ip);
+      cy.findByRole("alert").contains(data.ip.ip_address);
       cy.findByTestId("domain-name").should("have.value", data.domainName);
     });
   });
@@ -15,7 +18,7 @@ describe("<DomainForm />", () => {
   context("Without default value", () => {
     beforeEach(() => {
       cy.clock();
-      cy.mount(<DomainForm ip="10.0.0.1" />);
+      cy.mount(<DomainForm ip={{ ip_address: "10.0.0.1", host_name: "" }} />);
     });
 
     it("Renders without alert and empty input value", () => {
@@ -35,7 +38,7 @@ describe("<DomainForm />", () => {
 
       it("Ensure that alert is now visible", () => {
         cy.findByRole("alert").contains(data.domainName);
-        cy.findByRole("alert").contains(data.ip);
+        cy.findByRole("alert").contains(data.ip.ip_address);
       });
 
       it("Succes update domain name value", () => {

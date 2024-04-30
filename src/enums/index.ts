@@ -11,6 +11,7 @@ export enum Roles {
   Admin = "admin",
   Writer = "writer",
   Reader = "reader",
+  Customer = "customer",
 }
 
 export enum SecretType {
@@ -80,7 +81,6 @@ export enum Protocol {
   Polkadot = "polkadot",
   Stacks = "stacks",
 }
-
 
 export enum ProtocolsWithoutEthereum2 {
   APTOS = "aptos",
@@ -265,4 +265,10 @@ export enum InvoiceStatus {
   Open = "open",
   Draft = "draft",
   Uncollectible = "uncollectible",
+  Void = "void",
+}
+
+export enum Providers {
+  "Lets Encrypt" = "letsencrypt",
+  "Paid TLS Certificate" = "secret",
 }

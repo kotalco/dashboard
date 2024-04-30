@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreatePolkadotNodeForm } from "../components/create-polkadot-node-form";
 import { getClientVersions } from "@/services/get-client-versions";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
+
+import { Heading } from "@/components/ui/heading";
+
+import { CreatePolkadotNodeForm } from "./_components/create-polkadot-node-form";
 
 export default async function CreateNewPolkadotPage({
   params,
@@ -23,13 +25,9 @@ export default async function CreateNewPolkadotPage({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create New Polkadot Node</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CreatePolkadotNodeForm images={versions} />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <Heading title="New Polkadot Node" />
+      <CreatePolkadotNodeForm images={versions} />
+    </div>
   );
 }

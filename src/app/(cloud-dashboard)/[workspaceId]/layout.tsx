@@ -1,25 +1,30 @@
-import { findUser } from "@/services/find-user";
-import { getWorkspace } from "@/services/get-workspace";
-import { getWorkspaces } from "@/services/get-workspaces";
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-export default async function Layout({
+import { findUser } from "@/services/find-user";
+
+import { CloudActions } from "@/components/shared/command-actions/cloud-actions";
+
+export default async function PrivatePageLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { workspaceId: string };
 }) {
   const { user } = await findUser();
 
-  if (user?.is_customer) notFound();
-
-  try {
-    await getWorkspace(params.workspaceId);
-  } catch (error) {
-    const workspaces = await getWorkspaces();
-    redirect(`/${workspaces[0].id}`);
+  // No user and no auth token or invalid token
+  if (!user) {
+    const nextUrl = headers().get("x-pathname");
+    redirect(`/sign-in?redirect=${nextUrl}`);
   }
 
-  return <>{children}</>;
+  // Make sure user is a customer
+  if (user.is_customer) notFound();
+
+  return (
+    <>
+      <CloudActions />
+      {children}
+    </>
+  );
 }

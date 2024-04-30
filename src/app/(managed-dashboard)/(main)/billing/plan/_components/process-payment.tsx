@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 
 import { Alert } from "@/components/ui/alert";
-import { delay } from "@/lib/utils";
+import { delay, getBaseURL } from "@/lib/utils";
 
 interface ProcessPaymentProps {
   data: { clientSecret: string; cardId: string };
@@ -26,7 +26,7 @@ export const ProcessPayment: React.FC<ProcessPaymentProps> = ({ data }) => {
         clientSecret,
         {
           payment_method: cardId,
-          return_url: `${process.env["NEXT_PUBLIC_RETURN_URL_ROOT"]}/billing/plan`,
+          return_url: `${getBaseURL()}/billing/plan`,
         }
       );
 

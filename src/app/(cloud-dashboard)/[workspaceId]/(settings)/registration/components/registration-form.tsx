@@ -1,124 +1,53 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isAxiosError } from "axios";
+import { useParams } from "next/navigation";
 
-import { client } from "@/lib/client-instance";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Switch } from "@/components/ui/switch";
+import { useAction } from "@/hooks/use-action";
+import { editRegister } from "@/actions/edit-register";
+
+import { SubmitError } from "@/components/form/submit-error";
+import { SubmitSuccess } from "@/components/form/submit-success";
+import { SubmitButton } from "@/components/form/submit-button";
+import { Toggle } from "@/components/form/toggle";
 
 interface RegistrationFormProps {
   isEnabled?: boolean;
 }
 
-const schema = z.object({
-  enable_registration: z.boolean().optional(),
-});
-
-type SchemaType = z.infer<typeof schema>;
-
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   isEnabled,
 }) => {
-  const defaultValues = {
-    enable_registration: isEnabled,
+  const { workspaceId } = useParams();
+  const { execute, success, error, fieldErrors } = useAction(editRegister);
+
+  const onSubmit = (formData: FormData) => {
+    const enable_registration = formData.get("enable_registration") === "on";
+
+    execute({ enable_registration }, { workspaceId: workspaceId as string });
   };
 
-  const form = useForm<SchemaType>({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
-
-  const {
-    formState: {
-      isSubmitted,
-      isSubmitting,
-      isValid,
-      isDirty,
-      isSubmitSuccessful,
-      errors,
-    },
-    setError,
-  } = form;
-
-  async function onSubmit(values: z.infer<typeof schema>) {
-    try {
-      await client.post("/settings/registration", values);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const { response } = error;
-
-        setError("root", {
-          type: response?.status.toString(),
-          message: "Something went wrong.",
-        });
-      }
-    }
-  }
-
   return (
-    <Form {...form}>
-      <form
-        data-testid="registration-form"
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
-        <FormField
-          control={form.control}
-          name="enable_registration"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between p-4 border rounded-lg">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Enable Registration</FormLabel>
-                <FormDescription>
-                  If disabled, users will not be able to register their own
-                  accounts.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  data-testid="enable-switch"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+    <form
+      data-testid="registration-form"
+      action={onSubmit}
+      className="space-y-4"
+    >
+      <Toggle
+        id="enable_registration"
+        label="Enable Registration"
+        description="If disabled, users will not be able to register their own accounts."
+        defaultChecked={isEnabled}
+        errors={fieldErrors}
+        className="space-x-10"
+      />
 
-        <Button
-          data-testid="submit"
-          disabled={(isSubmitted && !isValid) || isSubmitting || !isDirty}
-          type="submit"
-        >
-          Save
-        </Button>
+      <SubmitButton>Update</SubmitButton>
 
-        {isSubmitSuccessful && (
-          <Alert variant="success" className="text-center">
-            <AlertDescription>
-              Your registration settings have been saved successfuly
-            </AlertDescription>
-          </Alert>
-        )}
+      <SubmitSuccess success={success}>
+        Your registration settings have been updated successfuly
+      </SubmitSuccess>
 
-        {errors.root && (
-          <Alert variant="destructive" className="text-center">
-            <AlertDescription>{errors.root.message}</AlertDescription>
-          </Alert>
-        )}
-      </form>
-    </Form>
+      <SubmitError error={error} />
+    </form>
   );
 };

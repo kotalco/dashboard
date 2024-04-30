@@ -1,15 +1,10 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { getWorkspace } from "@/services/get-workspace";
 import { Roles } from "@/enums";
 import { EditWorkspaceForm } from "./components/edit-workspace-form";
 import { LeaveWorkspace } from "./components/leave-workspace";
 import { DeleteWorkspace } from "./components/delete-workspace";
+import { Separator } from "@/components/ui/separator";
+import { Heading } from "@/components/ui/heading";
 
 export default async function SettingsPage({
   params,
@@ -19,28 +14,30 @@ export default async function SettingsPage({
   const workspace = await getWorkspace(params.workspaceId);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-10">
+    <div className="space-y-8">
       {workspace.role === Roles.Admin && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Workspace Settings</CardTitle>
-            <CardDescription>Manage your workspace settings.</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <>
+          <Heading
+            title="Workspace Settings"
+            description="Manage your workspace settings."
+          />
+          <div className="max-w-xs">
             <EditWorkspaceForm workspace={workspace} />
-          </CardContent>
-        </Card>
+          </div>
+        </>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Danger Zone</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          <LeaveWorkspace workspaceId={workspace.id} />
+      <Separator />
+
+      <Heading title="Danger Zone" />
+
+      <LeaveWorkspace id={workspace.id} />
+      {workspace.role === Roles.Admin && (
+        <>
+          <Separator className="max-w-md" />
           <DeleteWorkspace workspace={workspace} />
-        </CardContent>
-      </Card>
+        </>
+      )}
     </div>
   );
 }

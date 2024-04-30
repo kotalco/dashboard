@@ -1,6 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getEndpointsCount } from "@/services/get-endpoints-count";
 import Link from "next/link";
+
+import { getEndpointsCount } from "@/services/get-endpoints-count";
+
+import { CardStats } from "@/components/shared/card-stats/card-stats";
 
 export interface EndpointsCountProps {
   workspaceId: string;
@@ -19,14 +21,9 @@ export const EndpointsCount: React.FC<EndpointsCountProps> = async ({
           : `${workspaceId}/endpoints`
       }
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>Endpoints</CardTitle>
-        </CardHeader>
-        <CardContent className="text-3xl text-muted-foreground">
-          {count}
-        </CardContent>
-      </Card>
+      <CardStats className="hover:bg-muted transition" title="Endpoints">
+        {count}
+      </CardStats>
     </Link>
   );
 };

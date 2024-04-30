@@ -1,10 +1,9 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-
 import Link from "next/link";
 
-const INVOICES_LIMIT = 3;
+const INVOICES_LIMIT = 5;
 
 export const LoadMoreInvoicesButton = () => {
   const pathname = usePathname();
@@ -24,7 +23,7 @@ export const LoadMoreInvoicesButton = () => {
       scroll={false}
       replace
     >
-      Load More
+      Show More Invoices
     </Link>
   );
 };

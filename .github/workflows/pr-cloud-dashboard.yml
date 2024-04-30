@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-      - managed-dashboard
+      - staging
 
 jobs:
 
@@ -14,6 +14,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: update managed-dashboard with secrets values - staging
+      env:
+        NEXT_PUBLIC_WS_API_URL: "${{ secrets.STAGING_NEXT_PUBLIC_WS_API_URL }}"
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "${{ secrets.STAGING_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
+        API_URL: "${{ secrets.STAGING_API_URL }}"
+      run: |
+        envsubst < .env.production > .env.production.tmp
+        mv .env.production.tmp .env.production
 
     # - name: Install pnpm
     #   uses: pnpm/action-setup@v2
@@ -41,7 +50,7 @@ jobs:
       uses: docker/metadata-action@v3
       with:
         images: |
-          docker.io/kotalco/cloud-dashboard
+          docker.io/kotalco/cloud-dashboard-pr
         tags: |
           type=ref,event=tag
           type=sha,prefix=,suffix=,format=short
