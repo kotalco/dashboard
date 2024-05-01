@@ -53,11 +53,11 @@ export const DomainForm: React.FC<DomainFormProps> = ({ ip, domainName }) => {
         <Alert className="max-w-lg">
           {ip.ip_address && (
             <AlertDescription>
-              Add DNS record of type A that maps <strong>{value}</strong> to{" "}
+              Add DNS record of type A that maps <strong>app.{value}</strong> to{" "}
               <strong>{ip.ip_address}</strong>, <br />
-              Add DNS record of type A that maps <strong>
-                *.{value}
-              </strong> to <strong>{ip.ip_address}</strong>
+              Add DNS record of type A that maps{" "}
+              <strong>endpoints.{value}</strong> to{" "}
+              <strong>{ip.ip_address}</strong>
             </AlertDescription>
           )}
 
