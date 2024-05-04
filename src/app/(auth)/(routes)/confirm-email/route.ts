@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("email");
   const token = searchParams.get("token");
 
-  const response = NextResponse.redirect(`${protocol}//${domain}/sign-in`);
+  const response = NextResponse.redirect(`${protocol}://${domain}/sign-in`);
 
   try {
     await server.post("/users/verify_email", { email, token });
