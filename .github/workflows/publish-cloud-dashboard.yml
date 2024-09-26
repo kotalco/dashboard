@@ -162,14 +162,22 @@ jobs:
         run: |
           envsubst < ./staging-managed-dashboard.yaml | tee staging-managed-dashboard.yaml
 
-      - name: K8s-set-context to DO managed-staging cluster
-        uses: azure/k8s-set-context@v1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID_EKS_ADMIN }}
+          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY_EKS_ADMIN }}
+          aws-region: eu-central-1
+
+      - name: K8s-set-context to EKS staging cluster
+        if: github.ref == 'refs/heads/staging'
+        uses: azure/k8s-set-context@v4
         with:
           method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG_DO_MANAGED_STAGING }}
+          kubeconfig: ${{ secrets.STAGING_KUBECONFIG_EKS_STAGING }}
 
-      - name: Deploy to the DO managed-staging cluster
-        uses: azure/k8s-deploy@v1
+      - name: Deploy to the EKS managed-staging cluster
+        uses: azure/k8s-deploy@v5
         with:
           namespace: kotal
           manifests: |
